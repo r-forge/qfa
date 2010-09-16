@@ -210,27 +210,31 @@ suppressors<-gethits(results,qthresh,type="S")
 others<-results[(!results$ORF%in%enhancers$ORF)&(!results$ORF%in%suppressors$ORF),]
 # Get plot parameters
 ymax=1.1*max(suppressors$Mean.Double,enhancers$Mean.Double)
-ymin=0.9*min(suppressors$Mean.Double,enhancers$Mean.Double)
+#ymin=0.9*min(suppressors$Mean.Double,enhancers$Mean.Double)
+ymin=0
 xmax=1.1*max(suppressors$Mean.Control,enhancers$Mean.Control)
-xmin=0.9*min(suppressors$Mean.Control,enhancers$Mean.Control)
-plot(NULL,xlim=c(xmin,xmax),ylim=c(ymin,ymax),
-xlab="Control Mutant Fitness",ylab="Double Mutant Fitness",main="Epistasis Plot")
+#xmin=0.9*min(suppressors$Mean.Control,enhancers$Mean.Control)
+xmin=0
+plot(NULL,type="n",xlim=c(xmin,xmax),ylim=c(ymin,ymax),
+xlab="Control Fitness",ylab="Query Fitness",main="Epistasis Plot",
+col=8,pch=19,cex=0.5)
 # Add line for genetic independence
-if (fitratio!=FALSE){abline(0,fitratio,lwd=2)} else {
-abline(0,lm.epi(results$Mean.Double,results$Mean.Control,modcheck=FALSE),lwd=2)}
+if (fitratio!=FALSE){abline(0,fitratio,lwd=2,col=8)} else {
+abline(0,lm.epi(results$Mean.Double,results$Mean.Control,modcheck=FALSE),lwd=2,col=8)}
 # Add 1:1 fitness line
-abline(0,1,lwd=2,lty=2,col="grey")
+abline(0,1,lwd=2,lty=4,col=8)
 # Add reference ORF fitnesses lines
 if (ref.orf!=FALSE){reforf<-results[results$ORF==ref.orf,]
-abline(v=reforf$Mean.Control,col="cadetblue",lwd=1)
-abline(h=reforf$Mean.Double,col="cadetblue",lwd=1)}
+abline(v=reforf$Mean.Control,col="lightblue",lwd=2)
+abline(h=reforf$Mean.Double,col="lightblue",lwd=2)}
 # Add points for non-suppressors & non-enhancers
-points(others$Mean.Control,others$Mean.Double,col="grey",cex=0.5)
+points(others$Mean.Control,others$Mean.Double,col="grey",cex=0.5,pch=19)
 # Add suppressors & enhancers
-points(enhancers$Mean.Control,enhancers$Mean.Double,col='green',pch=21,bg='green',cex=0.5)
-text(enhancers$Mean.Control,(enhancers$Mean.Double+ymax/150),enhancers$Gene,cex=0.3)
-points(suppressors$Mean.Control,suppressors$Mean.Double,col='red',pch=21,bg='red',cex=0.5)
-text(suppressors$Mean.Control,(suppressors$Mean.Double+ymax/150),suppressors$Gene,cex=0.3)}
+points(enhancers$Mean.Control,enhancers$Mean.Double,col='green',pch=19,cex=0.5)
+text(enhancers$Mean.Control,(enhancers$Mean.Double+ymax/150),as.character(enhancers$Gene),col=1,pos=4,offset=0.1,cex=0.4)
+points(suppressors$Mean.Control,suppressors$Mean.Double,col='red',pch=19,cex=0.5)
+text(suppressors$Mean.Control,(suppressors$Mean.Double+ymax/150),as.character(suppressors$Gene),col=1,pos=4,offset=0.1,cex=0.4)
+}
 
 ## Extract hits from epistasis results object ##
 gethits<-function(results,qthresh,type="S",all.types=FALSE,GISthresh=0){
@@ -653,7 +657,7 @@ for (bcode in barcodes){bcount<-bcount+1
 	Inoc.Time=inoctime))
 				} #bcode
 if (ORF2gene!=FALSE){results$Gene<-sapply(as.character(results$ORF),orf2g,gdict)}
-results}
+return(results)}
 
 # Extrace row & col from list of position vectors
 rcget<-function(posvec,rc){posvec[match(rc,c("row","col"))]}
