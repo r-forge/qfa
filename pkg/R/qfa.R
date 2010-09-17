@@ -231,9 +231,9 @@ abline(h=reforf$Mean.Double,col="lightblue",lwd=2)}
 points(others$Mean.Control,others$Mean.Double,col="grey",cex=0.5,pch=19)
 # Add suppressors & enhancers
 points(enhancers$Mean.Control,enhancers$Mean.Double,col='green',pch=19,cex=0.5)
-text(enhancers$Mean.Control,(enhancers$Mean.Double+ymax/150),as.character(enhancers$Gene),col=1,pos=4,offset=0.1,cex=0.4)
+text(enhancers$Mean.Control,(enhancers$Mean.Double+ymax/150),enhancers$Gene,col=1,pos=4,offset=0.1,cex=0.4)
 points(suppressors$Mean.Control,suppressors$Mean.Double,col='red',pch=19,cex=0.5)
-text(suppressors$Mean.Control,(suppressors$Mean.Double+ymax/150),as.character(suppressors$Gene),col=1,pos=4,offset=0.1,cex=0.4)
+text(suppressors$Mean.Control,(suppressors$Mean.Double+ymax/150),suppressors$Gene,col=1,pos=4,offset=0.1,cex=0.4)
 }
 
 ## Extract hits from epistasis results object ##
@@ -610,8 +610,10 @@ orfp}
 #### Upper and lower bounds for variables in optimization ####
 lowerg<-function(inocguess){0.9*inocguess}; upperg<-function(inocguess){1.1*inocguess}
 lowerr<-0; upperr<-function(rguess){2.5*rguess}
-lowerK<-function(inocguess){0.9*inocguess}; upperK<-function(xdim,ydim){255*xdim*ydim}
-lowers<-function(xdim,ydim){0.025*xdim*ydim}; uppers<-function(xdim,ydim){75*xdim*ydim}
+lowerK<-function(inocguess){0.9*inocguess}; upperK<-function(xdim,ydim){0.75*255*xdim*ydim}
+# The lower bound on s seems to be causing problems with inf arising during optimisation
+#lowers<-function(xdim,ydim){0.025*xdim*ydim}; uppers<-function(xdim,ydim){175*xdim*ydim}
+lowers<-function(xdim,ydim){0.0025*xdim*ydim}; uppers<-function(xdim,ydim){175*xdim*ydim}
 
 ##### Does max. lik. fit for all colonies, given rod.read input #####
 qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",edgestrip=TRUE,...){
@@ -677,8 +679,11 @@ assign("last.colony.growth",growth,envir=.GlobalEnv)
 assign("last.colony.time",time,envir=.GlobalEnv)
 # Check if worth optimizing
 growththresh<-(1.5/255)*xybounds$K[2]
+print(position)
+print(growth)
+print(time)
 #if ((cor(time,log(growth))>0.1)&
-if (growth[length(growth)-1]>growththresh){
+if (max(growth)>growththresh){
 	# Get initial guess for parameters
 	init<-guess(time,growth,inocguess,xybounds)
 	# Function to be optimized
@@ -830,8 +835,6 @@ for (bcode in barcodes){bcode<-as.character(bcode)
 	title(main=maintit,xlab="Time since inoculation (days)",line=7,
 	ylab="Colony Size (Trimmed Greyscale)",cex.main=9,cex.lab=8,outer=TRUE)} #bcode
 dev.off()}
-	
-
 
 
 #### Plot a colony's timecourse from a row of the results #####	
@@ -856,7 +859,7 @@ c(dbc[index,'Row'],dbc[index,'Col'])}
 ### Do individual timecourse plot given parameters & data ###
 logdraw<-function(row,col,K,r,g,time,growth,gene,maxg,fitfunct){
 # Add logistic curve
-curve((K*g*exp(r*x))/(K+g*(exp(r*x)-1)),n=100,xlim=c(0,max(time)),ylim=c(0,1.2*maxg),
+curve((K*g*exp(r*x))/(K+g*(exp(r*x)-1)),n=100,xlim=c(0,ceiling(max(time))),ylim=c(0,1.2*maxg),
 xlab="",ylab="",main=gene,frame.plot=0,cex.main=3,cex.axis=1,lwd=2.5)
 # Add data points
 points(time,growth,col="red",cex=2,pch=4,lwd=2)
