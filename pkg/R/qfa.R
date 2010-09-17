@@ -59,26 +59,31 @@ if (length(bigd$Date.Time)%%platesize!=0){
 	warning("Number of photos not multiple of plate size")}
 print("Inoculation DateTimes:")
 print(unique(bigd$Inoc.Time))
-bigd}
+return(bigd)
+}
 
 #### Define Phenotype for fitness ####
 mdrmdp<-function(K,r,g){MDR<-sapply(r/((2*(K-g))/(K-2*g)),na2zero)
 MDP<-sapply(log(K/g)/log(2),na2zero)
-MDR*MDP}
+return(MDR*MDP)
+}
 
 ####### Convert data datetime to time from start in days ########
 tconv<-function(tstring,startt,fmt){
 t<-as.POSIXlt(as.character(tstring),format=fmt)
-as.numeric(difftime(t,startt,units="days"))}
+return(as.numeric(difftime(t,startt,units="days")))
+}
 
 # Timing function (internal) #
 trep<-function(thing,tobj){
 print(paste("Finished",thing,"in",round(tobj[3],2),"seconds"))
-print(paste(round(tobj[3]/60,2),"minutes"))}
+print(paste(round(tobj[3]/60,2),"minutes"))
+}
 
 # Converts NAs to zeros
 na2zero<-function(mdr){if (is.na(mdr)){mdr<-0}
-mdr}
+return(mdr)
+}
 
 ###### Create inoculation time environment #####
 bctimes<-function(bctimef){
@@ -87,7 +92,8 @@ starts<-new.env(hash=TRUE)
 for (k in 1:length(startframe$Barcode)){
 st=startframe$Start.Time[k]
 assign(startframe$Barcode[k],st,envir=starts)}
-starts} # bctimes
+return(starts)
+} # bctimes
 
 # Convert barcode to start time #
 bc2st<-function(bc,inocenv){get(as.character(bc),envir=inocenv)}
@@ -99,22 +105,23 @@ cache=new.env(hash = TRUE)
 orf2g=read.delim(dictionary,header=FALSE,
 colClasses=c("character"),col.names=c("ORF","Gene"))
 z=apply(orf2g,1,orfun,cache)
-cache}
+return(cache)
+}
 
 # Function called in orf2gdict #
 orfun<-function(row,environ){
 orf<-as.character(row[1])
 gene<-as.character(row[2])
-assign(orf,gene,envir=environ)} #orfun
+return(assign(orf,gene,envir=environ))
+} #orfun
 
 ### Function that converts orf 2 gene ###
-orf2g<-function(orf,dictenv){
-get(orf,envir=dictenv)}
+orf2g<-function(orf,dictenv){get(orf,envir=dictenv)}
 
 
 ################################################## Epistasis Function ###########################################################
 qfa.epi<-function(double,control,qthresh,rjags=FALSE,orfdict="ORF2GENE.txt",
-GISthresh=0.5,edgestrip=TRUE,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp){
+GISthresh=0.5,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp){
 ###### Get ORF mean fitnesses for control & double #######
 print("Calculating mean fitness for each ORF")
 ## Bayesian ##
@@ -140,12 +147,6 @@ names(dFms)<-orfs
 cFms<-sapply(cfits,mean)
 names(cFms)<-orfs} else {bayes=0
 ## LIK ##
-if (edgestrip==TRUE){dmr<-max(as.numeric(double$Row)); dmc<-max(as.numeric(double$Col))
-	print(paste("Stripping rows:",dmr,"and",1))
-	print(paste("Stripping columns:",dmc,"and",1))
-	double<-double[(!double$Row==1)&(!double$Col==1)&(!double$Row==dmr)&(!double$Col==dmc),]
-	cmr<-max(control$Row); cmc<-max(control$Col)
-	control<-control[(!control$Row==1)&(!control$Col==1)&(!control$Row==cmr)&(!control$Col==cmc),]}
 # Get orfs in question
 orfs<-as.character(double$ORF)
 orfs<-orfs[orfs%in%as.character(control$ORF)]
@@ -198,9 +199,11 @@ results$Type<-apply(results,1,typemake,m)
 results<-results[order(-abs(results$GIS),results$Q,results$Type),]
 # Plot results
 if (plot==TRUE){qfa.epiplot(results,qthresh,m)}
-list(Results=results,
+final<-list(Results=results,
 Enhancers=gethits(results,qthresh,type="E",GISthresh=GISthresh),
-Suppressors=gethits(results,qthresh,type="S",GISthresh=GISthresh))}
+Suppressors=gethits(results,qthresh,type="S",GISthresh=GISthresh))
+return(final)
+}
 
 ############### Epistasis Functions ##################
 # Makes epistasis plot for a given fdr level #
@@ -241,7 +244,8 @@ gethits<-function(results,qthresh,type="S",all.types=FALSE,GISthresh=0){
 results<-results[results$Q<qthresh,]
 if (all.types==FALSE){results<-results[results$Type==type,]}
 results<-results[abs(results$GIS)>=GISthresh,]
-results[order(-abs(results$GIS),results$Q,results$Type),]}
+return(results[order(-abs(results$GIS),results$Q,results$Type),])
+}
 
 # Function to initialize genetic ind. model
 epimod<-function(doubles,controls){require(rjags)
@@ -254,12 +258,14 @@ m~dweib(1.9,0.7)
 sigma~dlnorm(log(4),1)
 }","model.txt")
 jagd<-list(Fd=doubles,Fc=controls,N=length(doubles))
-jags.model(data=jagd,file="model.txt")}
+return(jags.model(data=jagd,file="model.txt"))
+}
 
 # Function to calculate fitnesses for repeats
 orfstat<-function(orf,fitframe,fitfunct){
 orfd<-fitframe[fitframe$ORF==orf,]
-fitfunct(orfd$K,orfd$r,orfd$g)}
+return(fitfunct(orfd$K,orfd$r,orfd$g))
+}
 
 # Linear regression genetic ind. model fit
 lm.epi<-function(doubles,controls,modcheck){
@@ -273,55 +279,58 @@ hist(resids,xlab="Fitness Residuals",main="Histogram of Residuals")
 qqnorm(resids/sd(resids),main="Normal QQ Plot")
 abline(0,1,lwd=2,col="red")
 dev.off()}
-m}
+return(m)
+}
 
 # Estimates probability of interaction for max lik method #
 pmake<-function(orf,m,cFs,dFs,cFms,dFms){
 if (dFms[orf]>m*cFms[orf]){
 	p<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="greater")$p.value} else {
 	p<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="less")$p.value}
-p}
+return(p)
+}
 
 # Calculate probability of interaction for Bayesian #
 bayesp<-function(orf,m,dfits,cfits){
 d<-dfits[[orf]]; c<-cfits[[orf]]; edf<-m*c
 z<-(mean(d)-mean(edf))/(sd(d)+sd(edf))
 if (z<0){p<-pnorm(z)} else {p<-1-pnorm(z)}
-p}
+return(p)
+}
 
 # Function to make fitnesses
 fitmake<-function(orf,poslist,fitfunct,g){
 orfpos<-poslist[[orf]]
-fitfunct(orfpos$k1,orfpos$r1,g)}
+return(fitfunct(orfpos$k1,orfpos$r1,g))
+}
 
 # Get type of interaction
 typemake<-function(row,m){md<-as.numeric(row['Mean.Double']); c<-as.numeric(row['Mean.Control'])
 if (m<1){if (md>m*c){type<-"S"} else {type<-"E"}} else {
 if (md>m*c){type<-"E"} else {type<-"S"}}
-type}
+return(type)
+}
 
 ####### Grabs posteriors for each variable for an ORF #######
 posmake<-function(orf,orfs,varpos){orfn<-match(orf,orfs)
 norfs<-length(orfs)
-lapply(varpos,varposget,orfn,norfs)}
+return(lapply(varpos,varposget,orfn,norfs))
+}
 
 #### Returns posterior if variable repeated for all ORFs ####
 varposget<-function(var,orfn,norfs){
 if (!is.null(dim(var))){z<-var[,orfn]} else {z<-NULL}
-z}
+return(z)
+}
 
 
 ####################################################### Bayesian Functions ###############################################################
 
 ################################### Function to put data into JAGS format ############################################
-qfa.data<-function(d,edgestrip=TRUE,split=c(),fmt="%Y-%m-%d_%H-%M-%S",orflist=c()){
+qfa.data<-function(d,split=c(),fmt="%Y-%m-%d_%H-%M-%S",orflist=c()){
 # Restrict to variable of interest in data.frame
 d<-data.frame(Barcode=d$Barcode,ORF=d$ORF,Row=d$Row,Col=d$Col,Growth=d$Growth,
 Date.Time=d$Date.Time,Inoc.Time=d$Inoc.Time)
-# Strip edge colonies if edgestrip TRUE #
-if (edgestrip==TRUE){
-d<-d[(!d$Row==min(d$Row))&(!d$Row==max(d$Row))&
-(!d$Col==min(d$Col))&(!d$Col==max(d$Col)),]} #ifedge
 stime<-proc.time()
 print("Selecting ORFs to put in model")
 # Use specified ORFs or all if none specified
@@ -382,7 +391,8 @@ for (k in 1:norf){orf<-orfs[k]; rep<-0
 									}#k-orf			
 dimnames(growth)[[1]]<-orfs; dimnames(time)[[1]]<-orfs; dimnames(nph)[[1]]<-orfs
 ftime<-proc.time()-stime; trep("Building data structure for JAGS",ftime)
-list(og=growth,time=time,E=norf,M=replist,N=nph,ORF=orfs)} #jagdata	
+return(list(og=growth,time=time,E=norf,M=replist,N=nph,ORF=orfs))
+} #jagdata	
 
 ##### Gets a list of all positions #####
 positget<-function(orf,d){
@@ -396,7 +406,8 @@ for (j in 1:length(bcodes)){dorbc<-dor[dor$Barcode==bcodes[j],]
 	nph<-length(drep[,1]); if (nph>nphmax){nphmax<-nph} } #pos
 } #j
 names(positions)<-bcodes; positions$nrep<-nreps; positions$nphmax<-nphmax
-positions}
+return(positions)
+}
 
 # To get max photos etc #
 nphget<-function(orfpos){orfpos$nphmax}
@@ -408,7 +419,8 @@ monofix<-function(tc){
 if (length(tc)>2){if (tc[1]>(tc[2]+tc[3])){tc[1]<-max(1,0.9*min(tc[2],tc[3]))}}
 # Stop flat at 1
 if (length(tc[tc==1])==length(tc)){tc[length(tc)]<-2}
-tc}
+return(tc)
+}
 
 # Function to get rid of zero growth data #
 nozero<-function(z){if (z<1){z=1} else {z=z}}
@@ -613,14 +625,11 @@ lowerr<-0; upperr<-function(rguess){2.5*rguess}
 lowerK<-function(inocguess){0.9*inocguess}; upperK<-function(xdim,ydim){0.75*255*xdim*ydim}
 # The lower bound on s seems to be causing problems with inf arising during optimisation
 #lowers<-function(xdim,ydim){0.025*xdim*ydim}; uppers<-function(xdim,ydim){175*xdim*ydim}
-lowers<-function(xdim,ydim){0.0025*xdim*ydim}; uppers<-function(xdim,ydim){175*xdim*ydim}
+lowers<-function(xdim,ydim){0.00025*xdim*ydim}; uppers<-function(xdim,ydim){50*xdim*ydim}
 
 ##### Does max. lik. fit for all colonies, given rod.read input #####
-qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",edgestrip=TRUE,...){
+qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",...){
 # Remove edge colonies if edgestrip true
-if (edgestrip==TRUE){
-d<-d[(!d$Row==min(d$Row))&(!d$Row==max(d$Row))&
-(!d$Col==min(d$Col))&(!d$Col==max(d$Col)),]} #ifedge
 # Get xdim & ydim
 xdim<-d[1,'Tile.Dimensions.X']; ydim<-d[1,'Tile.Dimensions.Y']
 # Define optimization bounds reliant on xdim & ydim and inocguess #
@@ -679,9 +688,6 @@ assign("last.colony.growth",growth,envir=.GlobalEnv)
 assign("last.colony.time",time,envir=.GlobalEnv)
 # Check if worth optimizing
 growththresh<-(1.5/255)*xybounds$K[2]
-print(position)
-print(growth)
-print(time)
 #if ((cor(time,log(growth))>0.1)&
 if (max(growth)>growththresh){
 	# Get initial guess for parameters
