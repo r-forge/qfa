@@ -715,7 +715,12 @@ logist<-function(K,r,g,t){
 
 # Log-likelihood (times(-1)) #
 loglik<-function(K,r,g,s,growth,time){
-sum(log(s)+(1/(2*s*s))*((growth-logist(K,r,g,time))^2))}
+LL<-sum(log(s)+(1/(2*s*s))*((growth-logist(K,r,g,time))^2))
+LL<-min(LL,999999999)
+LL<-max(0,LL)
+if(is.na(LL)){LL<-0}
+return(LL)
+}
 
 # partial derivative of -loglik wrt r #
 dldr<-function(K,r,g,s,growth,time){
