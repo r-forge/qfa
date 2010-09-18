@@ -232,11 +232,12 @@ abline(v=reforf$Mean.Control,col="lightblue",lwd=2)
 abline(h=reforf$Mean.Double,col="lightblue",lwd=2)}
 # Add points for non-suppressors & non-enhancers
 points(others$Mean.Control,others$Mean.Double,col="grey",cex=0.5,pch=19)
+text(others$Mean.Control,others$Mean.Double,others$Gene,col="grey",pos=4,offset=0.1,cex=0.4)
 # Add suppressors & enhancers
 points(enhancers$Mean.Control,enhancers$Mean.Double,col='green',pch=19,cex=0.5)
-text(enhancers$Mean.Control,(enhancers$Mean.Double+ymax/150),enhancers$Gene,col=1,pos=4,offset=0.1,cex=0.4)
+text(enhancers$Mean.Control,enhancers$Mean.Double,enhancers$Gene,col=1,pos=4,offset=0.1,cex=0.4)
 points(suppressors$Mean.Control,suppressors$Mean.Double,col='red',pch=19,cex=0.5)
-text(suppressors$Mean.Control,(suppressors$Mean.Double+ymax/150),suppressors$Gene,col=1,pos=4,offset=0.1,cex=0.4)
+text(suppressors$Mean.Control,suppressors$Mean.Double,suppressors$Gene,col=1,pos=4,offset=0.1,cex=0.4)
 }
 
 ## Extract hits from epistasis results object ##
