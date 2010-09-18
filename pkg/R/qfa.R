@@ -2,7 +2,7 @@
 
 ################ Read and bind rod output into suitable form for likelihood & bayesian #################
 rod.read<-function(path=".",files=c(),inoctimes="BarcodeTimes.txt",background="",treatments=c(),barcodes=c(),
-master.plates=c(),screen.names=c()){
+master.plates=c(),screen.names=c(),ORF2gene=""){
 # Create environment with inoculation times; checks if path specified
 if (length(strsplit(path,".")[[1]])>1){pathT<-1
 	inocenv<-bctimes(paste(path,inoctimes,sep="/"))} else {
@@ -59,6 +59,17 @@ if (length(bigd$Date.Time)%%platesize!=0){
 	warning("Number of photos not multiple of plate size")}
 print("Inoculation DateTimes:")
 print(unique(bigd$Inoc.Time))
+# Add a column of times since inoculation
+fmt="%Y-%m-%d_%H-%M-%S"
+time<-as.POSIXlt(as.character(bigd$Date.Time),format=fmt)
+inoc<-as.POSIXlt(as.character(bigd$Inoc.Time),format=fmt)
+difft<-as.numeric(difftime(time,inoc,units="days"))
+bigd$Expt.Time<-difft
+# Add a column of gene names if conversion file available
+if (ORF2gene!=""){
+	gdict<-orf2gdict(ORF2gene)
+	bigd$Gene<-sapply(as.character(bigd$ORF),orf2g,gdict)
+}else{bigd$Gene<-bigd$ORF}
 return(bigd)
 }
 
