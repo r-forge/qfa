@@ -786,6 +786,9 @@ tmrate=20.0} else {x=1}
 }#x
 rg<-log(max(0.000000000001,(Kg-G0g)/G0g))/tmrate
 rg<-max(lowerr,rg)
+# Set initial guess to half of best estimate to bias against
+# artificially large r
+rg<-0.5*rg
 #s
 s<-sqrt((1/n)*sum((growth-logist(Kg,rg,G0g,time))^2))
 s<-max(xybounds$s[1],s); s<-min(s,xybounds$s[2])
