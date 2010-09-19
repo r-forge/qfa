@@ -133,8 +133,8 @@ orf2g<-function(orf,dictenv){get(orf,envir=dictenv)}
 ################################################## Epistasis Function ###########################################################
 qfa.epi<-function(double,control,qthresh,rjags=FALSE,orfdict="ORF2GENE.txt",
 GISthresh=0.5,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp){
-###### Get ORF mean fitnesses for control & double #######
-print("Calculating mean fitness for each ORF")
+###### Get ORF median fitnesses for control & double #######
+print("Calculating median fitness for each ORF")
 ## Bayesian ##
 if (is.null(dim(double))){bayes=1
 # Get initial colony sizes
@@ -153,9 +153,9 @@ names(control)<-corfs
 orfs<-orfs[orfs%in%corfs]
 dfits<-lapply(orfs,fitmake,double,mdrmdp,dg)
 cfits<-lapply(orfs,fitmake,control,mdrmdp,cg)
-dFms<-sapply(dfits,mean)
+dFms<-sapply(dfits,median)
 names(dFms)<-orfs
-cFms<-sapply(cfits,mean)
+cFms<-sapply(cfits,median)
 names(cFms)<-orfs} else {bayes=0
 ## LIK ##
 # Get orfs in question
@@ -166,10 +166,10 @@ cFstats<-lapply(orfs,orfstat,control,fitfunct)
 names(cFstats)<-orfs
 dFstats<-lapply(orfs,orfstat,double,fitfunct)
 names(dFstats)<-orfs
-# Get means for each ORF
-cFms<-sapply(cFstats,mean)
+# Get medians for each ORF
+cFms<-sapply(cFstats,median)
 names(cFms)<-orfs
-dFms<-sapply(dFstats,mean)
+dFms<-sapply(dFstats,median)
 names(dFms)<-orfs}
 ### Fit genetic independence model ###
 if (rjags==FALSE){m<-lm.epi(dFms,cFms,modcheck)} else {
@@ -205,9 +205,12 @@ genes<-sapply(orfs,orf2g,orfdict)}}
 # Get genetic interaction scores
 gis<-dFms/mean(dFms)-cFms/mean(cFms)
 # Put into data.frame
-results<-data.frame(ORF=orfs,Gene=genes,P=p,Q=q,GIS=gis,Mean.Double=dFms,Mean.Control=cFms)
+results<-data.frame(ORF=orfs,Gene=genes,P=p,Q=q,GIS=gis,Median.Double=dFms,Median.Control=cFms)
 results$Type<-apply(results,1,typemake,m)
-results<-results[order(-abs(results$GIS),results$Q,results$Type),]
+results<-results[order(results$GIS,results$Q,results$Type),]
+# Get rid of duplicate entries in results
+orflist<-unique(as.character(results$ORF))
+results<-results[match(orflist,results$ORF),]
 # Plot results
 if (plot==TRUE){qfa.epiplot(results,qthresh,m)}
 final<-list(Results=results,
@@ -223,32 +226,32 @@ enhancers<-gethits(results,qthresh,type="E")
 suppressors<-gethits(results,qthresh,type="S")
 others<-results[(!results$ORF%in%enhancers$ORF)&(!results$ORF%in%suppressors$ORF),]
 # Get plot parameters
-ymax=1.1*max(suppressors$Mean.Double,enhancers$Mean.Double)
-#ymin=0.9*min(suppressors$Mean.Double,enhancers$Mean.Double)
+ymax=1.1*max(suppressors$Median.Double,enhancers$Median.Double)
+#ymin=0.9*min(suppressors$Median.Double,enhancers$Median.Double)
 ymin=0
-xmax=1.1*max(suppressors$Mean.Control,enhancers$Mean.Control)
-#xmin=0.9*min(suppressors$Mean.Control,enhancers$Mean.Control)
+xmax=1.1*max(suppressors$Median.Control,enhancers$Median.Control)
+#xmin=0.9*min(suppressors$Median.Control,enhancers$Median.Control)
 xmin=0
 plot(NULL,type="n",xlim=c(xmin,xmax),ylim=c(ymin,ymax),
 xlab="Control Fitness",ylab="Query Fitness",main="Epistasis Plot",
 col=8,pch=19,cex=0.5)
 # Add line for genetic independence
 if (fitratio!=FALSE){abline(0,fitratio,lwd=2,col=8)} else {
-abline(0,lm.epi(results$Mean.Double,results$Mean.Control,modcheck=FALSE),lwd=2,col=8)}
+abline(0,lm.epi(results$Median.Double,results$Median.Control,modcheck=FALSE),lwd=2,col=8)}
 # Add 1:1 fitness line
 abline(0,1,lwd=2,lty=4,col=8)
 # Add reference ORF fitnesses lines
 if (ref.orf!=FALSE){reforf<-results[results$ORF==ref.orf,]
-abline(v=reforf$Mean.Control,col="lightblue",lwd=2)
-abline(h=reforf$Mean.Double,col="lightblue",lwd=2)}
+abline(v=reforf$Median.Control,col="lightblue",lwd=2)
+abline(h=reforf$Median.Double,col="lightblue",lwd=2)}
 # Add points for non-suppressors & non-enhancers
-points(others$Mean.Control,others$Mean.Double,col="grey",cex=0.5,pch=19)
-text(others$Mean.Control,others$Mean.Double,others$Gene,col="grey",pos=4,offset=0.1,cex=0.4)
+points(others$Median.Control,others$Median.Double,col="grey",cex=0.5,pch=19)
+text(others$Median.Control,others$Median.Double,others$Gene,col="grey",pos=4,offset=0.1,cex=0.4)
 # Add suppressors & enhancers
-points(enhancers$Mean.Control,enhancers$Mean.Double,col='green',pch=19,cex=0.5)
-text(enhancers$Mean.Control,enhancers$Mean.Double,enhancers$Gene,col=1,pos=4,offset=0.1,cex=0.4)
-points(suppressors$Mean.Control,suppressors$Mean.Double,col='red',pch=19,cex=0.5)
-text(suppressors$Mean.Control,suppressors$Mean.Double,suppressors$Gene,col=1,pos=4,offset=0.1,cex=0.4)
+points(enhancers$Median.Control,enhancers$Median.Double,col='green',pch=19,cex=0.5)
+text(enhancers$Median.Control,enhancers$Median.Double,enhancers$Gene,col=1,pos=4,offset=0.1,cex=0.4)
+points(suppressors$Median.Control,suppressors$Median.Double,col='red',pch=19,cex=0.5)
+text(suppressors$Median.Control,suppressors$Median.Double,suppressors$Gene,col=1,pos=4,offset=0.1,cex=0.4)
 }
 
 ## Extract hits from epistasis results object ##
@@ -256,7 +259,7 @@ gethits<-function(results,qthresh,type="S",all.types=FALSE,GISthresh=0){
 results<-results[results$Q<qthresh,]
 if (all.types==FALSE){results<-results[results$Type==type,]}
 results<-results[abs(results$GIS)>=GISthresh,]
-return(results[order(-abs(results$GIS),results$Q,results$Type),])
+return(results[order(results$GIS,results$Q,results$Type),])
 }
 
 # Function to initialize genetic ind. model
@@ -317,7 +320,7 @@ return(fitfunct(orfpos$k1,orfpos$r1,g))
 }
 
 # Get type of interaction
-typemake<-function(row,m){md<-as.numeric(row['Mean.Double']); c<-as.numeric(row['Mean.Control'])
+typemake<-function(row,m){md<-as.numeric(row['Median.Double']); c<-as.numeric(row['Median.Control'])
 if (m<1){if (md>m*c){type<-"S"} else {type<-"E"}} else {
 if (md>m*c){type<-"E"} else {type<-"S"}}
 return(type)
