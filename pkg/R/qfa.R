@@ -704,7 +704,8 @@ assign("last.colony.time",time,envir=.GlobalEnv)
 # Check if worth optimizing
 growththresh<-(1.5/255)*xybounds$K[2]
 #if ((cor(time,log(growth))>0.1)&
-if (max(growth)>growththresh){
+#if (growth[length(growth)-1]>growththresh)
+#if (max(growth)>growththresh){
 	# Get initial guess for parameters
 	init<-guess(time,growth,inocguess,xybounds)
 	# Function to be optimized
@@ -721,7 +722,13 @@ if (max(growth)>growththresh){
 	optsol<-optim(par=init,fn=objf,gr=objfgr,method="L-BFGS-B",
 	lower=c(xybounds$K[1],lowerr,xybounds$g[1],xybounds$s[1]),
 	upper=c(xybounds$K[2],upperr(init[2]),xybounds$g[2],xybounds$s[2]),...)
-	pars<-optsol$par} else {pars<-c(inocguess,0,inocguess,Inf)}
+	pars<-optsol$par
+	if (pars[1]<pars[3]){
+		pars[1]=pars[3]
+		pars[2]=0
+		pars[4]<-sqrt((1/n)*sum((growth-logist(pars[1],pars[2],pars[3],time))^2))
+	}
+#} else {pars<-c(inocguess,0,inocguess,Inf)}
 pars}
 
 # Logistic growth curve function #
@@ -732,7 +739,7 @@ logist<-function(K,r,g,t){
 loglik<-function(K,r,g,s,growth,time){
 LL<-sum(log(s)+(1/(2*s*s))*((growth-logist(K,r,g,time))^2))
 LL<-min(LL,999999999)
-LL<-max(0,LL)
+LL<-max(0.0000000001,LL)
 if(is.na(LL)){LL<-0}
 return(LL)
 }
