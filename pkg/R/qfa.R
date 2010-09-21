@@ -681,9 +681,10 @@ for (bcode in barcodes){bcount<-bcount+1
 	K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],s=bcfit[,4],Screen.Name=info[,5],
 	Library.Name=info[,6],MasterPlate.Number=info[,7],Timeseries.order=info[,8],
 	Inoc.Time=inoctime))
-				} #bcode
+} #bcode
 if (ORF2gene!=FALSE){results$Gene<-sapply(as.character(results$ORF),orf2g,gdict)}
-return(results)}
+return(results)
+}
 
 # Extrace row & col from list of position vectors
 rcget<-function(posvec,rc){posvec[match(rc,c("row","col"))]}
@@ -703,33 +704,31 @@ assign("last.colony.growth",growth,envir=.GlobalEnv)
 assign("last.colony.time",time,envir=.GlobalEnv)
 # Check if worth optimizing
 growththresh<-(1.5/255)*xybounds$K[2]
-#if ((cor(time,log(growth))>0.1)&
-#if (growth[length(growth)-1]>growththresh)
-#if (max(growth)>growththresh){
-	# Get initial guess for parameters
-	init<-guess(time,growth,inocguess,xybounds)
-	# Function to be optimized
-	objf<-function(modpars){
-	K<-modpars[1]; r<-modpars[2]
-	g<-modpars[3]; s<-modpars[4]
-	loglik(K,r,g,s,growth,time)}
-	# Gradient of objf
-	objfgr<-function(pars){
-	K<-pars[1]; r<-pars[2]
-	g<-pars[3]; s<-pars[4]
-	loglikgr(K,r,g,s,growth,time)}
-	# Perform optimization
-	optsol<-optim(par=init,fn=objf,gr=objfgr,method="L-BFGS-B",
-	lower=c(xybounds$K[1],lowerr,xybounds$g[1],xybounds$s[1]),
-	upper=c(xybounds$K[2],upperr(init[2]),xybounds$g[2],xybounds$s[2]),...)
-	pars<-optsol$par
-	if (pars[1]<pars[3]){
-		pars[1]=pars[3]
-		pars[2]=0
-		pars[4]<-sqrt((1/n)*sum((growth-logist(pars[1],pars[2],pars[3],time))^2))
-	}
-#} else {pars<-c(inocguess,0,inocguess,Inf)}
-pars}
+# Get initial guess for parameters
+init<-guess(time,growth,inocguess,xybounds)
+# Function to be optimized
+objf<-function(modpars){
+K<-modpars[1]; r<-modpars[2]
+g<-modpars[3]; s<-modpars[4]
+loglik(K,r,g,s,growth,time)}
+# Gradient of objf
+objfgr<-function(pars){
+K<-pars[1]; r<-pars[2]
+g<-pars[3]; s<-pars[4]
+loglikgr(K,r,g,s,growth,time)}
+# Perform optimization
+optsol<-optim(par=init,fn=objf,gr=objfgr,method="L-BFGS-B",
+lower=c(xybounds$K[1],lowerr,xybounds$g[1],xybounds$s[1]),
+upper=c(xybounds$K[2],upperr(init[2]),xybounds$g[2],xybounds$s[2]),...)
+pars<-optsol$par
+# Sanity check for fitted parameters (no negative growth)
+if (pars[1]<pars[3]){
+	pars[1]=pars[3]
+	pars[2]=0
+	pars[4]<-sqrt((1/n)*sum((growth-logist(pars[1],pars[2],pars[3],time))^2))
+}
+return(pars)
+}
 
 # Logistic growth curve function #
 logist<-function(K,r,g,t){
@@ -785,28 +784,35 @@ G0g<-inocguess
 Kg<-max(growth)
 #r
 targ<-G0g+(Kg-G0g)/2.0
-tmrate<-20.0
-x=1
+MaxRateFound=FALSE
 ct=0
-while (x==1){
+# Run through time points looking for maximum rate of change of density
+while (MaxRateFound==FALSE){
 ct=ct+1
 tmrate<-time[ct]+((targ-growth[ct])/(growth[ct+1]-growth[ct]))*(time[ct+1]-time[ct])
-if (growth[ct+1]>=targ & growth[ct]<targ){x=0} else if (ct==(n-1)) {x=0
-tmrate=20.0} else {x=1}
-}#x
+if (growth[ct+1]>=targ & growth[ct]<targ){MaxRateFound=TRUE} 
+# If we haven't found a maximum by the end, arbitrarily set tmrate to 20
+else if (ct==(n-1)) {MaxRateFound=TRUE; tmrate=20;} 
+else {MaxRateFound==FALSE}
+}#MaxRateFound
 rg<-log(max(0.000000000001,(Kg-G0g)/G0g))/tmrate
-rg<-max(lowerr,rg)
 # Set initial guess to half of best estimate to bias against
 # artificially large r
 rg<-0.5*rg
+# Sanity check for guessed parameter values
+# If the data have low correlation, then set r=0 and K=g0
+if (cor(time,log(growth))<0.0001){
+	rg=0
+	Kg=G0g
+}
+rg<-max(lowerr,rg)
 #s
 s<-sqrt((1/n)*sum((growth-logist(Kg,rg,G0g,time))^2))
 s<-max(xybounds$s[1],s); s<-min(s,xybounds$s[2])
 # Out 
-c(Kg,rg,G0g,s)					
+guessparams=c(Kg,rg,G0g,s)					
+return(guessparams)
 }#guess
-
-
 	
 #### Get colony information ####
 colony.info<-function(position,bcdata){
