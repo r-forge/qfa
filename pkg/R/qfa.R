@@ -248,10 +248,14 @@ abline(h=reforf$Median.Double,col="lightblue",lwd=2)}
 points(others$Median.Control,others$Median.Double,col="grey",cex=0.5,pch=19)
 text(others$Median.Control,others$Median.Double,others$Gene,col="grey",pos=4,offset=0.1,cex=0.4)
 # Add suppressors & enhancers
-points(enhancers$Median.Control,enhancers$Median.Double,col='green',pch=19,cex=0.5)
-text(enhancers$Median.Control,enhancers$Median.Double,enhancers$Gene,col=1,pos=4,offset=0.1,cex=0.4)
-points(suppressors$Median.Control,suppressors$Median.Double,col='red',pch=19,cex=0.5)
-text(suppressors$Median.Control,suppressors$Median.Double,suppressors$Gene,col=1,pos=4,offset=0.1,cex=0.4)
+if(length(enhancers$ORF)>0){
+	points(enhancers$Median.Control,enhancers$Median.Double,col='green',pch=19,cex=0.5)
+	text(enhancers$Median.Control,enhancers$Median.Double,enhancers$Gene,col=1,pos=4,offset=0.1,cex=0.4)
+}
+if(length(suppressors$ORF)>0){
+	points(suppressors$Median.Control,suppressors$Median.Double,col='red',pch=19,cex=0.5)
+	text(suppressors$Median.Control,suppressors$Median.Double,suppressors$Gene,col=1,pos=4,offset=0.1,cex=0.4)
+}
 }
 
 ## Extract hits from epistasis results object ##
@@ -706,6 +710,12 @@ assign("last.colony.time",time,envir=.GlobalEnv)
 growththresh<-(1.5/255)*xybounds$K[2]
 # Get initial guess for parameters
 init<-guess(time,growth,inocguess,xybounds)
+
+#print(paste(row,col))
+#print(init)
+#print(time)
+#print(growth)
+
 # Function to be optimized
 objf<-function(modpars){
 K<-modpars[1]; r<-modpars[2]
@@ -725,6 +735,7 @@ pars<-optsol$par
 if (pars[1]<pars[3]){
 	pars[1]=pars[3]
 	pars[2]=0
+	n<-length(growth)
 	pars[4]<-sqrt((1/n)*sum((growth-logist(pars[1],pars[2],pars[3],time))^2))
 }
 return(pars)
@@ -801,11 +812,13 @@ rg<-log(max(0.000000000001,(Kg-G0g)/G0g))/tmrate
 rg<-0.5*rg
 # Sanity check for guessed parameter values
 # If the data have low correlation, then set r=0 and K=g0
-if (cor(time,log(growth))<0.0001){
+if (cor(time,log(growth))<0.1){
 	rg=0
 	Kg=G0g
 }
 rg<-max(lowerr,rg)
+# Hardcode in an upper limit on r to remove floating point problems
+rg<-min(50,rg)
 #s
 s<-sqrt((1/n)*sum((growth-logist(Kg,rg,G0g,time))^2))
 s<-max(xybounds$s[1],s); s<-min(s,xybounds$s[2])
