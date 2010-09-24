@@ -516,17 +516,17 @@ for (orf in 1:E){
 	# Mean of (mean ORF r) 
 	r11 ~ dgamma(1.87,0.35)
 	# sd of (mean ORF r)
-	r12 ~ dlnorm(log(0.75),1)
+	r12 ~ dlnorm(log(0.75),0.75)
 	# Mean of (sd ORF r)
 	r21 ~ dlnorm(log(0.75),0.85)
 	# Sd of (sd ORF r)
-	r22 ~ dlnorm(log(0.4),1)
+	r22 ~ dlnorm(log(0.4),0.85)
 
 	# sigma
-	# Median of (median ORF sigma)
+	# Median sigma over ORFs
 	s1m <- 0.4*Kloc
 	s1 ~ dgamma(1,1/s1m)
-	# sd of (median ORF sigma)
+	# Variability in sigma over ORFs
 	s2m<-0.1*Kloc
 	s2 ~ dlnorm(log(s2m),1)
 	
@@ -536,10 +536,9 @@ for (orf in 1:E){
 	g ~ dunif(lbg,ubg)
 
 } #model",sep=""),file="model.txt")
-
 # Make JAGS model with data and model #
-#jagd$ORF<-NULL
-#jags.model(data=jagd,file="model.txt",...)
+jagd$ORF<-NULL
+jags.model(data=jagd,file="model.txt",...)
 } #qfa.model
 
 
