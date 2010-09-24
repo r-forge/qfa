@@ -132,7 +132,7 @@ orf2g<-function(orf,dictenv){get(orf,envir=dictenv)}
 
 ################################################## Epistasis Function ###########################################################
 qfa.epi<-function(double,control,qthresh,rjags=FALSE,orfdict="ORF2GENE.txt",
-GISthresh=0.5,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp){
+GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp){
 ###### Get ORF median fitnesses for control & double #######
 print("Calculating median fitness for each ORF")
 ## Bayesian ##
@@ -189,8 +189,7 @@ print(paste("Ratio of background mutant fitness to wildtype fitness =",round(m,4
 print("Calculating interaction probabilities")
 if (bayes==0){
 p<-sapply(orfs,pmake,m,cFstats,dFstats,cFms,dFms)
-} else {
-p<-sapply(orfs,bayesp,m,dfits,cfits)}
+} else {p<-sapply(orfs,bayesp,m,dfits,cfits)}
 # Adjust for multiple comparisons
 q<-p.adjust(p,"fdr")
 # Get gene names if needed
@@ -203,7 +202,9 @@ if (is.null(genes)){# Create orf-gene dictionary
 orfdict<-orf2gdict(orfdict)
 genes<-sapply(orfs,orf2g,orfdict)}}
 # Get genetic interaction scores
-gis<-dFms/mean(dFms)-cFms/mean(cFms)
+meandiff<-mean(dFms-cFms)
+#gis<-dFms/mean(dFms)-cFms/mean(cFms)
+gis<-sapply(orfs,gismake,m,cFstats,dFstats,cFms,dFms)/meandiff
 # Put into data.frame
 results<-data.frame(ORF=orfs,Gene=genes,P=p,Q=q,GIS=gis,Median.Double=dFms,Median.Control=cFms)
 results$Type<-apply(results,1,typemake,m)
@@ -263,6 +264,7 @@ gethits<-function(results,qthresh,type="S",all.types=FALSE,GISthresh=0){
 results<-results[results$Q<qthresh,]
 if (all.types==FALSE){results<-results[results$Type==type,]}
 results<-results[abs(results$GIS)>=GISthresh,]
+results<-results[!is.na(results$ORF),]
 return(results[order(results$GIS,results$Q,results$Type),])
 }
 
@@ -303,10 +305,18 @@ return(m)
 
 # Estimates probability of interaction for max lik method #
 pmake<-function(orf,m,cFs,dFs,cFms,dFms){
-if (dFms[orf]>m*cFms[orf]){
-	p<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="greater")$p.value} else {
-	p<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="less")$p.value}
-return(p)
+p<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=FALSE)$p.value
+return(as.real(p))
+}
+
+# Estimates GIS for max lik method #
+gismake<-function(orf,m,cFs,dFs,cFms,dFms){
+	if(dFs[[orf]]==m*cFs[[orf]]){
+		return(0)
+	}else{
+		gis<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)$estimate
+		return(as.real(gis))
+	}
 }
 
 # Calculate probability of interaction for Bayesian #
