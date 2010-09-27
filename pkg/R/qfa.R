@@ -306,11 +306,11 @@ dev.off()}
 return(m)
 }
 
-# Estimates probability of interaction and strength of interaction for max lik method #
+# Estimates probability of no interaction and estimated strength of interaction for max lik method #
 pgis<-function(orf,m,cFs,dFs,cFms,dFms){
 	# If both sets of cultures are dead (and fitnesses equal) return appropriate p,gis
 	if(dFs[[orf]]==m*cFs[[orf]]){
-		return(c(999999999,0))
+		return(c(1,0))
 	}else{
 		# Returns p-value for significance of difference, and estimate of difference between medians
 		wilctest<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)
@@ -720,12 +720,6 @@ assign("last.colony.time",time,envir=.GlobalEnv)
 growththresh<-(1.5/255)*xybounds$K[2]
 # Get initial guess for parameters
 init<-guess(time,growth,inocguess,xybounds)
-
-#print(paste(row,col))
-#print(init)
-#print(time)
-#print(growth)
-
 # Function to be optimized
 objf<-function(modpars){
 K<-modpars[1]; r<-modpars[2]
