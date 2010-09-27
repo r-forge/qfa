@@ -188,7 +188,10 @@ print(paste("Ratio of background mutant fitness to wildtype fitness =",round(m,4
 ###### Estimate probability of interaction #######
 print("Calculating interaction probabilities")
 if (bayes==0){
-p<-sapply(orfs,pmake,m,cFstats,dFstats,cFms,dFms)
+pgis<-sapply(orfs,pgis,m,cFstats,dFstats,cFms,dFms)
+pgis<-as.data.frame(t(pgis))
+colnames(pgis)=c("p","gis")
+p<-pgis$p
 } else {p<-sapply(orfs,bayesp,m,dfits,cfits)}
 # Adjust for multiple comparisons
 q<-p.adjust(p,"fdr")
@@ -204,7 +207,7 @@ genes<-sapply(orfs,orf2g,orfdict)}}
 # Get genetic interaction scores
 meandiff<-mean(dFms-cFms)
 #gis<-dFms/mean(dFms)-cFms/mean(cFms)
-gis<-sapply(orfs,gismake,m,cFstats,dFstats,cFms,dFms)/meandiff
+gis<-pgis$gis/meandiff
 # Put into data.frame
 results<-data.frame(ORF=orfs,Gene=genes,P=p,Q=q,GIS=gis,Median.Double=dFms,Median.Control=cFms)
 results$Type<-apply(results,1,typemake,m)
@@ -303,19 +306,17 @@ dev.off()}
 return(m)
 }
 
-# Estimates probability of interaction for max lik method #
-pmake<-function(orf,m,cFs,dFs,cFms,dFms){
-p<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=FALSE)$p.value
-return(as.real(p))
-}
-
-# Estimates GIS for max lik method #
-gismake<-function(orf,m,cFs,dFs,cFms,dFms){
+# Estimates probability of interaction and strength of interaction for max lik method #
+pgis<-function(orf,m,cFs,dFs,cFms,dFms){
+	# If both sets of cultures are dead (and fitnesses equal) return appropriate p,gis
 	if(dFs[[orf]]==m*cFs[[orf]]){
-		return(0)
+		return(c(999999999,0))
 	}else{
-		gis<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)$estimate
-		return(as.real(gis))
+		# Returns p-value for significance of difference, and estimate of difference between medians
+		wilctest<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)
+		p<-as.real(wilctest$p.value)
+		diff<-as.real(wilctest$estimate)
+		return(c(p,diff))
 	}
 }
 
