@@ -141,16 +141,19 @@ if (is.null(dim(double))){bayes=1
 dg<-double$g; cg<-control$g
 ### Get orfs in double posterior ###
 orfs<-dimnames(double[["k1"]])[2][[1]]
+orfs<-unique(orfs)
 ## Make posterior organized by ORFs ##
 double<-lapply(orfs,posmake,orfs,double)
 names(double)<-orfs
 ### Get orfs in control posterior ###
 corfs<-dimnames(control[["k1"]])[2][[1]]
+corfs<-unique(corfs)
 ## Make posterior organized by ORFs ##
 control<-lapply(corfs,posmake,corfs,control)
 names(control)<-corfs
 # Calculate fitness posteriors with common orfs
 orfs<-orfs[orfs%in%corfs]
+orfs<-unique(orfs)
 dfits<-lapply(orfs,fitmake,double,mdrmdp,dg)
 cfits<-lapply(orfs,fitmake,control,mdrmdp,cg)
 dFms<-sapply(dfits,median)
@@ -161,6 +164,7 @@ names(cFms)<-orfs} else {bayes=0
 # Get orfs in question
 orfs<-as.character(double$ORF)
 orfs<-orfs[orfs%in%as.character(control$ORF)]
+orfs<-unique(orfs)
 # Get lists with fitnesses for each repeat
 cFstats<-lapply(orfs,orfstat,control,fitfunct)
 names(cFstats)<-orfs
@@ -173,33 +177,36 @@ dFms<-sapply(dFstats,median)
 names(dFms)<-orfs}
 ### Fit genetic independence model ###
 if (rjags==FALSE){m<-lm.epi(dFms,cFms,modcheck)} else {
-print("Initializing genetic independence model")
-mod<-epimod(dFms,cFms)
-print("Simulating posterior")
-update(mod,2*10^3)
-m<-coda.samples(mod,c("m"),n.iter=2*10^3,thin=2)
-m<-m[[1]][,'m']
-acf(m,lag.max=10^3)
-mdens<-density(m,n=10^4)
-mdens<-data.frame(x=mdens$x,y=mdens$y)
-mdens<-mdens[order(-mdens$y),]
-m<-mdens[1,'x']}
+	print("Initializing genetic independence model")
+	mod<-epimod(dFms,cFms)
+	print("Simulating posterior")
+	update(mod,2*10^3)
+	m<-coda.samples(mod,c("m"),n.iter=2*10^3,thin=2)
+	m<-m[[1]][,'m']
+	acf(m,lag.max=10^3)
+	mdens<-density(m,n=10^4)
+	mdens<-data.frame(x=mdens$x,y=mdens$y)
+	mdens<-mdens[order(-mdens$y),]
+	m<-mdens[1,'x']
+}
 print(paste("Ratio of background mutant fitness to wildtype fitness =",round(m,4)))
 ###### Estimate probability of interaction #######
 print("Calculating interaction probabilities")
 if (bayes==0){
-pgis<-sapply(orfs,pgis,m,cFstats,dFstats,cFms,dFms)
-pgis<-as.data.frame(t(pgis))
-colnames(pgis)=c("p","gis")
-p<-pgis$p
+	pgis<-sapply(orfs,pgis,m,cFstats,dFstats,cFms,dFms)
+	pgis<-as.data.frame(t(pgis))
+	colnames(pgis)=c("p","gis")
+	p<-pgis$p
 } else {p<-sapply(orfs,bayesp,m,dfits,cfits)}
 # Adjust for multiple comparisons
 q<-p.adjust(p,"fdr")
 # Get gene names if needed
 if (bayes==1){# Create orf-gene dictionary
-orfdict<-orf2gdict(orfdict)
-genes<-sapply(orfs,orf2g,orfdict)} else {# lik
-genes<-as.character(double$Gene); genes<-genes[genes%in%as.character(control$Gene)]
+	orfdict<-orf2gdict(orfdict)
+	genes<-sapply(orfs,orf2g,orfdict)
+} else {# lik
+	genes<-as.character(double$Gene[match(orfs,double$ORF)]); 
+	#genes<-genes[genes%in%as.character(control$Gene)]
 # If gene names missing, find them with orf2g
 if (is.null(genes)){# Create orf-gene dictionary
 orfdict<-orf2gdict(orfdict)
