@@ -230,11 +230,11 @@ enhancers<-gethits(results,qthresh,type="E")
 suppressors<-gethits(results,qthresh,type="S")
 others<-results[(!results$ORF%in%enhancers$ORF)&(!results$ORF%in%suppressors$ORF),]
 # Get plot parameters
-ymax=1.1*max(suppressors$Median.Double,enhancers$Median.Double)
-#ymin=0.9*min(suppressors$Median.Double,enhancers$Median.Double)
+ymax=1.1*max(results$Median.Double)
+#ymin=0.9*min(results$Median.Double)
 ymin=0
-xmax=1.1*max(suppressors$Median.Control,enhancers$Median.Control)
-#xmin=0.9*min(suppressors$Median.Control,enhancers$Median.Control)
+xmax=1.1*max(results$Median.Control)
+#xmin=0.9*min(results$Median.Control)
 xmin=0
 plot(NULL,type="n",xlim=c(xmin,xmax),ylim=c(ymin,ymax),
 xlab="Control Fitness",ylab="Query Fitness",main="Epistasis Plot",
@@ -308,7 +308,9 @@ return(m)
 
 # Estimates probability of no interaction and estimated strength of interaction for max lik method #
 pgis<-function(orf,m,cFs,dFs,cFms,dFms){
-	# If both sets of cultures are dead (and fitnesses equal) return appropriate p,gis
+	# If this orf is not present in both lists, return appropriate p,gis
+	if((length(dFs[[orf]])==0)|(length(cFs[[orf]])==0)){return(c(1,0))}
+	# If both sets of cultures are dead (and fitnesses therefore equal) return appropriate p,gis
 	if(dFs[[orf]]==m*cFs[[orf]]){
 		return(c(1,0))
 	}else{
@@ -637,7 +639,6 @@ varpos}
 varid<-function(splitname,varname){splitv<-splitname[1]
 if (splitv==varname){z=TRUE} else {z=FALSE}
 z}
-
 
 # checks number of columns in posterior matrix #
 colcheck<-function(dim){dim[2]}  
