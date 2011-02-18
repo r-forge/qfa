@@ -4,9 +4,14 @@
 rod.read<-function(path=".",files=c(),inoctimes="BarcodeTimes.txt",background="",treatments=c(),barcodes=c(),
 master.plates=c(),screen.names=c(),ORF2gene=""){
 # Create environment with inoculation times; checks if path specified
-if (length(strsplit(path,".")[[1]])>1){pathT<-1
-	inocenv<-bctimes(paste(path,inoctimes,sep="/"))} else {
-	inocenv<-bctimes(inoctimes); pathT<-0}
+if (length(strsplit(path,".")[[1]])>1){
+	pathT<-1
+	#inocenv<-bctimes(paste(path,inoctimes,sep="/"))
+}else{
+	#inocenv<-bctimes(inoctimes)
+	pathT<-0
+}
+inocenv<-bctimes(inoctimes)
 # If no files specified, use all .txt in working directory
 if (length(files)==0){fs<-list.files(path=path,pattern=".txt")} else {fs<-files}
 fs<-fs[(fs!='BarcodeTimes.txt')&(fs!='ORF2GENE.txt')&(fs!="model.txt")&(fs!="test.txt")]
@@ -193,10 +198,10 @@ print(paste("Ratio of background mutant fitness to wildtype fitness =",round(m,4
 ###### Estimate probability of interaction #######
 print("Calculating interaction probabilities")
 if (bayes==0){
-	pgis<-sapply(orfs,pgis,m,cFstats,dFstats,cFms,dFms)
-	pgis<-as.data.frame(t(pgis))
-	colnames(pgis)=c("p","gis")
-	p<-pgis$p
+	pg<-sapply(orfs,pgis,m,cFstats,dFstats,cFms,dFms)
+	pg<-as.data.frame(t(pg))
+	colnames(pg)=c("p","gis")
+	p<-pg$p
 } else {p<-sapply(orfs,bayesp,m,dfits,cfits)}
 # Adjust for multiple comparisons
 q<-p.adjust(p,"fdr")
@@ -214,7 +219,7 @@ genes<-sapply(orfs,orf2g,orfdict)}}
 # Get genetic interaction scores
 meandiff<-mean(dFms-cFms)
 #gis<-dFms/mean(dFms)-cFms/mean(cFms)
-gis<-pgis$gis/meandiff
+gis<-pg$gis/meandiff
 # Put into data.frame
 results<-data.frame(ORF=orfs,Gene=genes,P=p,Q=q,GIS=gis,Median.Double=dFms,Median.Control=cFms)
 results$Type<-apply(results,1,typemake,m)
@@ -824,9 +829,15 @@ rg<-log(max(0.000000000001,(Kg-G0g)/G0g))/tmrate
 rg<-0.5*rg
 # Sanity check for guessed parameter values
 # If the data have low correlation, then set r=0 and K=g0
-if (cor(time,log(growth))<0.1){
+# If all elements of growth are equal (e.g. zero) then correlation function throws error...
+if(length(unique(growth))==1){
 	rg=0
 	Kg=G0g
+}else{
+	if (cor(time,log(growth))<0.1){
+		rg=0
+		Kg=G0g
+	}
 }
 rg<-max(lowerr,rg)
 # Hardcode in an upper limit on r to remove floating point problems
@@ -886,6 +897,7 @@ for (bcode in barcodes){bcode<-as.character(bcode)
 	dbc<-d[as.character(d$Barcode)==bcode,]
 	# Get starting time for this plate
 	inoctime<-rbc$Inoc.Time[1]
+	#as.POSIXlt(as.character(bigd$Date.Time),format=fmt)
 	# Find number of rows and columns on this plate
 	nrow<-max(rbc$Row)-min(rbc$Row)+1; ncol<-max(rbc$Col)-min(rbc$Col)+1
 	# Find max growth to set y-axis for this plate
