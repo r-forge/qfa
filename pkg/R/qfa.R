@@ -79,7 +79,7 @@ return(bigd)
 }
 
 #### Define Phenotype for fitness ####
-mdrmdp<-function(K,r,g){MDR<-sapply(r/((2*(K-g))/(K-2*g)),na2zero)
+mdrmdp<-function(K,r,g){MDR<-sapply(r/log((2*(K-g))/(K-2*g)),na2zero)
 MDP<-sapply(log(K/g)/log(2),na2zero)
 return(MDR*MDP)
 }
