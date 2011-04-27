@@ -903,7 +903,7 @@ for (bcode in barcodes){bcode<-as.character(bcode)
 	# Find max growth to set y-axis for this plate
 	maxg<-max(dbc$Growth)
 	# Set graphics parameters for each plate
-	par(mfrow=c(nrow,ncol),oma=c(13,15,22,1),
+	op<-par(mfrow=c(nrow,ncol),oma=c(13,15,22,1),
 	mar=c(2,1,2,0.75),mgp=c(3,1,0),cex=cexfctr)
 	## Plot for each row of results for that bcode ##
 	z<-apply(rbc,1,rowplot,dbc,inoctime,maxg,fmt)
@@ -912,7 +912,8 @@ for (bcode in barcodes){bcode<-as.character(bcode)
 	"Medium:",rbc$Medium[1],"Plate:",rbc$MasterPlate.Number[1],sep=" ")
 	cextit<-1008/length(strsplit(maintit,split="")[[1]])
 	title(main=maintit,xlab="Time since inoculation (days)",line=7,
-	ylab="Colony Size (Trimmed Greyscale)",cex.main=9,cex.lab=8,outer=TRUE)} #bcode
+	ylab="Cell Density (AU)",cex.main=9,cex.lab=8,outer=TRUE)
+      par(op)} #bcode
 dev.off()}
 
 
@@ -938,7 +939,7 @@ c(dbc[index,'Row'],dbc[index,'Col'])}
 ### Do individual timecourse plot given parameters & data ###
 logdraw<-function(row,col,K,r,g,time,growth,gene,maxg,fitfunct){
 # Add logistic curve
-curve((K*g*exp(r*x))/(K+g*(exp(r*x)-1)),n=100,xlim=c(0,ceiling(max(time))),ylim=c(0,1.2*maxg),
+curve((K*g*exp(r*x))/(K+g*(exp(r*x)-1)),n=31,xlim=c(0,ceiling(max(time))),ylim=c(0,1.2*maxg),
 xlab="",ylab="",main=gene,frame.plot=0,cex.main=3,cex.axis=1,lwd=2.5)
 # Add data points
 points(time,growth,col="red",cex=2,pch=4,lwd=2)
