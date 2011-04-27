@@ -875,7 +875,7 @@ results<-results[results$MasterPlate.Number%in%master.plates,]
 d<-d[d$MasterPlate.Number%in%master.plates,]
 if (length(treatments)==0){treatments<-unique(results$Treatment)} 
 results<-results[results$Treatment%in%treatments,]
-d<-d[d$Treatment%in%treatments,]
+d<-d[d$Treatments%in%treatments,]
 if (length(screen.names)==0){screen.names<-unique(results$Screen.Name)} 
 results<-results[results$Screen.Name%in%screen.names,]
 d<-d[d$Screen.Name%in%screen.names,]
