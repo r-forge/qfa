@@ -120,6 +120,7 @@ cache=new.env(hash = TRUE)
 # Read in dictionary txt file 
 orf2g=read.delim(dictionary,header=FALSE,
 colClasses=c("character"),col.names=c("ORF","Gene"))
+orf2g$ORF=toupper(orf2g$ORF)
 z=apply(orf2g,1,orfun,cache)
 return(cache)
 }
