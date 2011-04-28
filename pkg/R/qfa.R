@@ -867,6 +867,9 @@ as.character(d$Timeseries.order),as.character(d$Background))}
 ##### Make PDFs #####
 qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.plates=c(),
 treatments=c(),screen.names=c(),backgrounds=c()){
+# Sort the data to be plotted sensibly, allowing easy comparison between repeats
+results=results[order(results$MasterPlate.Number,results$Treatment,results$Screen.Name),]
+
 # Get character vectors of requested barcodes, treatements,etc.; all if none specified
 if (length(barcodes)==0){barcodes<-unique(results$Barcode)}
 results<-results[results$Barcode%in%barcodes,]
