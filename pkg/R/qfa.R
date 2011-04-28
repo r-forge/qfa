@@ -238,7 +238,7 @@ return(final)
 
 ############### Epistasis Functions ##################
 # Makes epistasis plot for a given fdr level #
-qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W"){
+qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot"){
 enhancers<-gethits(results,qthresh,type="E")
 suppressors<-gethits(results,qthresh,type="S")
 others<-results[(!results$ORF%in%enhancers$ORF)&(!results$ORF%in%suppressors$ORF),]
@@ -250,7 +250,7 @@ xmax=1.1*max(results$Median.Control)
 #xmin=0.9*min(results$Median.Control)
 xmin=0
 plot(NULL,type="n",xlim=c(xmin,xmax),ylim=c(ymin,ymax),
-xlab="Control Fitness",ylab="Query Fitness",main="Epistasis Plot",
+xlab=xxlab,ylab=yylab,main=mmain,
 col=8,pch=19,cex=0.5)
 # Add line for genetic independence
 if (fitratio!=FALSE){abline(0,fitratio,lwd=2,col=8)} else {
