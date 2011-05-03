@@ -323,8 +323,13 @@ return(m)
 pgis<-function(orf,m,cFs,dFs,cFms,dFms){
 	# If this orf is not present in both lists, return appropriate p,gis
 	if((length(dFs[[orf]])==0)|(length(cFs[[orf]])==0)){return(c(1,0))}
+	# If fitnesses are not unique in one condition (e.g. all dead) and only one repeat in another (e.g. after stripping)
+	# This would cause wilcoxon test to fail due to ties
+	ldFS=length(dFs[[orf]]); lcFS=length(cFs[[orf]])
+	ludFS=length(unique(dFs[[orf]])); lucFS=length(unique(cFs[[orf]]))
+	if (((ludFS==1)&(ldFS>1)&(lcFS==1))|((lucFS==1)&(lcFS>1)&(ldFS==1))){return(c(1,median(dFs[[orf]],na.rm=TRUE)-m*median(cFs[[orf]],na.rm=TRUE)))}
 	# If both sets of cultures are dead (and fitnesses therefore equal) return appropriate p,gis
-	if(dFs[[orf]]==m*cFs[[orf]]){
+	if(sum(dFs[[orf]]==m*cFs[[orf]])==length(dFs[[orf]]==m*cFs[[orf]])){
 		return(c(1,0))
 	}else{
 		# Returns p-value for significance of difference, and estimate of difference between medians
