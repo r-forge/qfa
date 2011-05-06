@@ -238,17 +238,19 @@ return(final)
 
 ############### Epistasis Functions ##################
 # Makes epistasis plot for a given fdr level #
-qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot"){
+qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot",fmax=0){
+
 enhancers<-gethits(results,qthresh,type="E")
 suppressors<-gethits(results,qthresh,type="S")
 others<-results[(!results$ORF%in%enhancers$ORF)&(!results$ORF%in%suppressors$ORF),]
-# Get plot parameters
-ymax=1.1*max(results$Median.Double)
-#ymin=0.9*min(results$Median.Double)
-ymin=0
-xmax=1.1*max(results$Median.Control)
-#xmin=0.9*min(results$Median.Control)
-xmin=0
+if (fmax==0){
+	# Get plot parameters
+	ymax=1.1*max(results$Median.Double); ymin=0
+	xmax=1.1*max(results$Median.Control); xmin=0
+}else{
+	ymin=0;ymax=fmax
+	xmin=0;xmax=fmax
+}
 plot(NULL,type="n",xlim=c(xmin,xmax),ylim=c(ymin,ymax),
 xlab=xxlab,ylab=yylab,main=mmain,
 col=8,pch=19,cex=0.5)
@@ -871,7 +873,7 @@ as.character(d$Timeseries.order),as.character(d$Background))}
 
 ##### Make PDFs #####
 qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.plates=c(),
-treatments=c(),screen.names=c(),backgrounds=c()){
+treatments=c(),screen.names=c(),backgrounds=c(),maxg=0,maxt=0){
 # Sort the data to be plotted sensibly, allowing easy comparison between repeats
 results=results[order(results$MasterPlate.Number,results$Treatment,results$Screen.Name),]
 
@@ -910,12 +912,12 @@ for (bcode in barcodes){bcode<-as.character(bcode)
 	# Find number of rows and columns on this plate
 	nrow<-max(rbc$Row)-min(rbc$Row)+1; ncol<-max(rbc$Col)-min(rbc$Col)+1
 	# Find max growth to set y-axis for this plate
-	maxg<-max(dbc$Growth)
+	if (maxg==0) maxg=max(dbc$Growth)
 	# Set graphics parameters for each plate
 	op<-par(mfrow=c(nrow,ncol),oma=c(13,15,22,1),
 	mar=c(2,1,2,0.75),mgp=c(3,1,0),cex=cexfctr)
 	## Plot for each row of results for that bcode ##
-	z<-apply(rbc,1,rowplot,dbc,inoctime,maxg,fmt)
+	z<-apply(rbc,1,rowplot,dbc,inoctime,maxg,fmt,maxt)
 	# Title for the plate
 	maintit<-paste(rbc$Barcode[1],"Treatment:",rbc$Treatment[1],
 	"Medium:",rbc$Medium[1],"Plate:",rbc$MasterPlate.Number[1],sep=" ")
@@ -927,7 +929,7 @@ dev.off()}
 
 
 #### Plot a colony's timecourse from a row of the results #####	
-rowplot<-function(resrow,dbc,inoctime,maxg,fmt){
+rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt){
 # Get logistic parameters, gene name and position
 K<-as.numeric(resrow['K']); r<-as.numeric(resrow['r']); g<-as.numeric(resrow['g']);
 row<-as.numeric(resrow['Row']); col<-as.numeric(resrow['Col'])
@@ -937,7 +939,7 @@ dcol<-dbc[(dbc$Row==row)&(dbc$Col==col),]
 growth<-sapply(dcol$Growth,nozero)
 time<-sapply(dcol$Date.Time,tconv,inoctime,fmt)
 # Draw the curves and data
-logdraw(row,col,K,r,g,time,growth,gene,maxg,mdrmdp)}
+logdraw(row,col,K,r,g,time,growth,gene,maxg,mdrmdp,maxt)}
 
 
 
@@ -946,9 +948,10 @@ index2pos<-function(index,dbc){
 c(dbc[index,'Row'],dbc[index,'Col'])}
 
 ### Do individual timecourse plot given parameters & data ###
-logdraw<-function(row,col,K,r,g,time,growth,gene,maxg,fitfunct){
+logdraw<-function(row,col,K,r,g,time,growth,gene,maxg,fitfunct,maxt){
 # Add logistic curve
-curve((K*g*exp(r*x))/(K+g*(exp(r*x)-1)),n=31,xlim=c(0,ceiling(max(time))),ylim=c(0,1.2*maxg),
+if(maxt==0) maxt=ceiling(max(time))
+curve((K*g*exp(r*x))/(K+g*(exp(r*x)-1)),n=31,xlim=c(0,maxt),ylim=c(0,1.2*maxg),
 xlab="",ylab="",main=gene,frame.plot=0,cex.main=3,cex.axis=1,lwd=2.5)
 # Add data points
 points(time,growth,col="red",cex=2,pch=4,lwd=2)
