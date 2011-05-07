@@ -878,9 +878,6 @@ treatments=c(),screen.names=c(),backgrounds=c(),maxg=0,maxt=0){
 results=results[order(results$MasterPlate.Number,results$Treatment,results$Screen.Name),]
 
 # Get character vectors of requested barcodes, treatements,etc.; all if none specified
-if (length(barcodes)==0){barcodes<-unique(results$Barcode)}
-results<-results[results$Barcode%in%barcodes,]
-d<-d[d$Barcode%in%barcodes,]
 if (length(master.plates)==0){master.plates<-unique(results$MasterPlate.Number)} 
 results<-results[results$MasterPlate.Number%in%master.plates,]
 d<-d[d$MasterPlate.Number%in%master.plates,]
@@ -893,6 +890,9 @@ d<-d[d$Screen.Name%in%screen.names,]
 if (length(backgrounds)==0){backgrounds<-unique(results$Background)} 
 results<-results[results$Background%in%backgrounds,]
 d<-d[d$Background%in%backgrounds,]
+if (length(barcodes)==0){barcodes<-unique(results$Barcode)}
+results<-results[results$Barcode%in%barcodes,]
+d<-d[d$Barcode%in%barcodes,]
 print(paste("Plotting for",length(results[,1]),"colonies"))
 # Produce PDF
 colmax<-max(results$Col); rowmax<-max(results$Row)
