@@ -138,9 +138,9 @@ orf2g<-function(orf,dictenv){get(orf,envir=dictenv)}
 
 ################################################## Epistasis Function ###########################################################
 qfa.epi<-function(double,control,qthresh,rjags=FALSE,orfdict="ORF2GENE.txt",
-GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp){
+GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE){
 ###### Get ORF median fitnesses for control & double #######
-print("Calculating median fitness for each ORF")
+print("Calculating median (or mean) fitness for each ORF")
 ## Bayesian ##
 if (is.null(dim(double))){bayes=1
 # Get initial colony sizes
@@ -177,9 +177,9 @@ names(cFstats)<-orfs
 dFstats<-lapply(orfs,orfstat,double,fitfunct)
 names(dFstats)<-orfs
 # Get medians for each ORF
-cFms<-sapply(cFstats,median)
+if(wctest){cFms<-sapply(cFstats,median)}else{cFms<-sapply(cFstats,mean)}
 names(cFms)<-orfs
-dFms<-sapply(dFstats,median)
+if(wctest){dFms<-sapply(dFstats,median)}else{dFms<-sapply(dFstats,mean)}
 names(dFms)<-orfs}
 ### Fit genetic independence model ###
 if (rjags==FALSE){m<-lm.epi(dFms,cFms,modcheck)} else {
@@ -199,7 +199,7 @@ print(paste("Ratio of background mutant fitness to wildtype fitness =",round(m,4
 ###### Estimate probability of interaction #######
 print("Calculating interaction probabilities")
 if (bayes==0){
-	pg<-sapply(orfs,pgis,m,cFstats,dFstats,cFms,dFms)
+	pg<-sapply(orfs,pgis,m,cFstats,dFstats,cFms,dFms,wilcoxon=wctest)
 	pg<-as.data.frame(t(pg))
 	colnames(pg)=c("p","gis")
 	p<-pg$p
@@ -322,11 +322,11 @@ return(m)
 }
 
 # Estimates probability of no interaction and estimated strength of interaction for max lik method #
-pgis<-function(orf,m,cFs,dFs,cFms,dFms){
+pgis<-function(orf,m,cFs,dFs,cFms,dFms,wilcoxon=TRUE){
 	# If this orf is not present in both lists, return appropriate p,gis
 	if((length(dFs[[orf]])==0)|(length(cFs[[orf]])==0)){return(c(1,0))}
 	# If fitnesses are not unique in one condition (e.g. all dead) and only one repeat in another (e.g. after stripping)
-	# This would cause wilcoxon test to fail due to ties
+	# This would cause wilcoxon test to fail due to ties, and t.test to fail due to insufficient y?
 	ldFS=length(dFs[[orf]]); lcFS=length(cFs[[orf]])
 	ludFS=length(unique(dFs[[orf]])); lucFS=length(unique(cFs[[orf]]))
 	if (((ludFS==1)&(ldFS>1)&(lcFS==1))|((lucFS==1)&(lcFS>1)&(ldFS==1))){return(c(1,median(dFs[[orf]],na.rm=TRUE)-m*median(cFs[[orf]],na.rm=TRUE)))}
@@ -334,11 +334,20 @@ pgis<-function(orf,m,cFs,dFs,cFms,dFms){
 	if(sum(dFs[[orf]]==m*cFs[[orf]])==length(dFs[[orf]]==m*cFs[[orf]])){
 		return(c(1,0))
 	}else{
-		# Returns p-value for significance of difference, and estimate of difference between medians
-		wilctest<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)
-		p<-as.real(wilctest$p.value)
-		diff<-as.real(wilctest$estimate)
-		return(c(p,diff))
+		if (wilcoxon){
+			# Returns p-value for significance of difference, and estimate of difference between medians
+			ctest<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)
+			p<-as.real(ctest$p.value)
+			diff<-as.real(ctest$estimate)
+			return(c(p,diff))
+		}else{
+			# Returns p-value for significance of difference, and the difference between the means
+			ctest<-t.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)
+			p<-as.real(ctest$p.value)
+			diff<-as.real(ctest$estimate)
+			diff<-diff[1]-diff[2]
+			return(c(p,diff))
+		}
 	}
 }
 
