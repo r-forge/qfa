@@ -1,83 +1,3 @@
-############################### Functions common to Bayesian and Likelihoood #######################################
-
-################ Read and bind rod output into suitable form for likelihood & bayesian #################
-rod.read<-function(path=".",files=c(),inoctimes="BarcodeTimes.txt",background="",treatments=c(),barcodes=c(),
-master.plates=c(),screen.names=c(),ORF2gene=""){
-# Create environment with inoculation times; checks if path specified
-if (length(strsplit(path,".")[[1]])>1){
-	pathT<-1
-	#inocenv<-bctimes(paste(path,inoctimes,sep="/"))
-}else{
-	#inocenv<-bctimes(inoctimes)
-	pathT<-0
-}
-inocenv<-bctimes(inoctimes)
-# If no files specified, use all .txt in working directory
-if (length(files)==0){fs<-list.files(path=path,pattern=".txt")} else {fs<-files}
-fs<-fs[(fs!='BarcodeTimes.txt')&(fs!='ORF2GENE.txt')&(fs!="model.txt")&(fs!="test.txt")]
-print("List of data files to read:")
-print(fs)
-if (pathT==1){fs<-paste(path,fs,sep="/")}
-bigd<-data.frame()
-for (f in fs){
-	print(paste("Reading",as.character(f)))
-	# Find out which ROD version and print
-	rodversion<-as.numeric(scan(f,nlines=1,what="character")[4])
-	print(paste("ROD Export Version",rodversion))
-	if (rodversion==5){
-		# Read in tab deliminated rod output
-		roddata<-read.delim(f,skip=1)
-		# Only take specified treatments, or all if none specified
-		# and do the same for other arguments
-		if (length(treatments)>0){
-			roddata<-roddata[(roddata$Treatments%in%treatments),]}
-		# Only take specified barcodes, or all if none specified
-		if (length(barcodes)>0){
-			roddata<-roddata[(roddata$Barcode%in%barcodes),]}
-		if (length(master.plates)>0){
-			roddata<-roddata[(roddata$MasterPlate.Number%in%master.plates),]}
-		if (length(screen.names)>0){
-			roddata<-roddata[(roddata$Screen.Name%in%screen.names),]}
-		# Add column for inoculation times
-		roddata$Inoc.Time<-""; bcs<-unique(roddata$Barcode)
-		for (b in bcs){
-		roddata[roddata$Barcode==as.character(b),'Inoc.Time']<-get(as.character(b),envir=inocenv)}
-		# Correct column names
-		names(roddata)[3]<-"Row"; names(roddata)[5]<-"Col"; names(roddata)[14]<-"ORF"
-		names(roddata)[4]<-"Growth"; names(roddata)[15]<-"Date.Time"
-		# Bind 
-		bigd<-rbind(bigd,roddata)} else {stop("Unkown ROD version")} #ifROD5
-	} #fs
-# Add column for genetic background
-bigd$Background<-background
-# Print checks so people are sure they're using the correct data #
-print(paste("Number of Barcodes =",length(unique(bigd$Barcode))))
-print("Treatments :")
-print(unique(bigd$Treatments))
-print("Media:")
-print(unique(bigd$Medium))
-print(paste("Number of ORFs =",length(unique(bigd$ORF))))
-print("Screens:")
-print(unique(bigd$Screen.Name))
-platesize<-max(as.numeric(bigd$Row))*max(as.numeric(bigd$Col))
-if (length(bigd$Date.Time)%%platesize!=0){
-	warning("Number of photos not multiple of plate size")}
-print("Inoculation DateTimes:")
-print(unique(bigd$Inoc.Time))
-# Add a column of times since inoculation
-fmt="%Y-%m-%d_%H-%M-%S"
-time<-as.POSIXlt(as.character(bigd$Date.Time),format=fmt)
-inoc<-as.POSIXlt(as.character(bigd$Inoc.Time),format=fmt)
-difft<-as.numeric(difftime(time,inoc,units="days"))
-bigd$Expt.Time<-difft
-# Add a column of gene names if conversion file available
-if (ORF2gene!=""){
-	gdict<-orf2gdict(ORF2gene)
-	bigd$Gene<-sapply(as.character(bigd$ORF),orf2g,gdict)
-}else{bigd$Gene<-bigd$ORF}
-return(bigd)
-}
-
 #### Define Phenotype for fitness ####
 mdrmdp<-function(K,r,g){MDR<-sapply(r/log((2*(K-g))/(K-2*g)),na2zero)
 MDP<-sapply(log(K/g)/log(2),na2zero)
@@ -96,7 +16,7 @@ print(paste("Finished",thing,"in",round(tobj[3],2),"seconds"))
 print(paste(round(tobj[3]/60,2),"minutes"))
 }
 
-# Converts NAs to zeros
+# Converts NAs to zeros # Should get rid of this - CONOR.
 na2zero<-function(mdr){if (is.na(mdr)){mdr<-0}
 return(mdr)
 }
@@ -135,37 +55,11 @@ return(assign(orf,gene,envir=environ))
 ### Function that converts orf 2 gene ###
 orf2g<-function(orf,dictenv){get(orf,envir=dictenv)}
 
-
 ################################################## Epistasis Function ###########################################################
-qfa.epi<-function(double,control,qthresh,rjags=FALSE,orfdict="ORF2GENE.txt",
+qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE){
 ###### Get ORF median fitnesses for control & double #######
 print("Calculating median (or mean) fitness for each ORF")
-## Bayesian ##
-if (is.null(dim(double))){bayes=1
-# Get initial colony sizes
-dg<-double$g; cg<-control$g
-### Get orfs in double posterior ###
-orfs<-dimnames(double[["k1"]])[2][[1]]
-orfs<-unique(orfs)
-## Make posterior organized by ORFs ##
-double<-lapply(orfs,posmake,orfs,double)
-names(double)<-orfs
-### Get orfs in control posterior ###
-corfs<-dimnames(control[["k1"]])[2][[1]]
-corfs<-unique(corfs)
-## Make posterior organized by ORFs ##
-control<-lapply(corfs,posmake,corfs,control)
-names(control)<-corfs
-# Calculate fitness posteriors with common orfs
-orfs<-orfs[orfs%in%corfs]
-orfs<-unique(orfs)
-dfits<-lapply(orfs,fitmake,double,mdrmdp,dg)
-cfits<-lapply(orfs,fitmake,control,mdrmdp,cg)
-dFms<-sapply(dfits,median)
-names(dFms)<-orfs
-cFms<-sapply(cfits,median)
-names(cFms)<-orfs} else {bayes=0
 ## LIK ##
 # Get orfs in question
 orfs<-as.character(double$ORF)
@@ -176,47 +70,33 @@ cFstats<-lapply(orfs,orfstat,control,fitfunct)
 names(cFstats)<-orfs
 dFstats<-lapply(orfs,orfstat,double,fitfunct)
 names(dFstats)<-orfs
-# Get medians for each ORF
+# Get means or medians for each ORF
 if(wctest){cFms<-sapply(cFstats,median)}else{cFms<-sapply(cFstats,mean)}
 names(cFms)<-orfs
 if(wctest){dFms<-sapply(dFstats,median)}else{dFms<-sapply(dFstats,mean)}
-names(dFms)<-orfs}
+names(dFms)<-orfs
 ### Fit genetic independence model ###
-if (rjags==FALSE){m<-lm.epi(dFms,cFms,modcheck)} else {
-	print("Initializing genetic independence model")
-	mod<-epimod(dFms,cFms)
-	print("Simulating posterior")
-	update(mod,2*10^3)
-	m<-coda.samples(mod,c("m"),n.iter=2*10^3,thin=2)
-	m<-m[[1]][,'m']
-	acf(m,lag.max=10^3)
-	mdens<-density(m,n=10^4)
-	mdens<-data.frame(x=mdens$x,y=mdens$y)
-	mdens<-mdens[order(-mdens$y),]
-	m<-mdens[1,'x']
-}
+m<-lm.epi(dFms,cFms,modcheck)
 print(paste("Ratio of background mutant fitness to wildtype fitness =",round(m,4)))
 ###### Estimate probability of interaction #######
 print("Calculating interaction probabilities")
-if (bayes==0){
-	pg<-sapply(orfs,pgis,m,cFstats,dFstats,cFms,dFms,wilcoxon=wctest)
-	pg<-as.data.frame(t(pg))
-	colnames(pg)=c("p","gis")
-	p<-pg$p
-} else {p<-sapply(orfs,bayesp,m,dfits,cfits)}
+pg<-sapply(orfs,pgis,m,cFstats,dFstats,cFms,dFms,wilcoxon=wctest)
+pg<-as.data.frame(t(pg))
+colnames(pg)=c("p","gis")
+p<-pg$p
+
 # Adjust for multiple comparisons
 q<-p.adjust(p,"fdr")
 # Get gene names if needed
-if (bayes==1){# Create orf-gene dictionary
-	orfdict<-orf2gdict(orfdict)
-	genes<-sapply(orfs,orf2g,orfdict)
-} else {# lik
-	genes<-as.character(double$Gene[match(orfs,double$ORF)]); 
-	#genes<-genes[genes%in%as.character(control$Gene)]
+# lik
+genes<-as.character(double$Gene[match(orfs,double$ORF)]); 
+#genes<-genes[genes%in%as.character(control$Gene)]
 # If gene names missing, find them with orf2g
 if (is.null(genes)){# Create orf-gene dictionary
-orfdict<-orf2gdict(orfdict)
-genes<-sapply(orfs,orf2g,orfdict)}}
+	orfdict<-orf2gdict(orfdict)
+	genes<-sapply(orfs,orf2g,orfdict)
+}
+	
 # Get genetic interaction scores
 meandiff<-mean(dFms-cFms)
 #gis<-dFms/mean(dFms)-cFms/mean(cFms)
@@ -286,20 +166,6 @@ results<-results[!is.na(results$ORF),]
 return(results[order(results$GIS,results$Q,results$Type),])
 }
 
-# Function to initialize genetic ind. model
-epimod<-function(doubles,controls){require(rjags)
-write("
-model {
-for (i in 1:N){
-	Fd[i]~dnorm(m*Fc[i],sigma^(-2))
-	}
-m~dweib(1.9,0.7)
-sigma~dlnorm(log(4),1)
-}","model.txt")
-jagd<-list(Fd=doubles,Fc=controls,N=length(doubles))
-return(jags.model(data=jagd,file="model.txt"))
-}
-
 # Function to calculate fitnesses for repeats
 orfstat<-function(orf,fitframe,fitfunct){
 orfd<-fitframe[fitframe$ORF==orf,]
@@ -351,14 +217,6 @@ pgis<-function(orf,m,cFs,dFs,cFms,dFms,wilcoxon=TRUE){
 	}
 }
 
-# Calculate probability of interaction for Bayesian #
-bayesp<-function(orf,m,dfits,cfits){
-d<-dfits[[orf]]; c<-cfits[[orf]]; edf<-m*c
-z<-(mean(d)-mean(edf))/(sd(d)+sd(edf))
-if (z<0){p<-pnorm(z)} else {p<-1-pnorm(z)}
-return(p)
-}
-
 # Function to make fitnesses
 fitmake<-function(orf,poslist,fitfunct,g){
 orfpos<-poslist[[orf]]
@@ -384,299 +242,6 @@ if (!is.null(dim(var))){z<-var[,orfn]} else {z<-NULL}
 return(z)
 }
 
-
-####################################################### Bayesian Functions ###############################################################
-
-################################### Function to put data into JAGS format ############################################
-qfa.data<-function(d,split=c(),fmt="%Y-%m-%d_%H-%M-%S",orflist=c()){
-# Restrict to variable of interest in data.frame
-d<-data.frame(Barcode=d$Barcode,ORF=d$ORF,Row=d$Row,Col=d$Col,Growth=d$Growth,
-Date.Time=d$Date.Time,Inoc.Time=d$Inoc.Time)
-stime<-proc.time()
-print("Selecting ORFs to put in model")
-# Use specified ORFs or all if none specified
-if (length(orflist)==0){orfs<-unique(d$ORF)} else {orfs<-orflist}
-# Split ORFs and only use one part if specified
-if (length(split)>0){
-nparts<-split[1]; part<-split[2]
-splitsize<-floor(length(orfs)/nparts)
-barriers<-c(0,1:(nparts-1)*splitsize,length(orfs))
-orfparts<-list()
-for (j in 1:nparts){
-orfparts[[j]]<-orfs[(1+barriers[j]):barriers[j+1]]}
-orfs<-orfparts[[part]]} # ifsplit
-norf<-length(orfs)
-print(paste(norf,"ORFs in model"))
-# Find out all the barcode-positions for each ORF #
-print("Finding information about each repeat for each ORF") 
-poslist<-lapply(orfs,positget,d) 
-names(poslist)<-orfs
-# Find max number of repeats & Photos #
-replist<-sapply(poslist,nrepget)
-maxnphlist<-sapply(poslist,nphget)
-maxnph<-max(maxnphlist); maxrep<-max(replist)
-# Set up arrays for growth and time & nph #
-growth<-array(dim=c(norf,maxrep,maxnph))
-time<-array(dim=c(norf,maxrep,maxnph))
-nph<-matrix(nrow=norf,ncol=maxrep)
-# Fill in arrays
-print("Collecting and structuring dynamic data for JAGS")
-for (k in 1:norf){orf<-orfs[k]; rep<-0
-	# Print a report at quartiles of completeness
-	if (k%in%(floor(1:3*norf*(1/4)))){print(paste("Done for ",k,"/",norf," ORFs",sep=""))}
-	# Get list of positions and data for ORF
-	orfpos<-poslist[[as.character(orf)]]; orfd<-d[d$ORF==orf,]
-	# Get list of barcodes for this ORF
-	bcodes<-unique(orfd$Barcode) 
-	# Fill in arrays 
-	for (b in bcodes){
-		# Positions and data for this ORF on this Barcode
-		bcpos<-orfpos[[as.character(b)]]; dbc<-orfd[orfd$Barcode==b,]
-		# Get inoculation time for this barcode
-		startt<-as.POSIXlt(as.character(dbc[1,'Inoc.Time']),format=fmt)
-		# Get growth and time data for each spot on this barcode
-		for (pos in bcpos){row<-pos[1]; col<-pos[2]; rep<-rep+1
-			drep<-dbc[(dbc$Row==row) & (dbc$Col==col),]
-			# Add number of photos for this repeat to matrix #
-			nphotos<-length(drep[,1]); nph[k,rep]<-nphotos
-			# Get times in days since inoculation #
-			drep$t<-sapply(drep$Date.Time,tconv,startt,fmt)
-			# Order data by increasing time from inoculation #
-			drep<-drep[order(drep$t,drep$Growth),]
-			# Get growth data in correct order with weirdness ironed out #
-			growth[k,rep,1:nphotos]<-monofix(sapply(drep$Growth,nozero))
-			# Put corresponding times in corresponding time array (no negatives) #
-			time[k,rep,1:nphotos]<-sapply(drep$t,noneg)
-					} #pos
-							}#bcode
-									}#k-orf			
-dimnames(growth)[[1]]<-orfs; dimnames(time)[[1]]<-orfs; dimnames(nph)[[1]]<-orfs
-ftime<-proc.time()-stime; trep("Building data structure for JAGS",ftime)
-return(list(og=growth,time=time,E=norf,M=replist,N=nph,ORF=orfs))
-} #jagdata	
-
-##### Gets a list of all positions #####
-positget<-function(orf,d){
-dor<-d[d$ORF==orf,]; nreps<-0
-positions<-list(); bcodes<-unique(dor$Barcode); nphmax<-0
-for (j in 1:length(bcodes)){dorbc<-dor[dor$Barcode==bcodes[j],]
-	pos2<-list(); for (k in 1:length(dorbc[,1])){
-		pos2[[k]]<-c(dorbc[k,'Row'],dorbc[k,'Col'])}#k
-	pos2<-unique(pos2); positions[[j]]<-pos2; nreps<-nreps+length(pos2)
-	for (pos in pos2){drep<-dorbc[(dorbc$Row==pos[1])&(dorbc$Col==pos[2]),]
-	nph<-length(drep[,1]); if (nph>nphmax){nphmax<-nph} } #pos
-} #j
-names(positions)<-bcodes; positions$nrep<-nreps; positions$nphmax<-nphmax
-return(positions)
-}
-
-# To get max photos etc #
-nphget<-function(orfpos){orfpos$nphmax}
-nrepget<-function(orfpos){orfpos$nrep}
-
-# Stops too implausible data that breaks updating #
-monofix<-function(tc){
-# Stop anomalous first point as it easily breaks the updating
-if (length(tc)>2){if (tc[1]>(tc[2]+tc[3])){tc[1]<-max(1,0.9*min(tc[2],tc[3]))}}
-# Stop flat at 1
-if (length(tc[tc==1])==length(tc)){tc[length(tc)]<-2}
-return(tc)
-}
-
-# Function to get rid of zero growth data #
-nozero<-function(z){if (z<1){z=1} else {z=z}}
-
-## Remove negative times ##
-noneg<-function(z){if (z<0){z=0} else {z=z}}
-
-
-######################### Build Bayesian Model with user input for priors #################################
-qfa.model<-function(jagd,Kloc,gloc,Ksd="(2/3)*Kloc",g.range=10,...){require(rjags)
-# Write model with user inputted guess for g and typical final colony size
-write(paste("
-################# Bayesian QFA Model ####################
-model {
-### User specified prior parameters ###
-# Typical Inoculum level 
-gloc<-",gloc,"
-grange<-",g.range," 
-# Typical final colony size
-Kloc<-",Kloc,"
-Ksd<-",Ksd," 
-
-# For each ORF (mutant)
-for (orf in 1:E){
-      # For each repeat for that ORF
-	for (i in 1:M[orf]){
-            # For each photo for that repeat
-		for (j in 1:N[orf,i]) {
-			# Assume lognormal error
-			og[orf,i,j] ~ dnorm(logm[orf,i,j],(sigma[orf]^(-2)))
-			# Model growth as logistic
-			logm[orf,i,j]<-(K[orf,i]*g*exp(r[orf,i]*time[orf,i,j]))/(K[orf,i]+g*(exp(r[orf,i]*time[orf,i,j])-1))
-	} #j	
-	
-	## Priors for parameters for each repeat
-	# Specific to an ORF (except for inoculum, same prior for all)
-	K[orf,i] ~ dgamma(((k1[orf]^2)/(k2[orf]^2)),(k1[orf]/(k2[orf]^2))) 
-	r[orf,i] ~ dgamma(((r1[orf]^2)/(r2[orf]^2)),(r1[orf]/(r2[orf]^2)))
-	
-	} #i
-	
-	## Priors for priors for parameters for each repeat
-	# Specific to an experiment
-	# Mean of K[orf,i]
-	k1[orf] ~ dgamma(((k11^2)/(k12^2)),(k11/(k12^2)))
-	# sd of K[orf,i]	
-	k2[orf] ~ dgamma(((k21^2)/(k22^2)),(k21/(k22^2)))
-	# Mean r[orf,i]
-	r1[orf] ~ dgamma(((r11^2)/(r12^2)),(r11/(r12^2)))
-	# sd r[orf,i]
-	r2[orf] ~ dgamma(((r21^2)/(r22^2)),(r21/(r22^2)))
-	# Prior for sigma[orf]
-	sigma[orf] ~ dlnorm(log(s1),(s2^(-2)))
-
-	} #orf
-
-	## Priors for the parameters at the experiment level
-	# so each experiment can have differing priors for each ORF's priors
-	
-	# K
-	# Mean of (mean ORF K)
-	k11 ~ dgamma((Kloc^2)/(Ksd^2),(Kloc/(Ksd^2)))
-	# sd of (mean ORF K)
-	k12m<-0.3*Kloc
-	k12 ~ dlnorm(log(k12m),1)
-	# Mean of (sd ORF K)
-	k21m<-0.2*Kloc
-	k21 ~ dlnorm(log(k21m),1)
-	# sd of (sd ORF K)
-	k22m<-0.085*Kloc
-	k22 ~ dlnorm(log(k22m),1)
-	
-	# r
-	# Mean of (mean ORF r) 
-	r11 ~ dgamma(1.87,0.35)
-	# sd of (mean ORF r)
-	r12 ~ dlnorm(log(0.75),0.75)
-	# Mean of (sd ORF r)
-	r21 ~ dlnorm(log(0.75),0.85)
-	# Sd of (sd ORF r)
-	r22 ~ dlnorm(log(0.4),0.85)
-
-	# sigma
-	# Median sigma over ORFs
-	s1m <- 0.4*Kloc
-	s1 ~ dgamma(1,1/s1m)
-	# Variability in sigma over ORFs
-	s2m<-0.1*Kloc
-	s2 ~ dlnorm(log(s2m),1)
-	
-	# Inoculum
-	lbg<-(1-grange/100)*gloc
-	ubg<-(1+grange/100)*gloc
-	g ~ dunif(lbg,ubg)
-
-} #model",sep=""),file="model.txt")
-# Make JAGS model with data and model #
-jagd$ORF<-NULL
-jags.model(data=jagd,file="model.txt",...)
-} #qfa.model
-
-
-############ Check autocorrelations and plot correlograms to check convergence ############
-qfa.acf<-function(posterior,lag.max=100,plot=TRUE,tol=0.2,printout=FALSE){
-# Get maximum lag to calculate ACF for
-if (lag.max==0){possize<-length(pos[,1])} else {possize<-lag.max}
-# Make a list with each element giving acf statistics for each variable #
-pars<-names(posterior)
-acfs<-list(); nacmat<-c(); pnac<-c()
-for (par in pars){acflist<-list()
-	pos<-posterior[[par]]
-	# Find ACF for each param & plot
-	parnames<-dimnames(pos)[[2]]
-	if (plot==TRUE){frame(); text(0.5,0.5,par,cex=5)}
-	if (!is.null(parnames)){
-	for (param in parnames){
-		parn<-match(param,parnames)
-		acflist[[parn]]<-acf(pos[,parn],lag.max=possize,main=param,plot=plot)
-		if (plot==TRUE){abline(h=c(tol,-tol),v=10,col="red",lwd=1.5)}} #param
-	names(acflist)<-parnames} else {acflist[[1]]<-acf(pos,lag.max=possize,main=par,plot=plot)
-	if (plot==TRUE){abline(h=c(tol,-tol),v=10,col="red",lwd=1.5)}} #if.parnames
-	# Number of autocorrelations with magnitude greater than tol #
-	nacs<-sapply(acflist,nac,tol)
-	# expressed as a percentage of the lags inspected
-	pnacs<-100*nacs/(possize-10)
-	if (printout==TRUE){print(paste(par,":",sep=""))
-		print(paste("Number of autocorrelations (lag 10 ono.) with magnitude >",tol))
-		print(nacs)
-		print(paste("% of autocorrelations (lag 10 ono.) with magnitude >",tol))
-		print(round(pnacs,3))} #print
-	acfs[[match(par,pars)]]<-acflist; nacmat<-rbind(nacmat,nacs); pnac<-rbind(pnac,pnacs)} #par
-names(acfs)<-pars; dimnames(nacmat)[[1]]<-pars; dimnames(pnac)[[1]]<-pars
-list(ACF=acfs,nAC=nacmat,pAC=pnac)}
-
-
-### Counts the number of magnitude>tol autocorrelations for an element of acflist ###
-nac<-function(acs,tol){acs<-as.vector(acs[[1]])
-acs<-acs[11:length(acs)]
-length(acs[abs(acs)>tol])}
-
-################# Makes posterior for each orf given list of orfs used ########################
-########### and makes posterior organized by model variables. Suitable for analysis. ##########
-qfa.simulate<-function(model,initial.update=5*10^4,samples=5*10^4,thins=10,orfs=c(),
-params=c("k1","r1","g","k11","k12","k21","k22","r11","r12","r21","r22","s1","s2"),...){
-# Do initial updating
-print("Performing burn in and initial updating of model")
-require(rjags)
-update(model,initial.update)
-# Sample from posterior using CODA
-### Sample the posterior ###
-print("Sampling the posterior")
-x<-coda.samples(model,params,n.iter=samples,thin=thins,...)
-# Get the matrix like part of the coda posterior
-pm<-x[[1]]
-### Build posterior object ###
-varpos<-list()
-# Get variable names from pm
-posnames<-dimnames(pm)[[2]]
-varnames<-strsplit(posnames,"\\[")
-# Use this to extract variables' posteriors
-for (param in params){paramposs<-sapply(varnames,varid,param)
-varpos[[match(param,params)]]<-pm[,paramposs]}
-names(varpos)<-params
-# If we know what ORFs are in the model, add the names to relevant places
-if (length(orfs)>0){
-# Find out which parameters aren't there for each ORF
-dims<-lapply(lapply(varpos,dim),colcheck)
-specpars<-c(); norfs<-length(orfs)
-for (k in 1:length(dims)){
-	if (is.null(dims[[k]])){specpars<-append(specpars,params[k])}}
-# Give the variables the names of their ORFs
-orfpars<-params[!params%in%specpars]
-for (par in orfpars){dimnames(varpos[[par]])[2][[1]]<-orfs}}
-varpos}
-
-
-# Add the posteriors for these to the orf organized posteriors
-#for (spar in specpars){parn<-match(spar,specpars)
-#orfpos$par[[parn]]<-varpos[[match(spar,names(varpos))]]}
-#names(orfpos$par)[1:length(specpars)]<-specpars
-
-
-#### Checks the identity of a split variable name ####
-varid<-function(splitname,varname){splitv<-splitname[1]
-if (splitv==varname){z=TRUE} else {z=FALSE}
-z}
-
-# checks number of columns in posterior matrix #
-colcheck<-function(dim){dim[2]}  
-
-# Removes null elements of orf posterior #
-nullremove<-function(orfp,specpars){
-for (par in specpars){orfp[[par]]<-NULL}
-orfp}
-
 ############################### Likelihood Functions ################################
 #### Upper and lower bounds for variables in optimization ####
 lowerg<-function(inocguess){0.9*inocguess}; upperg<-function(inocguess){1.1*inocguess}
@@ -686,7 +251,7 @@ lowerK<-function(inocguess){0.9*inocguess}; upperK<-function(xdim,ydim){0.75*255
 #lowers<-function(xdim,ydim){0.025*xdim*ydim}; uppers<-function(xdim,ydim){175*xdim*ydim}
 lowers<-function(xdim,ydim){0.00025*xdim*ydim}; uppers<-function(xdim,ydim){50*xdim*ydim}
 
-##### Does max. lik. fit for all colonies, given rod.read input #####
+##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
 qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",...){
 # Remove edge colonies if edgestrip true
 # Get xdim & ydim
