@@ -1,0 +1,94 @@
+IMG {	border: 0;
+	}
+
+BODY {background-color: white;
+	font-size: 12pt;
+	font-family: "lucida console";
+	}
+
+A {	text-decoration:none;
+	}
+
+A:LINK {	color: black;
+		font-weight: bold; 
+		text-decoration: none;
+		border-bottom:1px dashed
+	}
+
+A:VISITED {	color: black;
+		font-weight: bold; 
+		text-decoration: none;
+		border-bottom:1px dashed
+	}
+
+A:HOVER {	background: black;
+		color: white;
+		font-weight: bold;
+	}
+
+H1 { 	color: black;
+      margin-bottom: 0;
+	background-colour: white;
+	font-size: 28pt;
+	}
+
+H2 { 	color: black;
+      margin-bottom: 0;
+	margin-top: 10;
+	font-size: 20pt;
+	}
+
+H3 { 	color: black;
+      margin-bottom: 0;
+	font-size: 15pt;
+	}
+
+H4 { 	color: black;
+      margin-bottom: 0;
+	font-size: 10pt;
+	}
+
+H5 { 	color: black;
+      margin-bottom: 0;
+	font-weight: normal;
+	font-size: 8pt;
+	}
+
+HR {	border: 0;
+	margin-bottom: 5;
+	margin-top: 5;
+	color: black;
+	background-color: black;
+	width: 100%;
+	height: 7px;
+	}
+
+UL {  list-style-type: square;
+      list-style-position: outside;
+	}
+
+P { 	font-size: 12pt;
+	}
+
+PRE, TT, CODE { font-size: 12pt;
+	}
+
+TABLE { background-color: #dddddd }
+
+TD { 	font-size: 10pt;
+	background-color: #dddddd ;
+	}
+
+TD.light { background-color: #eeeeee }
+
+TD.darker { background-color: #cccccc }
+
+TH { background-color: #bbbbbb }
+
+DIV.CBOX{
+	background-color:	rgb(237,237,237);
+	padding-left: 50pt;
+	}
+
+
+
