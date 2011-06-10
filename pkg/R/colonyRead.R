@@ -89,6 +89,9 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 		iman$Barcode=substr(iman$Image.Name,1,11)
 		iman$Date.Time=substr(iman$Image.Name,13,31)
 
+		# Dump any images which are not in the experimental description file
+		iman=iman[iman$Barcode%in%expt$Barcode,]
+
 		# Create a dictionary for filename->photo number
 		getPhotoNum<-function(filename){
 			# Get plate name from filename
