@@ -1,0 +1,204 @@
+qfa.Hierachical<-function(a,Scaling,iter,upd,thin,PlotOutput=TRUE,work,CustomModel=FALSE){
+a<-funcIDORDER(a)
+IDuni<-unique(a$ID)
+ORFuni<-unique(a$ORF)
+gene<-unlist(lapply(ORFuni,fun1,data=a))
+N<-length(ORFuni);M<-length(IDuni)
+NoORF_a<-unlist(lapply(ORFuni,fun2,data=a))#no of repeats each orf
+NoTime_a<-c(0,unlist(lapply(IDuni,fun3,data=a)))# 0+ no of time each repeat
+NoSum_a<-c(0,unlist(lapply(1:N,fun4,NoORF_vec=NoORF_a)))
+dimr<-max(NoORF_a);dimc<-max(NoTime_a)
+y<-funcXY(a$Growth,M,N,NoTime_a,NoSum_a,dimr,dimc)
+x<-funcXY(a$Expt.Time,M,N,NoTime_a,NoSum_a,dimr,dimc)
+QFA.I<-list("NoORF"=c(NoORF_a),"NoTime"=c(NoTime_a)[-1],"NoSum"=c(NoSum_a),"N"=N,"M"=M,"gene"=gene)
+if (Scaling==TRUE){y<-funcSCALING(a,y)}
+QFA.D<-list(y=y,x=x)
+if (!(CustomModel==FALSE)){source(CustomModel)} else {funcMODELHierarchical()}
+QFA.P<-funcPRIORS(CustomModel)
+samp<-funcFITandUPDATE(QFA.I,QFA.D,QFA.P)
+QFA.O<-funcSAVE(a,samp,N,M,iter,thin,upd)
+QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)
+if(PlotOutput==TRUE){QFA.H.Plots(work,QFA)}
+return(QFA)
+}
+
+
+QFA.H.Plots<-function(work,QFA){
+
+samp<-QFA$samp
+iter<-QFA$iter
+thin<-QFA$thin
+
+y<-QFA$y
+x<-QFA$x
+
+N<-QFA$N
+M<-QFA$M
+NoSum<-QFA$NoSum
+NoORF<-QFA$NoORF
+NoTime<-QFA$NoTime
+gene<-QFA$gene
+
+K_s<-QFA$K_s
+r_s<-QFA$r_s
+PO_s<-QFA$PO_s
+beta<-QFA$beta
+tau_s<-QFA$tau_s
+delta<-QFA$delta
+alpha_ij_sd<-QFA$alpha_ij_sd
+gamma_ij_sd<-QFA$gamma_ij_sd
+alpha<-QFA$alpha
+gamma<-QFA$gamma
+alpha_i<-QFA$alpha_i
+gamma_i<-QFA$gamma_i
+alpha_ij<-QFA$alpha_ij
+gamma_ij<-QFA$gamma_ij
+
+namesamp<-QFA$namesamp
+K<-QFA$K
+K_i<-QFA$K_i
+K_ij<-QFA$K_ij
+PO<-QFA$PO
+k_tau<-QFA$k_tau
+r<-QFA$r
+r_i<-QFA$r_i
+r_ij<-QFA$r_ij
+r_tau<-QFA$r_tau
+taui<-QFA$taui
+tau<-QFA$tau
+
+################################################
+print("Plots")
+################################################
+
+ylimmin<-min(na.omit(as.numeric(y)))
+ylimmax<-max(na.omit(as.numeric(y)))
+xlimmin<-min(na.omit(as.numeric(x)))
+xlimmax<-max(na.omit(as.numeric(x)))
+
+pdf(paste("Plots_M",work,".pdf",sep=""))
+################################################
+print("Master Curve")
+################################################
+plot(x,y,main="Master Curve",xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+curve((K*PO*exp(r*x))/(K+PO*(exp(r*x)-1)), 0, 8,add=TRUE,col=1)
+################################################
+print("ORF Curves")
+################################################
+plot(x,y,main="ORF Curves",xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+for (i in 1:N)
+{
+curve((K_i[i]*PO*exp(r_i[i]*x))/(K_i[i]+PO*(exp(r_i[i]*x)-1)), 0, 8,add=TRUE,col=i) 
+}
+################################################
+print("Repeat Curves")
+################################################
+plot(x,y,main="Repeat Curves", xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+for (i in 1:M)
+{
+curve((K_ij[i]*PO*exp(r_ij[i]*x))/(K_ij[i]+PO*(exp(r_ij[i]*x)-1)), 0, 8,add=TRUE,col=i) 
+}
+################################################
+print("Model Variation tau")
+################################################
+plot(x,y,main="Curve variation tau_m", xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+KK=K
+rr=r
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), 0, 8,add=TRUE,col=1) 
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))+2/(tau^0.5), 0, 8,add=TRUE,col=3) 
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))-2/(tau^0.5), 0, 8,add=TRUE,col=3)
+plot(x,y,main="Repeat Curve variation tau_i", xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), 0, 8,add=TRUE,col=1) 
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))+2/(taui[i]^0.5), 0, 8,add=TRUE,col=3) 
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))-2/(taui[i]^0.5), 0, 8,add=TRUE,col=3)
+################################################
+print("Model Variation posterior")
+################################################
+par(mfrow=c(4,2))
+for (i in 1:N)
+{
+plot(density(rnorm(2000,K,alpha)),main="Density Curve variation", xlab="Time (days)", ylab="Culture Density (AU)")
+lines(density(rnorm(2000,K_i[i],1/k_tau[i]^0.5)),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=2)
+lines(density(K_ij[((1+NoSum[i]):NoSum[i+1])]),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=3)
+plot(density(rnorm(2000,r,gamma)),main="Density Curve variation", xlab="Time (days)", ylab="Culture Density (AU)")
+lines(density(rnorm(2000,r_i[i],gamma_i)),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=2)
+lines(density(r_ij[((1+NoSum[i]):NoSum[i+1])]),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=3)
+}
+dev.off()
+
+pdf(paste("Plots_M_indiv",work,".pdf",sep=""))
+###########################################
+print("plots for individual Logistic curve fits")
+###########################################
+for (i in 1:N)
+{
+plot(-1,-1,main=paste(gene[i],"Curve"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+points(x[,,i],y[,,i])
+KK=K_i[i]
+rr=r_i[i]
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), 0, 8,add=TRUE,col=1) 
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))+2/k_tau[i]^0.5, 7, 8,add=TRUE,col=3) 
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))-2/k_tau[i]^0.5, 7, 8,add=TRUE,col=3) 
+plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+points(x[,,i],y[,,i])
+for (j in 1:NoORF[i])
+{
+KK=K_ij[(j+NoSum[i])]
+rr=r_ij[(j+NoSum[i])]
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), 0, 8,add=TRUE,col=1+j) 
+}
+}
+dev.off()
+
+pdf(paste("Plots_M_diag",work,".pdf",sep=""))
+###########################################
+print("Prior density")
+###########################################
+par(mfrow=c(4,2))
+sampsize<-round(iter/thin)
+den<-matrix(0,sampsize,11)
+den[,1]<-rgamma(sampsize,(K_s^2)/(alpha^2),K_s/(alpha^2))
+den[,2]<-rgamma(sampsize,(K_s^2)/(alpha^2),K_s/(alpha^2))
+den[,3]<-rgamma(sampsize,(K_s^2)/(alpha^2),K_s/(alpha^2))
+den[,4]<-runif(sampsize,PO_s,beta)
+den[,5]<-rgamma(sampsize,(alpha_ij^2)/(alpha_ij_sd^2),alpha_ij/(alpha_ij_sd^2))
+den[,6]<-rgamma(sampsize,(r_s^2)/(gamma^2),r_s/(gamma^2))
+den[,7]<-rgamma(sampsize,(r_s^2)/(gamma^2),r_s/(gamma^2))
+den[,8]<-rgamma(sampsize,(r_s^2)/(gamma^2),r_s/(gamma^2))
+den[,9]<-rgamma(sampsize,(gamma_ij^2)/(gamma_ij_sd^2),gamma_ij/(gamma_ij_sd^2))
+den[,10]<-rgamma(sampsize,(tau_s^2)/(delta^2),tau_s/(delta^2))
+den[,11]<-rgamma(sampsize,(tau_s^2)/(delta^2),tau_s/(delta^2))
+
+namesampden<-unique(substring(namesamp,1,4))
+for (i in 1:ncol(den))
+{
+plot(density(den[,i]),paste(namesampden[i],"Prior Density"))
+}
+
+###########################################
+print("Diagnostics trace acf density")
+###########################################
+postpred<-funcPostPred(sampsize,work,QFA)
+
+par(mfrow=c(4,4))
+for (i in 1:length(namesamp))
+{
+post<-density(as.numeric(samp[,i])+0.0000000000000000000000000000001)
+pred<-density(postpred[,i]+0.0000000000000000000000000000001)#!!!!!!!!!!!!!!!!!
+postpred<-postpred+0.0000000000000000000000000000001
+plot(as.numeric(samp[,i]),main=paste(namesamp[i],"Trace Top"),type="l")
+t<-(1:ncol(den))[namesampden==substring(namesamp[i],1,4)]
+pri<-density(den[,t])
+plot(post,main=paste(namesamp[i],"Density"),xlim=c(min(pri$x),max(pri$x)),
+ylim=c(min(post$y,pri$y),max(post$y,pri$y)))
+lines(pri,col=2)
+acf(as.numeric(samp[,i]),main=paste(namesamp[i],"ACF"))
+plot(post,main=paste(namesamp[i],"Density"),xlim=c(min(post$x,pred$x),max(post$x,pred$x)),
+ylim=c(min(post$y,postpred),max(post$y,postpred)))
+lines(density(postpred[,i]),main=paste(namesamp[i],"Density PostPred"),col=2)
+}
+dev.off()
+}
+
+
+
