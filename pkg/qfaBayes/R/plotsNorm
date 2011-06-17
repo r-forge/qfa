@@ -1,4 +1,3 @@
-
 samp<-QFA$samp
 iter<-QFA$iter
 thin<-QFA$thin

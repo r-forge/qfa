@@ -24,7 +24,7 @@ return(QFA)
 }
 
 ### Hierachical Logistic Curve Model Plots to Pdf###
-QFA.H.Plots<-function(work,QFA){
+QFA.H.Plots<-function(work,QFA,LinearGaussian=FALSE){
 
 samp<-QFA$samp
 iter<-QFA$iter
@@ -158,6 +158,7 @@ print("Prior density")
 par(mfrow=c(4,2))
 sampsize<-round(iter/thin)
 den<-funcDen(sampsize,QFA)
+if (LinearGaussian==FALSE){den<-funcDen(sampsize,QFA)}else den<-funcDen_LG(sampsize,QFA)
 namesampden<-unique(substring(namesamp,1,4))
 for (i in 1:ncol(den))
 {
@@ -167,7 +168,8 @@ plot(density(den[,i]),paste(namesampden[i],"Prior Density"))
 ###########################################
 print("Diagnostics trace acf density")
 ###########################################
-postpred<-funcPostPred(sampsize,QFA)
+if (LinearGaussian==FALSE){postpred<-funcPostPred(sampsize,QFA)} else postpred<-funcPostPred_LG(sampsize,QFA)
+
 
 par(mfrow=c(4,4))
 for (i in 1:length(namesamp))
