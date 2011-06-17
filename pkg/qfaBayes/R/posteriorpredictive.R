@@ -1,5 +1,35 @@
+funcDen<-function(sampsize,QFA){
+K_s<-QFA$K_s
+r_s<-QFA$r_s
+PO_s<-QFA$PO_s
+beta<-QFA$beta
+tau_s<-QFA$tau_s
+delta<-QFA$delta
+alpha_ij_sd<-QFA$alpha_ij_sd
+gamma_ij_sd<-QFA$gamma_ij_sd
+alpha<-QFA$alpha
+gamma<-QFA$gamma
+alpha_i<-QFA$alpha_i
+gamma_i<-QFA$gamma_i
+alpha_ij<-QFA$alpha_ij
+gamma_ij<-QFA$gamma_ij
 
-funcPostPred<-function(iter,work,QFA){
+den<-matrix(0,sampsize,11)
+den[,1]<-rgamma(sampsize,(K_s^2)/(alpha^2),K_s/(alpha^2))
+den[,2]<-rgamma(sampsize,(K_s^2)/(alpha^2),K_s/(alpha^2))
+den[,3]<-rgamma(sampsize,(K_s^2)/(alpha^2),K_s/(alpha^2))
+den[,4]<-runif(sampsize,PO_s,beta)
+den[,5]<-rgamma(sampsize,(alpha_ij^2)/(alpha_ij_sd^2),alpha_ij/(alpha_ij_sd^2))
+den[,6]<-rgamma(sampsize,(r_s^2)/(gamma^2),r_s/(gamma^2))
+den[,7]<-rgamma(sampsize,(r_s^2)/(gamma^2),r_s/(gamma^2))
+den[,8]<-rgamma(sampsize,(r_s^2)/(gamma^2),r_s/(gamma^2))
+den[,9]<-rgamma(sampsize,(gamma_ij^2)/(gamma_ij_sd^2),gamma_ij/(gamma_ij_sd^2))
+den[,10]<-rgamma(sampsize,(tau_s^2)/(delta^2),tau_s/(delta^2))
+den[,11]<-rgamma(sampsize,(tau_s^2)/(delta^2),tau_s/(delta^2))
+den
+}
+
+funcPostPred<-function(iter,QFA){
 
 N<-QFA$N
 M<-QFA$M

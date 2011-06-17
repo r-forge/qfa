@@ -1,21 +1,22 @@
+#### Joint Hierachical Logistic Curve Model ####
 qfa.Joint<-function(a,b,Scaling,iter,upd,thin,PlotOutput=TRUE,work,CustomModel=FALSE){
 a<-funcIDORDER(a)
 IDuni<-unique(a$ID)
 ORFuni<-unique(a$ORF)
-gene<-unlist(lapply(ORFuni,fun1,data=a))#?
+gene<-unlist(lapply(ORFuni,funcGENE,data=a))#?
 N<-length(ORFuni);M<-length(IDuni)
-NoORF_a<-unlist(lapply(ORFuni,fun2,data=a))#no of repeats each orf
-NoTime_a<-c(0,unlist(lapply(IDuni,fun3,data=a)))# 0+ no of time each repeat
-NoSum_a<-c(0,unlist(lapply(1:N,fun4,NoORF_vec=NoORF_a)))
+NoORF_a<-unlist(lapply(ORFuni,funcNoORF,data=a))#no of repeats each orf
+NoTime_a<-c(0,unlist(lapply(IDuni,funcNoTime,data=a)))# 0+ no of time each repeat
+NoSum_a<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_a)))
 
 b<-funcIDORDER(b)
 IDuni<-unique(b$ID)
 ORFuni<-unique(b$ORF)
-gene<-unlist(lapply(ORFuni,fun1,data=a))#?
+gene<-unlist(lapply(ORFuni,funcGENE,data=a))#?
 N<-length(ORFuni);M<-length(IDuni)#?
-NoORF_b<-unlist(lapply(ORFuni,fun2,data=b))#no of repeats each orf
-NoTime_b<-c(0,unlist(lapply(IDuni,fun3,data=b)))# 0+ no of time each repeat
-NoSum_b<-c(0,unlist(lapply(1:N,fun4,NoORF_vec=NoORF_b)))
+NoORF_b<-unlist(lapply(ORFuni,funNoORF,data=b))#no of repeats each orf
+NoTime_b<-c(0,unlist(lapply(IDuni,funcNoTime,data=b)))# 0+ no of time each repeat
+NoSum_b<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_b)))
 
 
 dimr<-max(NoORF_a,NoORF_b);dimc<-max(NoTime_a,NoTime_b)
@@ -31,13 +32,17 @@ if (!(CustomModel==FALSE)){source(CustomModel)} else {funcMODELJoint()}
 QFA.P<-funcPRIORS_J(CustomModel)
 
 samp<-funcFITandUPDATE_J(QFA.I,QFA.D,QFA.P)
-QFA.O<-funcSAVE_J(a,b,samp,N,M,iter,thin,upd)
+QFA.O<-funcPosterior_J(samp,N,M,iter,thin,upd)
 
 QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)
 if(PlotOutput==TRUE){QFA.J.Plots(work,QFA)}
 return(QFA)
 }
 
+
+
+
+### Joint Hierachical Logistic Curve Model Plots to Pdf###
 QFA.J.Plots<-function(work,QFA){
 
 samp<-QFA$samp
@@ -266,5 +271,4 @@ lines(density(den[,t]),col=2)#####
 acf(as.numeric(samp[,i]),main=paste(namesamp[i],"ACF"))
 }
 dev.off()
-
 }

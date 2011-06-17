@@ -1,12 +1,13 @@
+#### Hierachical Logistic Curve Model ####
 qfa.Hierachical<-function(a,Scaling,iter,upd,thin,PlotOutput=TRUE,work,CustomModel=FALSE){
 a<-funcIDORDER(a)
 IDuni<-unique(a$ID)
 ORFuni<-unique(a$ORF)
-gene<-unlist(lapply(ORFuni,fun1,data=a))
+gene<-unlist(lapply(ORFuni,funcGENE,data=a))
 N<-length(ORFuni);M<-length(IDuni)
-NoORF_a<-unlist(lapply(ORFuni,fun2,data=a))#no of repeats each orf
-NoTime_a<-c(0,unlist(lapply(IDuni,fun3,data=a)))# 0+ no of time each repeat
-NoSum_a<-c(0,unlist(lapply(1:N,fun4,NoORF_vec=NoORF_a)))
+NoORF_a<-unlist(lapply(ORFuni,funcNoORF,data=a))#no of repeats each orf
+NoTime_a<-c(0,unlist(lapply(IDuni,funcNoTime,data=a)))# 0+ no of time each repeat
+NoSum_a<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_a)))
 dimr<-max(NoORF_a);dimc<-max(NoTime_a)
 y<-funcXY(a$Growth,M,N,NoTime_a,NoSum_a,dimr,dimc)
 x<-funcXY(a$Expt.Time,M,N,NoTime_a,NoSum_a,dimr,dimc)
@@ -16,13 +17,13 @@ QFA.D<-list(y=y,x=x)
 if (!(CustomModel==FALSE)){source(CustomModel)} else {funcMODELHierarchical()}
 QFA.P<-funcPRIORS(CustomModel)
 samp<-funcFITandUPDATE(QFA.I,QFA.D,QFA.P)
-QFA.O<-funcSAVE(a,samp,N,M,iter,thin,upd)
-QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)
+QFA.O<-funcPosterior(samp,N,M,iter,thin,upd)
+QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P,ORFuni=ORFuni)
 if(PlotOutput==TRUE){QFA.H.Plots(work,QFA)}
 return(QFA)
 }
 
-
+### Hierachical Logistic Curve Model Plots to Pdf###
 QFA.H.Plots<-function(work,QFA){
 
 samp<-QFA$samp
@@ -156,19 +157,7 @@ print("Prior density")
 ###########################################
 par(mfrow=c(4,2))
 sampsize<-round(iter/thin)
-den<-matrix(0,sampsize,11)
-den[,1]<-rgamma(sampsize,(K_s^2)/(alpha^2),K_s/(alpha^2))
-den[,2]<-rgamma(sampsize,(K_s^2)/(alpha^2),K_s/(alpha^2))
-den[,3]<-rgamma(sampsize,(K_s^2)/(alpha^2),K_s/(alpha^2))
-den[,4]<-runif(sampsize,PO_s,beta)
-den[,5]<-rgamma(sampsize,(alpha_ij^2)/(alpha_ij_sd^2),alpha_ij/(alpha_ij_sd^2))
-den[,6]<-rgamma(sampsize,(r_s^2)/(gamma^2),r_s/(gamma^2))
-den[,7]<-rgamma(sampsize,(r_s^2)/(gamma^2),r_s/(gamma^2))
-den[,8]<-rgamma(sampsize,(r_s^2)/(gamma^2),r_s/(gamma^2))
-den[,9]<-rgamma(sampsize,(gamma_ij^2)/(gamma_ij_sd^2),gamma_ij/(gamma_ij_sd^2))
-den[,10]<-rgamma(sampsize,(tau_s^2)/(delta^2),tau_s/(delta^2))
-den[,11]<-rgamma(sampsize,(tau_s^2)/(delta^2),tau_s/(delta^2))
-
+den<-funcDen(sampsize,QFA)
 namesampden<-unique(substring(namesamp,1,4))
 for (i in 1:ncol(den))
 {
@@ -178,14 +167,13 @@ plot(density(den[,i]),paste(namesampden[i],"Prior Density"))
 ###########################################
 print("Diagnostics trace acf density")
 ###########################################
-postpred<-funcPostPred(sampsize,work,QFA)
+postpred<-funcPostPred(sampsize,QFA)
 
 par(mfrow=c(4,4))
 for (i in 1:length(namesamp))
 {
-post<-density(as.numeric(samp[,i])+0.0000000000000000000000000000001)
-pred<-density(postpred[,i]+0.0000000000000000000000000000001)#!!!!!!!!!!!!!!!!!
-postpred<-postpred+0.0000000000000000000000000000001
+post<-density(as.numeric(samp[,i]))
+pred<-density(postpred[,i])
 plot(as.numeric(samp[,i]),main=paste(namesamp[i],"Trace Top"),type="l")
 t<-(1:ncol(den))[namesampden==substring(namesamp[i],1,4)]
 pri<-density(den[,t])
@@ -195,10 +183,7 @@ lines(pri,col=2)
 acf(as.numeric(samp[,i]),main=paste(namesamp[i],"ACF"))
 plot(post,main=paste(namesamp[i],"Density"),xlim=c(min(post$x,pred$x),max(post$x,pred$x)),
 ylim=c(min(post$y,postpred),max(post$y,postpred)))
-lines(density(postpred[,i]),main=paste(namesamp[i],"Density PostPred"),col=2)
+lines(pred),main=paste(namesamp[i],"Density PostPred"),col=2)
 }
 dev.off()
 }
-
-
-

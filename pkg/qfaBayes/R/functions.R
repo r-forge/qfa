@@ -1,69 +1,89 @@
-
-funcREMOVE<-function(data,uni,treat,MPlate){
-data=data[data$Screen.Name%in%uni,]
-data=data[data$Treatment%in%treat,]
+### Filter by Screen Name, Temprature and Master Plate Number ###
+funcREMOVE<-function(data,Screen,Treat,MPlate){
+data=data[data$Screen.Name%in%Screen,]
+data=data[data$Treatment%in%Treat,]
 data=data[data$MasterPlate.Number%in%MPlate,]
 data
 }
+
+### Orders dataset ###
 funcIDORDER<-function(data){
 data$ID<-paste(data$Barcode,data$MasterPlate.Number,formatC(data$Row,digits=2),formatC(data$Col,digits=2),sep="")
 data<-data[order(paste(data$ORF,data$ID),data$Timeseries.order), ]
 }
-fun1<-function(x,data){
+
+### Gives gene names ###
+funcGENE<-function(x,data){
 data$Gene[data$ORF%in%x][1]
 }
-fun2<-function(x,data){
+
+### Gives number of repeats for each ORF ###
+funcNoORF<-function(x,data){
 length(unique((data$ID[data$ORF==x])))
 }
-fun3<-function(x,data){
+
+### Gives number of time points for each repeat ###
+funcNoTime<-function(x,data){
 length((data$ID[data$ID==x]))
 }
-fun4<-function(x,NoORF_vec){
+
+### Gives running total of number of number of repeats for each ORF ###
+funcNoSum<-function(x,NoORF_vec){
 sum(NoORF_vec[1:x])
 }
-fun5<-function(x,NoTime_vec,data_vec,dimr,dimc){
+
+### Adds NA values at the end of a repeat to give consistent row length for an array###
+funcRowRep<-function(x,NoTime_vec,data_vec,dimr,dimc){
 c(data_vec[sum(1,NoTime_vec[1:x]):sum(NoTime_vec[1:(x+1)])],rep(NA,dimc-length(data_vec[sum(1,NoTime_vec[1:x]):sum(NoTime_vec[1:(x+1)])])))
 }
-fun6<-function(x,NoSum_vec,data_vec,dimr,dimc){
+
+### Adds NA values at the end of an ORF to give consistent Col length for an array ###
+funcColORF<-function(x,NoSum_vec,data_vec,dimr,dimc){
 c(data_vec[(dimc*NoSum_vec[x]+1):(dimc*NoSum_vec[x+1])],rep(NA,dimr*dimc-length(data_vec[(dimc*NoSum_vec[x]+1):(dimc*NoSum_vec[x+1])])))
 }
+
+### Creates and transposes an Array ###
 funcARRAYTRANS<-function(data_vec,dim){
 vec<-array(c(data_vec),dim=dim)
 vec<-aperm(vec, c(2,1,3))
 vec
 }
 
+### Sorts data into array with correct dimensions ###
 funcXY<-function(data,M,N,NoTime_vec,NoSum_vec,dimr,dimc){
-XY<-unlist(lapply(1:M,fun5,NoTime_vec=NoTime_vec,data_vec=data,dimr,dimc))
-XY<-unlist(lapply(1:N,fun6,NoSum_vec=NoSum_vec,data_vec=XY,dimr,dimc))
+XY<-unlist(lapply(1:M,funcRowRep,NoTime_vec=NoTime_vec,data_vec=data,dimr,dimc))
+XY<-unlist(lapply(1:N,funcColORF,NoSum_vec=NoSum_vec,data_vec=XY,dimr,dimc))
 dim<-c(dimc,dimr,N)
 XY<-funcARRAYTRANS(XY,dim)
 XY
 }
 
+### Creates and transposes an Array ###
 funcARRAYTRANS_J<-function(data_vec,dim){
 vec<-array(c(data_vec),dim=dim)
 vec<-aperm(vec, c(2,1,3,4))
 vec
 }
 
+### Sorts data into array with correct dimensions (Joint Model Specific) ###
 funcXY_J<-function(data,data_b,M,N,NoTime_vec,NoSum_vec,NoTime_vec_b,NoSum_vec_b,dimr,dimc){
-XY<-unlist(lapply(1:M,fun5,NoTime_vec=NoTime_vec,data_vec=data,dimr,dimc))
-XY<-unlist(lapply(1:N,fun6,NoSum_vec=NoSum_vec,data_vec=XY,dimr,dimc))
-XY_b<-unlist(lapply(1:M,fun5,NoTime_vec=NoTime_vec_b,data_vec=data_b,dimr,dimc))
-XY_b<-unlist(lapply(1:N,fun6,NoSum_vec=NoSum_vec_b,data_vec=XY_b,dimr,dimc))
+XY<-unlist(lapply(1:M,funcRowRep,NoTime_vec=NoTime_vec,data_vec=data,dimr,dimc))
+XY<-unlist(lapply(1:N,funcColORF,NoSum_vec=NoSum_vec,data_vec=XY,dimr,dimc))
+XY_b<-unlist(lapply(1:M,funcRowRep,NoTime_vec=NoTime_vec_b,data_vec=data_b,dimr,dimc))
+XY_b<-unlist(lapply(1:N,funcColORF,NoSum_vec=NoSum_vec_b,data_vec=XY_b,dimr,dimc))
 dim<-c(dimc,dimr,N,2)
 XY<-funcARRAYTRANS_J(c(XY,XY_b),dim)
 XY
 }
 
+### Creates and transposes an Array (Joint Model Specific) ###
 funcSCALING<-function(data,vec){
 lim<-max(data$Tile.Dimensions.Y)*max(data$Tile.Dimensions.X)*255
 vec<-vec/lim
 vec
 }
 
-
+### Saves hierarchical model to disk space for rjags to load ###
 funcMODELHierarchical<-function(){
 write("
 model {
@@ -89,6 +109,8 @@ model {
 ","model1.bug")
 }
 
+
+### Saves joint model to disk space for rJags to load ###
 funcMODELJoint<-function(){
 write("
 model {
@@ -129,6 +151,35 @@ for (c in 1:2){
 }","model1.bug")
 }
 
+### Saves interaction model to disk space for rJags to load ###
+funcMODELInteraction<-function(){
+write("
+model {
+	for (i in 1:N){
+		for (j in 1:2){
+			for (k in 1:NoORF[i,j]){
+				y[k,j,i]~ dnorm(alpha[j]*(mui[i]+delt[i,j]*gam[i,j]),nuj[j]*taui[i])
+			}
+		}
+		mui[i]~dnorm(mu,mu_b)
+		gam[i,1]<-0
+		gam[i,2]~dnorm(0,gam_b)
+		delt[i,1]<-0
+		delt[i,2]~dbern(p)
+		taui[i]~dgamma((tau^2)/(tau_b^2),(tau)/(tau_b^2))
+	}
+	mu~dnorm(mu_a,mu_b)
+	alpha[1]<-1
+	alpha[2]~dgamma((alpha_a^2)/(alpha_b^2),(alpha_a)/(alpha_b^2))
+	tau~dgamma((tau_a^2)/(tau_b^2),(tau_a)/(tau_b^2))
+	nuj[1]~dgamma((nu^2)/(tau_b^2),(nu)/(tau_b^2))
+	nuj[2]~dgamma((nu^2)/(tau_b^2),(nu)/(tau_b^2))
+	nu~dgamma((tau_a^2)/(tau_b^2),(tau_a)/(tau_b^2))
+}
+","model1.bug")
+}
+
+### Load priors ###
 funcPRIORS<-function(CustomModel){
 if (!(CustomModel==FALSE)){Priors<-read.delim(paste(CustomModel,"Priors",sep="."),header=F)} else {data(PriorsH)}
 list("K_s"=Priors[1,],
@@ -148,6 +199,8 @@ list("K_s"=Priors[1,],
 )
 }
 
+
+### Load priors (Joint Model Specific) ###
 funcPRIORS_J<-function(CustomModel){
 
 if (!(CustomModel==FALSE)){Priors<-read.delim(paste(CustomModel,"Priors",sep="."),header=F)} else {Priors<-read.delim("Priors",header=F)}
@@ -174,6 +227,7 @@ omega_b=Priors[19,]
 )
 }
 
+### Fit, update and sample from the rjags model ###
 funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P){
 jags <- jags.model('model1.bug',
                    data = list('x' = QFA.D$x,
@@ -191,6 +245,7 @@ samp<-samp[[1]]
 samp
 }
 
+### Fit, update and sample from the rjags model (Joint Model Specific) ###
 funcFITandUPDATE_J<-function(QFA.I,QFA.D,QFA.P){
 SHIFT<-c(0,max(QFA.I$NoSum[,1]))#####!!!!!!!!!!!!!!!!!!!!!!
 jags <- jags.model('model1.bug',
@@ -207,8 +262,9 @@ samp<-samp[[1]]
 samp
 }
 
-funcSAVE<-function(data,samp,N,M,iter,thin,upd){
-vecsamp=colMeans(samp)
+### Outputs posterior sample in a named list ###
+funcPosterior<-function(samp,N,M,iter,thin,upd){
+if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-samp}
 list(
 vecsamp=vecsamp,
 namesamp=names(vecsamp),
@@ -230,8 +286,9 @@ burnandupd=(1000+upd)
 )
 }
 
-funcSAVE_J<-function(data,data_b,samp,N,M,iter,thin,upd){
-vecsamp=colMeans(samp)
+### Outputs posterior sample in a named list (Joint Model Specific) ###
+funcPosterior_J<-function(samp,N,M,iter,thin,upd){
+if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-samp}
 list(
 vecsamp=vecsamp,
 namesamp=names(vecsamp),
@@ -259,13 +316,10 @@ thin=thin,
 burnandupd=(1000+upd))
 }
 
-#####################################################################
-print("Preprocessing")
-#####################################################################
-
+###  ###
 qfa.variables<-function(data){
-uni<-as.character(unique(data$Screen.Name))
-treat<-as.character(unique(data$Treatment))
+Screen<-as.character(unique(data$Screen.Name))
+Treat<-as.character(unique(data$Treatment))
 MPlate<-unique(data$MasterPlate.Number)
-list(uni,treat,MPlate)
+list(Screen=Screen,Treat=Treat,MPlate=MPlate)
 }
