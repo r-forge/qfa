@@ -23,9 +23,11 @@ Screen<-as.character(unique(a$Screen.Name))[1]
 Treat<-as.character(unique(a$Treatment))[2]
 MPlate<-unique(a$MasterPlate.Number)[15]
 a<-funcREMOVE(a,Screen,Treat,MPlate)
-CustomModel="CustomModel"
+
+CustomModel="CustomModel5"
 BASIC<-qfa.Hierachical(a,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=PlotOutput,work="ModelHExample",CustomModel=CustomModel)
 save(CustomModel,file=paste(CustomModel,"R",sep="."))#####
 QFA.H.Plots(CustomModel,BASIC)
 
 # eof
+
