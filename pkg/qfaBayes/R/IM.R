@@ -82,6 +82,7 @@ gam_b=1/(gam_b)^2
 tau_a=1
 tau_b=max(na.omit(c(y)))
 }
+QFA.P<-list(p=p,mu_a=mu_a,mu_b=mu_b,alpha_a=alpha_a,alpha_b=alpha_b,gam_b=gam_b,tau_a=tau_a,tau_b=tau_b)
 
 library("rjags")
 jags <- jags.model('model1.bug',data = list('y'=y,'NoORF'=NoORF,'p'=p,'N' = N,'mu_a'=mu_a,'mu_b'=mu_b,'alpha_a'=alpha_a,'alpha_b'=alpha_b,'gam_b'=gam_b,'tau_a' = tau_a,'tau_b' = tau_b),n.chains = 1,n.adapt = 100)
@@ -95,9 +96,9 @@ samp<-coda.samples(jags,
             iter,thin=thin)
 samp<-samp[[1]]
 
-QFA<-funcPosterior_I(samp,N,M,iter,thin,upd)
+QFA.S<-funcPosterior_I(samp,N,M,iter,thin,upd)
 QFA.l<-list(N=N,gene=a$gene,treat="27",y=y,NoORF=NoORF)
-QFA<-c(QFA,QFA.l)
+QFA<-c(QFA.S,QFA.P,QFA.l)
 return(QFA)
 }
 
