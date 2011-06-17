@@ -183,7 +183,7 @@ lines(pri,col=2)
 acf(as.numeric(samp[,i]),main=paste(namesamp[i],"ACF"))
 plot(post,main=paste(namesamp[i],"Density"),xlim=c(min(post$x,pred$x),max(post$x,pred$x)),
 ylim=c(min(post$y,postpred),max(post$y,postpred)))
-lines(pred),main=paste(namesamp[i],"Density PostPred"),col=2)
+lines(pred,main=paste(namesamp[i],"Density PostPred"),col=2)
 }
 dev.off()
 }
