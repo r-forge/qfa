@@ -171,7 +171,6 @@ print("Data plot with highlighted Interactions")
 ##########################################
 funplot3<-function(){
 #################################### VECORDER LENGTH>2
-if(length(vecorder)>1){
 limmin<-min(y,na.rm=TRUE)
 limmax<-max(y,na.rm=TRUE)*1.1
 plot(1,type="n",main=paste("Treatment",treat,"Degrees"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Control",ylab="Query",pch=19,col=8,cex=0.5)
@@ -181,9 +180,9 @@ abline(lm(colMeans(y[,2,],na.rm=TRUE)~0+colMeans(y[,1,],na.rm=TRUE)),col="grey",
 lines(c(mean(defa[gene=="HIS3"]),mean(defa[gene=="HIS3"])),c(-1000,1000),lwd=2)
 lines(c(-1000,1000),c(mean(defb[gene=="HIS3"]),mean(defb[gene=="HIS3"])),lwd=2)
 points(colMeans(y[,1,],na.rm=TRUE),colMeans(y[,2,],na.rm=TRUE),main=paste("Treatment",treat,"Degrees"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",pch=19,col=8,cex=0.5)
-i=vecorder[deltagamma[vecorder]>0]
+i=c(vecorder[deltagamma[vecorder]>0],vecorder[deltagamma[vecorder]>0])#DUP
 points(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
-i=vecorder[deltagamma[vecorder]<=0]  
+i=c(vecorder[deltagamma[vecorder]<=0],vecorder[deltagamma[vecorder]<=0] )#DUP 
 points(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),xlim=c(0,5),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
 i=vecorder
 text(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),gene[i],pos=4,offset=0.1,cex=0.4)
@@ -195,14 +194,13 @@ abline(lm(colMeans(y[,2,],na.rm=TRUE)~0+colMeans(y[,1,],na.rm=TRUE)),col="grey",
 lines(c(mean(defa[gene=="HIS3"]),mean(defa[gene=="HIS3"])),c(-1000,1000),lwd=2)
 lines(c(-1000,1000),c(mean(defb[gene=="HIS3"]),mean(defb[gene=="HIS3"])),lwd=2)
 points(colMeans(y[,1,],na.rm=TRUE),colMeans(y[,2,],na.rm=TRUE),main=paste("Treatment",treat,"Degrees"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",pch=19,col=8,cex=0.5)
-i=vecorder[deltagamma[vecorder]>0]
+i=c(vecorder[deltagamma[vecorder]>0],vecorder[deltagamma[vecorder]>0])#DUP
 points(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
-i=vecorder[deltagamma[vecorder]<=0]  
+i=c(vecorder[deltagamma[vecorder]<=0],vecorder[deltagamma[vecorder]<=0] ) #DUP
 points(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),xlim=c(0,5),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
 i=1:N
 text(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),gene[i],pos=4,offset=0.1,cex=0.4)
 legend(1,limmax, c("Model Fit (y=Alpha2*x)","1-1","simple Lin Reg","HIS3 Fit"), cex=0.5,col=c("cadetblue","grey","grey","black"), lty=c(1,2,3,1))
-}
 }
 ###########################################
 print("Diagnostics trace acf density")
