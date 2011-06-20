@@ -1,6 +1,6 @@
 #### Interaction Model ####
 
-fun5<-function(x){
+fun5<-function(x,defa,defb){
 c(defa[(aNoSum[x]+1):(aNoSum[x+1])],rep(NA,dimr-length(defa[(aNoSum[x]+1):(aNoSum[x+1])])),defb[(bNoSum[x]+1):(bNoSum[x+1])],rep(NA,dimr-length(defb[(bNoSum[x]+1):(bNoSum[x+1])])))
 }
 
@@ -65,7 +65,7 @@ NoORF<-cbind(a$NoORF,b$NoORF)
 dimr<-max(NoORF)
 defa<-fun8(a)
 defb<-fun8(b)
-vec<-unlist(lapply(1:N,fun5))
+vec<-unlist(lapply(1:N,fun5,defa=defa,defb=defb))
 y=array(vec,dim=c(dimr,2,N))
 
 funcMODELInteraction()
