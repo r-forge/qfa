@@ -1,31 +1,33 @@
-#### Interaction Model ####
-
-fun5<-function(x,defa,defb){
+### Adds NA values at the end of an ORF to give consistent row length for an array###
+funcVecArray<-function(x,defa,defb){
 c(defa[(aNoSum[x]+1):(aNoSum[x+1])],rep(NA,dimr-length(defa[(aNoSum[x]+1):(aNoSum[x+1])])),defb[(bNoSum[x]+1):(bNoSum[x+1])],rep(NA,dimr-length(defb[(bNoSum[x]+1):(bNoSum[x+1])])))
 }
 
-fun6<-function(x){
-x$r/log(2*(x$K-x$g)/(x$K-2*x$g)) #MDR
+### Interaction Definition MDR ### EXAMPLE funcCustomInterDef<-funcInterDefMDR
+funcInterDefMDR<-function(x){
+x$r/log(2*(x$K-x$g)/(x$K-2*x$g)) 
 }
 
-fun7<-function(x){
-log(x$K/x$g)/log(2) #MDP
+### Interaction Definition MDP ### EXAMPLE funcCustomInterDef<-funcInterDefMDP
+funcInterDefMDP<-function(x){
+log(x$K/x$g)/log(2)
 }
 
-fun2<-function(x){
+### -Inf values become NA ###
+funcInfToNA<-function(x){
 x[is.na(x)]=-Inf
 x[x<0]=NA
 x
 }
 
-fun8<-function(x){
+### Interaction Definition MDRMDP ###
+funcInterDefMDRMDP<-function(x){
 vecMDRa<-x$r_ij/log(2*(x$K_ij-x$PO)/(x$K_ij-2*x$PO)) #MDR
 vecMDPa<-log(x$K_ij/x$PO)/log(2) #MDP
-as.numeric(lapply(vecMDPa,fun2))*as.numeric(lapply(vecMDRa,fun2))
+as.numeric(lapply(vecMDPa,funcInfToNA))*as.numeric(lapply(vecMDRa,funcInfToNA))
 }
 
-fun9<-function(x){CUSTOMDEF(x)}
-
+### Outputs posterior sample in a named list ###
 funcPosterior_I<-function(samp,N,M,iter,thin,upd){
 if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-samp}
 if(nrow(samp)>1) {deltagamma<-colMeans(samp[,(N+3):(2*N+2)]*samp[,(3*N+3):(4*N+2)])} else {deltagamma<-(samp[,(N+3):(2*N+2)]*samp[,(3*N+3):(4*N+2)])}
@@ -55,17 +57,25 @@ vecorder=order(1-delta)[1:sig]
 )
 }
 
+#### Interaction Model ####
 qfa.Interaction<-function
-(a,b,iter,upd,thin,PlotOutput=TRUE,work,CustomModel=FALSE,Priors=FALSE){
+(a,b,iter,upd,thin,PlotOutput=TRUE,work,CustomModel=FALSE,Priors=FALSE,CustomInteractionDef=FALSE){
 QFAuni<-a$QFAuni
 aNoSum<-a$NoSum
 bNoSum<-b$NoSum
 N<-a$N
 NoORF<-cbind(a$NoORF,b$NoORF)
 dimr<-max(NoORF)
-defa<-fun8(a)
-defb<-fun8(b)
-vec<-unlist(lapply(1:N,fun5,defa=defa,defb=defb))
+
+if(CustomInteractionDef=FALSE){
+defa<-funcInterDefMDRMDP(a)
+defb<-funcInterDefMDRMDP(b)} else {
+source(CustomInteractionDef)
+defa<-funcCustomInterDef(a)
+defb<-funcCustomInterDef(b)
+}
+
+vec<-unlist(lapply(1:N,funcVecArray,defa=defa,defb=defb))
 y=array(vec,dim=c(dimr,2,N))
 
 funcMODELInteraction()
@@ -87,9 +97,9 @@ QFA.P<-list(p=p,mu_a=mu_a,mu_b=mu_b,alpha_a=alpha_a,alpha_b=alpha_b,gam_b=gam_b,
 library("rjags")
 jags <- jags.model('model1.bug',data = list('y'=y,'NoORF'=NoORF,'p'=p,'N' = N,'mu_a'=mu_a,'mu_b'=mu_b,'alpha_a'=alpha_a,'alpha_b'=alpha_b,'gam_b'=gam_b,'tau_a' = tau_a,'tau_b' = tau_b),n.chains = 1,n.adapt = 100)
 
-TimeC<-(iter+upd)*system.time(update(jags,990))[1]
+TimeC<-(iter+upd)*system.time(update(jags,900))[2]
+print(paste("Time till completion",TimeC/(60*60*900),"(hours)",TimeC/(60*900),"(minutes)"))
 
-print(paste("Time till completion",TimeC/(60*60*990),"(hours)",TimeC/(60*990),"(minutes)"))
 update(jags, upd)
 samp<-coda.samples(jags,
           c('mui','gam','delt','tau','nu','alpha','mu','taui','nuj'),
@@ -104,9 +114,6 @@ return(QFA)
 
 
 ### Interaction Model Plots to Pdf###
-###########################################
-print("plot fitted with Conditioning on delta=1")
-###########################################
 QFA.I.Plots<-function(work,QFA){
 
 vecsamp=QFA$vecsamp
@@ -134,7 +141,9 @@ gene=QFA$gene
 treat=QFA$treat
 y=QFA$y
 NoORF=QFA$NoORF
-
+###########################################
+print("plot fitted with Conditioning on delta=1")
+###########################################
 funplot1<-function(){
 limmin<-min(A1*mu_i, A2*(mu_i+gamma))
 limmax<-max(A1*mu_i, A2*(mu_i+gamma))
