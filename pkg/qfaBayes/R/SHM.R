@@ -13,12 +13,12 @@ y<-funcXY(a$Growth,M,N,NoTime_a,NoSum_a,dimr,dimc)
 x<-funcXY(a$Expt.Time,M,N,NoTime_a,NoSum_a,dimr,dimc)
 QFA.I<-list("NoORF"=c(NoORF_a),"NoTime"=c(NoTime_a)[-1],"NoSum"=c(NoSum_a),"N"=N,"M"=M,"gene"=gene)
 if (Scaling==TRUE){y<-funcSCALING(a,y)}
-QFA.D<-list(y=y,x=x)
+QFA.D<-list(y=y,x=x,ORFuni=ORFuni)
 if (!(CustomModel==FALSE)){source(CustomModel)} else {funcMODELHierarchical()}
 QFA.P<-funcPRIORS(CustomModel)
 samp<-funcFITandUPDATE(QFA.I,QFA.D,QFA.P)
 QFA.O<-funcPosterior(samp,N,M,iter,thin,upd)
-QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P,ORFuni=ORFuni)
+QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)
 if(PlotOutput==TRUE){QFA.H.Plots(work,QFA)}
 return(QFA)
 }

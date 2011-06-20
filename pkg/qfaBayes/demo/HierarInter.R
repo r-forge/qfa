@@ -32,8 +32,8 @@ save(BASICa,file=paste("BASICa","R",sep="."))#####
 # Single Model
 
 require(qfaBayes)
-Control<-c("Adam_cdc13-1_SDLV2_REP1.txt","Adam_cdc13-1_SDLV2_REP2.txt","Adam_cdc13-1_SDLV2_REP3.txt","Adam_cdc13-1_SDLV2_REP4.txt")[1]
-Query<-c("cdc13-1_rad9D_SDLv2_Rpt1.txt","cdc13-1_rad9D_SDLv2_Rpt2.txt","cdc13-1_rad9D_SDLv2_Rpt3.txt","cdc13-1_rad9D_SDLv2_Rpt4.txt")[1]
+Control<-c("Adam_cdc13-1_SDLV2_REP1.txt","Adam_cdc13-1_SDLV2_REP2.txt","Adam_cdc13-1_SDLV2_REP3.txt","Adam_cdc13-1_SDLV2_REP4.txt")
+Query<-c("cdc13-1_rad9D_SDLv2_Rpt1.txt","cdc13-1_rad9D_SDLv2_Rpt2.txt","cdc13-1_rad9D_SDLv2_Rpt3.txt","cdc13-1_rad9D_SDLv2_Rpt4.txt")
 Work="testjoint"
 DescripControl<-"ExptDescriptionCDC13.txt"
 DescripQuery<-"ExptDescriptionCDC13RAD9.txt"
@@ -59,7 +59,7 @@ save(BASICb,file=paste("BASICb","R",sep="."))#####
 
 #######################################
 
-BASIC_I<-qfa.Interaction(BASICa,BASICb,iter=10000,upd=10000,thin=100,PlotOutput=FALSE,work="work",CustomModel=FALSE,Priors=FALSE)
+BASIC_I<-qfa.Interaction(BASICa,BASICb,iter=300000,upd=200000,thin=200,PlotOutput=FALSE,work="work",CustomModel=FALSE,Priors=FALSE)
 
 QFA.I.Plots("Final",BASIC_I)
 

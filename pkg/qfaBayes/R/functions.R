@@ -181,49 +181,49 @@ model {
 
 ### Load priors ###
 funcPRIORS<-function(CustomModel){
-if (!(CustomModel==FALSE)){Priors<-read.delim(paste(CustomModel,"Priors",sep="."),header=F)} else {data(PriorsH)}
-list("K_s"=Priors[1,],
-"r_s"=Priors[2,],
-"PO_s"=Priors[3,],
-"beta"=Priors[4,],
-"tau_s"=Priors[5,],
-"delta"=Priors[6,],
-"alpha"=Priors[7,],
-"gamma"=Priors[8,],
-"alpha_i"=Priors[9,],
-"gamma_i"=Priors[10,],
-"alpha_ij"=Priors[11,],
-"gamma_ij"=Priors[12,],
-"alpha_ij_sd"=Priors[13,],
-"gamma_ij_sd"=Priors[14,]
-)
+if (!(CustomModel==FALSE)){source(paste(CustomModel,"Priors",sep="."))} else {data(PriorsH)}
+list(
+K_s=Priors$K_s,
+r_s=Priors$r_s,
+PO_s=Priors$PO_s,
+beta=Priors$beta,
+tau_s=Priors$tau_s,
+delta=Priors$delta,
+alpha=Priors$alpha,
+gamma=Priors$gamma,
+alpha_i=Priors$alpha_i,
+gamma_i=Priors$gamma_i,
+alpha_ij=Priors$alpha_ij,
+gamma_ij=Priors$gamma_ij,
+alpha_ij_sd=Priors$alpha_ij_sd,
+gamma_ij_sd=Priors$gamma_ij_sd)
 }
 
 
 ### Load priors (Joint Model Specific) ###
 funcPRIORS_J<-function(CustomModel){
 
-if (!(CustomModel==FALSE)){Priors<-read.delim(paste(CustomModel,"Priors",sep="."),header=F)} else {Priors<-read.delim("Priors",header=F)}
+if (!(CustomModel==FALSE)){source(paste(CustomModel,"Priors",sep="."))} else {data(PriorsJ)}
 list(
-K_s=Priors[1,],
-r_s=Priors[2,],
-PO_s=Priors[3,],
-beta=Priors[4,],
-tau_s=Priors[5,],
-delta=Priors[6,],
-alpha=Priors[7,],
-gamma=Priors[8,],
-alpha_i=Priors[9,],
-gamma_i=Priors[10,],
-alpha_ij=Priors[11,],
-gamma_ij=Priors[12,],
-alpha_ij_sd=Priors[13,],
-gamma_ij_sd=Priors[14,],
-p=Priors[15,],
-alpha_a=Priors[16,],
-alpha_b=Priors[17,],
-gam_b=Priors[18,],
-omega_b=Priors[19,]
+K_s=Priors$K_s,
+r_s=Priors$r_s,
+PO_s=Priors$PO_s,
+beta=Priors$beta,
+tau_s=Priors$tau_s,
+delta=Priors$delta,
+alpha=Priors$alpha,
+gamma=Priors$gamma,
+alpha_i=Priors$alpha_i,
+gamma_i=Priors$gamma_i,
+alpha_ij=Priors$alpha_ij,
+gamma_ij=Priors$gamma_ij,
+alpha_ij_sd=Priors$alpha_ij_sd,
+gamma_ij_sd=Priors$gamma_ij_sd,
+p=Priors$p,
+alpha_a=Priors$alpha_a,
+alpha_b=Priors$alpha_b,
+gam_b=Priors$gam_b,
+omega_b=Priors$omega_b
 )
 }
 
@@ -235,7 +235,7 @@ jags <- jags.model('model1.bug',
                                'N' = QFA.I$N,'alpha_ij_sd'=QFA.P$alpha_ij_sd,'gamma_ij_sd'=QFA.P$gamma_ij_sd,'NoTime' = QFA.I$NoTime,'NoORF' = QFA.I$NoORF,'NoSum' = QFA.I$NoSum, 'K_s' = QFA.P$K_s,'PO_s' = QFA.P$PO_s,'r_s' = QFA.P$r_s,'tau_s' = QFA.P$tau_s,'delta'=QFA.P$delta,'alpha' = QFA.P$alpha,'beta' = QFA.P$beta,'gamma' = QFA.P$gamma,'alpha_i' = QFA.P$alpha_i,'gamma_i' = QFA.P$gamma_i,'alpha_ij' = QFA.P$alpha_ij,'gamma_ij' = QFA.P$gamma_ij),
                    n.chains = 1,
                    n.adapt = 100)
-TimeC<-(iter+upd)*system.time(update(jags,900))[1]
+TimeC<-(iter+upd)*system.time(update(jags,900))[2]
 print(paste("Time till completion",TimeC/(60*60*900),"(hours)",TimeC/(60*900),"(minutes)"))
 update(jags, upd)
 samp<-coda.samples(jags,
@@ -254,7 +254,7 @@ jags <- jags.model('model1.bug',
                                'N' = QFA.I$N,'alpha_ij_sd'=QFA.P$alpha_ij_sd,'gamma_ij_sd'=QFA.P$gamma_ij_sd,'NoTime' = QFA.I$NoTime,'NoORF' = QFA.I$NoORF,'NoSum' = QFA.I$NoSum, 'K_s' = QFA.P$K_s,'PO_s' = QFA.P$PO_s,'r_s' = QFA.P$r_s,'tau_s' = QFA.P$tau_s,'delta'=QFA.P$delta,'alpha' = QFA.P$alpha,'beta' = QFA.P$beta,'gamma' = QFA.P$gamma,'alpha_i' = QFA.P$alpha_i,'gamma_i' = QFA.P$gamma_i,'alpha_ij' = QFA.P$alpha_ij,'gamma_ij' = QFA.P$gamma_ij),
                    n.chains = 1,
                    n.adapt = 100)
-TimeC<-(iter+upd)*system.time(update(jags,900))[1]
+TimeC<-(iter+upd)*system.time(update(jags,900))[2]
 print(paste("Time till completion",TimeC/(60*60*900),"(hours)",TimeC/(60*900),"(minutes)"))
 update(jags, upd)
 samp<-coda.samples(jags,c('K','K_i','K_ij','PO','alph','bet','delt','gam','k_tau','r_tau','nu','nuc','omega','r','r_i','r_ij','tau','tau_m'),iter,thin=thin)
@@ -316,7 +316,7 @@ thin=thin,
 burnandupd=(1000+upd))
 }
 
-###  ###
+###  Gives experiment variables from ROD output###
 qfa.variables<-function(data){
 Screen<-as.character(unique(data$Screen.Name))
 Treat<-as.character(unique(data$Treatment))
