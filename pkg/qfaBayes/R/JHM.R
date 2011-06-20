@@ -46,7 +46,7 @@ return(QFA)
 
 ### Joint Hierachical Logistic Curve Model Plots to Pdf###
 QFA.J.Plots<-function(work,QFA){
-
+Treat="FIX"#######
 samp<-QFA$samp
 iter<-QFA$iter
 thin<-QFA$thin
@@ -105,10 +105,10 @@ delta<-QFA$delta
 
 SHIFT<-c(0,max(QFA$NoSum[,1]))#####!!!!!!!!!!!!!!!!!!!!!!
 
-A1<-alph[1]
-A2<-alph[2]
-B1<-bet[1]
-B2<-bet[2]
+A1<-QFA$alpha[1]
+A2<-QFA$alpha[2]
+B1<-QFA$bet[1]
+B2<-QFA$bet[2]
 sig<-sum(rep(1,N)[delta>0.5])
 order<-order(1-delta)
 vecorder<-order(1-delta)[1:sig]
@@ -138,15 +138,15 @@ limmax<-max(na.omit(Mu))
 ###########################################
 print("plot fitted with Conditioning on delta=1")
 ###########################################
-pdf(paste("Plots_Inter",wrk,".pdf",sep=""))
-plot(1,type="n",main=paste("Treatment",treat,"Degrees"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Control",ylab="Query",pch=19,col=8,cex=0.5)
+pdf(paste("Plots_Inter",work,".pdf",sep=""))
+plot(1,type="n",main=paste("Treatment",Treat,"Degrees"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Control",ylab="Query",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=2)
 abline(lm(c(colMeans(y[,,,1],na.rm=TRUE))~0+c(colMeans(y[,,,2],na.rm=TRUE))),col="grey",lty=3)
 if (sum((1:N)[gene=="HIS3"])==1){
 lines(c(mu_a[gene=="HIS3"],mu_b[gene=="HIS3"]),c(-1000,1000),lwd=2)
 lines(c(-1000,1000),c(mean(defb[gene=="HIS3"]),mean(defb[gene=="HIS3"])),lwd=2)}
 i=1:N
-points(mu_a[i],mu_b[i],main=paste("Treatment",treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single (=Alpha1*mu_i)",ylab="Double (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
+points(mu_a[i],mu_b[i],main=paste("Treatment",Treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single (=Alpha1*mu_i)",ylab="Double (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
 i=vecorder[gamdelt[order][1:sig]>0]
 points(mu_a[i],(mu_b[i]),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder[gamdelt[order][1:sig]<=0]  
@@ -157,14 +157,14 @@ legend(1,limmax, c("1-1","simple Lin Reg"), cex=0.5,col=c("grey","grey","black")
 if (sum((1:N)[gene=="HIS3"])==1){
 legend(1,limmax, c("1-1","simple Lin Reg","HIS3 Fit"), cex=0.5,col=c("grey","grey","black"), lty=c(2,3,1))
 }
-plot(1,type="n",main=paste("Treatment",treat,"Degrees"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Control",ylab="Query",pch=19,col=8,cex=0.5)
+plot(1,type="n",main=paste("Treatment",Treat,"Degrees"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Control",ylab="Query",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=2)
 abline(lm(c(colMeans(y[,,,1],na.rm=TRUE))~0+c(colMeans(y[,,,2],na.rm=TRUE))),col="grey",lty=3)
 if (sum((1:N)[gene=="HIS3"])==1){
 lines(c(mu_a[gene=="HIS3"],mu_b[gene=="HIS3"]),c(-1000,1000),lwd=2)
 lines(c(-1000,1000),c(mean(defb[gene=="HIS3"]),mean(defb[gene=="HIS3"])),lwd=2)}
 i=1:N
-points(mu_a[i],mu_b[i],main=paste("Treatment",treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single (=Alpha1*mu_i)",ylab="Double (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
+points(mu_a[i],mu_b[i],main=paste("Treatment",Treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single (=Alpha1*mu_i)",ylab="Double (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
 i=vecorder[omegadelt[order][1:sig]>0]
 points(mu_a[i],(mu_b[i]),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder[omegadelt[order][1:sig]<=0]  
@@ -177,9 +177,9 @@ legend(1,limmax, c("1-1","simple Lin Reg","HIS3 Fit"), cex=0.5,col=c("grey","gre
 }
 
 i=1:N
-plot(1,type="n",main=paste("Treatment",treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Control (=Alpha1*mu_i)",ylab="Query (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
+plot(1,type="n",main=paste("Treatment",Treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Control (=Alpha1*mu_i)",ylab="Query (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
 lines(c(0,1000),c(0,1000),lwd=2)
-points(mu_a[i],mu_b[i],main=paste("Treatment",treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single (=Alpha1*mu_i)",ylab="Double (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
+points(mu_a[i],mu_b[i],main=paste("Treatment",Treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single (=Alpha1*mu_i)",ylab="Double (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
 i=vecorder[gamdelt[order][1:sig]>0]
 points(mu_a[i],(mu_b[i]),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder[gamdelt[order][1:sig]<=0]  
@@ -188,7 +188,7 @@ i=1:N
 text(mu_a[i],(mu_b[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 dev.off()
 
-pdf(paste("Plots_M",wrk,".pdf",sep=""))
+pdf(paste("Plots_M",work,".pdf",sep=""))
 ################################################
 print("Master Curve")
 ################################################
@@ -217,7 +217,7 @@ dev.off()
 ###########################################
 print("plots for individual Logistic curve fits")
 ###########################################
-pdf(paste("Plots_M_indiv",wrk,".pdf",sep=""))
+pdf(paste("Plots_M_indiv",work,".pdf",sep=""))
 vecNoORF<-rbind(c(0,0),NoORF)
 for (i in 1:N){
 plot(x[,,i,1],y[,,i,1],col=2,main=paste(gene[i],"Repeat Curve"), xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
@@ -238,7 +238,7 @@ curve((K_ij[j]*PO*exp(r_ij[j]*x))/(K_ij[j]+PO*(exp(r_ij[j]*x)-1)), 0, 8,add=TRUE
 }
 dev.off()
 
-pdf(paste("Plots_M_diag",wrk,".pdf",sep=""))
+pdf(paste("Plots_M_diag",work,".pdf",sep=""))
 ###########################################
 print("Prior density")
 ###########################################
