@@ -67,7 +67,7 @@ N<-a$N
 NoORF<-cbind(a$NoORF,b$NoORF)
 dimr<-max(NoORF)
 
-if(CustomInteractionDef=FALSE){
+if(CustomInteractionDef==FALSE){
 defa<-funcInterDefMDRMDP(a)
 defb<-funcInterDefMDRMDP(b)} else {
 source(CustomInteractionDef)
