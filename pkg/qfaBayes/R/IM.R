@@ -59,7 +59,9 @@ vecorder=order(1-delta)[1:sig]
 
 #### Interaction Model ####
 qfa.Interaction<-function
-(a,b,iter,upd,thin,PlotOutput=TRUE,work,CustomModel=FALSE,Priors=FALSE,CustomInteractionDef=FALSE){
+(Control,Query,iter,upd,thin,PlotOutput=TRUE,work,CustomModel=FALSE,Priors=FALSE,CustomInteractionDef=FALSE){
+a<-Control
+b<-Query
 QFAuni<-a$QFAuni
 aNoSum<-a$NoSum
 bNoSum<-b$NoSum

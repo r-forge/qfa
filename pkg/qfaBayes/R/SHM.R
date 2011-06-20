@@ -157,7 +157,6 @@ print("Prior density")
 ###########################################
 par(mfrow=c(4,2))
 sampsize<-round(iter/thin)
-den<-funcDen(sampsize,QFA)
 if (LinearGaussian==FALSE){den<-funcDen(sampsize,QFA)}else den<-funcDen_LG(sampsize,QFA)
 namesampden<-unique(substring(namesamp,1,4))
 for (i in 1:ncol(den))

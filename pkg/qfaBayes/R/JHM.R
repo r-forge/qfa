@@ -1,5 +1,7 @@
 #### Joint Hierachical Logistic Curve Model ####
-qfa.Joint<-function(a,b,Scaling,iter,upd,thin,PlotOutput=TRUE,work,CustomModel=FALSE){
+qfa.Joint<-function(Control,Query,Scaling,iter,upd,thin,PlotOutput=TRUE,work,CustomModel=FALSE){
+a<-Control
+b<-Query
 a<-funcIDORDER(a)
 IDuni<-unique(a$ID)
 ORFuni<-unique(a$ORF)
@@ -14,7 +16,7 @@ IDuni<-unique(b$ID)
 ORFuni<-unique(b$ORF)
 gene<-unlist(lapply(ORFuni,funcGENE,data=a))#?
 N<-length(ORFuni);M<-length(IDuni)#?
-NoORF_b<-unlist(lapply(ORFuni,funNoORF,data=b))#no of repeats each orf
+NoORF_b<-unlist(lapply(ORFuni,funcNoORF,data=b))#no of repeats each orf
 NoTime_b<-c(0,unlist(lapply(IDuni,funcNoTime,data=b)))# 0+ no of time each repeat
 NoSum_b<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_b)))
 
