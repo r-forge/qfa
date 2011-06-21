@@ -1,5 +1,6 @@
 #### Hierachical Logistic Curve Model ####
-qfa.Hierachical<-function(a,Scaling,iter,upd,thin,PlotOutput=TRUE,work,CustomModel=FALSE){
+qfa.Hierachical<-function(experiment,Scaling,iter,upd,thin,PlotOutput=TRUE,work,CustomModel=FALSE){
+a<-experiment
 a<-funcIDORDER(a)
 IDuni<-unique(a$ID)
 ORFuni<-unique(a$ORF)
@@ -19,12 +20,12 @@ QFA.P<-funcPRIORS(CustomModel)
 samp<-funcFITandUPDATE(QFA.I,QFA.D,QFA.P)
 QFA.O<-funcPosterior(samp,N,M,iter,thin,upd)
 QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)
-if(PlotOutput==TRUE){QFA.H.Plots(work,QFA)}
+if(PlotOutput==TRUE){qfaplots.H(work,QFA)}
 return(QFA)
 }
 
 ### Hierachical Logistic Curve Model Plots to Pdf###
-QFA.H.Plots<-function(work,QFA,LinearGaussian=FALSE){
+qfaplots.H<-function(work,QFA,LinearGaussian=FALSE){
 
 samp<-QFA$samp
 iter<-QFA$iter
