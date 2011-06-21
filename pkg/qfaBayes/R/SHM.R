@@ -86,7 +86,10 @@ curve((K*PO*exp(r*x))/(K+PO*(exp(r*x)-1)), 0, 8,add=TRUE,col=1)
 ################################################
 print("ORF Curves")
 ################################################
-plot(x,y,main="ORF Curves",xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+plot(-1,-1,main="ORF Curves",xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+for (i in 1:N)
+points(x[,,i],y[,,i],main="ORF Curves",xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax),col=i)
+}
 for (i in 1:N)
 {
 curve((K_i[i]*PO*exp(r_i[i]*x))/(K_i[i]+PO*(exp(r_i[i]*x)-1)), 0, 8,add=TRUE,col=i) 

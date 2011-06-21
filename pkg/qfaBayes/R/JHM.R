@@ -26,7 +26,8 @@ dimr<-max(NoORF_a,NoORF_b);dimc<-max(NoTime_a,NoTime_b)
 y<-funcXY_J(a$Growth,b$Growth,M,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
 x<-funcXY_J(a$Expt.Time,b$Time,M,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
 
-QFA.I<-list("NoORF"=cbind(NoORF_a,NoORF_b),"NoTime"=cbind(NoTime_a,NoTime_b)[-1,],"NoSum"=cbind(NoSum_a,NoSum_b),"N"=N,"M"=M,"gene"=gene)
+QFA.I<-list("NoORF"=cbind(NoORF_a,NoORF_b),"NoTime"=cbind(NoTime_a,NoTime_b)[-1,],"NoSum"=cbind(NoSum_a,NoSum_b),"N"=N,"M"=M,"gene"=gene,SHIFT=c(0,max(NoSum_a,NoSum_b))
+)
 
 if (Scaling==TRUE){y<-funcSCALING(rbind(a,b),y)}
 QFA.D<-list(x=x,y=y)
@@ -60,6 +61,8 @@ NoSum<-QFA$NoSum
 NoORF<-QFA$NoORF
 NoTime<-QFA$NoTime
 gene<-QFA$gene
+SHIFT<-QFA$SHIFT
+
 
 K_s<-QFA$K_s
 r_s<-QFA$r_s
@@ -103,7 +106,6 @@ gamdelt<-QFA$gamdelt
 omegadelt<-QFA$omegadelt
 delta<-QFA$delta
 
-SHIFT<-c(0,max(QFA$NoSum[,1]))#####!!!!!!!!!!!!!!!!!!!!!!
 
 A1<-QFA$alpha[1]
 A2<-QFA$alpha[2]
@@ -197,17 +199,20 @@ curve((K*PO*exp(r*x))/(K+PO*(exp(r*x)-1)), 0, max(na.omit(c(x))),add=TRUE,col=1)
 ################################################
 print("ORF Curves")
 ################################################
-plot(x,y,main="ORF Curves",xlab="Time (days)", ylab="Culture Domensity (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+plot(x[,,,1],y[,,,1],main="ORF Curves",xlab="Time (days)", ylab="Culture Domensity (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+points(x[,,,2],y[,,,2],main="ORF Curves",xlab="Time (days)", ylab="Culture Domensity (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
 for (i in 1:N)
 {
 curve((K_i[i]*PO*exp(r_i[i]*x))/(K_i[i]+PO*(exp(r_i[i]*x)-1)), 0, 8,add=TRUE,col=2)
 curve((A2*(K_i[i]+gamdelt[i])*PO*exp(B2*(r_i[i]+omegadelt[i])*x))/(A2*(K_i[i]+gamdelt[i])+PO*(exp(B2*(r_i[i]+omegadelt[i])*x)-1)), 0, 8,add=TRUE,col=3) 
 }
+
 ################################################
 print("Repeat Curves")
 ################################################
-plot(x,y,main="Repeat Curves", xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
-for (i in 1:sum(NoSum[51,]))
+plot(x,y,main="Repeat Curves", xlab="Time (days)", ylab="Culture 
+Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
+for (i in 1:sum(NoSum[(N+1),]))
 {
 curve((K_ij[i]*PO*exp(r_ij[i]*x))/(K_ij[i]+PO*(exp(r_ij[i]*x)-1)), 0, 8,add=TRUE,col=i) 
 }
