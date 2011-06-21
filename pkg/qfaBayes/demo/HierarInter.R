@@ -19,7 +19,7 @@ a<-funcREMOVE(a,Screen,Treat,MPlate)
 
 CustomModel="CustomModel7"
 
-ControlFit<-qfa.Hierachical(a,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=FASLE,work="ModelHExample",CustomModel=CustomModel)
+ControlFit<-qfa.Hierachical(a,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=FALSE,work="ModelHExample",CustomModel=CustomModel)
 
 ### Query ###
 
@@ -42,7 +42,7 @@ QueryFit<-qfa.Hierachical(b,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=
 
 
 ### Hierarchical model plots for Control and Query ###
-QFA.H.Plots("Control"ControlFit,LinearGaussian=TRUE)
+QFA.H.Plots("Control",ControlFit,LinearGaussian=TRUE)
 QFA.H.Plots("Query",QueryFit,LinearGaussian=TRUE)
 
 ### Fit Interaction Model ###
