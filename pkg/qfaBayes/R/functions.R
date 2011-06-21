@@ -247,10 +247,9 @@ samp
 
 ### Fit, update and sample from the rjags model (Joint Model Specific) ###
 funcFITandUPDATE_J<-function(QFA.I,QFA.D,QFA.P){
-SHIFT<-c(0,max(QFA.I$NoSum[,1]))#####!!!!!!!!!!!!!!!!!!!!!!
 jags <- jags.model('model1.bug',
                    data = list('x' = QFA.D$x,
-                               'y' = QFA.D$y,'SHIFT'=SHIFT,'p'=QFA.P$p,'alpha_a'=QFA.P$alpha_a,'alpha_b'=QFA.P$alpha_b,'gam_b'=QFA.P$gam_b,'omega_b'=QFA.P$omega_b,
+                               'y' = QFA.D$y,'SHIFT'=QFA$SHIFT,'p'=QFA.P$p,'alpha_a'=QFA.P$alpha_a,'alpha_b'=QFA.P$alpha_b,'gam_b'=QFA.P$gam_b,'omega_b'=QFA.P$omega_b,
                                'N' = QFA.I$N,'alpha_ij_sd'=QFA.P$alpha_ij_sd,'gamma_ij_sd'=QFA.P$gamma_ij_sd,'NoTime' = QFA.I$NoTime,'NoORF' = QFA.I$NoORF,'NoSum' = QFA.I$NoSum, 'K_s' = QFA.P$K_s,'PO_s' = QFA.P$PO_s,'r_s' = QFA.P$r_s,'tau_s' = QFA.P$tau_s,'delta'=QFA.P$delta,'alpha' = QFA.P$alpha,'beta' = QFA.P$beta,'gamma' = QFA.P$gamma,'alpha_i' = QFA.P$alpha_i,'gamma_i' = QFA.P$gamma_i,'alpha_ij' = QFA.P$alpha_ij,'gamma_ij' = QFA.P$gamma_ij),
                    n.chains = 1,
                    n.adapt = 100)
