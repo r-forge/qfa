@@ -111,12 +111,13 @@ samp<-samp[[1]]
 QFA.S<-funcPosterior_I(samp,N,M,iter,thin,upd)
 QFA.l<-list(N=N,gene=a$gene,treat="27",y=y,NoORF=NoORF)
 QFA<-c(QFA.S,QFA.P,QFA.l)
+if(PlotOutput==TRUE){qfaplots.I(work,QFA)}
 return(QFA)
 }
 
 
 ### Interaction Model Plots to Pdf###
-QFA.I.Plots<-function(work,QFA){
+qfaplots.I<-function(work,QFA){
 
 vecsamp=QFA$vecsamp
 namesamp=QFA$namesamp

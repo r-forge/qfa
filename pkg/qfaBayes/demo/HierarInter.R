@@ -42,14 +42,14 @@ QueryFit<-qfa.Hierachical(b,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=
 
 
 ### Hierarchical model plots for Control and Query ###
-QFA.H.Plots("Control",ControlFit,LinearGaussian=TRUE)
-QFA.H.Plots("Query",QueryFit,LinearGaussian=TRUE)
+qfaplots.H("Control",ControlFit,LinearGaussian=TRUE)
+qfaplots.H("Query",QueryFit,LinearGaussian=TRUE)
 
 ### Fit Interaction Model ###
 InteractionFit<-qfa.Interaction(ControlFit,QueryFit,iter=300000,upd=200000,thin=200,PlotOutput=FALSE,work="work",CustomModel=FALSE,Priors=FALSE)
 
 ### Interaction model plots ###
-QFA.I.Plots("Final",InteractionFit)
+qfaplots.I("Final",InteractionFit)
 
 # eof
 

@@ -30,7 +30,7 @@ Screen<-as.character(unique(b$Screen.Name))[1]
 b<-funcREMOVE(b,Screen,Treat,MPlate)
 
 JointFit<-qfa.Joint(a,b,Scaling=TRUE,iter,upd,thin,PlotOutput=FALSE,work,CustomModel=FALSE)
-QFA.J.Plots(work,JointFit)
+qfaplots.J(work,JointFit)
 
 # eof
 

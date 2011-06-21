@@ -18,7 +18,7 @@ CustomModel="CustomModel7"
 ControlFit<-qfa.Hierachical(a,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=FALSE,work="ModelHExample",CustomModel=CustomModel)
 
 ### Plots ###
-QFA.H.Plots(CustomModel,ControlFit,LinearGaussian=TRUE)
+qfaplots.H(CustomModel,ControlFit,LinearGaussian=TRUE)
 
 # eof
 

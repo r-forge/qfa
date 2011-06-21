@@ -38,7 +38,7 @@ samp<-funcFITandUPDATE_J(QFA.I,QFA.D,QFA.P)
 QFA.O<-funcPosterior_J(samp,N,M,iter,thin,upd)
 
 QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)
-if(PlotOutput==TRUE){QFA.J.Plots(work,QFA)}
+if(PlotOutput==TRUE){qfaplots.J(work,QFA)}
 return(QFA)
 }
 
@@ -46,7 +46,7 @@ return(QFA)
 
 
 ### Joint Hierachical Logistic Curve Model Plots to Pdf###
-QFA.J.Plots<-function(work,QFA){
+qfaplots.J<-function(work,QFA,CustomInteractionDef=FALSE){
 Treat="FIX"#######
 samp<-QFA$samp
 iter<-QFA$iter
@@ -124,9 +124,12 @@ ylimmax<-max(na.omit(as.numeric(y)))
 xlimmin<-min(na.omit(as.numeric(x)))
 xlimmax<-max(na.omit(as.numeric(x)))
 
-vecMDRa<-(r_ij)/log(2*(K_ij-PO)/(K_ij-2*PO)) #MDR
-vecMDPa<-log((K_ij)/PO)/log(2) #MDP
-Mu<-as.numeric(vecMDPa)*as.numeric(vecMDRa)
+if(CustomInteractionDef==FALSE){
+Mu<-funcInterDefMDRMDP(QFA)} else {
+source(CustomInteractionDef)
+Mu<-funcCustomInterDef(QFA)
+}
+
 Mu_a<-Mu[1:sum(NoORF[,1])]
 veca<-vecb<-matrix(NA,N,max(NoORF))
 Mu_b<-Mu[(1+sum(NoORF[,1])):sum(NoORF)]
