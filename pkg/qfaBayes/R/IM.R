@@ -98,10 +98,7 @@ QFA.P<-list(p=p,mu_a=mu_a,mu_b=mu_b,alpha_a=alpha_a,alpha_b=alpha_b,gam_b=gam_b,
 
 library("rjags")
 jags <- jags.model('model1.bug',data = list('y'=y,'NoORF'=NoORF,'p'=p,'N' = N,'mu_a'=mu_a,'mu_b'=mu_b,'alpha_a'=alpha_a,'alpha_b'=alpha_b,'gam_b'=gam_b,'tau_a' = tau_a,'tau_b' = tau_b),n.chains = 1,n.adapt = 100)
-
-TimeC<-(iter+upd)*system.time(update(jags,900))[2]
-print(paste("Time till completion",TimeC/(60*60*900),"(hours)",TimeC/(60*900),"(minutes)"))
-
+funcJagsTime(iter,upd,jags)
 update(jags, upd)
 samp<-coda.samples(jags,
           c('mui','gam','delt','tau','nu','alpha','mu','taui','nuj'),
@@ -111,13 +108,13 @@ samp<-samp[[1]]
 QFA.S<-funcPosterior_I(samp,N,M,iter,thin,upd)
 QFA.l<-list(N=N,gene=a$gene,treat="27",y=y,NoORF=NoORF)
 QFA<-c(QFA.S,QFA.P,QFA.l)
-if(PlotOutput==TRUE){qfaplots.I(work,QFA)}
+if(PlotOutput==TRUE){qfaplots.I(QFA,work)}
 return(QFA)
 }
 
 
 ### Interaction Model Plots to Pdf###
-qfaplots.I<-function(work,QFA){
+qfaplots.I<-function(QFA,work){
 
 vecsamp=QFA$vecsamp
 namesamp=QFA$namesamp
@@ -148,16 +145,16 @@ NoORF=QFA$NoORF
 print("plot fitted with Conditioning on delta=1")
 ###########################################
 funplot1<-function(){
-limmin<-min(A1*mu_i, A2*(mu_i+gamma))
+limmin<-0
 limmax<-max(A1*mu_i, A2*(mu_i+gamma))
 i=1:N
 plot(1,type="n",main=paste("Treatment",treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Control (=Alpha1*mu_i)",ylab="Query (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
 lines(A1*c(0,1000),A2*c(0,1000),lwd=2)
 points(A1*mu_i[i], A2*(mu_i[i]+gamma[i]),main=paste("Treatment",treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single (=Alpha1*mu_i)",ylab="Double (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
 i=vecorder[gamma[vecorder]>0]
-points(A1*mu_i[i],A2*(mu_i[i]+gamma[i]),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
+points(A1*mu_i[i],A2*(mu_i[i]+gamma[i]),ylim=c(limmin,limmax),xlim=c(0,5),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder[gamma[vecorder]<=0]  
-points(A1*mu_i[i],A2*(mu_i[i]+gamma[i]),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
+points(A1*mu_i[i],A2*(mu_i[i]+gamma[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
 i=vecorder
 text(A1*mu_i[i],A2*(mu_i[i]+gamma[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 }
@@ -165,16 +162,16 @@ text(A1*mu_i[i],A2*(mu_i[i]+gamma[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 print("plot fitted NO conditioning")
 ###########################################
 funplot2<-function(){
-limmin<-min(A1*mu_i, A2*(mu_i+deltagamma))
+limmin<-0
 limmax<-max(A1*mu_i, A2*(mu_i+deltagamma))
 i=1:N
 plot(1,type="n",main=paste("Treatment",treat,"Degrees","(delta=Posterior Expectations)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Control (=Alpha1*mu_i)",ylab="Query (=Alpha2*(mu_i+delta_i*gamma_i))",col=8,pch=19,cex=0.5)
 lines(A1*c(0,1000),A2*c(0,1000),lwd=2)
 points(A1*mu_i[i], A2*(mu_i[i]+deltagamma[i]),main=paste("Treatment",treat,"Degrees","(delta=Posterior Expectations)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single (=Alpha1*mu_i)",ylab="Double (=Alpha2*(mu_i+delta_i*gamma_i))",col=8,pch=19,cex=0.5)
 i=vecorder[deltagamma[vecorder]>0]
-points(A1*mu_i[i],A2*(mu_i[i]+deltagamma[i]),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
+points(A1*mu_i[i],A2*(mu_i[i]+deltagamma[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder[deltagamma[vecorder]<=0]  
-points(A1*mu_i[i],A2*(mu_i[i]+deltagamma[i]),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
+points(A1*mu_i[i],A2*(mu_i[i]+deltagamma[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
 i=vecorder
 text(A1*mu_i[i],A2*(mu_i[i]+deltagamma[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 }
@@ -183,7 +180,7 @@ print("Data plot with highlighted Interactions")
 ##########################################
 funplot3<-function(){
 #################################### VECORDER LENGTH>2
-limmin<-min(y,na.rm=TRUE)
+limmin<-0
 limmax<-max(y,na.rm=TRUE)*1.1
 plot(1,type="n",main=paste("Treatment",treat,"Degrees"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Control",ylab="Query",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),A2*c(-1000,10000),col="cadetblue",lwd=2,)
@@ -193,7 +190,7 @@ lines(c(mean(defa[gene=="HIS3"]),mean(defa[gene=="HIS3"])),c(-1000,1000),lwd=2)
 lines(c(-1000,1000),c(mean(defb[gene=="HIS3"]),mean(defb[gene=="HIS3"])),lwd=2)
 points(colMeans(y[,1,],na.rm=TRUE),colMeans(y[,2,],na.rm=TRUE),main=paste("Treatment",treat,"Degrees"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",pch=19,col=8,cex=0.5)
 i=c(vecorder[deltagamma[vecorder]>0],vecorder[deltagamma[vecorder]>0])#DUP
-points(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
+points(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=c(vecorder[deltagamma[vecorder]<=0],vecorder[deltagamma[vecorder]<=0] )#DUP 
 points(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),xlim=c(0,5),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
 i=vecorder
@@ -207,9 +204,9 @@ lines(c(mean(defa[gene=="HIS3"]),mean(defa[gene=="HIS3"])),c(-1000,1000),lwd=2)
 lines(c(-1000,1000),c(mean(defb[gene=="HIS3"]),mean(defb[gene=="HIS3"])),lwd=2)
 points(colMeans(y[,1,],na.rm=TRUE),colMeans(y[,2,],na.rm=TRUE),main=paste("Treatment",treat,"Degrees"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",pch=19,col=8,cex=0.5)
 i=c(vecorder[deltagamma[vecorder]>0],vecorder[deltagamma[vecorder]>0])#DUP
-points(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
+points(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=c(vecorder[deltagamma[vecorder]<=0],vecorder[deltagamma[vecorder]<=0] ) #DUP
-points(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),xlim=c(0,5),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
+points(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
 i=1:N
 text(colMeans(y[,1,i],na.rm=TRUE),colMeans(y[,2,i],na.rm=TRUE),gene[i],pos=4,offset=0.1,cex=0.4)
 legend(1,limmax, c("Model Fit (y=Alpha2*x)","1-1","simple Lin Reg","HIS3 Fit"), cex=0.5,col=c("cadetblue","grey","grey","black"), lty=c(1,2,3,1))
@@ -263,7 +260,7 @@ text(rowSums(NoORF)[order],gene[i],pos=4,offset=0.1,cex=0.4)
 print("Individual plots")
 ##########################################
 funplot6<-function(){
-limmin<-min(y,na.rm=TRUE)
+limmin<-0
 limmax<-max(y,na.rm=TRUE)
 vec<-order(1-delta)[1:sig];col=1
 for (i in vec)

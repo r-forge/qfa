@@ -3,9 +3,9 @@
 
 Control<-c("Adam_cdc13-1_SDLV2_REP1.txt","Adam_cdc13-1_SDLV2_REP2.txt","Adam_cdc13-1_SDLV2_REP3.txt","Adam_cdc13-1_SDLV2_REP4.txt")[1]
 DescripControl<-"ExptDescriptionCDC13.txt"
-upd=200000
-iter=100000
-thin=100
+upd=20
+iter=10
+thin=1
 data("Adam_cdc-1_SDLV2_REP1")
 
 qfa.variables(a)
@@ -18,7 +18,7 @@ CustomModel="CustomModel7"
 ControlFit<-qfa.Hierachical(a,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=FALSE,work="ModelHExample",CustomModel=CustomModel)
 
 ### Plots ###
-qfaplots.H(CustomModel,ControlFit,LinearGaussian=TRUE)
+qfaplots.H(ControlFit,CustomModel,LinearGaussian=TRUE)
 
 # eof
 

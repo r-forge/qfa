@@ -20,12 +20,12 @@ QFA.P<-funcPRIORS(CustomModel)
 samp<-funcFITandUPDATE(QFA.I,QFA.D,QFA.P)
 QFA.O<-funcPosterior(samp,N,M,iter,thin,upd)
 QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)
-if(PlotOutput==TRUE){qfaplots.H(work,QFA)}
+if(PlotOutput==TRUE){qfaplots.H(QFA,work)}
 return(QFA)
 }
 
 ### Hierachical Logistic Curve Model Plots to Pdf###
-qfaplots.H<-function(work,QFA,LinearGaussian=FALSE){
+qfaplots.H<-function(QFA,work,LinearGaussian=FALSE){
 
 samp<-QFA$samp
 iter<-QFA$iter
@@ -73,23 +73,23 @@ tau<-QFA$tau
 print("Plots")
 ################################################
 
-ylimmin<-min(na.omit(as.numeric(y)))
+ylimmin<-0
 ylimmax<-max(na.omit(as.numeric(y)))
-xlimmin<-min(na.omit(as.numeric(x)))
+xlimmin<-0
 xlimmax<-max(na.omit(as.numeric(x)))
 
 pdf(paste("Plots_M",work,".pdf",sep=""))
 ################################################
 print("Master Curve")
 ################################################
-plot(x,y,main="Master Curve",xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+plot(x,y,main="Master Curve",xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
 curve((K*PO*exp(r*x))/(K+PO*(exp(r*x)-1)), 0, 8,add=TRUE,col=1)
 ################################################
 print("ORF Curves")
 ################################################
-plot(-1,-1,main="ORF Curves",xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
-for (i in 1:N)
-points(x[,,i],y[,,i],main="ORF Curves",xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax),col=i)
+plot(-1,-1,main="ORF Curves",xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
+for (i in 1:N){
+points(x[,,i],y[,,i],main="ORF Curves",xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax),col=i)
 }
 for (i in 1:N)
 {
@@ -98,7 +98,7 @@ curve((K_i[i]*PO*exp(r_i[i]*x))/(K_i[i]+PO*(exp(r_i[i]*x)-1)), 0, 8,add=TRUE,col
 ################################################
 print("Repeat Curves")
 ################################################
-plot(x,y,main="Repeat Curves", xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+plot(x,y,main="Repeat Curves", xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
 for (i in 1:M)
 {
 curve((K_ij[i]*PO*exp(r_ij[i]*x))/(K_ij[i]+PO*(exp(r_ij[i]*x)-1)), 0, 8,add=TRUE,col=i) 
@@ -106,16 +106,16 @@ curve((K_ij[i]*PO*exp(r_ij[i]*x))/(K_ij[i]+PO*(exp(r_ij[i]*x)-1)), 0, 8,add=TRUE
 ################################################
 print("Model Variation tau")
 ################################################
-plot(x,y,main="Curve variation tau_m", xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+plot(x,y,main="Curve variation tau_m", xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
 KK=K
 rr=r
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), 0, 8,add=TRUE,col=1) 
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))+2/(tau^0.5), 0, 8,add=TRUE,col=3) 
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))-2/(tau^0.5), 0, 8,add=TRUE,col=3)
-plot(x,y,main="Repeat Curve variation tau_i", xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), 0, 8,add=TRUE,col=1) 
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))+2/(taui[i]^0.5), 0, 8,add=TRUE,col=3) 
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))-2/(taui[i]^0.5), 0, 8,add=TRUE,col=3)
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)),xlimmin, xlimmax,add=TRUE,col=1) 
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))+2/(tau^0.5), xlimmin, xlimmax,add=TRUE,col=3) 
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))-2/(tau^0.5), xlimmin, xlimmax,add=TRUE,col=3)
+plot(x,y,main="Repeat Curve variation tau_i", xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=1) 
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))+2/(taui[i]^0.5), xlimmin, xlimmax,add=TRUE,col=3) 
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))-2/(taui[i]^0.5), xlimmin, xlimmax,add=TRUE,col=3)
 ################################################
 print("Model Variation posterior")
 ################################################
@@ -137,20 +137,20 @@ print("plots for individual Logistic curve fits")
 ###########################################
 for (i in 1:N)
 {
-plot(-1,-1,main=paste(gene[i],"Curve"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+plot(-1,-1,main=paste(gene[i],"Curve"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
 points(x[,,i],y[,,i])
 KK=K_i[i]
 rr=r_i[i]
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), 0, 8,add=TRUE,col=1) 
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))+2/k_tau[i]^0.5, 7, 8,add=TRUE,col=3) 
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))-2/k_tau[i]^0.5, 7, 8,add=TRUE,col=3) 
-plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=1) 
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))+2/k_tau[i]^0.5, xlimmax-0.8*xlimmax, xlimmax,add=TRUE,col=3) 
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))-2/k_tau[i]^0.5, xlimmax-0.8*xlimmax, xlimmax,add=TRUE,col=3) 
+plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
 points(x[,,i],y[,,i])
 for (j in 1:NoORF[i])
 {
 KK=K_ij[(j+NoSum[i])]
 rr=r_ij[(j+NoSum[i])]
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), 0, 8,add=TRUE,col=1+j) 
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=1+j) 
 }
 }
 dev.off()

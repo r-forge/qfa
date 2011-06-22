@@ -38,7 +38,7 @@ samp<-funcFITandUPDATE_J(QFA.I,QFA.D,QFA.P)
 QFA.O<-funcPosterior_J(samp,N,M,iter,thin,upd)
 
 QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)
-if(PlotOutput==TRUE){qfaplots.J(work,QFA)}
+if(PlotOutput==TRUE){qfaplots.J(QFA,work)}
 return(QFA)
 }
 
@@ -46,7 +46,7 @@ return(QFA)
 
 
 ### Joint Hierachical Logistic Curve Model Plots to Pdf###
-qfaplots.J<-function(work,QFA,CustomInteractionDef=FALSE){
+qfaplots.J<-function(QFA,work,CustomInteractionDef=FALSE){
 Treat="FIX"#######
 samp<-QFA$samp
 iter<-QFA$iter
@@ -119,9 +119,9 @@ vecorder<-order(1-delta)[1:sig]
 print("Plots")
 ################################################
 
-ylimmin<-min(na.omit(as.numeric(y)))
+ylimmin<-0
 ylimmax<-max(na.omit(as.numeric(y)))
-xlimmin<-min(na.omit(as.numeric(x)))
+xlimmin<-0
 xlimmax<-max(na.omit(as.numeric(x)))
 
 if(CustomInteractionDef==FALSE){
@@ -153,9 +153,9 @@ lines(c(-1000,1000),c(mean(defb[gene=="HIS3"]),mean(defb[gene=="HIS3"])),lwd=2)}
 i=1:N
 points(mu_a[i],mu_b[i],main=paste("Treatment",Treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single (=Alpha1*mu_i)",ylab="Double (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
 i=vecorder[gamdelt[order][1:sig]>0]
-points(mu_a[i],(mu_b[i]),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
+points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder[gamdelt[order][1:sig]<=0]  
-points(mu_a[i],(mu_b[i]),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
+points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
 i=vecorder
 text(mu_a[i],(mu_b[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 legend(1,limmax, c("1-1","simple Lin Reg"), cex=0.5,col=c("grey","grey","black"), lty=c(1,2,3,1))
@@ -171,9 +171,9 @@ lines(c(-1000,1000),c(mean(defb[gene=="HIS3"]),mean(defb[gene=="HIS3"])),lwd=2)}
 i=1:N
 points(mu_a[i],mu_b[i],main=paste("Treatment",Treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single (=Alpha1*mu_i)",ylab="Double (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
 i=vecorder[omegadelt[order][1:sig]>0]
-points(mu_a[i],(mu_b[i]),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
+points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder[omegadelt[order][1:sig]<=0]  
-points(mu_a[i],(mu_b[i]),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
+points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
 i=vecorder
 text(mu_a[i],(mu_b[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 legend(1,limmax, c("1-1","simple Lin Reg"), cex=0.5,col=c("grey","grey","black"), lty=c(2,3,1))
@@ -186,9 +186,9 @@ plot(1,type="n",main=paste("Treatment",Treat,"Degrees","(Conditioning on deltas=
 lines(c(0,1000),c(0,1000),lwd=2)
 points(mu_a[i],mu_b[i],main=paste("Treatment",Treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single (=Alpha1*mu_i)",ylab="Double (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
 i=vecorder[gamdelt[order][1:sig]>0]
-points(mu_a[i],(mu_b[i]),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
+points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder[gamdelt[order][1:sig]<=0]  
-points(mu_a[i],(mu_b[i]),ylim=c(0,5),xlim=c(0,5),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
+points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
 i=1:N
 text(mu_a[i],(mu_b[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 dev.off()
@@ -202,8 +202,8 @@ curve((K*PO*exp(r*x))/(K+PO*(exp(r*x)-1)), 0, max(na.omit(c(x))),add=TRUE,col=1)
 ################################################
 print("ORF Curves")
 ################################################
-plot(x[,,,1],y[,,,1],main="ORF Curves",xlab="Time (days)", ylab="Culture Domensity (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
-points(x[,,,2],y[,,,2],main="ORF Curves",xlab="Time (days)", ylab="Culture Domensity (AU)",xlim=c(0,8),ylim=c(ylimmin,ylimmax))
+plot(x[,,,1],y[,,,1],main="ORF Curves",xlab="Time (days)", ylab="Culture Domensity (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
+points(x[,,,2],y[,,,2],main="ORF Curves",xlab="Time (days)", ylab="Culture Domensity (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
 for (i in 1:N)
 {
 curve((K_i[i]*PO*exp(r_i[i]*x))/(K_i[i]+PO*(exp(r_i[i]*x)-1)), 0, 8,add=TRUE,col=2)
