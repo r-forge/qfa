@@ -69,6 +69,15 @@ r_tau<-QFA$r_tau
 taui<-QFA$taui
 tau<-QFA$tau
 
+
+if(LinearGaussian==TRUE){
+K<-exp(QFA$K)
+K_i<-exp(QFA$K_i)
+K_ij<-QFA$K_ij
+r<-exp(QFA$r)
+r_i<-exp(QFA$r_i)
+}
+
 ################################################
 print("Plots")
 ################################################
@@ -103,37 +112,39 @@ for (i in 1:M)
 {
 curve((K_ij[i]*PO*exp(r_ij[i]*x))/(K_ij[i]+PO*(exp(r_ij[i]*x)-1)), 0, 8,add=TRUE,col=i) 
 }
+
 ################################################
-print("Model Variation tau")
+print("Model Variation tau")#fix
 ################################################
 plot(x,y,main="Curve variation tau_m", xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
 KK=K
 rr=r
 curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)),xlimmin, xlimmax,add=TRUE,col=1) 
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))+2/(tau^0.5), xlimmin, xlimmax,add=TRUE,col=3) 
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))-2/(tau^0.5), xlimmin, xlimmax,add=TRUE,col=3)
-plot(x,y,main="Repeat Curve variation tau_i", xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=1) 
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))+2/(taui[i]^0.5), xlimmin, xlimmax,add=TRUE,col=3) 
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))-2/(taui[i]^0.5), xlimmin, xlimmax,add=TRUE,col=3)
+if (LinearGaussian==FALSE){KK=funcCurveVarK(K,tau,1)} else {KK=funcCurveVarK_LG(K,tau,1)}
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=3) 
+if (LinearGaussian==FALSE){KK=funcCurveVarK(K,tau,-1)} else {KK=funcCurveVarK_LG(K,tau,-1)}
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=3)
+
 ################################################
 print("Model Variation posterior")
 ################################################
+
 par(mfrow=c(4,2))
 for (i in 1:N)
 {
-plot(density(rnorm(2000,K,alpha)),main="Density Curve variation", xlab="Time (days)", ylab="Culture Density (AU)")
-lines(density(rnorm(2000,K_i[i],1/k_tau[i]^0.5)),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=2)
-lines(density(K_ij[((1+NoSum[i]):NoSum[i+1])]),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=3)
-plot(density(rnorm(2000,r,gamma)),main="Density Curve variation", xlab="Time (days)", ylab="Culture Density (AU)")
-lines(density(rnorm(2000,r_i[i],gamma_i)),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=2)
-lines(density(r_ij[((1+NoSum[i]):NoSum[i+1])]),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=3)
+if (LinearGaussian==FALSE){MVP<-funcModelVarPost(QFA)} else {MVP<-funcModelVarPost_LG(QFA)}
+plot(density(MVP[,1]),main="Density Curve variation", xlab="Time (days)", ylab="Culture Density (AU)")
+lines(density(MVP[,2]),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=2)
+lines(density(MVP[,3]),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=3)
+plot(density(MVP[,4]),main="Density Curve variation", xlab="Time (days)", ylab="Culture Density (AU)")
+lines(density(MVP[,5]),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=2)
+lines(density(MVP[,6]),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=3)
 }
 dev.off()
 
 pdf(paste("Plots_M_indiv",work,".pdf",sep=""))
 ###########################################
-print("plots for individual Logistic curve fits")
+print("plots for individual Logistic curve fits")#fix
 ###########################################
 for (i in 1:N)
 {
@@ -142,8 +153,10 @@ points(x[,,i],y[,,i])
 KK=K_i[i]
 rr=r_i[i]
 curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=1) 
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))+2/k_tau[i]^0.5, xlimmax-0.8*xlimmax, xlimmax,add=TRUE,col=3) 
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1))-2/k_tau[i]^0.5, xlimmax-0.8*xlimmax, xlimmax,add=TRUE,col=3) 
+if (LinearGaussian==FALSE){KK=funcCurveVarK(K_i[i],k_tau[i],1)} else {KK=funcCurveVarK_LG(K_i[i],tau,1)}
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmax-0.8*xlimmax, xlimmax,add=TRUE,col=3) 
+if (LinearGaussian==FALSE){KK=funcCurveVarK(K_i[i],k_tau[i],-1)} else {KK=funcCurveVarK_LG(K_i[i],tau,-1)}
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmax-0.8*xlimmax, xlimmax,add=TRUE,col=3) 
 plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
 points(x[,,i],y[,,i])
 for (j in 1:NoORF[i])
