@@ -5,8 +5,8 @@
 Control<-c("Adam_cdc13-1_SDLV2_REP1.txt","Adam_cdc13-1_SDLV2_REP2.txt","Adam_cdc13-1_SDLV2_REP3.txt","Adam_cdc13-1_SDLV2_REP4.txt")
 Work="testjoint"
 DescripControl<-"ExptDescriptionCDC13.txt"
-upd=2000
-iter=1000
+upd=20
+iter=10
 thin=1
 wrk=Work
 PlotOutput=FALSE
@@ -42,14 +42,14 @@ QueryFit<-qfa.Hierachical(b,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=
 
 
 ### Hierarchical model plots for Control and Query ###
-qfaplots.H("Control",ControlFit,LinearGaussian=TRUE)
-qfaplots.H("Query",QueryFit,LinearGaussian=TRUE)
+qfaplots.H(ControlFit,"Control",LinearGaussian=TRUE)
+qfaplots.H(QueryFit,"Query",LinearGaussian=TRUE)
 
 ### Fit Interaction Model ###
 InteractionFit<-qfa.Interaction(ControlFit,QueryFit,iter=300000,upd=200000,thin=200,PlotOutput=FALSE,work="work",CustomModel=FALSE,Priors=FALSE)
 
 ### Interaction model plots ###
-qfaplots.I("Final",InteractionFit)
+qfaplots.I(InteractionFit,"Interaction")
 
 # eof
 

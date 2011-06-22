@@ -6,9 +6,10 @@ Creates and stores plots for qfa.Hierarchical() output to .pdf
 }
 \usage{
 qfaplots.H(work,QFA,LinearGaussian=FALSE)
+}
 \arguments{
   \item{work}{A unique name to identify the functions output.}
-  \item{QFA}{Output from qfa.Hierarchical() )
+  \item{QFA}{Output from qfa.Hierarchical()}
 \item{LinearGaussian}{Have you used a linear gaussian model? TRUE or FALSE.}
 }
 \value{

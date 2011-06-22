@@ -227,6 +227,11 @@ omega_b=Priors$omega_b
 )
 }
 
+funcJagsTime<-function(iter,upd,jags){
+#TimeC<-(iter+upd)*system.time(update(jags,900))[2]
+#print(paste("Time till completion",TimeC/(60*60*900),"(hours)",TimeC/(60*900),"(minutes)"))
+}
+
 ### Fit, update and sample from the rjags model ###
 funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P){
 jags <- jags.model('model1.bug',
@@ -235,8 +240,7 @@ jags <- jags.model('model1.bug',
                                'N' = QFA.I$N,'alpha_ij_sd'=QFA.P$alpha_ij_sd,'gamma_ij_sd'=QFA.P$gamma_ij_sd,'NoTime' = QFA.I$NoTime,'NoORF' = QFA.I$NoORF,'NoSum' = QFA.I$NoSum, 'K_s' = QFA.P$K_s,'PO_s' = QFA.P$PO_s,'r_s' = QFA.P$r_s,'tau_s' = QFA.P$tau_s,'delta'=QFA.P$delta,'alpha' = QFA.P$alpha,'beta' = QFA.P$beta,'gamma' = QFA.P$gamma,'alpha_i' = QFA.P$alpha_i,'gamma_i' = QFA.P$gamma_i,'alpha_ij' = QFA.P$alpha_ij,'gamma_ij' = QFA.P$gamma_ij),
                    n.chains = 1,
                    n.adapt = 100)
-TimeC<-(iter+upd)*system.time(update(jags,900))[2]
-print(paste("Time till completion",TimeC/(60*60*900),"(hours)",TimeC/(60*900),"(minutes)"))
+funcJagsTime(iter,upd,jags)
 update(jags, upd)
 samp<-coda.samples(jags,
           c('K_ij','r_ij','K_i','r_i','K','PO','r','tau','tau_m','k_tau','r_tau'),
@@ -249,12 +253,11 @@ samp
 funcFITandUPDATE_J<-function(QFA.I,QFA.D,QFA.P){
 jags <- jags.model('model1.bug',
                    data = list('x' = QFA.D$x,
-                               'y' = QFA.D$y,'SHIFT'=QFA$SHIFT,'p'=QFA.P$p,'alpha_a'=QFA.P$alpha_a,'alpha_b'=QFA.P$alpha_b,'gam_b'=QFA.P$gam_b,'omega_b'=QFA.P$omega_b,
+                               'y' = QFA.D$y,'SHIFT'=QFA.I$SHIFT,'p'=QFA.P$p,'alpha_a'=QFA.P$alpha_a,'alpha_b'=QFA.P$alpha_b,'gam_b'=QFA.P$gam_b,'omega_b'=QFA.P$omega_b,
                                'N' = QFA.I$N,'alpha_ij_sd'=QFA.P$alpha_ij_sd,'gamma_ij_sd'=QFA.P$gamma_ij_sd,'NoTime' = QFA.I$NoTime,'NoORF' = QFA.I$NoORF,'NoSum' = QFA.I$NoSum, 'K_s' = QFA.P$K_s,'PO_s' = QFA.P$PO_s,'r_s' = QFA.P$r_s,'tau_s' = QFA.P$tau_s,'delta'=QFA.P$delta,'alpha' = QFA.P$alpha,'beta' = QFA.P$beta,'gamma' = QFA.P$gamma,'alpha_i' = QFA.P$alpha_i,'gamma_i' = QFA.P$gamma_i,'alpha_ij' = QFA.P$alpha_ij,'gamma_ij' = QFA.P$gamma_ij),
                    n.chains = 1,
                    n.adapt = 100)
-TimeC<-(iter+upd)*system.time(update(jags,900))[2]
-print(paste("Time till completion",TimeC/(60*60*900),"(hours)",TimeC/(60*900),"(minutes)"))
+funcJagsTime(iter,upd,jags)
 update(jags, upd)
 samp<-coda.samples(jags,c('K','K_i','K_ij','PO','alph','bet','delt','gam','k_tau','r_tau','nu','nuc','omega','r','r_i','r_ij','tau','tau_m'),iter,thin=thin)
 samp<-samp[[1]]
