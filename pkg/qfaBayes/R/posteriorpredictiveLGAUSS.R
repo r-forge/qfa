@@ -1,9 +1,9 @@
-funcCurveVarK<-function(K,tau,addsub){
-KK=K+addsub*2/(tau^0.5)
+funcCurveVarK_LG<-function(K,tau,addsub){
+KK=exp(log(K)+addsub*2/(tau^0.5))
 KK
 }
 
-funcModelVarPost<-function(QFA){
+funcModelVarPost_LG<-function(QFA){
 K<-QFA$K
 alpha<-QFA$alpha
 K_i<-QFA$K_i
@@ -14,21 +14,19 @@ gamma<-QFA$gamma
 r_i<-QFA$r_i
 gamma_i<-QFA$gamma_i
 r_ij<-QFA$r_ij
-
-
 len<-length(K_ij)*2000
 
 MVP<-matrix(NA,len,6)
-MVP[,1]<-rgamma(len,(K^2)/(alpha^2),K/(alpha^2))
-MVP[,2]<-rgamma(len,(K_i[i]^2)*K_tau[i],K_i[i]*K_tau[i])
-MVP[,3]<-rep(2000,K_ij[((1+NoSum[i]):NoSum[i+1])],2000)
-MVP[,4]<-rgamma(len,(r^2)/(gamma^2),r/(gamma^2))
-MVP[,5]<-rgamma(len,(r_i[i]^2)/(gamma_i^2),r_i[i]/(gamma_i^2))
-MVP[,6]<-rep(r_ij[((1+NoSum[i]):NoSum[i+1])],2000)
+MVP[,1]<-rnorm(len,K,alpha)
+MVP[,2]<-rnorm(len,K_i[i],1/k_tau[i]^0.5)
+MVP[,3]<-rep(log(K_ij[((1+NoSum[i]):NoSum[i+1])]),2000)
+MVP[,4]<-rnorm(len,r,gamma)
+MVP[,5]<-rnorm(len,r_i[i],gamma_i)
+MVP[,6]<-rep(log(r_ij[((1+NoSum[i]):NoSum[i+1])]),2000)
 MVP
 }
 
-funcDen<-function(sampsize,QFA){
+funcDen_LG<-function(sampsize,QFA){
 K_s<-QFA$K_s
 r_s<-QFA$r_s
 PO_s<-QFA$PO_s
@@ -45,21 +43,21 @@ alpha_ij<-QFA$alpha_ij
 gamma_ij<-QFA$gamma_ij
 
 den<-matrix(0,sampsize,11)
-den[,1]<-rgamma(sampsize,(K_s^2)/(alpha^2),K_s/(alpha^2))
-den[,2]<-rgamma(sampsize,(K_s^2)/(alpha^2),K_s/(alpha^2))
-den[,3]<-rgamma(sampsize,(K_s^2)/(alpha^2),K_s/(alpha^2))
+den[,1]<-rnorm(sampsize,K_s,alpha)
+den[,2]<-rnorm(sampsize,K_s,alpha)
+den[,3]<-exp(rnorm(sampsize,K_s,alpha))
 den[,4]<-runif(sampsize,PO_s,beta)
 den[,5]<-rgamma(sampsize,(alpha_ij^2)/(alpha_ij_sd^2),alpha_ij/(alpha_ij_sd^2))
-den[,6]<-rgamma(sampsize,(r_s^2)/(gamma^2),r_s/(gamma^2))
-den[,7]<-rgamma(sampsize,(r_s^2)/(gamma^2),r_s/(gamma^2))
-den[,8]<-rgamma(sampsize,(r_s^2)/(gamma^2),r_s/(gamma^2))
+den[,6]<-rnorm(sampsize,r_s,gamma)
+den[,7]<-rnorm(sampsize,r_s,gamma)
+den[,8]<-exp(rnorm(sampsize,r_s,gamma))
 den[,9]<-rgamma(sampsize,(gamma_ij^2)/(gamma_ij_sd^2),gamma_ij/(gamma_ij_sd^2))
 den[,10]<-rgamma(sampsize,(tau_s^2)/(delta^2),tau_s/(delta^2))
 den[,11]<-rgamma(sampsize,(tau_s^2)/(delta^2),tau_s/(delta^2))
 den
 }
 
-funcPostPred<-function(iter,QFA){
+funcPostPred_LG<-function(iter,QFA){
 
 N<-QFA$N
 M<-QFA$M
@@ -101,17 +99,17 @@ tau<-QFA$tau
 
 postpred<-matrix(0,iter,length(namesamp))
 
-postpred[,1]<-rgamma(iter,(K_s^2)/alpha^2,K_s/alpha^2)
+postpred[,1]<-rnorm(iter,K_s,alpha)
 
 for (i in 1:length(K_i)){
 j=(2)+i-1
-postpred[,j]<-rgamma(iter,(K^2)/alpha_i^2,K/alpha_i^2)
+postpred[,j]<-rnorm(iter,K,alpha_i)
 }
 
 t=1
 for (i in (N+2):(M+N+1) ){
 if(((i-(N+2))==c(NoSum[-1])[t])) t=t+1
-postpred[,i]<-rgamma(iter,(K_i[t]^2)*k_tau[t],K_i[t]*k_tau[t])
+postpred[,i]<-exp(rnorm(iter,K_i[t],1/k_tau[t]^0.5))
 }
 postpred[,(M+N+2)]<-runif(iter,PO_s,beta)
 
@@ -120,16 +118,17 @@ j=(M+N+3)+i-1
 postpred[,j]<-rgamma(iter,(alpha_ij^2)/alpha_ij_sd^2,(alpha_ij^2)/alpha_ij_sd^2)
 }
 
-postpred[,(M+2*N+3)]<-rgamma(iter,(r_s^2)/gamma^2,r_s/gamma^2)
+postpred[,(M+2*N+3)]<-rnorm(iter,r_s,gamma)
 
 for (i in 1:length(r_i)){
 j=(M+2*N+4)+i-1
-postpred[,j]<-rgamma(iter,(r^2)/gamma_i^2,r/gamma_i^2)
+postpred[,j]<-rnorm(iter,r,gamma_i)
 }
+
 t=1
 for (i in (M+2*N+4):(M+3*N+3) ){
 if(((i-(M+2*N+4))==c(NoSum[-1])[t])) t=t+1	
-postpred[,i]<-rgamma(iter,(r_i[t]^2)/gamma_ij^2,r_i[t]/gamma_ij^2)
+postpred[,i]<-exp(rnorm(iter,r_i[t],gamma_ij))
 }
 
 for (i in 1:length(r_tau)){
