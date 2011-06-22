@@ -3,9 +3,9 @@
 
 Control<-c("Adam_cdc13-1_SDLV2_REP1.txt","Adam_cdc13-1_SDLV2_REP2.txt","Adam_cdc13-1_SDLV2_REP3.txt","Adam_cdc13-1_SDLV2_REP4.txt")[1]
 DescripControl<-"ExptDescriptionCDC13.txt"
-upd=20
-iter=10
-thin=1
+upd=800000
+iter=100000
+thin=200
 data("Adam_cdc-1_SDLV2_REP1")
 
 qfa.variables(a)
