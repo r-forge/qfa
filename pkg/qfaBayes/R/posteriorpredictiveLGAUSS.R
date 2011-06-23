@@ -1,9 +1,9 @@
 funcCurveVarK_LG<-function(K,tau,addsub){
 KK=exp(log(K)+addsub*2/(tau^0.5))
-KK
+max(KK,0)
 }
 
-funcModelVarPost_LG<-function(QFA){
+funcModelVarPost_LG<-function(QFA,i){
 K<-QFA$K
 alpha<-QFA$alpha
 K_i<-QFA$K_i
@@ -14,16 +14,17 @@ gamma<-QFA$gamma
 r_i<-QFA$r_i
 gamma_i<-QFA$gamma_i
 r_ij<-QFA$r_ij
-len<-length(K_ij)*2000
+NoSum<-QFA$NoSum
 
-MVP<-matrix(NA,len,6)
-MVP[,1]<-rnorm(len,K,alpha)
-MVP[,2]<-rnorm(len,K_i[i],1/k_tau[i]^0.5)
-MVP[,3]<-rep(log(K_ij[((1+NoSum[i]):NoSum[i+1])]),2000)
-MVP[,4]<-rnorm(len,r,gamma)
-MVP[,5]<-rnorm(len,r_i[i],gamma_i)
-MVP[,6]<-rep(log(r_ij[((1+NoSum[i]):NoSum[i+1])]),2000)
-MVP
+len<-length(K_ij[((1+NoSum[i]):NoSum[i+1])])
+list(
+A=rnorm(3*len,K,alpha),
+B=rnorm(2*len,K_i[i],1/k_tau[i]^0.5),
+C=log(K_ij[((1+NoSum[i]):NoSum[i+1])]),
+D=rnorm(3*len,r,gamma),
+E=rnorm(2*len,r_i[i],gamma_i),
+F=log(r_ij[((1+NoSum[i]):NoSum[i+1])])
+)
 }
 
 funcDen_LG<-function(sampsize,QFA){
