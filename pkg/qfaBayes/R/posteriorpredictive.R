@@ -1,9 +1,9 @@
 funcCurveVarK<-function(K,tau,addsub){
 KK=K+addsub*2/(tau^0.5)
-KK
+max(KK,0)
 }
 
-funcModelVarPost<-function(QFA){
+funcModelVarPost<-function(QFA,i){
 K<-QFA$K
 alpha<-QFA$alpha
 K_i<-QFA$K_i
@@ -14,19 +14,20 @@ gamma<-QFA$gamma
 r_i<-QFA$r_i
 gamma_i<-QFA$gamma_i
 r_ij<-QFA$r_ij
+NoSum<-QFA$NoSum
 
+len<-length(K_ij[((1+NoSum[i]):NoSum[i+1])])
 
-len<-length(K_ij)*2000
-
-MVP<-matrix(NA,len,6)
-MVP[,1]<-rgamma(len,(K^2)/(alpha^2),K/(alpha^2))
-MVP[,2]<-rgamma(len,(K_i[i]^2)*k_tau[i],K_i[i]*k_tau[i])
-MVP[,3]<-rep(2000,K_ij[((1+NoSum[i]):NoSum[i+1])],2000)
-MVP[,4]<-rgamma(len,(r^2)/(gamma^2),r/(gamma^2))
-MVP[,5]<-rgamma(len,(r_i[i]^2)/(gamma_i^2),r_i[i]/(gamma_i^2))
-MVP[,6]<-rep(r_ij[((1+NoSum[i]):NoSum[i+1])],2000)
-MVP
+list(
+A=rgamma(len*3,(K^2)/(alpha^2),K/(alpha^2)),
+B=rgamma(len*2,(K_i[i]^2)*k_tau[i],K_i[i]*k_tau[i]),
+C=K_ij[((1+NoSum[i]):NoSum[i+1])],
+D=rgamma(len*3,(r^2)/(gamma^2),r/(gamma^2)),
+E=rgamma(len*2,(r_i[i]^2)/(gamma_i^2),r_i[i]/(gamma_i^2)),
+F=r_ij[((1+NoSum[i]):NoSum[i+1])]
+)
 }
+
 
 funcDen<-function(sampsize,QFA){
 K_s<-QFA$K_s

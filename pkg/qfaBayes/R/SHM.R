@@ -132,13 +132,13 @@ print("Model Variation posterior")
 par(mfrow=c(4,2))
 for (i in 1:N)
 {
-if (LinearGaussian==FALSE){MVP<-funcModelVarPost(QFA)} else {MVP<-funcModelVarPost_LG(QFA)}
-plot(density(MVP[,1]),main="Density Curve variation", xlab="Time (days)", ylab="Culture Density (AU)")
-lines(density(MVP[,2]),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=2)
-lines(density(MVP[,3]),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=3)
-plot(density(MVP[,4]),main="Density Curve variation", xlab="Time (days)", ylab="Culture Density (AU)")
-lines(density(MVP[,5]),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=2)
-lines(density(MVP[,6]),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=3)
+if (LinearGaussian==FALSE){MVP<-funcModelVarPost(QFA,i)} else {MVP<-funcModelVarPost_LG(QFA,i)}
+plot(density(MVP$A),main="Density Curve variation", xlab="Time (days)", ylab="Culture Density (AU)")
+lines(density(MVP$B),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=2)
+lines(density(MVP$C),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=3)
+plot(density(MVP$D),main="Density Curve variation", xlab="Time (days)", ylab="Culture Density (AU)")
+lines(density(MVP$E),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=2)
+lines(density(MVP$F),main="Master Curve variation", xlab="Time (days)", ylab="Culture Density (AU)",col=3)
 }
 dev.off()
 
