@@ -16,7 +16,7 @@ a<-funcREMOVE(a,Screen,Treat,MPlate)
 
 CustomModel="CustomModel7"
 ControlFit<-qfa.Hierachical(a,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=FALSE,work="ModelHExample",CustomModel=CustomModel)
-save(ControlFit,file=paste(CustomModel,R,sep=".")
+save(ControlFit,file=paste(CustomModel,"R",sep="."))
 ### Plots ###
 qfaplots.H(ControlFit,CustomModel,LinearGaussian=TRUE)
 

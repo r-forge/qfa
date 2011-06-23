@@ -3,9 +3,9 @@
 
 Control<-c("Adam_cdc13-1_SDLV2_REP1.txt","Adam_cdc13-1_SDLV2_REP2.txt","Adam_cdc13-1_SDLV2_REP3.txt","Adam_cdc13-1_SDLV2_REP4.txt")[1]
 DescripControl<-"ExptDescriptionCDC13.txt"
-upd=800000
-iter=100000
-thin=200
+upd=10
+iter=10
+thin=1
 data("Adam_cdc-1_SDLV2_REP1")
 
 qfa.variables(a)
@@ -16,7 +16,7 @@ a<-funcREMOVE(a,Screen,Treat,MPlate)
 
 CustomModel="CustomModel5"
 ControlFit<-qfa.Hierachical(a,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=FALSE,work="ModelHExample",CustomModel=CustomModel)
-save(ControlFit,file=paste(CustomModel,R,sep=".")
+save(ControlFit,file=paste(CustomModel,"R",sep="."))
 
 ### Plots ###
 qfaplots.H(ControlFit,CustomModel,LinearGaussian=TRUE)

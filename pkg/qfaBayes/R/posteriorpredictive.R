@@ -20,7 +20,7 @@ len<-length(K_ij)*2000
 
 MVP<-matrix(NA,len,6)
 MVP[,1]<-rgamma(len,(K^2)/(alpha^2),K/(alpha^2))
-MVP[,2]<-rgamma(len,(K_i[i]^2)*K_tau[i],K_i[i]*K_tau[i])
+MVP[,2]<-rgamma(len,(K_i[i]^2)*k_tau[i],K_i[i]*k_tau[i])
 MVP[,3]<-rep(2000,K_ij[((1+NoSum[i]):NoSum[i+1])],2000)
 MVP[,4]<-rgamma(len,(r^2)/(gamma^2),r/(gamma^2))
 MVP[,5]<-rgamma(len,(r_i[i]^2)/(gamma_i^2),r_i[i]/(gamma_i^2))
