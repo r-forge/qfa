@@ -14,7 +14,7 @@ Treat<-as.character(unique(a$Treatment))[2]
 MPlate<-unique(a$MasterPlate.Number)[15]
 a<-funcREMOVE(a,Screen,Treat,MPlate)
 
-CustomModel="CustomModel7FULL"
+CustomModel="CustomModel7Full"
 ControlFit<-qfa.Hierachical(a,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=FALSE,work="ModelHExample",CustomModel=CustomModel)
 save(ControlFit,file=paste(CustomModel,"R",sep="."))
 
