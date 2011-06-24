@@ -12,7 +12,7 @@ wrk=Work
 PlotOutput=FALSE
 a=rod.read(file=Control,inoctimes=DescripControl)
 qfa.variables(a)
-Screen<-as.character(unique(a$Screen.Name))
+Screen<-as.character(unique(a$Screen.Name))[1]
 Treat<-as.character(unique(a$Treatment))[2]
 MPlate<-unique(a$MasterPlate.Number)[15]
 a<-funcREMOVE(a,Screen,Treat,MPlate)
@@ -34,7 +34,7 @@ PlotOutput=FALSE
 b=rod.read(file=Query,inoctimes=DescripQuery)
 
 qfa.variables(b)
-Screen<-as.character(unique(b$Screen.Name))
+Screen<-as.character(unique(b$Screen.Name))[1]
 b<-funcREMOVE(b,Screen,Treat,MPlate)
 
 CustomModel="CustomModel7"
