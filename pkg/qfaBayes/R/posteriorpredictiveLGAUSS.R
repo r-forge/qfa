@@ -1,7 +1,28 @@
-funcCurveVarK_LG<-function(K,tau,addsub){
-KK=exp(log(K)+addsub*2/(tau^0.5))
-max(KK,0)
+funcMCurveVar_LG<-function(x,samp,PO,M,N){
+MQQU=MQQD=NA
+for (j in 1:ceiling(max(x,na.rm=TRUE))){
+KK=exp(samp[,1])
+rr=exp(samp[,(M+2*N+3)])
+MQQU[j]<-quantile((KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1)))[1]
+MQQD[j]<-quantile((KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1)))[5]
 }
+list(MQQU=MQQU,MQQD=MQQD)
+}
+
+funcICurveVar_LG<-function(x,samp,PO,M,N){
+IQQU=IQQD=matrix(NA,ceiling(max(x,na.rm=TRUE)),N)
+for (j in 1:ceiling(max(x,na.rm=TRUE))){
+for (i in 1:N){
+KK=exp(samp[,2+i-1])
+rr=exp(samp[,M+2*N+4+i-1])
+IQQU[j,i]<-quantile((KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1)))[1]
+IQQD[j,i]<-quantile((KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1)))[5]
+}
+}
+list(IQQU=IQQU,IQQD=IQQD)
+}
+
+
 
 funcModelVarPost_LG<-function(QFA,i){
 K<-QFA$K
