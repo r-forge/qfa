@@ -92,7 +92,7 @@ pdf(paste("Plots_M",work,".pdf",sep=""))
 print("Master Curve")
 ################################################
 plot(x,y,main="Master Curve",xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
-curve((K*PO*exp(r*x))/(K+PO*(exp(r*x)-1)), 0, 8,add=TRUE,col=1)
+curve((K*PO*exp(r*x))/(K+PO*(exp(r*x)-1)), xlimmin, xlimmax,add=TRUE,col=1)
 ################################################
 print("ORF Curves")
 ################################################
@@ -120,11 +120,9 @@ plot(x,y,main="Curve variation tau_m", xlab="Time (days)", ylab="Culture Density
 KK=K
 rr=r
 curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)),xlimmin, xlimmax,add=TRUE,col=1) 
-if (LinearGaussian==FALSE){KK=funcCurveVarK(K,tau,1)} else {KK=funcCurveVarK_LG(K,tau,1)}
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=3) 
-if (LinearGaussian==FALSE){KK=funcCurveVarK(K,tau,-1)} else {KK=funcCurveVarK_LG(K,tau,-1)}
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=3)
-
+if (LinearGaussian==FALSE){MCurveVar<-funcMCurveVar(x,samp,PO,M,N)} else {MCurveVar<-funcMCurveVar_LG(x,samp,PO,M,N)} 
+lines(MCurveVar$MQQU)
+lines(MCurveVar$MQQD)
 ################################################
 print("Model Variation posterior")
 ################################################
@@ -146,6 +144,9 @@ pdf(paste("Plots_M_indiv",work,".pdf",sep=""))
 ###########################################
 print("plots for individual Logistic curve fits")#fix
 ###########################################
+
+if (LinearGaussian==FALSE){ICurveVar<-funcICurveVar(x,samp,PO,M,N)} else {ICurveVar<-funcICurveVar_LG(x,samp,PO,M,N)} 
+
 for (i in 1:N)
 {
 plot(-1,-1,main=paste(gene[i],"Curve"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
@@ -153,10 +154,9 @@ points(x[,,i],y[,,i])
 KK=K_i[i]
 rr=r_i[i]
 curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=1) 
-if (LinearGaussian==FALSE){KK=funcCurveVarK(K_i[i],k_tau[i],1)} else {KK=funcCurveVarK_LG(K_i[i],tau,1)}
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmax-0.8*xlimmax, xlimmax,add=TRUE,col=3) 
-if (LinearGaussian==FALSE){KK=funcCurveVarK(K_i[i],k_tau[i],-1)} else {KK=funcCurveVarK_LG(K_i[i],tau,-1)}
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmax-0.8*xlimmax, xlimmax,add=TRUE,col=3) 
+lines(ICurveVar$IQQU[,i])
+lines(ICurveVar$IQQD[,i])
+
 plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
 points(x[,,i],y[,,i])
 for (j in 1:NoORF[i])
@@ -166,7 +166,32 @@ rr=r_ij[(j+NoSum[i])]
 curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=1+j) 
 }
 }
+
 dev.off()
+
+pdf(paste("Plots_Tau",work,".pdf",sep=""))
+
+plot(x,y,main="Master Curve",xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
+curve((K*PO*exp(r*x))/(K+PO*(exp(r*x)-1)), xlimmin, xlimmax,add=TRUE,col=1)
+curve(+2/tau^0.5+(K*PO*exp(r*x))/(K+PO*(exp(r*x)-1)), xlimmin, xlimmax,add=TRUE,col=3)
+curve(-2/tau^0.5+(K*PO*exp(r*x))/(K+PO*(exp(r*x)-1)), xlimmin, xlimmax,add=TRUE,col=3)
+
+for (i in 1:N)
+{
+for (j in 1:NoORF[i])
+{
+plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
+points(x[j,,i],y[j,,i])
+KK=K_ij[(j+NoSum[i])]
+rr=r_ij[(j+NoSum[i])]
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=1) 
+curve(2/taui[i]^0.5+(KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=1+j) 
+curve(-2/taui[i]^0.5+(KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=1+j) 
+}
+}
+
+dev.off()
+
 
 pdf(paste("Plots_M_diag",work,".pdf",sep=""))
 ###########################################
