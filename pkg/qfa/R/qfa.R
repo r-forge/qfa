@@ -289,7 +289,8 @@ for (bcode in barcodes){bcount<-bcount+1
 	Background=info[,9],Treatment=info[,2],Medium=info[,3],ORF=info[,4],
 	K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],s=bcfit[,4],Screen.Name=info[,5],
 	Library.Name=info[,6],MasterPlate.Number=info[,7],Timeseries.order=info[,8],
-	Inoc.Time=inoctime))
+	Inoc.Time=inoctime,TileX=info[,10],TileY=info[,11],XOffset=info[,12],YOffset=info[,13],
+	Threshold=info[,14],EdgeLength=info[,15],EdgePixels=info[,16],RepQuad=info[,17]))
 } #bcode
 if (ORF2gene!=FALSE){results$Gene<-sapply(as.character(results$ORF),orf2g,gdict)}
 return(results)
@@ -437,12 +438,16 @@ colony.info<-function(position,bcdata){
 # Get row & column to restrict data
 row<-position[1]; col<-position[2]
 d<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
+# Want to use the LAST datapoint 
+# Most relevant for edge length (possibly most reliable for position)
+d<-d[order(d$Date.Time,decreasing=TRUE),]
 d<-d[1,]
 # Character vector of colony info
 c(as.character(d$Barcode),
 as.character(d$Treatments),as.character(d$Medium),as.character(d$ORF),
 as.character(d$Screen.Name),as.character(d$Library.Name),as.character(d$MasterPlate.Number),
-as.character(d$Timeseries.order),as.character(d$Background))}
+as.character(d$Timeseries.order),as.character(d$Background),as.numeric(d$Tile.Dimensions.X),as.numeric(d$Tile.Dimensions.Y),
+as.numeric(d$X.Offset),as.numeric(d$Y.Offset),as.numeric(d$Threshold),as.numeric(d$Edge.length),as.numeric(d$Edge.Pixels),as.numeric(d$RepQuad))}
 
 
 ##### Make PDFs #####
