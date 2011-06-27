@@ -1,22 +1,44 @@
-funcMCurveVar_LG<-function(x,samp,PO,M,N){
-MQQU=MQQD=NA
+funcMCurveVar_LG<-function(sim,QFA){
+x<-QFA$x
+samp<-QFA$samp
+PO<-QFA$PO
+M<-QFA$M
+N<-QFA$N
+QQ=MQQU=MQQD=NA
+QQ<-numeric(0)
 for (j in 1:ceiling(max(x,na.rm=TRUE))){
-KK=exp(samp[,1])
-rr=exp(samp[,(M+2*N+3)])
-MQQU[j]<-quantile((KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1)))[1]
-MQQD[j]<-quantile((KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1)))[5]
+for (l in 1:nrow(samp)){
+KK=exp(rnorm(sim,samp[l,1],alpha_i))
+rr=exp(rnorm(sim,samp[l,(M+2*N+3)],gamma_i))
+QQ<-c(QQ,(KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1)))
+}
+MQQU[j]<-quantile(QQ,na.rm=TRUE)[4]
+MQQD[j]<-quantile(QQ,na.rm=TRUE)[2]
+QQ<-numeric(0)
 }
 list(MQQU=MQQU,MQQD=MQQD)
 }
 
-funcICurveVar_LG<-function(x,samp,PO,M,N){
-IQQU=IQQD=matrix(NA,ceiling(max(x,na.rm=TRUE)),N)
-for (j in 1:ceiling(max(x,na.rm=TRUE))){
+funcICurveVar_LG<-function(sim,QFA){
+x<-QFA$x
+samp<-QFA$samp
+PO<-QFA$PO
+M<-QFA$M
+N<-QFA$N
+IQQU=IQQD=matrix(numeric(0),ceiling(max(x,na.rm=TRUE)),N)
+QQ<-numeric(0)
 for (i in 1:N){
-KK=exp(samp[,2+i-1])
-rr=exp(samp[,M+2*N+4+i-1])
-IQQU[j,i]<-quantile((KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1)))[1]
-IQQD[j,i]<-quantile((KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1)))[5]
+for (j in 1:ceiling(max(x,na.rm=TRUE))){
+for (l in 1:nrow(samp)){
+A=1/samp[l,M+N+3+i-1]^0.5
+B=1/samp[l,2*M+3*N+4+i-1]^0.5
+KK=exp(rnorm(sim,samp[l,(2+i-1)],1/A^2))
+rr=exp(rnorm(sim,samp[l,(M+2*N+4+i-1)],1/B^2))
+QQ<-c(QQ,(KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1)))
+}
+IQQU[j,i]<-quantile(QQ,na.rm=TRUE)[4]
+IQQD[j,i]<-quantile(QQ,na.rm=TRUE)[2]
+QQ<-numeric(0)
 }
 }
 list(IQQU=IQQU,IQQD=IQQD)

@@ -120,7 +120,7 @@ plot(x,y,main="Curve variation tau_m", xlab="Time (days)", ylab="Culture Density
 KK=K
 rr=r
 curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)),xlimmin, xlimmax,add=TRUE,col=1) 
-if (LinearGaussian==FALSE){MCurveVar<-funcMCurveVar(x,samp,PO,M,N)} else {MCurveVar<-funcMCurveVar_LG(x,samp,PO,M,N)} 
+if (LinearGaussian==FALSE){MCurveVar<-funcMCurveVar(1,QFA)} else {MCurveVar<-funcMCurveVar_LG(1,QFA)} 
 lines(MCurveVar$MQQU)
 lines(MCurveVar$MQQD)
 ################################################
@@ -145,7 +145,7 @@ pdf(paste("Plots_M_indiv",work,".pdf",sep=""))
 print("plots for individual Logistic curve fits")#fix
 ###########################################
 
-if (LinearGaussian==FALSE){ICurveVar<-funcICurveVar(x,samp,PO,M,N)} else {ICurveVar<-funcICurveVar_LG(x,samp,PO,M,N)} 
+if (LinearGaussian==FALSE){ICurveVar<-funcICurveVar(1,QFA)} else {ICurveVar<-funcICurveVar_LG(1,QFA)} 
 
 for (i in 1:N)
 {
