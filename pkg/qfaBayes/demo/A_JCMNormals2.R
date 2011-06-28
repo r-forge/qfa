@@ -18,7 +18,7 @@ data("cdc13-1_rad9D_SDLv2_Rpt1")
 qfa.variables(b)
 Screen<-as.character(unique(b$Screen.Name))[1]
 b<-funcREMOVE(b,Screen,Treat,MPlate)
-CustomModel="2JCMNNormals2"
+CustomModel="A_JCMNNormals2"
 JointFit<-qfa.Joint(a,b,Scaling=TRUE,iter,upd,thin,PlotOutput=FALSE,work,CustomModel=FALSE)
 save(ControlFit,file=paste(CustomModel,"BASIC","R",sep="."))
 
