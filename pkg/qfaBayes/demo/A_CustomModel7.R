@@ -1,6 +1,6 @@
 # Hierarchical.R
 # Single Model
-CustomModel="2CustomModel7_3"
+CustomModel="A_CustomModel7"
 
 Control<-c("Adam_cdc13-1_SDLV2_REP1.txt","Adam_cdc13-1_SDLV2_REP2.txt","Adam_cdc13-1_SDLV2_REP3.txt","Adam_cdc13-1_SDLV2_REP4.txt")
 DescripControl<-"ExptDescriptionCDC13.txt"
