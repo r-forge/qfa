@@ -1,20 +1,20 @@
 # Hierarchical.R
 # Single Model
+CustomModel="A_CustomModel7"
 
-Control<-c("Adam_cdc13-1_SDLV2_REP1.txt","Adam_cdc13-1_SDLV2_REP2.txt","Adam_cdc13-1_SDLV2_REP3.txt","Adam_cdc13-1_SDLV2_REP4.txt")[1]
+Control<-c("Adam_cdc13-1_SDLV2_REP1.txt","Adam_cdc13-1_SDLV2_REP2.txt","Adam_cdc13-1_SDLV2_REP3.txt","Adam_cdc13-1_SDLV2_REP4.txt")
 DescripControl<-"ExptDescriptionCDC13.txt"
 upd=800000
-iter=100000
+iter=200000
 thin=200
-data("Adam_cdc-1_SDLV2_REP1")
+data("PeterFull")
 
 qfa.variables(a)
-Screen<-as.character(unique(a$Screen.Name))[1]
+Screen<-as.character(unique(a$Screen.Name))
 Treat<-as.character(unique(a$Treatment))[2]
 MPlate<-unique(a$MasterPlate.Number)[15]
 a<-funcREMOVE(a,Screen,Treat,MPlate)
 
-CustomModel="CustomModel11"
 ControlFit<-qfa.Hierachical(a,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=FALSE,work="ModelHExample",CustomModel=CustomModel)
 save(ControlFit,file=paste(CustomModel,"R",sep="."))
 
