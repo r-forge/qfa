@@ -1,4 +1,0 @@
-BASIC_I<-qfa.Interaction(a,b,iter=100,upd=100,thin=1,PlotOutput=TRUE,work="work",CustomModel=FALSE,Priors=FALSE)
-QFA.I.Plots(inter,BASIC_I)
-
-print("change this, index00, 0 8 plots  interaction defiontion in joint model remove from plors func. sort priors for interation model")

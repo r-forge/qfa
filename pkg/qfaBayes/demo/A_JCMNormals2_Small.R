@@ -1,8 +1,8 @@
 # Joint.R
 # Joint Model
-upd=800000
-iter=200000
-thin=200
+upd=100000
+iter=100000
+thin=100
 work="Joint"
 PlotOutput=FALSE
 data("Adam_cdc-1_SDLV2_REP1")

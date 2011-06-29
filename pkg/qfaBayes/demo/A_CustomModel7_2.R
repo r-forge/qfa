@@ -10,7 +10,7 @@ thin=200
 data("AdamFull")
 
 qfa.variables(a)
-Screen<-as.character(unique(a$Screen.Name))[1]
+Screen<-as.character(unique(a$Screen.Name))
 Treat<-as.character(unique(a$Treatment))[2]
 MPlate<-unique(a$MasterPlate.Number)[15]
 a<-funcREMOVE(a,Screen,Treat,MPlate)
