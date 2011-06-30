@@ -8,7 +8,7 @@ upd=1000000
 iter=1000000
 thin=100
 data("PeterFull")
-
+a<-b
 qfa.variables(a)
 Screen<-as.character(unique(a$Screen.Name))
 Treat<-as.character(unique(a$Treatment))[2]
