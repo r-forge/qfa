@@ -5,9 +5,7 @@ CustomModel="B_CM1"
 Control<-c("Adam_cdc13-1_SDLV2_REP1.txt","Adam_cdc13-1_SDLV2_REP2.txt","Adam_cdc13-1_SDLV2_REP3.txt","Adam_cdc13-1_SDLV2_REP4.txt")
 DescripControl<-"ExptDescriptionCDC13.txt"
 
-#upd=8
-#iter=2
-#thin=2
+source(iter.R)
 work=paste(upd,iter,thin,sep="_")
 data("AdamFull")
 
