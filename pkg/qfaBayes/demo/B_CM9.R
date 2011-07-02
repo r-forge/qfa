@@ -4,7 +4,7 @@ CustomModel="B_CM9"
 
 Control<-c("Adam_cdc13-1_SDLV2_REP1.txt","Adam_cdc13-1_SDLV2_REP2.txt","Adam_cdc13-1_SDLV2_REP3.txt","Adam_cdc13-1_SDLV2_REP4.txt")
 DescripControl<-"ExptDescriptionCDC13.txt"
-source(iter.R)
+source("iter.R")
 #upd=8
 #iter=2
 #thin=2
