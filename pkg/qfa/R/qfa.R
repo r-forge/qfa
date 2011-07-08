@@ -207,9 +207,12 @@ pgis<-function(orf,m,cFs,dFs,cFms,dFms,wilcoxon=TRUE){
 			diff<-as.real(ctest$estimate)
 			return(c(p,diff))
 		}else{
-			# t-test fails if only one element in either list
+			# t-test fails if only one element in either list, do one sample test
 			if((ldFS<=1)|(lcFS<=1)){
-				return(c(1,mean(dFs[[orf]])-m*mean(cFs[[orf]])))
+				ctest<-t.test(dFs[[orf]]-m*cFs[[orf]])
+				p<-as.real(ctest$p.value)
+				diff<-as.real(ctest$estimate)
+				return(c(p,diff))
 			}else{
 				# Returns p-value for significance of difference, and the difference between the means
 				ctest<-t.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)
