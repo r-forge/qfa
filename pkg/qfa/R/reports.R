@@ -3,9 +3,10 @@ fitnessReport<-function(treatment,outputfile,dataframe){
 	print(outputfile)
 	fitdf=dataframe[dataframe$Treatment==treatment,]
 
-	genelst=unique(as.character(fitdf$Gene))
-	genelst=sort(genelst)
-	orflst=as.character(fitdf$ORF[match(genelst,as.character(fitdf$Gene))])
+	orflst=unique(as.character(fitdf$ORF))
+	orflst=sort(orflst)
+	
+	genelst=as.character(fitdf$Gene[match(orflst,as.character(fitdf$ORF))])
 
 	# Get median fitness and variance for each gene
 	calcStuff <- function(queryORF){
@@ -82,9 +83,10 @@ pdf(outputfile)
 for (trt in unique(dataframe$Treatment)){
 	for (scr in unique(dataframe$Screen.Name)){
 		dt=dataframe[(dataframe$Screen.Name==scr)&(dataframe$Treatment==trt),]
-		dt$MasterPlate.Number=as.numeric(dt$MasterPlate.Number)
-		dt=dt[order(dt$MasterPlate.Number),]
-		dt$MasterPlate.Number=as.factor(dt$MasterPlate.Number)
+		dt=dt[order(as.numeric(dt$MasterPlate.Number)),]
+		plateNums=unique(as.numeric(dt$MasterPlate.Number))
+		plateNums=as.character(plateNums)
+		dt$MasterPlate.Number<-factor(dt$MasterPlate.Number,levels=plateNums)
 		boxplot(dt$fit~dt$MasterPlate.Number,notch=TRUE,xlab="Plate Number",ylab="Fitness",col=rainbow(23),main=paste(trt,scr),ylim=c(0,fitmax),cex.axis=0.5)
 }
 }
