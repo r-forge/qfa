@@ -4,20 +4,15 @@ samp<-QFA$samp
 PO<-QFA$PO
 M<-QFA$M
 N<-QFA$N
-QQ=MQQU=MQQD=NA
-QQ<-numeric(0)
-for (j in 1:ceiling(max(x,na.rm=TRUE))){
 for (l in 1:nrow(samp)){
-KK=exp(rnorm(sim,samp[l,1],alpha_i))
-rr=exp(rnorm(sim,samp[l,(M+2*N+3)],gamma_i))
-QQ<-c(QQ,(KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1)))
+PO=samp[l,(M+2*N+3)]
+KK=exp(rnorm(sim,samp[l,1],1/samp[l,(N+2)]^0.5))
+rr=exp(rnorm(sim,samp[l,(M+2*N+4)],1/samp[l,(M+3*N+5)]^0.5))
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)),xlimmin, xlimmax,add=TRUE,col=5) 
 }
-MQQU[j]<-quantile(QQ,na.rm=TRUE)[4]
-MQQD[j]<-quantile(QQ,na.rm=TRUE)[2]
-QQ<-numeric(0)
 }
-list(MQQU=MQQU,MQQD=MQQD)
-}
+
+
 
 funcICurveVar_LG<-function(sim,QFA){
 x<-QFA$x
@@ -25,24 +20,38 @@ samp<-QFA$samp
 PO<-QFA$PO
 M<-QFA$M
 N<-QFA$N
-IQQU=IQQD=matrix(numeric(0),ceiling(max(x,na.rm=TRUE)),N)
-QQ<-numeric(0)
 for (i in 1:N){
-for (j in 1:ceiling(max(x,na.rm=TRUE))){
-for (l in 1:nrow(samp)){
-A=1/samp[l,M+N+3+i-1]^0.5
-B=1/samp[l,2*M+3*N+4+i-1]^0.5
-KK=exp(rnorm(sim,samp[l,(2+i-1)],1/A^2))
-rr=exp(rnorm(sim,samp[l,(M+2*N+4+i-1)],1/B^2))
-QQ<-c(QQ,(KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1)))
+
+ plot(-1,-1,main=paste(gene[i],"Curve",i),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
+points(x[,,i],y[,,i])
+
+ for (l in 1:nrow(samp)){
+  PO=samp[l,(M+2*N+3)]
+  A=1/samp[l,M+N+3+i-1]^0.5
+  B=1/samp[l,2*M+3*N+6+i-1]^0.5
+  KK=exp(rnorm(sim,samp[l,(2+i-1)],A))
+  rr=exp(rnorm(sim,samp[l,(M+2*N+5+i-1)],B))
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)),xlimmin, xlimmax,add=TRUE,col=5) 
+ }
+
+KK=exp(K_i[i])
+rr=exp(r_i[i])
+
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=5)
+
+plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
+points(x[,,i],y[,,i])
+for (j in 1:NoORF[i])
+{
+KK=K_ij[(j+NoSum[i])]
+rr=r_ij[(j+NoSum[i])]
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=1+j) 
+} 
 }
-IQQU[j,i]<-quantile(QQ,na.rm=TRUE)[4]
-IQQD[j,i]<-quantile(QQ,na.rm=TRUE)[2]
-QQ<-numeric(0)
+
 }
-}
-list(IQQU=IQQU,IQQD=IQQD)
-}
+
+
 
 
 
@@ -77,27 +86,31 @@ PO_s<-QFA$PO_s
 beta<-QFA$beta
 tau_s<-QFA$tau_s
 delta<-QFA$delta
-alpha_ij_sd<-QFA$alpha_ij_sd
-gamma_ij_sd<-QFA$gamma_ij_sd
+alpha_i_tau<-QFA$alpha_i_tau
+gamma_i_tau<-QFA$gamma_i_tau
 alpha<-QFA$alpha
 gamma<-QFA$gamma
 alpha_i<-QFA$alpha_i
 gamma_i<-QFA$gamma_i
 alpha_ij<-QFA$alpha_ij
 gamma_ij<-QFA$gamma_ij
+alpha_ij_tau<-QFA$alpha_ij_tau
+gamma_ij_tau<-QFA$gamma_ij_tau
 
-den<-matrix(0,sampsize,11)
-den[,1]<-rnorm(sampsize,K_s,alpha)
-den[,2]<-rnorm(sampsize,K_s,alpha)
-den[,3]<-exp(rnorm(sampsize,K_s,alpha))
-den[,4]<-runif(sampsize,PO_s,beta)
-den[,5]<-rgamma(sampsize,(alpha_ij^2)/(alpha_ij_sd^2),alpha_ij/(alpha_ij_sd^2))
-den[,6]<-rnorm(sampsize,r_s,gamma)
-den[,7]<-rnorm(sampsize,r_s,gamma)
-den[,8]<-exp(rnorm(sampsize,r_s,gamma))
-den[,9]<-rgamma(sampsize,(gamma_ij^2)/(gamma_ij_sd^2),gamma_ij/(gamma_ij_sd^2))
-den[,10]<-rgamma(sampsize,(tau_s^2)/(delta^2),tau_s/(delta^2))
-den[,11]<-rgamma(sampsize,(tau_s^2)/(delta^2),tau_s/(delta^2))
+den<-matrix(0,sampsize,13)
+den[,1]<-(rnorm(sampsize,K_s,alpha))
+den[,2]<-(rnorm(sampsize,K_s,alpha))
+den[,3]<-(rnorm(sampsize,alpha_i,1/alpha_i_tau^0.5))
+den[,4]<-exp(rnorm(sampsize,K_s,alpha))
+den[,5]<-exp(rnorm(sampsize,alpha_ij,1/alpha_ij_tau^0.5))
+den[,6]<-exp(rnorm(sampsize,PO_s,beta))
+den[,7]<-(rnorm(sampsize,r_s,gamma))
+den[,8]<-(rnorm(sampsize,r_s,gamma))
+den[,9]<-exp(rnorm(sampsize,gamma_i,1/gamma_i_tau^0.5))
+den[,10]<-exp(rnorm(sampsize,r_s,gamma))
+den[,11]<-exp(rnorm(sampsize,gamma_ij,1/gamma_ij_tau^0.5))
+den[,12]<-rnorm(sampsize,tau_s,1/delta^0.5)
+den[,13]<-exp(rnorm(sampsize,tau_s,1/delta^0.5))
 den
 }
 
@@ -115,14 +128,16 @@ PO_s<-QFA$PO_s
 beta<-QFA$beta
 tau_s<-QFA$tau_s
 delta<-QFA$delta
-alpha_ij_sd<-QFA$alpha_ij_sd
-gamma_ij_sd<-QFA$gamma_ij_sd
+alpha_i_tau<-QFA$alpha_i_tau
+gamma_i_tau<-QFA$gamma_i_tau
 alpha<-QFA$alpha
 gamma<-QFA$gamma
 alpha_i<-QFA$alpha_i
 gamma_i<-QFA$gamma_i
 alpha_ij<-QFA$alpha_ij
 gamma_ij<-QFA$gamma_ij
+alpha_ij_tau<-QFA$alpha_ij_tau
+gamma_ij_tau<-QFA$gamma_ij_tau
 
 namesamp<-QFA$namesamp
 K<-QFA$K

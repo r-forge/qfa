@@ -47,35 +47,41 @@ PO_s<-QFA$PO_s
 beta<-QFA$beta
 tau_s<-QFA$tau_s
 delta<-QFA$delta
-alpha_ij_sd<-QFA$alpha_ij_sd
-gamma_ij_sd<-QFA$gamma_ij_sd
+
 alpha<-QFA$alpha
 gamma<-QFA$gamma
+
 alpha_i<-QFA$alpha_i
 gamma_i<-QFA$gamma_i
+alpha_i_tau<-QFA$alpha_i_tau
+gamma_i_tau<-QFA$gamma_i_tau
+
 alpha_ij<-QFA$alpha_ij
 gamma_ij<-QFA$gamma_ij
+alpha_ij_tau<-QFA$alpha_ij_tau
+gamma_ij_tau<-QFA$gamma_ij_tau
 
 namesamp<-QFA$namesamp
 K<-QFA$K
 K_i<-QFA$K_i
 K_ij<-QFA$K_ij
 PO<-QFA$PO
-k_tau<-QFA$k_tau
 r<-QFA$r
 r_i<-QFA$r_i
 r_ij<-QFA$r_ij
-r_tau<-QFA$r_tau
 taui<-QFA$taui
 tau<-QFA$tau
-
-
+k_i_tau<-QFA$k_i_tau
+r_i_tau<-QFA$r_i_tau
+k_ij_tau<-QFA$k_ij_tau
+r_ij_tau<-QFA$r_ij_tau
 if(LinearGaussian==TRUE){
 K<-exp(QFA$K)
 K_i<-exp(QFA$K_i)
 K_ij<-QFA$K_ij
 r<-exp(QFA$r)
 r_i<-exp(QFA$r_i)
+tau<-exp(QFA$tau)
 }
 
 ################################################
@@ -113,16 +119,16 @@ for (i in 1:M)
 curve((K_ij[i]*PO*exp(r_ij[i]*x))/(K_ij[i]+PO*(exp(r_ij[i]*x)-1)), 0, 8,add=TRUE,col=i) 
 }
 
+
 ################################################
 print("Model Variation tau")#fix
 ################################################
 plot(x,y,main="Curve variation tau_m", xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
+if (LinearGaussian==FALSE){MCurveVar<-funcMCurveVar(1,QFA)} else {MCurveVar<-funcMCurveVar_LG(1,QFA)} 
 KK=K
 rr=r
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)),xlimmin, xlimmax,add=TRUE,col=1) 
-if (LinearGaussian==FALSE){MCurveVar<-funcMCurveVar(1,QFA)} else {MCurveVar<-funcMCurveVar_LG(1,QFA)} 
-lines(MCurveVar$MQQU)
-lines(MCurveVar$MQQD)
+curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)),xlimmin, xlimmax,add=TRUE,col=2) 
+
 ################################################
 print("Model Variation posterior")
 ################################################
@@ -146,26 +152,6 @@ print("plots for individual Logistic curve fits")#fix
 ###########################################
 
 if (LinearGaussian==FALSE){ICurveVar<-funcICurveVar(1,QFA)} else {ICurveVar<-funcICurveVar_LG(1,QFA)} 
-
-for (i in 1:N)
-{
-plot(-1,-1,main=paste(gene[i],"Curve"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
-points(x[,,i],y[,,i])
-KK=K_i[i]
-rr=r_i[i]
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=1) 
-lines(ICurveVar$IQQU[,i])
-lines(ICurveVar$IQQD[,i])
-
-plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
-points(x[,,i],y[,,i])
-for (j in 1:NoORF[i])
-{
-KK=K_ij[(j+NoSum[i])]
-rr=r_ij[(j+NoSum[i])]
-curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)), xlimmin, xlimmax,add=TRUE,col=1+j) 
-}
-}
 
 dev.off()
 
@@ -209,24 +195,26 @@ plot(density(den[,i]),paste(namesampden[i],"Prior Density"))
 ###########################################
 print("Diagnostics trace acf density")
 ###########################################
-if (LinearGaussian==FALSE){postpred<-funcPostPred(sampsize,QFA)} else postpred<-funcPostPred_LG(sampsize,QFA)
-
+#if (LinearGaussian==FALSE){postpred<-funcPostPred(sampsize,QFA)} else #postpred<-funcPostPred_LG(sampsize,QFA)
 
 par(mfrow=c(4,4))
-for (i in 1:length(namesamp))
+for (i in 1:ncol(samp))
 {
 post<-density(as.numeric(samp[,i]))
-pred<-density(postpred[,i])
+#pred<-density(pred[,i])
+
 plot(as.numeric(samp[,i]),main=paste(namesamp[i],"Trace Top"),type="l")
-t<-(1:ncol(den))[namesampden==substring(namesamp[i],1,4)]
-pri<-density(den[,t])
-plot(post,main=paste(namesamp[i],"Density"),xlim=c(min(pri$x),max(pri$x)),
-ylim=c(min(post$y,pri$y),max(post$y,pri$y)))
-lines(pri,col=2)
 acf(as.numeric(samp[,i]),main=paste(namesamp[i],"ACF"))
-plot(post,main=paste(namesamp[i],"Density"),xlim=c(min(post$x,pred$x),max(post$x,pred$x)),
-ylim=c(min(post$y,postpred),max(post$y,postpred)))
-lines(pred,main=paste(namesamp[i],"Density PostPred"),col=2)
+
+#t<-(1:ncol(den))[namesampden==substring(namesamp[i],1,4)]
+pri<-density(den[,t])
+
+plot(post,main=paste(namesamp[i],"Density"),xlim=c(min(post$x),max(post$x)),
+ylim=c(min(post$y,post$y),max(post$y,post$y)))
+lines(pri,col=2)
+plot(pri,main=paste(namesamp[i],"Density"),xlim=c(min(pri$x,pri$x),max(pri$x,pri$x)),
+ylim=c(min(pri$y,pri$y),max(pri$y,pri$y)),col=2)
+lines(post)
+
 }
 dev.off()
-}
