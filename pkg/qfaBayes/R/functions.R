@@ -198,7 +198,10 @@ gamma_i_tau=Priors$gamma_i_tau,
 alpha_ij=Priors$alpha_ij,
 gamma_ij=Priors$gamma_ij,
 alpha_ij_tau=Priors$alpha_ij_tau,
-gamma_ij_tau=Priors$gamma_ij_tau)
+gamma_ij_tau=Priors$gamma_ij_tau,
+delta_mu=Priors$delta_mu,
+delta_sd=Priors$delta_sd
+)
 }
 
 
@@ -260,7 +263,9 @@ jags <- jags.model('model1.bug',
 'gamma_i' = QFA.P$gamma_i,
 'gamma_i_tau'=QFA.P$gamma_i_tau,
 'gamma_ij' = QFA.P$gamma_ij,
-'gamma_ij_tau'=QFA.P$gamma_ij_tau
+'gamma_ij_tau'=QFA.P$gamma_ij_tau,
+'delta_mu'=QFA.P$delta_mu,
+'delta_sd'=QFA.P$delta_sd
 ),
                    n.chains = 1,
                    n.adapt = 100)
@@ -279,7 +284,8 @@ c('K_ij',
 'K_ij_tau',
 'r_ij_tau',
 'K_i_tau',
-'r_i_tau'),
+'r_i_tau',
+'delta_tau'),
              iter,thin=thin)
 samp<-samp[[1]]
 samp
@@ -312,13 +318,15 @@ K_i_tau=vecsamp[(N+2)],
 K_ij=vecsamp[(N+3):(M+N+2)],
 K_ij_tau=vecsamp[(M+N+3):(M+2*N+2)],
 PO=vecsamp[(M+2*N+3)],
-r=vecsamp[(M+2*N+4)],
-r_i=vecsamp[(M+2*N+5):(M+3*N+4)],
-r_i_tau=vecsamp[(M+3*N+5)],
-r_ij=vecsamp[(M+3*N+6):(2*M+3*N+5)],
-r_ij_tau=vecsamp[(2*M+3*N+6):(2*M+4*N+5)],
-tau=vecsamp[(2*M+4*N+6)],
-taui=vecsamp[(2*M+4*N+7):(2*M+5*N+6)],
+delta_tau=vecsamp[(M+2*N+4)],
+r=vecsamp[(M+2*N+5)],
+r_i=vecsamp[(M+2*N+6):(M+3*N+5)],
+r_i_tau=vecsamp[(M+3*N+6)],
+r_ij=vecsamp[(M+3*N+7):(2*M+3*N+6)],
+r_ij_tau=vecsamp[(2*M+3*N+7):(2*M+4*N+6)],
+tau=vecsamp[(2*M+4*N+7)],
+taui=vecsamp[(2*M+4*N+8):(2*M+5*N+7)],
+
 samp=samp,
 iter=iter,
 thin=thin,
