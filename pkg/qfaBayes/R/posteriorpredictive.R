@@ -4,23 +4,23 @@ samp<-QFA$samp
 M<-QFA$M
 N<-QFA$N
 MQQU=MQQD=NA
-j=1:ceiling(max(x,na.rm=TRUE))
-QQ<-matrix(numeric(0),ncol=max(j),nrow=nrow(samp))
-
+vec<-seq(0,ceiling(max(x,na.rm=TRUE)),0.1)
+QQ<-matrix(numeric(0),ncol=length(vec),nrow=nrow(samp))
 for (l in 1:nrow(samp)){
 PO=samp[l,(M+2*N+3)]
 KK=rgamma(1,(samp[l,1]^2)*samp[l,N+2],samp[l,1]*samp[l,N+2])
 rr=rgamma(1,(samp[l,(M+2*N+5)]^2)*(samp[l,(M+3*N+6)]),samp[l,(M+2*N+5)]*(samp[l,(M+3*N+6)]))
-QQ[l,]<-(KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1))
+QQ[l,]<-(KK*PO*exp(rr*vec))/(KK+PO*(exp(rr*vec)-1))
 }
-for (j in 1:ceiling(max(x,na.rm=TRUE))){
+
+for (j in 1:length(vec) ){
 MQQU[j]<-quantile(QQ[,j],na.rm=TRUE)[4]
 MQQD[j]<-quantile(QQ[,j],na.rm=TRUE)[2]
 }
-list(MQQU=MQQU,MQQD=MQQD)
+list(MQQU=MQQU,MQQD=MQQD,Time=vec)
 }
 
-funcICurveVar<-function(sim,QFA){
+funcICurveVar<-function(QFA){
 x<-QFA$x
 samp<-QFA$samp
 PO<-QFA$PO
@@ -30,18 +30,18 @@ for (i in 1:N){
 
  plot(-1,-1,main=paste(gene[i],"Curve",i),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
 points(x[,,i],y[,,i])
-j=1:ceiling(max(x,na.rm=TRUE))
-QQ<-matrix(numeric(0),ncol=max(j),nrow=nrow(samp))
+vec<-seq(0,ceiling(max(x,na.rm=TRUE)),0.1)
+QQ<-matrix(numeric(0),ncol=length(vec),nrow=nrow(samp))
  for (l in 1:nrow(samp)){
   PO=samp[l,(M+2*N+3)]
   A=samp[l,M+N+3+i-1]
   B=1/samp[l,2*M+3*N+7+i-1]^2
   KK=rgamma(1,(samp[l,(2+i-1)]^2)*A,samp[l,(2+i-1)]*A)
   rr=rgamma(1,(samp[l,(M+2*N+6+i-1)]^2)*B,samp[l,(M+2*N+6+i-1)]*B)
-QQ[l,]<-(KK*PO*exp(rr*j))/(KK+PO*(exp(rr*j)-1))
+QQ[l,]<-(KK*PO*exp(rr*vec))/(KK+PO*(exp(rr*vec)-1))
  }
 
-for (j in 1:ceiling(max(x,na.rm=TRUE))){
+for (j in 1:length(vec)){
 MQQU[j]<-quantile(QQ[,j],na.rm=TRUE)[4]
 MQQD[j]<-quantile(QQ[,j],na.rm=TRUE)[2]
 }
@@ -49,8 +49,8 @@ MCurveVar<-list(MQQU=MQQU,MQQD=MQQD)
 KK=K_i[i]
 rr=r_i[i]
 curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)),xlimmin, xlimmax,add=TRUE) 
-lines(MCurveVar$MQQU,col=2)
-lines(MCurveVar$MQQD,col=2)
+lines(vec,MCurveVar$MQQU,col=2)
+lines(vec,MCurveVar$MQQD,col=2)
 
 plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
 points(x[,,i],y[,,i])
@@ -81,7 +81,7 @@ alpha_ij<-QFA$alpha_ij
 gamma_ij<-QFA$gamma_ij
 alpha_ij_tau<-QFA$alpha_ij
 gamma_ij_tau<-QFA$gamma_ij_tau
-delta_mu<-QFA$delta_mu_tau
+delta_mu<-QFA$delta_mu
 
 delta_sd<-QFA$delta_sd
 
@@ -138,7 +138,9 @@ r_ij<-QFA$r_ij
 r_ij_tau<-QFA$r_ij_tau
 taui<-QFA$taui
 tau<-QFA$tau
+delta_mu<-QFA$delta_mu
 
+delta_sd<-QFA$delta_sd
 
 
 
@@ -219,4 +221,61 @@ Q<-c(Q,rgamma(iter,(samp[l,(2*M+4*N+7)]^2)*samp[l,(M+2*N+4)],samp[l,(2*M+4*N+7)]
 A=mean(Q);B=1/var(Q)
 postpred[,(2*M+4*N+8):(2*M+5*N+7)]<-rgamma(iter,(A^2)*B,A*B)
 postpred
+}
+
+funcPriorPlot<-function(QFA.P){
+
+K_s<-QFA.P$K_s
+r_s<-QFA.P$r_s
+PO_s<-QFA.P$PO_s
+beta<-QFA.P$beta
+tau_s<-QFA.P$tau_s
+delta<-QFA.P$delta
+
+alpha<-QFA.P$alpha
+gamma<-QFA.P$gamma
+
+alpha_i<-QFA.P$alpha_i
+gamma_i<-QFA.P$gamma_i
+alpha_i_tau<-QFA.P$alpha_i_tau
+gamma_i_tau<-QFA.P$gamma_i_tau
+
+alpha_ij<-QFA.P$alpha_ij
+gamma_ij<-QFA.P$gamma_ij
+alpha_ij_tau<-QFA.P$alpha_ij_tau
+gamma_ij_tau<-QFA.P$gamma_ij_tau
+
+delta_mu<-QFA.P$delta_mu
+delta_sd<-QFA.P$delta_sd
+
+#para
+sampsize=2000
+pdf(paste("Priors_M",".pdf",sep=""))
+par(mfrow=c(3,3))
+plot(density(rgamma(sampsize,(K_s^2)*alpha,K_s*alpha)),main="K Prior")
+plot(density(rgamma(sampsize,(alpha_i^2)*alpha_i_tau,alpha_i*alpha_i_tau)),main="K_i_tau Prior")
+plot(density(rgamma(sampsize,(alpha_ij^2)*alpha_ij_tau,alpha_ij*alpha_ij_tau)),main="K_ij_tau Prior")
+plot(density(rgamma(sampsize,(r_s^2)*gamma,r_s*gamma)),main="r Prior")
+plot(density(rgamma(sampsize,(gamma_i^2)*gamma_i_tau,gamma_i*gamma_i_tau)),main="r_i_tau Prior")
+plot(density(rgamma(sampsize,(gamma_ij^2)/gamma_ij_tau,gamma_ij/gamma_ij_tau)),main="r_ij_tau Prior")
+plot(density(rgamma(sampsize,(PO_s^2)*beta,PO_s*beta)),main="PO Prior")
+plot(density(rgamma(sampsize,(tau_s^2)*delta,tau_s*delta)),main="tau Prior")
+plot(density(rgamma(sampsize,(delta_mu^2)*delta_sd,delta_mu*delta_sd)),main="Delta_tau Prior")
+
+#sd
+par(mfrow=c(3,3))
+plot(density(rgamma(sampsize,(K_s^2)*alpha,K_s*alpha)),main="K Prior")
+ plot(density( 1/rgamma(sampsize,(alpha_i^2)*alpha_i_tau,alpha_i*alpha_i_tau)^0.5 ),main="K_i_tau Prior")
+ 
+plot(density( 1/(rgamma(sampsize,(alpha_ij^2)*alpha_ij_tau,alpha_ij*alpha_ij_tau))^0.5 ),main="K_ij_tau Prior")
+
+plot(density(rgamma(sampsize,(r_s^2)*gamma,r_s*gamma)),main="r Prior")
+ plot(density( 1/rgamma(sampsize,(gamma_i^2)*gamma_i_tau,gamma_i*gamma_i_tau)^0.5 ),main="r_i_tau Prior")
+
+plot(density(2+rgamma(sampsize,(gamma_ij^2)/gamma_ij_tau,gamma_ij/gamma_ij_tau)),main="r_ij_tau Prior")
+
+plot(density(rgamma(sampsize,(PO_s^2)*beta,PO_s*beta)),main="PO Prior")
+ plot(density( 1/rgamma(sampsize,(tau_s^2)*delta,tau_s*delta)^0.5 ),main="tau Prior" , xlim=c(0,1))
+ plot(density( 1/rgamma(sampsize,(delta_mu^2)*delta_sd,delta_mu*delta_sd)^0.5 ),main="Delta_tau Prior")
+dev.off()
 }
