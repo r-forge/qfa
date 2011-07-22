@@ -17,6 +17,12 @@ if (Scaling==TRUE){y<-funcSCALING(a,y)}
 QFA.D<-list(y=y,x=x,ORFuni=ORFuni)
 if (!(CustomModel==FALSE)){source(CustomModel)} else {funcMODELHierarchical()}
 QFA.P<-funcPRIORS(CustomModel)
+
+#if (LinearGaussian==FALSE){funcPriorPlot(QFA.P)} else {funcPriorPlot_LG(QFA.P)} 
+#print("Please check Priors.pdf. Are you happy with your choice of #priors? (y/n) ")
+#ans<-readline()
+#if (!(ans=="y")) stop() else print("Fitting Model")
+ 
 samp<-funcFITandUPDATE(QFA.I,QFA.D,QFA.P)
 QFA.O<-funcPosterior(samp,N,M,iter,thin,upd)
 QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)
@@ -91,6 +97,15 @@ tau<-exp(QFA$tau)
 }
 
 ################################################
+print("priors")
+################################################
+
+if (LinearGaussian==FALSE){funcPriorPlot(QFA)} else {funcPriorPlot_LG(QFA)} 
+
+
+
+
+################################################
 print("Plots")
 ################################################
 
@@ -134,8 +149,8 @@ if (LinearGaussian==FALSE){MCurveVar<-funcMCurveVar(QFA)} else {MCurveVar<-funcM
 KK=K
 rr=r
 curve((KK*PO*exp(rr*x))/(KK+PO*(exp(rr*x)-1)),xlimmin, xlimmax,add=TRUE) 
-lines(MCurveVar$MQQU,col=2)
-lines(MCurveVar$MQQD,col=2)
+lines(MCurveVar$Time,MCurveVar$MQQU,col=2)
+lines(MCurveVar$Time,MCurveVar$MQQD,col=2)
 
 dev.off()
 
@@ -144,7 +159,7 @@ pdf(paste("Plots_M_indiv",work,".pdf",sep=""))
 print("plots for individual Logistic curve fits")#postpredORF andorfrep
 ###########################################
 
-if (LinearGaussian==FALSE){ICurveVar<-funcICurveVar(1,QFA)} else {ICurveVar<-funcICurveVar_LG(1,QFA)} 
+if (LinearGaussian==FALSE){ICurveVar<-funcICurveVar(QFA)} else {ICurveVar<-funcICurveVar_LG(QFA)} 
 
 dev.off()
 
@@ -211,7 +226,7 @@ lines(pred,col=2)
 
 plot(post,main=paste(namesamp[i],"Density"),xlim=c(min(pred$x),max(pred$x)),
 ylim=c(min(pred$y,pred$y),max(pred$y,pred$y)))
-lines(post,col=2)
+lines(pred,col=2)
 
 t<-(1:ncol(den))[namesampden==substring(namesamp_EDIT[i],1,4)]
 pri<-density(den[,t])
