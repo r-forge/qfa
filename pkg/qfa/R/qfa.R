@@ -396,24 +396,30 @@ nozero<-function(growth){if (growth==0){growth<-1} else {growth<-growth}}
 
 ### Provide initial guess for logistic model parameters ###
 guess<-function(time,growth,inocguess,xybounds){
+
+# Sort time and growth
+growth=growth[order(time)]
+time=time[order(time)]
+
+# Enforce monotonic increasing behaviour in growth
+for (x in 2:length(growth)) growth[x]=max(c(max(growth[1:(x-1)]),growth[x]))
+
 n=length(time)
 # g
 G0g<-inocguess
 # K
 Kg<-max(growth)
 #r
-targ<-G0g+(Kg-G0g)/2.0
-MaxRateFound=FALSE
-ct=0
-# Run through time points looking for maximum rate of change of density
-while (MaxRateFound==FALSE){
-ct=ct+1
-tmrate<-time[ct]+((targ-growth[ct])/(growth[ct+1]-growth[ct]))*(time[ct+1]-time[ct])
-if (growth[ct+1]>=targ & growth[ct]<targ){MaxRateFound=TRUE} 
-# If we haven't found a maximum by the end, arbitrarily set tmrate to 20
-else if (ct==(n-1)) {MaxRateFound=TRUE; tmrate=20;} 
-else {MaxRateFound==FALSE}
-}#MaxRateFound
+targ<-min(growth)+(max(growth)-min(growth))/2.0
+
+approxcurve=approxfun(time,growth,rule=2)
+#print(c(approxcurve(min(time)),approxcurve(max(time))))
+solvefn<-function(x) approxcurve(x)-targ
+if(sign(solvefn(min(time)))!=sign(solvefn(max(time)))){
+	sol=uniroot(solvefn,c(min(time),max(time)))
+	tmrate=sol$root
+}else{tmrate=(min(time)+max(time))/2.0}
+
 rg<-log(max(0.000000000001,(Kg-G0g)/G0g))/tmrate
 # Set initial guess to half of best estimate to bias against
 # artificially large r
