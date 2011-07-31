@@ -11,11 +11,19 @@
 <hr></hr>
 <h3>Download R package</h3>
 
-<p>The R package can be downloaded for several operating systems at its R-forge page:
+<p>The R package is available for several operating systems at its R-forge page:
 </br></br>
 <a href="http://r-forge.r-project.org/projects/qfa">http://r-forge.r-project.org/projects/qfa</a>
 </br></br>
-Source code for the package can also be checked out by SVN.
+In theory, installation should be as simple as executing one of the following commands during an R session:
+</br></br>
+install.packages("qfa", repos="http://R-Forge.R-project.org")
+</br></br>
+Unfortunately, the Microsoft Windows builds on R-Forge seem to be a bit unreliable.  One alternative is to install this version (compiled for 64-bit windows and R-2.13.0):
+</br></br>
+install.packages("qfa",repos="http://research.ncl.ac.uk/colonyzer/R/")
+</br></br>
+Source code for the package can also be checked out from R-forge by SVN.
 <hr></hr>
 
 <h3>Introduction</h3>
