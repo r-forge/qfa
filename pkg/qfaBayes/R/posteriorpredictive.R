@@ -22,10 +22,26 @@ list(MQQU=MQQU,MQQD=MQQD,Time=vec)
 
 funcICurveVar<-function(QFA){
 x<-QFA$x
+y<-QFA$y
+gene<-QFA$gene
+ylimmin<-0
+ylimmax<-max(na.omit(as.numeric(y)))
+xlimmin<-0
+xlimmax<-max(na.omit(as.numeric(x)))
+
 samp<-QFA$samp
 PO<-QFA$PO
 M<-QFA$M
 N<-QFA$N
+NoSum<-QFA$NoSum
+NoORF<-QFA$NoORF
+NoTime<-QFA$NoTime
+MQQU=MQQD=NA
+K_i<-QFA$K_i
+K_ij<-QFA$K_ij
+r_i<-QFA$r_i
+r_ij<-QFA$r_ij
+
 for (i in 1:N){
 
  plot(-1,-1,main=paste(gene[i],"Curve",i),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(xlimmin,xlimmax),ylim=c(ylimmin,ylimmax))
@@ -117,8 +133,10 @@ PO_s<-QFA$PO_s
 beta<-QFA$beta
 tau_s<-QFA$tau_s
 delta<-QFA$delta
-alpha_ij_sd<-QFA$alpha_ij_sd
-gamma_ij_sd<-QFA$gamma_ij_sd
+alpha_ij_tau<-QFA$alpha_ij_tau
+gamma_ij_tau<-QFA$gamma_ij_tau
+alpha_i_tau<-QFA$alpha_i_tau
+gamma_i_tau<-QFA$gamma_i_tau
 alpha<-QFA$alpha
 gamma<-QFA$gamma
 alpha_i<-QFA$alpha_i
@@ -142,7 +160,7 @@ delta_mu<-QFA$delta_mu
 
 delta_sd<-QFA$delta_sd
 
-
+samp<-QFA$samp
 
 
 postpred<-matrix(0,iter,length(namesamp))
@@ -223,7 +241,7 @@ postpred[,(2*M+4*N+8):(2*M+5*N+7)]<-rgamma(iter,(A^2)*B,A*B)
 postpred
 }
 
-funcPriorPlot<-function(QFA.P){
+funcPriorPlot<-function(QFA.P,work){
 
 K_s<-QFA.P$K_s
 r_s<-QFA.P$r_s
@@ -250,32 +268,68 @@ delta_sd<-QFA.P$delta_sd
 
 #para
 sampsize=2000
-pdf(paste("Priors_M",".pdf",sep=""))
+pdf(paste("Plots_M_Priors_",".pdf",sep=""))
+
+name<-c("K Prior","K_i_tau Prior","K_ij_tau Prior","r Prior","r_i_tau Prior","r_ij_tau Prior","PO Prior","tau Prior","delta_tau")
+vec<-matrix(numeric(0),sampsize,9)
+vec[,1]<-rgamma(sampsize,(K_s^2)*alpha,K_s*alpha)
+vec[,2]<-rgamma(sampsize,(alpha_i^2)*alpha_i_tau,alpha_i*alpha_i_tau)
+vec[,3]<-rgamma(sampsize,(alpha_ij^2)*alpha_ij_tau,alpha_ij*alpha_ij_tau)
+vec[,4]<-rgamma(sampsize,(r_s^2)*gamma,r_s*gamma)
+vec[,5]<-rgamma(sampsize,(gamma_i^2)*gamma_i_tau,gamma_i*gamma_i_tau)
+vec[,6]<-rgamma(sampsize,(gamma_ij^2)/gamma_ij_tau,gamma_ij/gamma_ij_tau)
+vec[,7]<-rgamma(sampsize,(PO_s^2)*beta,PO_s*beta)
+vec[,8]<-rgamma(sampsize,(tau_s^2)*delta,tau_s*delta)
+vec[,9]<-rgamma(sampsize,(delta_mu^2)*delta_sd,delta_mu*delta_sd)
+
 par(mfrow=c(3,3))
-plot(density(rgamma(sampsize,(K_s^2)*alpha,K_s*alpha)),main="K Prior")
-plot(density(rgamma(sampsize,(alpha_i^2)*alpha_i_tau,alpha_i*alpha_i_tau)),main="K_i_tau Prior")
-plot(density(rgamma(sampsize,(alpha_ij^2)*alpha_ij_tau,alpha_ij*alpha_ij_tau)),main="K_ij_tau Prior")
-plot(density(rgamma(sampsize,(r_s^2)*gamma,r_s*gamma)),main="r Prior")
-plot(density(rgamma(sampsize,(gamma_i^2)*gamma_i_tau,gamma_i*gamma_i_tau)),main="r_i_tau Prior")
-plot(density(rgamma(sampsize,(gamma_ij^2)/gamma_ij_tau,gamma_ij/gamma_ij_tau)),main="r_ij_tau Prior")
-plot(density(rgamma(sampsize,(PO_s^2)*beta,PO_s*beta)),main="PO Prior")
-plot(density(rgamma(sampsize,(tau_s^2)*delta,tau_s*delta)),main="tau Prior")
-plot(density(rgamma(sampsize,(delta_mu^2)*delta_sd,delta_mu*delta_sd)),main="Delta_tau Prior")
+for (i in 1:length(name)){
+plot(density(vec[,i]),main=name[i])
+}
+par(mfrow=c(1,1))
+for (i in 1:length(name)){
+plot(density(vec[,i]),main=name[i])
+mtext( paste(round(quantile(vec[,i])[1],digit=3),
+round(quantile(vec[,i])[2],digit=3),
+round(quantile(vec[,i])[3],digit=3),
+round(quantile(vec[,i])[4],digit=3),
+round(quantile(vec[,i])[5],digit=3)
+))
+}
+
+
 
 #sd
+name<-c("K Prior","K_i_tau Prior","K_ij_tau Prior","r Prior","r_i_tau Prior","r_ij_tau Prior","PO Prior","tau Prior","delta_tau")
+vec<-matrix(numeric(0),sampsize,9)
+vec[,1]<-rgamma(sampsize,(K_s^2)*alpha,K_s*alpha)
+vec[,2]<-1/rgamma(sampsize,(alpha_i^2)*alpha_i_tau,alpha_i*alpha_i_tau)^0.5
+vec[,3]<-1/rgamma(sampsize,(alpha_ij^2)*alpha_ij_tau,alpha_ij*alpha_ij_tau)^0.5
+vec[,4]<-rgamma(sampsize,(r_s^2)*gamma,r_s*gamma)
+vec[,5]<-1/rgamma(sampsize,(gamma_i^2)*gamma_i_tau,gamma_i*gamma_i_tau)^0.5
+
+vec[,6]<-rgamma(sampsize,(gamma_ij^2)/gamma_ij_tau,gamma_ij/gamma_ij_tau)
+
+vec[,7]<-rgamma(sampsize,(PO_s^2)*beta,PO_s*beta)
+vec[,8]<-1/rgamma(sampsize,(tau_s^2)*delta,tau_s*delta)^0.5
+vec[,9]<-1/rgamma(sampsize,(delta_mu^2)*delta_sd,delta_mu*delta_sd)^0.5
+
 par(mfrow=c(3,3))
-plot(density(rgamma(sampsize,(K_s^2)*alpha,K_s*alpha)),main="K Prior")
- plot(density( 1/rgamma(sampsize,(alpha_i^2)*alpha_i_tau,alpha_i*alpha_i_tau)^0.5 ),main="K_i_tau Prior")
- 
-plot(density( 1/(rgamma(sampsize,(alpha_ij^2)*alpha_ij_tau,alpha_ij*alpha_ij_tau))^0.5 ),main="K_ij_tau Prior")
+for (i in 1:length(name)){
+plot(density(vec[,i]),main=name[i])
+}
 
-plot(density(rgamma(sampsize,(r_s^2)*gamma,r_s*gamma)),main="r Prior")
- plot(density( 1/rgamma(sampsize,(gamma_i^2)*gamma_i_tau,gamma_i*gamma_i_tau)^0.5 ),main="r_i_tau Prior")
+par(mfrow=c(1,1))
+for (i in 1:length(name)){
+plot(density(vec[,i]),main=name[i])
+mtext( paste(round(quantile(vec[,i])[1],digit=3),
+round(quantile(vec[,i])[2],digit=3),
+round(quantile(vec[,i])[3],digit=3),
+round(quantile(vec[,i])[4],digit=3),
+round(quantile(vec[,i])[5],digit=3)
+))
+}
 
-plot(density(2+rgamma(sampsize,(gamma_ij^2)/gamma_ij_tau,gamma_ij/gamma_ij_tau)),main="r_ij_tau Prior")
 
-plot(density(rgamma(sampsize,(PO_s^2)*beta,PO_s*beta)),main="PO Prior")
- plot(density( 1/rgamma(sampsize,(tau_s^2)*delta,tau_s*delta)^0.5 ),main="tau Prior" , xlim=c(0,1))
- plot(density( 1/rgamma(sampsize,(delta_mu^2)*delta_sd,delta_mu*delta_sd)^0.5 ),main="Delta_tau Prior")
 dev.off()
 }
