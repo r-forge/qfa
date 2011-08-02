@@ -91,13 +91,15 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 
 		# Dump any images which are not in the experimental description file
 		iman=iman[iman$Barcode%in%expt$Barcode,]
+		smalliman=iman[(iman$Row==1)&(iman$Col==1),]
 
 		# Create a dictionary for filename->photo number
 		getPhotoNum<-function(filename){
 			# Get plate name from filename
 			platename=substr(filename,1,11)
 			# Filter iman data frame by filename
-			tmp=na.omit(iman[(iman$Barcode==platename)&(iman$Row==1)&(iman$Col==1),])
+			#tmp=na.omit(smalliman[(smalliman$Barcode==platename),])
+			tmp=smalliman[(smalliman$Barcode==platename),]
 			tmp=tmp[order(tmp$Image.Name),]
 			tmp$PhotoNum=1:length(tmp$Image.Name)
 			return(as.numeric(tmp$PhotoNum[tmp$Image.Name==filename]))
