@@ -401,8 +401,9 @@ guess<-function(time,growth,inocguess,xybounds){
 growth=growth[order(time)]
 time=time[order(time)]
 
-# Enforce monotonic increasing behaviour in growth
-for (x in 2:length(growth)) growth[x]=max(c(max(growth[1:(x-1)]),growth[x]))
+# Enforce positivity and monotonic increasing behaviour in growth
+growth[1]=max(c(growth[1],0.000001))
+for (x in 2:length(growth)) growth[x]=max(c(max(growth[1:(x-1)]),growth[x],0.000001))
 
 n=length(time)
 # g
