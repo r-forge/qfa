@@ -239,7 +239,6 @@ funcJagsTime<-function(iter,upd,jags){
 
 ### Fit, update and sample from the rjags model ###
 funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P,inits){
-QFA.I$NoORF<-rep(NoOfRep,QFA.I$N)
 jags <- jags.model('model1.bug',
                    data = list('x' = QFA.D$x,
                                'y' = QFA.D$y,
