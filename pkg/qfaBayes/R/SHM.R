@@ -1,5 +1,5 @@
 #### Hierachical Logistic Curve Model ####
-qfa.Hierachical<-function(experiment,Scaling,iter,upd,thin,inits,PlotOutput=TRUE,work,CustomModel=FALSE){
+qfa.Hierachical<-function(experiment,Scaling,iter,upd,thin,inits,PlotOutput=TRUE,work,CustomModel=FALSE,NoOfRep){
 a<-experiment
 a<-funcIDORDER(a)
 IDuni<-unique(a$ID)
@@ -23,7 +23,7 @@ QFA.P<-funcPRIORS(CustomModel)
 #ans<-readline()
 #if (!(ans=="y")) stop() else print("Fitting Model")
  
-samp<-funcFITandUPDATE(QFA.I,QFA.D,QFA.P,inits)
+samp<-funcFITandUPDATE(QFA.I,QFA.D,QFA.P,inits,NoOfRep)
 QFA.O<-funcPosterior(samp,N,M,iter,thin,upd)
 QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)
 if(PlotOutput==TRUE){qfaplots.H(QFA,work)}

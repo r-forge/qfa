@@ -238,9 +238,16 @@ funcJagsTime<-function(iter,upd,jags){
 }
 
 ### Fit, update and sample from the rjags model ###
-funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P,inits){
+funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P,inits,NoOfRep){
 
-
+for (i in 1:QFA.I$N){
+for (j in 1:QFA.I$NoORF[N]) {
+for (k in 2:QFA.I$NoTime[QFA.I$NoSum[-1][N]]){
+if (!is.na(QFA.D$y[j,k,i])){if (QFA.D$y[j,(k-1),i]>QFA.D$y[j,k,i]){ QFA.D$y[j,,i]=rep(NA,length(QFA.D$y[j,,i])) }} 
+}
+}
+}
+QFA.I$NoORF<-rep(NoOfRep,QFA.I$N)
 jags <- jags.model('model1.bug',
                    data = list('x' = QFA.D$x,
                                'y' = QFA.D$y,
