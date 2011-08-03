@@ -238,7 +238,7 @@ funcJagsTime<-function(iter,upd,jags){
 }
 
 ### Fit, update and sample from the rjags model ###
-funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P){
+funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P,inits){
 
 
 jags <- jags.model('model1.bug',
@@ -268,7 +268,9 @@ jags <- jags.model('model1.bug',
 'delta_sd'=QFA.P$delta_sd
 ),
                    n.chains = 1,
-                   n.adapt = 100)
+                   n.adapt = 100,
+			 inits=inits
+)
 funcJagsTime(iter,upd,jags)
 update(jags, upd)
 samp<-coda.samples(jags,
