@@ -238,20 +238,7 @@ funcJagsTime<-function(iter,upd,jags){
 }
 
 ### Fit, update and sample from the rjags model ###
-funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P,inits,NoOfRep){
-
-for (i in 1:QFA.I$N){
-for (j in 1:QFA.I$NoORF[N]) {
-for (k in 2:QFA.I$NoTime[QFA.I$NoSum[-1][N]]){
-if (!is.na(QFA.D$y[j,k,i])){if (QFA.D$y[j,(k-1),i]>QFA.D$y[j,k,i]){ QFA.D$y[j,,i]=rep(NA,length(QFA.D$y[j,,i])) }} 
-}
-}
-}
-for (i in 1:QFA.I$N){
-vec<-!is.na(QFA.D$y[,1,i])
-QFA.D$y[,,i]=rbind(QFA.D$y[vec,,i],QFA.D$y[!vec,,i])
-}
-
+funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P,inits){
 QFA.I$NoORF<-rep(NoOfRep,QFA.I$N)
 jags <- jags.model('model1.bug',
                    data = list('x' = QFA.D$x,

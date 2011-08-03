@@ -18,7 +18,19 @@ a<-funcREMOVE(a,Screen,Treat,MPlate)
 
 inits=list('K'=log(0.089),'r'=log(1.82),'PO_L'=log(0.00224),'K_i_tau_L'=1.25,'r_i_tau_L'=3.429)
 
-ControlFit<-qfa.Hierachical(a,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=FALSE,work="ModelHExample",CustomModel=CustomModel,inits=inits,4)
+
+
+a<-funcIDORDER(a)
+IDuni<-unique(a$ID)
+for (i in 1:length(IDuni)){
+for (j in 2:length(a[a$ID==IDuni[i],]$Growth) ){
+if (a[a$ID==IDuni[i],]$Growth[j]<a[a$ID==IDuni[i],]$Growth[j-1]){t=1}
+}
+if (t==1){a<-a[!a$ID==IDuni[i],]}
+t=0
+}
+
+ControlFit<-qfa.Hierachical(a,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=FALSE,work="ModelHExample",CustomModel=CustomModel,inits=inits)
 save(ControlFit,file=paste(CustomModel,work,"R",sep="."))
 
 ### Plots ###
