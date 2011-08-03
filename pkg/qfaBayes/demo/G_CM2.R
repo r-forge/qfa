@@ -11,14 +11,14 @@ source("iter.R")
 work=paste(upd,iter,thin,sep="_")
 data("AdamFull")
 qfa.variables(a)
-Screen<-as.character(unique(a$Screen.Name))[1]
-Treat<-as.character(unique(a$Treatment))[2]
-MPlate<-unique(a$MasterPlate.Number)[15]
+Screen<-as.character(unique(a$Screen.Name))
+Treat<-27
+MPlate<-unique(a$MasterPlate.Number)
 a<-funcREMOVE(a,Screen,Treat,MPlate)
 
 inits=list('K'=log(0.089),'r'=log(1.82),'PO_L'=log(0.00224),'K_i_tau_L'=1.25,'r_i_tau_L'=3.429)
 
-ControlFit<-qfa.Hierachical(a,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=FALSE,work="ModelHExample",CustomModel=CustomModel,inits=inits)
+ControlFit<-qfa.Hierachical(a,Scaling=TRUE,iter=iter,upd=upd,thin=thin,PlotOutput=FALSE,work="ModelHExample",CustomModel=CustomModel,inits=inits,4)
 save(ControlFit,file=paste(CustomModel,work,"R",sep="."))
 
 ### Plots ###
