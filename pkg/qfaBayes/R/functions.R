@@ -247,6 +247,11 @@ if (!is.na(QFA.D$y[j,k,i])){if (QFA.D$y[j,(k-1),i]>QFA.D$y[j,k,i]){ QFA.D$y[j,,i
 }
 }
 }
+for (i in 1:QFA.I$N){
+vec<-!is.na(QFA.D$y[,1,i])
+QFA.D$y[,,i]=rbind(QFA.D$y[vec,,i],QFA.D$y[!vec,,i])
+}
+
 QFA.I$NoORF<-rep(NoOfRep,QFA.I$N)
 jags <- jags.model('model1.bug',
                    data = list('x' = QFA.D$x,
