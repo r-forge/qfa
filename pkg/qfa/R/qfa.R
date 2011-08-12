@@ -251,24 +251,18 @@ return(z)
 }
 
 ############################### Likelihood Functions ################################
-#### Upper and lower bounds for variables in optimization ####
-lowerg<-function(inocguess){0.9*inocguess}; upperg<-function(inocguess){1.1*inocguess}
-lowerr<-0; upperr<-function(rguess){2.5*rguess}
-lowerK<-function(inocguess){0.9*inocguess}; upperK<-function(xdim,ydim){0.75*255*xdim*ydim}
-# The lower bound on s seems to be causing problems with inf arising during optimisation
-#lowers<-function(xdim,ydim){0.025*xdim*ydim}; uppers<-function(xdim,ydim){175*xdim*ydim}
-lowers<-function(xdim,ydim){0.00025*xdim*ydim}; uppers<-function(xdim,ydim){50*xdim*ydim}
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
 qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",...){
-# Remove edge colonies if edgestrip true
 # Get xdim & ydim
 xdim<-d[1,'Tile.Dimensions.X']; ydim<-d[1,'Tile.Dimensions.Y']
 # Define optimization bounds reliant on xdim & ydim and inocguess #
-lows<-lowers(xdim,ydim); ups<-uppers(xdim,ydim)
-lowK<-lowerK(inocguess); upK<-upperK(xdim,ydim) 
-lowg<-lowerg(inocguess); upg<-upperg(inocguess)
-xybounds<-list(s=c(lows,ups),K=c(lowK,upK),g=c(lowg,upg))
+lowK<-0.9*inocguess; upK<-1.0
+lowr<-0; upr<-20
+lowg<-0.9*inocguess; upg<-1.1*inocguess
+lows<-0.0000001; ups<-0.2
+xybounds<-list(K=c(lowK,upK),r=c(lowr,upr),g=c(lowg,upg),s=c(lows,ups))
+
 # Create orf2gene dictionary
 if (ORF2gene!=FALSE){gdict<-orf2gdict(ORF2gene)}
 # Vector of barcodes
@@ -288,7 +282,7 @@ for (bcode in barcodes){bcount<-bcount+1
 	positions<-lapply(1:length(dbc[,1]),index2pos,dbc)
 	positions<-unique(positions)
 	# Fit logistic model to each colony
-	bcfit<-t(sapply(positions,colony.fit,dbc,inoctime,xybounds,fmt=fmt,...))
+	bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,inoctime,xybounds,fmt=fmt,...))
 	info<-t(sapply(positions,colony.info,dbc))
 	rows<-sapply(positions,rcget,"row")
 	cols<-sapply(positions,rcget,"col")
@@ -304,13 +298,11 @@ if (ORF2gene!=FALSE){results$Gene<-sapply(as.character(results$ORF),orf2g,gdict)
 return(results)
 }
 
-# Extrace row & col from list of position vectors
+# Extract row & col from list of position vectors
 rcget<-function(posvec,rc){posvec[match(rc,c("row","col"))]}
 
 ### Function that does the optimization for one colony ###
-colony.fit<-function(position,bcdata,inoctime,xybounds,fmt,...){
-# Retrieve inoculation guess
-inocguess<-(10/9)*xybounds$g[1]
+colony.fit<-function(position,bcdata,inocguess,inoctime,xybounds,fmt,...){
 # Get row & column to restrict data
 row<-position[1]; col<-position[2]
 d<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
@@ -320,10 +312,18 @@ growth<-sapply(d$Growth,nozero)
 time<-sapply(d$Date.Time,tconv,inoctime,fmt)
 assign("last.colony.growth",growth,envir=.GlobalEnv)
 assign("last.colony.time",time,envir=.GlobalEnv)
+pars=data.fit(time,growth,inocguess,xybounds)
+return(pars)
+}
+
+### Function that fits model for a timecourse
+data.fit<-function(time,growth,inocguess,xybounds){
 # Check if worth optimizing
 growththresh<-(1.5/255)*xybounds$K[2]
 # Get initial guess for parameters
-init<-guess(time,growth,inocguess,xybounds)
+init<-guess(data$Expt.Time,data$Growth,inocguess,xybounds)
+xybounds$r=c(0.75*init$r,1.25*init$r)
+print(init)
 # Function to be optimized
 objf<-function(modpars){
 K<-modpars[1]; r<-modpars[2]
@@ -335,9 +335,12 @@ K<-pars[1]; r<-pars[2]
 g<-pars[3]; s<-pars[4]
 loglikgr(K,r,g,s,growth,time)}
 # Perform optimization
-optsol<-optim(par=init,fn=objf,gr=objfgr,method="L-BFGS-B",
-lower=c(xybounds$K[1],lowerr,xybounds$g[1],xybounds$s[1]),
-upper=c(xybounds$K[2],upperr(init[2]),xybounds$g[2],xybounds$s[2]),...)
+#,gr=objfgr
+optsol<-optim(par=unlist(init),fn=objf,gr=NULL,method="L-BFGS-B",
+lower=c(xybounds$K[1],xybounds$r[1],xybounds$g[1],xybounds$s[1]),
+upper=c(xybounds$K[2],xybounds$r[2],xybounds$g[2],xybounds$s[2]),
+control=list(trace=TRUE,maxit=10000,factr=1e-1))
+print(optsol)
 pars<-optsol$par
 # Sanity check for fitted parameters (no negative growth)
 if (pars[1]<pars[3]){
@@ -356,9 +359,9 @@ logist<-function(K,r,g,t){
 # Log-likelihood (times(-1)) #
 loglik<-function(K,r,g,s,growth,time){
 LL<-sum(log(s)+(1/(2*s*s))*((growth-logist(K,r,g,time))^2))
-LL<-min(LL,999999999)
-LL<-max(0.0000000001,LL)
-if(is.na(LL)){LL<-0}
+#LL<-min(LL,999999999)
+#LL<-max(0.0000000001,LL)
+#if(is.na(LL)){LL<-0}
 return(LL)
 }
 
@@ -402,8 +405,8 @@ growth=growth[order(time)]
 time=time[order(time)]
 
 # Enforce positivity and monotonic increasing behaviour in growth
-growth[1]=max(c(growth[1],0.000001))
-for (x in 2:length(growth)) growth[x]=max(c(max(growth[1:(x-1)]),growth[x],0.000001))
+growth[1]=max(c(growth[1],0.000000001))
+for (x in 2:length(growth)) growth[x]=max(c(max(growth[1:(x-1)]),growth[x],0.00000001))
 
 n=length(time)
 # g
@@ -424,7 +427,7 @@ if(sign(solvefn(min(time)))!=sign(solvefn(max(time)))){
 rg<-log(max(0.000000000001,(Kg-G0g)/G0g))/tmrate
 # Set initial guess to half of best estimate to bias against
 # artificially large r
-rg<-0.5*rg
+#rg<-0.5*rg
 # Sanity check for guessed parameter values
 # If the data have low correlation, then set r=0 and K=g0
 # If all elements of growth are equal (e.g. zero) then correlation function throws error...
@@ -441,10 +444,10 @@ rg<-max(lowerr,rg)
 # Hardcode in an upper limit on r to remove floating point problems
 rg<-min(50,rg)
 #s
-s<-sqrt((1/n)*sum((growth-logist(Kg,rg,G0g,time))^2))
-s<-max(xybounds$s[1],s); s<-min(s,xybounds$s[2])
+sg<-sqrt((1/n)*sum((growth-logist(Kg,rg,G0g,time))^2))
+sg<-max(xybounds$sg[1],sg); sg<-min(sg,xybounds$sg[2])
 # Out 
-guessparams=c(Kg,rg,G0g,s)					
+guessparams=list(K=Kg,r=rg,g=G0g,s=sg)					
 return(guessparams)
 }#guess
 	
