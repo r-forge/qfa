@@ -1,3 +1,10 @@
+require(DEoptim)
+
+# Minimum detectable cell density
+minCellDensity=0.005
+# Minimum possible carrying capacity (depends on nutrients)
+minK=0.025
+
 #### Define Phenotype for fitness ####
 mdrmdp<-function(K,r,g){MDR<-sapply(r/log((2*(K-g))/(K-2*g)),na2zero)
 MDP<-sapply(log(K/g)/log(2),na2zero)
@@ -254,11 +261,9 @@ return(z)
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
 qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",...){
-# Get xdim & ydim
-xdim<-d[1,'Tile.Dimensions.X']; ydim<-d[1,'Tile.Dimensions.Y']
-# Define optimization bounds reliant on xdim & ydim and inocguess #
-lowK<-0.9*inocguess; upK<-1.0
-lowr<-0; upr<-20
+# Define optimization bounds based on inocguess #
+lowK<-max(0.9*inocguess,minK); upK<-1.0
+lowr<-0; upr<-15
 lowg<-0.9*inocguess; upg<-1.1*inocguess
 lows<-0.0000001; ups<-0.2
 xybounds<-list(K=c(lowK,upK),r=c(lowr,upr),g=c(lowg,upg),s=c(lows,ups))
@@ -276,13 +281,12 @@ for (bcode in barcodes){bcount<-bcount+1
 	print(paste("Optimizing Plate",bcount,"/",nbc,":",bcode))
 	# Restrict data to just this barcode
 	dbc<-d[d$Barcode==bcode,]
-	# Get inoculation time for this plate
-	inoctime<-as.POSIXlt(as.character(dbc[1,'Inoc.Time']),format=fmt)
+	inoctime=dbc$Inoc.Time[1]
 	# Get list of unique colony positions
 	positions<-lapply(1:length(dbc[,1]),index2pos,dbc)
 	positions<-unique(positions)
 	# Fit logistic model to each colony
-	bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,inoctime,xybounds,fmt=fmt,...))
+	bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,xybounds,...))
 	info<-t(sapply(positions,colony.info,dbc))
 	rows<-sapply(positions,rcget,"row")
 	cols<-sapply(positions,rcget,"col")
@@ -302,28 +306,25 @@ return(results)
 rcget<-function(posvec,rc){posvec[match(rc,c("row","col"))]}
 
 ### Function that does the optimization for one colony ###
-colony.fit<-function(position,bcdata,inocguess,inoctime,xybounds,fmt,...){
+colony.fit<-function(position,bcdata,inocguess,xybounds,...){
 # Get row & column to restrict data
 row<-position[1]; col<-position[2]
 d<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
-# Get growth data
-growth<-sapply(d$Growth,nozero)
-# Get time data
-time<-sapply(d$Date.Time,tconv,inoctime,fmt)
-assign("last.colony.growth",growth,envir=.GlobalEnv)
-assign("last.colony.time",time,envir=.GlobalEnv)
-pars=data.fit(time,growth,inocguess,xybounds)
+growth=as.numeric(d$Growth)
+time=as.numeric(d$Expt.Time)
+#pars=data.fit(time,growth,inocguess,xybounds)
+pars=de.fit(time,growth,inocguess,xybounds,initPop=TRUE)
 return(pars)
 }
 
 ### Function that fits model for a timecourse
-data.fit<-function(time,growth,inocguess,xybounds){
-# Check if worth optimizing
-growththresh<-(1.5/255)*xybounds$K[2]
-# Get initial guess for parameters
-init<-guess(data$Expt.Time,data$Growth,inocguess,xybounds)
-xybounds$r=c(0.75*init$r,1.25*init$r)
-print(init)
+data.fit<-function(time,growth,inocguess,xybounds,inits=c()){
+if(length(inits)==0){
+	# Get initial guess for parameters
+	init<-guess(time,growth,inocguess,xybounds)
+}else{init<-inits}
+#xybounds$r=c(0.75*init$r,1.25*init$r)
+xybounds$r=c(0.5*init$r,2.0*init$r)
 # Function to be optimized
 objf<-function(modpars){
 K<-modpars[1]; r<-modpars[2]
@@ -335,12 +336,9 @@ K<-pars[1]; r<-pars[2]
 g<-pars[3]; s<-pars[4]
 loglikgr(K,r,g,s,growth,time)}
 # Perform optimization
-#,gr=objfgr
-optsol<-optim(par=unlist(init),fn=objf,gr=NULL,method="L-BFGS-B",
+optsol<-optim(par=unlist(init),fn=objf,gr=objfgr,method="L-BFGS-B",
 lower=c(xybounds$K[1],xybounds$r[1],xybounds$g[1],xybounds$s[1]),
-upper=c(xybounds$K[2],xybounds$r[2],xybounds$g[2],xybounds$s[2]),
-control=list(trace=TRUE,maxit=10000,factr=1e-1))
-print(optsol)
+upper=c(xybounds$K[2],xybounds$r[2],xybounds$g[2],xybounds$s[2]))
 pars<-optsol$par
 # Sanity check for fitted parameters (no negative growth)
 if (pars[1]<pars[3]){
@@ -393,9 +391,68 @@ dldK<-function(K,r,g,s,growth,time){
 loglikgr<-function(K,r,g,s,growth,time){
 c(dldK(K,r,g,s,growth,time),dldr(K,r,g,s,growth,time),
 dldg(K,r,g,s,growth,time),dlds(K,r,g,s,growth,time))}
+
+de.fit<-function(time,growth,inocguess,xybounds,inits=c(),initPop=FALSE){
+# Fit to growth curve with differential evolution
+# Get initial guess for parameters
+if(length(inits)==0){
+	# Get initial guess for parameters
+	init<-guess(time,growth,inocguess,xybounds)
+}else{init<-inits}
+
+xybounds$r=c(0.5*init$r,2.0*init$r)
+# Function to be optimized
+objf<-function(modpars){
+K<-modpars[1]; r<-modpars[2]
+g<-modpars[3]; s<-modpars[4]
+loglik(K,r,g,s,growth,time)}
+
+# Make results repeatable
+#set.seed(1234)
+# Format bounds
+low=c(xybounds$K[1],xybounds$r[1],xybounds$g[1],xybounds$s[1])
+up=c(xybounds$K[2],xybounds$r[2],xybounds$g[2],xybounds$s[2])
+
+NumParticles=10*length(low)
+
+if(initPop){
+# Randomly sample from within bounds for initial population
+Klist=runif(NumParticles,min=low[1],max=up[1])
+rlist=runif(NumParticles,min=low[2],max=up[2])
+glist=runif(NumParticles,min=low[3],max=up[3])
+slist=runif(NumParticles,min=low[4],max=up[4])
+pop=data.frame(K=Klist,r=rlist,g=glist,s=slist)
+pop=as.matrix(pop)
+# Set first particle equal to initial guess
+pop[1,]=as.numeric(t(init))
+# Set second particle equal to a dead colony
+pop[2,]=c(0.025,0,low[3],low[4])
+}else{pop=NULL}
+
+optsol=DEoptim(
+objf,lower=low,upper=up,
+DEoptim.control(trace = FALSE,NP=NumParticles,initialpop=pop,itermax=200)
+)
+pars<-optsol$optim$bestmem
+# Sanity check for fitted parameters (no negative growth)
+if (pars[1]<pars[3]){
+	pars[1]=pars[3]
+	pars[2]=0
+	n<-length(growth)
+	pars[4]<-sqrt((1/n)*sum((growth-logist(pars[1],pars[2],pars[3],time))^2))
+}
+#print(time)
+#print(growth)
+#print(inocguess)
+#print(xybounds)
+#print(pars)
+
+return(pars)
+}
+
 	
 # Prevent zero growth from occurring
-nozero<-function(growth){if (growth==0){growth<-1} else {growth<-growth}}
+nozero<-function(growth){if (growth==0){growth<-0.0000000000001} else {growth<-growth}}
 
 ### Provide initial guess for logistic model parameters ###
 guess<-function(time,growth,inocguess,xybounds){
@@ -404,50 +461,50 @@ guess<-function(time,growth,inocguess,xybounds){
 growth=growth[order(time)]
 time=time[order(time)]
 
-# Enforce positivity and monotonic increasing behaviour in growth
-growth[1]=max(c(growth[1],0.000000001))
-for (x in 2:length(growth)) growth[x]=max(c(max(growth[1:(x-1)]),growth[x],0.00000001))
-
 n=length(time)
-# g
+
+# Enforce positivity and monotonic increasing behaviour in growth
+#growth[1]=max(c(growth[1],0.000000001))
+#for (x in 2:length(growth)) growth[x]=max(c(max(growth[1:(x-1)]),growth[x],0.00000001))
+
 G0g<-inocguess
-# K
-Kg<-max(growth)
+Kg<-max(max(growth),minK)
+
 #r
 targ<-min(growth)+(max(growth)-min(growth))/2.0
+approxspline=smooth.spline(time,growth)
+approxcurve=approxfun(approxspline$x,approxspline$y,rule=2)
 
-approxcurve=approxfun(time,growth,rule=2)
-#print(c(approxcurve(min(time)),approxcurve(max(time))))
 solvefn<-function(x) approxcurve(x)-targ
-if(sign(solvefn(min(time)))!=sign(solvefn(max(time)))){
+if((approxcurve(max(time))>=approxcurve(min(time)))&(sign(solvefn(min(time)))!=sign(solvefn(max(time))))){
 	sol=uniroot(solvefn,c(min(time),max(time)))
 	tmrate=sol$root
-}else{tmrate=(min(time)+max(time))/2.0}
+	rg=log(max(0.000000000001,(Kg-G0g)/G0g))/tmrate
+}else{
+	tmrate=(min(time)+max(time))/2.0
+	rg=0
+	Kg=minK
+}
 
-rg<-log(max(0.000000000001,(Kg-G0g)/G0g))/tmrate
 # Set initial guess to half of best estimate to bias against
 # artificially large r
 #rg<-0.5*rg
+
 # Sanity check for guessed parameter values
-# If the data have low correlation, then set r=0 and K=g0
+# If the data have low correlation, then set r=0
 # If all elements of growth are equal (e.g. zero) then correlation function throws error...
-if(length(unique(growth))==1){
+if((length(unique(growth))==1)|(cor(time,growth)<0.5)){
 	rg=0
-	Kg=G0g
-}else{
-	if (cor(time,log(growth))<0.1){
-		rg=0
-		Kg=G0g
-	}
+	Kg=minK
 }
-rg<-max(lowerr,rg)
-# Hardcode in an upper limit on r to remove floating point problems
-rg<-min(50,rg)
 #s
 sg<-sqrt((1/n)*sum((growth-logist(Kg,rg,G0g,time))^2))
 sg<-max(xybounds$sg[1],sg); sg<-min(sg,xybounds$sg[2])
 # Out 
-guessparams=list(K=Kg,r=rg,g=G0g,s=sg)					
+guessparams=list(K=Kg,r=rg,g=G0g,s=sg)
+#curve(approxcurve,from=0,to=max(time),ylim=c(0,max(growth)))
+#points(time,growth)
+#abline(h=targ,col="red")				
 return(guessparams)
 }#guess
 	
@@ -534,7 +591,7 @@ if ('Gene'%in%names(resrow)){gene<-resrow['Gene']} else {gene<-resrow['ORF']}
 # Get data for that colony
 dcol<-dbc[(dbc$Row==row)&(dbc$Col==col),]
 growth<-sapply(dcol$Growth,nozero)
-time<-sapply(dcol$Date.Time,tconv,inoctime,fmt)
+time<-dcol$Expt.Time
 # Draw the curves and data
 logdraw(row,col,K,r,g,time,growth,gene,maxg,mdrmdp,maxt)}
 
