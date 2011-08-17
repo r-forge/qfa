@@ -85,7 +85,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 		colnames(iman)=c("Image.Name","Row","Col","X.Offset","Y.Offset","Area","Trimmed","Threshold","Intensity","Edge.Pixels","Colony.Color.R","Colony.Color.G","Colony.Color.B","Background.Color.R","Background.Color.G","Background.Color.B","Edge.length","Tile.Dimensions.X","Tile.Dimensions.Y")
 
 		# Create extra columns
-		iman$Growth=iman$Trimmed
+		iman$Growth=iman$Trimmed/(255*iman$Tile.Dimensions.X*iman$Tile.Dimensions.Y)
 		iman$Barcode=substr(iman$Image.Name,1,11)
 		iman$Date.Time=substr(iman$Image.Name,13,31)
 
