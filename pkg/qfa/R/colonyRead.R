@@ -155,7 +155,6 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 # For testing older code, we can write a synthetic ROD object to file using this function.
 # Hopefully this will not be required.
 
-
 rod.write<-function(iman,outf){
 # This is how we can construct a ROD file from the returned object...
 ROD=data.frame(

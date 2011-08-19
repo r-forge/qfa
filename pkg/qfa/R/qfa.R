@@ -612,7 +612,7 @@ points(time,growth,col="red",cex=2,pch=4,lwd=2)
 # Add legend
 # With fitness
 F<-fitfunct(K,r,g)
-legt1<-paste(c("K=","r=","g=","F="),c(round(K,0),round(r,3),round(g,0),round(F,2)),sep="")
+legt1<-paste(c("K=","r=","g=","F="),c(signif(K,3),signif(r,3),signif(g,3),signif(F,2)),sep="")
 legend(0,1.2*maxg,legt1,box.lty=0)
 legend(0.9*max(time),1.2*maxg,c(row,col),box.lty=0,cex=0.5)
 }
