@@ -2,7 +2,7 @@ require(DEoptim)
 
 # Minimum detectable cell density
 minCellDensity=0.005
-# Minimum possible carrying capacity (depends on nutrients)
+# Minimum possible carrying capacity (depends on nutrients?)
 minK=0.025
 
 #### Define Phenotype for fitness ####
@@ -260,7 +260,7 @@ return(z)
 ############################### Likelihood Functions ################################
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
-qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",...){
+qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",globalOpt=TRUE,...){
 # Define optimization bounds based on inocguess #
 lowK<-max(0.9*inocguess,minK); upK<-1.0
 lowr<-0; upr<-15
@@ -286,7 +286,7 @@ for (bcode in barcodes){bcount<-bcount+1
 	positions<-lapply(1:length(dbc[,1]),index2pos,dbc)
 	positions<-unique(positions)
 	# Fit logistic model to each colony
-	bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,xybounds,...))
+	bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,xybounds,globalOpt,...))
 	info<-t(sapply(positions,colony.info,dbc))
 	rows<-sapply(positions,rcget,"row")
 	cols<-sapply(positions,rcget,"col")
@@ -306,14 +306,17 @@ return(results)
 rcget<-function(posvec,rc){posvec[match(rc,c("row","col"))]}
 
 ### Function that does the optimization for one colony ###
-colony.fit<-function(position,bcdata,inocguess,xybounds,...){
+colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt=TRUE,...){
 # Get row & column to restrict data
 row<-position[1]; col<-position[2]
 d<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
 growth=as.numeric(d$Growth)
 time=as.numeric(d$Expt.Time)
-#pars=data.fit(time,growth,inocguess,xybounds)
-pars=de.fit(time,growth,inocguess,xybounds,initPop=TRUE)
+if(globalOpt) {
+	pars=de.fit(time,growth,inocguess,xybounds,initPop=TRUE)
+}else{
+	pars=data.fit(time,growth,inocguess,xybounds)
+}
 return(pars)
 }
 
@@ -392,6 +395,7 @@ loglikgr<-function(K,r,g,s,growth,time){
 c(dldK(K,r,g,s,growth,time),dldr(K,r,g,s,growth,time),
 dldg(K,r,g,s,growth,time),dlds(K,r,g,s,growth,time))}
 
+
 de.fit<-function(time,growth,inocguess,xybounds,inits=c(),initPop=FALSE){
 # Fit to growth curve with differential evolution
 # Get initial guess for parameters
@@ -400,12 +404,14 @@ if(length(inits)==0){
 	init<-guess(time,growth,inocguess,xybounds)
 }else{init<-inits}
 
-xybounds$r=c(0.5*init$r,2.0*init$r)
+xybounds$r=c(0.25*init$r,4.0*init$r)
 # Function to be optimized
 objf<-function(modpars){
 K<-modpars[1]; r<-modpars[2]
 g<-modpars[3]; s<-modpars[4]
-loglik(K,r,g,s,growth,time)}
+res=loglik(K,r,g,s,growth,time)
+if(is.na(res)){return(Inf)}else{return(res)}
+}
 
 # Make results repeatable
 #set.seed(1234)
@@ -431,7 +437,7 @@ pop[2,]=c(0.025,0,low[3],low[4])
 
 optsol=DEoptim(
 objf,lower=low,upper=up,
-DEoptim.control(trace = FALSE,NP=NumParticles,initialpop=pop,itermax=200)
+DEoptim.control(trace = FALSE,NP=NumParticles,initialpop=pop,itermax=250)
 )
 pars<-optsol$optim$bestmem
 # Sanity check for fitted parameters (no negative growth)
@@ -441,11 +447,6 @@ if (pars[1]<pars[3]){
 	n<-length(growth)
 	pars[4]<-sqrt((1/n)*sum((growth-logist(pars[1],pars[2],pars[3],time))^2))
 }
-#print(time)
-#print(growth)
-#print(inocguess)
-#print(xybounds)
-#print(pars)
 
 return(pars)
 }
@@ -455,7 +456,7 @@ return(pars)
 nozero<-function(growth){if (growth==0){growth<-0.0000000000001} else {growth<-growth}}
 
 ### Provide initial guess for logistic model parameters ###
-guess<-function(time,growth,inocguess,xybounds){
+guess<-function(time,growth,inocguess,xybounds,minK=0.025){
 
 # Sort time and growth
 growth=growth[order(time)]
@@ -477,7 +478,7 @@ approxcurve=approxfun(approxspline$x,approxspline$y,rule=2)
 
 solvefn<-function(x) approxcurve(x)-targ
 if((approxcurve(max(time))>=approxcurve(min(time)))&(sign(solvefn(min(time)))!=sign(solvefn(max(time))))){
-	sol=uniroot(solvefn,c(min(time),max(time)))
+	sol=uniroot(solvefn,c(min(time),time[which.max(growth)]))
 	tmrate=sol$root
 	rg=log(max(0.000000000001,(Kg-G0g)/G0g))/tmrate
 }else{
@@ -493,7 +494,7 @@ if((approxcurve(max(time))>=approxcurve(min(time)))&(sign(solvefn(min(time)))!=s
 # Sanity check for guessed parameter values
 # If the data have low correlation, then set r=0
 # If all elements of growth are equal (e.g. zero) then correlation function throws error...
-if((length(unique(growth))==1)|(cor(time,growth)<0.5)){
+if((length(unique(growth))==1)|(cor(time,growth)<0.1)){
 	rg=0
 	Kg=minK
 }
@@ -552,6 +553,7 @@ print(paste("Plotting for",length(results[,1]),"colonies"))
 colmax<-max(results$Col); rowmax<-max(results$Row)
 pdf(file,4*colmax,4*rowmax)
 cexfctr<-(rowmax*colmax)/384
+#cexfctr=1.0
 bcount<-0; nbc<-length(barcodes)
 for (bcode in barcodes){bcode<-as.character(bcode)
 	# Say what you're doing
@@ -575,12 +577,12 @@ for (bcode in barcodes){bcode<-as.character(bcode)
 	# Title for the plate
 	maintit<-paste(rbc$Barcode[1],"Treatment:",rbc$Treatment[1],
 	"Medium:",rbc$Medium[1],"Plate:",rbc$MasterPlate.Number[1],sep=" ")
-	cextit<-1008/length(strsplit(maintit,split="")[[1]])
+	#cextit<-1008/length(strsplit(maintit,split="")[[1]])
+	cextit<-500/nchar(maintit)
 	title(main=maintit,xlab="Time since inoculation (days)",line=7,
-	ylab="Cell Density (AU)",cex.main=9,cex.lab=8,outer=TRUE)
+	ylab="Cell Density (AU)",cex.main=cextit,cex.lab=8,outer=TRUE)
       par(op)} #bcode
 dev.off()}
-
 
 #### Plot a colony's timecourse from a row of the results #####	
 rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt){
@@ -595,25 +597,23 @@ time<-dcol$Expt.Time
 # Draw the curves and data
 logdraw(row,col,K,r,g,time,growth,gene,maxg,mdrmdp,maxt)}
 
-
-
 ### Converts row no. to position vector ###	
 index2pos<-function(index,dbc){
 c(dbc[index,'Row'],dbc[index,'Col'])}
 
 ### Do individual timecourse plot given parameters & data ###
-logdraw<-function(row,col,K,r,g,time,growth,gene,maxg,fitfunct,maxt){
+logdraw<-function(row,col,K,r,g,time,growth,gene,maxg,fitfunct,maxt,scaleT=1.0){
 # Add logistic curve
 if(maxt==0) maxt=ceiling(max(time))
 curve((K*g*exp(r*x))/(K+g*(exp(r*x)-1)),n=31,xlim=c(0,maxt),ylim=c(0,1.2*maxg),
-xlab="",ylab="",main=gene,frame.plot=0,cex.main=3,cex.axis=1,lwd=2.5)
+xlab="",ylab="",main=gene,frame.plot=0,cex.main=3*scaleT,cex.axis=1*scaleT,lwd=2.5)
 # Add data points
-points(time,growth,col="red",cex=2,pch=4,lwd=2)
+points(time,growth,col="red",cex=2*scaleT,pch=4,lwd=2)
 # Add legend
 # With fitness
 F<-fitfunct(K,r,g)
-legt1<-paste(c("K=","r=","g=","F="),c(signif(K,3),signif(r,3),signif(g,3),signif(F,2)),sep="")
-legend(0,1.2*maxg,legt1,box.lty=0)
-legend(0.9*max(time),1.2*maxg,c(row,col),box.lty=0,cex=0.5)
+legt1<-paste(c("K=","r=","g=","F="),c(signif(K,3),signif(r,3),signif(g,3),signif(F,3)),sep="")
+legend(0,1.2*maxg,legt1,box.lty=0,cex=scaleT)
+legend(0.9*max(time),1.2*maxg,c(row,col),box.lty=0,cex=0.5*scaleT)
 }
 
