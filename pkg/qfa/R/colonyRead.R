@@ -1,7 +1,7 @@
 #### Read in Colonyzer output and return a rod.read-like object ####
 # This function essentially replaces the database functionalities of ROD and is therefore quite slow.
 # I recommend that you run it once, and write the returned table to file for future use.
-# It is *extremely* fast compared to using ROD itself however...
+# It is *extremely* fast and flexible compared to using ROD itself however...
 ####
 
 colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF2gene="",libraries="LibraryDescriptions.csv",background=""){
@@ -86,8 +86,13 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 
 		# Create extra columns
 		iman$Growth=iman$Trimmed/(255*iman$Tile.Dimensions.X*iman$Tile.Dimensions.Y)
-		iman$Barcode=substr(iman$Image.Name,1,11)
-		iman$Date.Time=substr(iman$Image.Name,13,31)
+		if(nchar(iman$Image.Name)==31){
+			iman$Barcode=substr(iman$Image.Name,1,11)
+			iman$Date.Time=substr(iman$Image.Name,13,31)
+		}else{
+			iman$Barcode=substr(iman$Image.Name,1,15)
+			iman$Date.Time=substr(iman$Image.Name,17,35)
+		}
 
 		# Dump any images which are not in the experimental description file
 		iman=iman[iman$Barcode%in%expt$Barcode,]
@@ -96,7 +101,11 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 		# Create a dictionary for filename->photo number
 		getPhotoNum<-function(filename){
 			# Get plate name from filename
-			platename=substr(filename,1,11)
+			if(nchar(iman$Image.Name)==31){
+				platename=substr(filename,1,11)
+			}else{
+				platename=substr(filename,1,15)
+			}
 			# Filter iman data frame by filename
 			#tmp=na.omit(smalliman[(smalliman$Barcode==platename),])
 			tmp=smalliman[(smalliman$Barcode==platename),]

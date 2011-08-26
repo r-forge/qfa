@@ -24,7 +24,7 @@ fitnessReport<-function(treatment,outputfile,dataframe){
 	return(results)
 }
 
-correlationReport<-function(screennames,dataframe,outputfile,aw=4,ah=4,fitmax=130){
+correlationReport<-function(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185){
         # Tests the correlation of all possible repeats of the same plate/treatment
         # Useful tool for searching for incorrect plate orientation, or misplaced/mislabelled plates
         # Can also give clues about plates with incorrect medium
@@ -53,6 +53,7 @@ correlationReport<-function(screennames,dataframe,outputfile,aw=4,ah=4,fitmax=13
                 r1=r1[order(r1$Screen.Name,r1$MasterPlate.Number,r1$Gene),]
                 r2=r2[order(r2$Screen.Name,r2$MasterPlate.Number,r2$Gene),]
                 
+		    if((length(r1$fit)==length(r2$fit))&(length(r1$fit)>0)){
                 cols=rainbow(max(as.numeric(dataframe$MasterPlate.Number),na.rm=TRUE))
                 correlate=cor(r1$fit,r2$fit)
                 corrs=rbind(corrs,c(rep1,rep2,t,p,correlate))
@@ -63,6 +64,7 @@ correlationReport<-function(screennames,dataframe,outputfile,aw=4,ah=4,fitmax=13
                 #text(r1$fit,r2$fit,r1$Gene,col="black",pos=4,offset=0.1,cex=0.4)
                 points(r1$fit,r2$fit,col=cols[r1$MasterPlate.Number],pch=16,cex=0.4)
                 #print(c(sum(r1$Gene==r2$Gene),length(r1$Gene)))
+		    }else{plot(NULL,xlim=c(0,fitmax),ylim=c(0,fitmax),xlab=rep1,ylab=rep2,main=paste("Trt:",t,"Plate:",p),axes=FALSE)}
         }
         if(pdummy>0) for(p in 1:pdummy) plot(NULL,xlim=c(0,fitmax),ylim=c(0,fitmax),xlab="",ylab="",main="",axes=FALSE)
         }
@@ -78,12 +80,16 @@ correlationReport<-function(screennames,dataframe,outputfile,aw=4,ah=4,fitmax=13
 	  dev.off()
 }
 
-plateBoxplots<-function(dataframe,outputfile,fitmax=130){
+plateBoxplots<-function(dataframe,outputfile,fitmax=185){
 # Generates plate by plate boxplots of culture fitnesses
 # Useful for identifying plates with medium problems
+trts=unique(dataframe$Treatment)
+scrns=unique(dataframe$Screen.Name)
+trts=trts[order(trts)]
+scrns=scrns[order(scrns)]
 pdf(outputfile)
-for (trt in unique(dataframe$Treatment)){
-	for (scr in unique(dataframe$Screen.Name)){
+for (trt in trts){
+	for (scr in scrns){
 		dt=dataframe[(dataframe$Screen.Name==scr)&(dataframe$Treatment==trt),]
 		dt=dt[order(as.numeric(as.character(dt$MasterPlate.Number))),]
 		plateNums=unique(as.numeric(as.character(dt$MasterPlate.Number)))
