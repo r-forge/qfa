@@ -477,7 +477,7 @@ approxspline=smooth.spline(time,growth)
 approxcurve=approxfun(approxspline$x,approxspline$y,rule=2)
 
 solvefn<-function(x) approxcurve(x)-targ
-if((approxcurve(max(time))>=approxcurve(min(time)))&(sign(solvefn(min(time)))!=sign(solvefn(max(time))))){
+if((approxcurve(max(time))>=approxcurve(min(time)))&(sign(solvefn(min(time)))!=sign(solvefn(time[which.max(growth)])))){
 	sol=uniroot(solvefn,c(min(time),time[which.max(growth)]))
 	tmrate=sol$root
 	rg=log(max(0.000000000001,(Kg-G0g)/G0g))/tmrate
