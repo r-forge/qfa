@@ -18,7 +18,8 @@ normalisePlates=function(d,column){
 		med=median(d[d$Treatment==trt,column])
 		for (b in unique(d$Barcode[d$Treatment==trt])){
 			datlst=as.numeric(d[(d$Barcode==b)&(d$Treatment==trt),column])
-			datlst=datlst*med/median(datlst)
+			p.med=median(datlst)
+			if(p.med>=1) datlst=datlst*med/p.med # Avoid division by zero median fitness...
 			d[(d$Barcode==b)&(d$Treatment==trt),column]=datlst
 		}		
 	}
@@ -86,9 +87,11 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	orfs<-orfs[orfs%in%as.character(control$ORF)]
 	orfs<-unique(orfs)
 	# Get lists with fitnesses for each repeat
-	cFstats<-lapply(orfs,orfstat,control,fitfunct)
+	#cFstats<-lapply(orfs,orfstat,control,fitfunct)
+	cFstats<-lapply(orfs,orffit,control)
 	names(cFstats)<-orfs
-	dFstats<-lapply(orfs,orfstat,double,fitfunct)
+	#dFstats<-lapply(orfs,orfstat,double,fitfunct)
+	dFstats<-lapply(orfs,orffit,double)
 	names(dFstats)<-orfs
 	# Get means or medians for each ORF
 	if(wctest){cFms<-sapply(cFstats,median)}else{cFms<-sapply(cFstats,mean)}
@@ -190,6 +193,12 @@ gethits<-function(results,qthresh,type="S",all.types=FALSE,GISthresh=0){
 orfstat<-function(orf,fitframe,fitfunct){
 	orfd<-fitframe[fitframe$ORF==orf,]
 	return(fitfunct(orfd$K,orfd$r,orfd$g,orfd$v))
+}
+
+# Function to extract fitnesses from data frame with "fit" column
+orffit<-function(orf,fitframe){
+	orfd<-fitframe[fitframe$ORF==orf,]
+	return(orfd$fit)
 }
 
 # Linear regression genetic ind. model fit
