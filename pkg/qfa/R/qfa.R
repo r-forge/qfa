@@ -11,6 +11,20 @@ logist<-function(K,r,g,t) (K*g*exp(r*t))/(K+g*(exp(r*t)-1))
 # Generalised logistic growth model #
 Glogist<-function(K,r,g,v,t) K/(1+(-1+(K/g)^v)*exp(-r*v*t))^(1/v)
 
+####### Normalise a column in a data frame
+normalisePlates=function(d,column){
+	d$Treatment=as.character(d$Treatment); d[,column]=as.numeric(d[,column]); d$Barcode=as.character(d$Barcode)
+	for(trt in sort(unique(d$Treatment))){
+		med=median(d[d$Treatment==trt,column])
+		for (b in unique(d$Barcode[d$Treatment==trt])){
+			datlst=as.numeric(d[(d$Barcode==b)&(d$Treatment==trt),column])
+			datlst=datlst*med/median(datlst)
+			d[(d$Barcode==b)&(d$Treatment==trt),column]=datlst
+		}		
+	}
+	return(as.real(d[,column]))
+}
+
 ####### Convert data datetime to time from start in days ########
 tconv<-function(tstring,startt,fmt){
 	t<-as.POSIXlt(as.character(tstring),format=fmt)
@@ -258,7 +272,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 	lowK<-max(0.9*inocguess,minK); upK<-1.0
 	lowr<-0; upr<-15
 	lowg<-0.9*inocguess; upg<-1.1*inocguess
-	#lowg<-0.5*inocguess; upg<-2.0*inocguess
+	#lowg<-0.001*inocguess; upg<-1000.0*inocguess
 	lowv<-0.1; upv<-10.0
 	xybounds<-list(K=c(lowK,upK),r=c(lowr,upr),g=c(lowg,upg),v=c(lowv,upv))
 
@@ -288,7 +302,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		# s=bcfit[,4]
 		results<-rbind(results,data.frame(Barcode=info[,1],Row=rows,Col=cols,
 		Background=info[,9],Treatment=info[,2],Medium=info[,3],ORF=info[,4],
-		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],Screen.Name=info[,5],
+		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],Screen.Name=info[,5],
 		Library.Name=info[,6],MasterPlate.Number=info[,7],Timeseries.order=info[,8],
 		Inoc.Time=inoctime,TileX=info[,10],TileY=info[,11],XOffset=info[,12],YOffset=info[,13],
 		Threshold=info[,14],EdgeLength=info[,15],EdgePixels=info[,16],RepQuad=info[,17]))
@@ -304,20 +318,20 @@ rcget<-function(posvec,rc) posvec[match(rc,c("row","col"))]
 colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,minK,...){
 	# Get row & column to restrict data
 	row<-position[1]; col<-position[2]
-	d<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
-	len1=length(d$Growth)
+	do<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
+	len1=length(do$Growth)
 	# Throw away observations below the detectable threshold
-	#d=d[as.numeric(d$Growth)>=detectThresh,]
-	#len2=length(d$Growth)
+	d=do[as.numeric(do$Growth)>=detectThresh,]
+	len2=length(d$Growth)
 	# If this has left us with too few points, return "dead colony"
-	#if (len2/len1<0.25) return(c(minK,0,0,1))
+	if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf))
 	growth=as.numeric(d$Growth)
 	tim=as.numeric(d$Expt.Time)
 	if(globalOpt) {
 		pars=de.fit(tim,growth,inocguess,xybounds,initPop=TRUE)
 		# Check for high fraction of K at end of modelled experiment
 		GEnd=Glogist(pars[1],pars[2],pars[3],pars[4],max(tim))
-		if(GEnd/pars[1]<0.75){
+		if(GEnd/pars[1]<0.75){ # If experiment not quite finished...
 			# Put tight bounds on K and optimise again
 			Kmin=max(0.95*1.5*GEnd,minK); Kmax=max(1.05*1.5*GEnd,minK)
 			xybounds$K=c(Kmin,Kmax)
@@ -327,109 +341,42 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 		pars=data.fit(tim,growth,inocguess,xybounds)
 		# Check for high fraction of K at end of modelled experiment
 		GEnd=Glogist(pars[1],pars[2],pars[3],pars[4],max(tim))
-		if(GEnd/pars[1]<0.75){
+		if(GEnd/pars[1]<0.75){ # If experiment not quite finished...
 			# Put tight bounds on K and optimise again
 			Kmin=max(0.95*1.5*GEnd,minK); Kmax=max(1.05*1.5*GEnd,minK)
 			xybounds$K=c(Kmin,Kmax)
 			pars=data.fit(tim,growth,inocguess,xybounds)
 		}
 	}
+	# Check for spurious combination of relatively high r, low K, spend more time optimising...
+	if((mdr(pars[1],pars[2],pars[3],pars[4])>1.0)&((pars[1]<0.05)|(max(growth)<0.05)|(tail(growth,1)<0.05))){ # Try optimising with sick colony as guess
+		Kmin=max(0.9*inocguess,minK); Kmax=1.5*max(pars[1],minK); xybounds$K=c(Kmin,Kmax); 
+		xybounds$r=c(0,3) # Slow growth
+		xybounds$v=c(0.75,1.5) # More logistic growth
+		inits=list(K=pars[1],r=0.6,g=inocguess,v=1)
+		newpars=de.fit(tim,growth,inocguess,xybounds,inits=inits,initPop=TRUE,widenr=FALSE)			
+		if(newpars[5]<=pars[5]) pars=newpars				
+	}
+	opt=sumsq(pars[1],pars[2],pars[3],pars[4],do$Growth,do$Expt.Time) # Use all data (not just data below detection thresh)
+	dead=sumsq(inocguess,0,inocguess,1,do$Growth,do$Expt.Time)
+	if(dead<=opt) pars=c(inocguess,0,inocguess,1,dead) # Try dead colony
 	return(pars)
 }
 
-### Function that fits model for a timecourse
-data.fit<-function(tim,growth,inocguess,xybounds,inits=c()){
-	if(length(inits)==0){
-		# Get initial guess for parameters
-		init<-guess(tim,growth,inocguess,xybounds)
-	}else{init<-inits}
-	#xybounds$r=c(0.75*init$r,1.25*init$r)
-	#xybounds$r=c(0.1*init$r,10.0*init$r)
-	# Set initial guess to twice best estimate to bias against small r
-	#init$r=2.0*init$r
-	# Try to stop L-BFGS-B errors by moving away from minK
-	xybounds$K[1]=1.01*xybounds$K[1]
-	# Function to be optimized
-	objf<-function(modpars){
-		K<-modpars[1]; r<-modpars[2]
-		g<-modpars[3]; v<-modpars[4]
-		res=sumsq(K,r,g,v,growth,tim)
-	}
-	# Perform optimization
-	optsol<-optim(par=unlist(init),fn=objf,gr=NULL,method="L-BFGS-B",
-	lower=c(xybounds$K[1],xybounds$r[1],xybounds$g[1],xybounds$v[1]),
-	upper=c(xybounds$K[2],xybounds$r[2],xybounds$g[2],xybounds$v[2]),
-	control=list(maxit=1000,trace=0,parscale=c(0.2,10,inocguess,1)))
-	pars<-optsol$par
-	# Sanity check for fitted parameters (no negative growth)
-	if (pars[1]<pars[3]){
-		pars[1]=pars[3]
-		pars[2]=0
-		n<-length(growth)
-		pars[4]<-1
-	}
-	if(optsol$message!="CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH") print(optsol$message)
-	return(pars)
-}
-
-### Provide initial guess for logistic model parameters ###
-guess<-function(tim,growth,inocguess,xybounds,minK=0.025){
-	# Sort time and growth
-	growth=growth[order(tim)]
-	tim=tim[order(tim)]
-	n=length(tim)
-
-	# Enforce positivity and monotonic increasing behaviour in growth
-	#growth[1]=max(c(growth[1],0.000000001))
-	#for (x in 2:length(growth)) growth[x]=max(c(max(growth[1:(x-1)]),growth[x],0.00000001))
-	G0g<-inocguess
-	Kg<-max(max(growth),minK)
-	vg=1 # Assume logistic model is adequate
-	# Guess for r is a bit more complicated
-	targ<-min(growth)+(max(growth)-min(growth))/2.0
-	approxspline=smooth.spline(tim,growth)
-	approxcurve=approxfun(approxspline$x,approxspline$y,rule=2)
-
-	solvefn<-function(x) approxcurve(x)-targ
-	if((approxcurve(max(tim))>=approxcurve(min(tim)))&(sign(solvefn(min(tim)))!=sign(solvefn(tim[which.max(growth)])))){
-		sol=uniroot(solvefn,c(min(tim),tim[which.max(growth)]))
-		tmrate=sol$root
-		rg=log(max(0.000000000001,(Kg-G0g)/G0g))/tmrate
-	}else{
-		tmrate=(min(tim)+max(tim))/2.0; rg=0; Kg=minK
-	}
-
-	# Sanity check for guessed parameter values
-	# If the data have low correlation, then set r=0
-	# If all elements of growth are equal (e.g. zero) then correlation function throws error...
-	if((length(unique(growth))==1)|(cor(tim,growth)<0.1)){ rg=0; Kg=minK}
-	return(list(K=Kg,r=rg,g=G0g,v=vg))
-}#guess
-
-# Sum of squared error
-sumsq<-function(K,r,g,v,growth,tim){
-	#ss=sum(abs(growth-Glogist(K,r,g,v,tim)))
-	ss=sum((growth-Glogist(K,r,g,v,tim))^2)
-	#growth=growth[growth>0];tim=tim[growth>0]
-	#ss=sum(abs(log(growth)-log(Glogist(K,r,g,v,tim))))
-	if(is.na(ss)){print("NA!"); return(Inf)}else{return(ss)}
-}
-
-de.fit<-function(tim,growth,inocguess,xybounds,inits=c(),initPop=FALSE){
+### Function that fits model to a timecourse
+de.fit<-function(tim,growth,inocguess,xybounds,inits=list(),initPop=FALSE,widenr=TRUE){
 	# Fit to growth curve with differential evolution
 	# Get initial guess for parameters
 	if(length(inits)==0){
 		# Get initial guess for parameters
 		init<-guess(tim,growth,inocguess,xybounds)
-	}else{init<-inits}
-
-	xybounds$r=c(0.01*init$r,10.0*init$r)
+	}else{init=inits}
+	if (widenr) xybounds$r=c(0.01*init$r,10.0*init$r)
 
 	# Function to be optimized
 	objf<-function(modpars){
 		K<-modpars[1]; r<-modpars[2]
 		g<-modpars[3]; v<-modpars[4]
-		#res=loglik(K,r,g,s,growth,tim)
 		res=sumsq(K,r,g,v,growth,tim)
 		return(res)
 	}
@@ -456,24 +403,98 @@ de.fit<-function(tim,growth,inocguess,xybounds,inits=c(),initPop=FALSE){
 	pop[2,]=c(0.025,0,low[3],1)
 	}else{pop=NULL}
 
-	optsol=DEoptim(
-	objf,lower=low,upper=up,
-	DEoptim.control(trace = FALSE,NP=NumParticles,initialpop=pop,itermax=250)
+	optsol=DEoptim(objf,lower=low,upper=up,
+	DEoptim.control(trace = FALSE,NP=NumParticles,initialpop=pop,itermax=200)
 	)
-	pars<-optsol$optim$bestmem
+	pars=as.numeric(optsol$optim$bestmem)
+	objval=objf(pars)
 	# Sanity check for fitted parameters (no negative growth)
 	if (pars[1]<pars[3]){
-		pars[1]=pars[3]
-		pars[2]=0
-		n<-length(growth)
-		pars[4]<-1
-	}
-
+		pars[1]=pars[3]; pars[2]=0; pars[4]=1
+		objval=objf(pars)}
+	pars=c(pars,objval)
 	return(pars)
 }
 
-# Prevent zero growth from occurring
-nozero<-function(growth){if (growth==0){growth<-0.0000000000001} else {growth<-growth}}
+### Function that fits to for a timecourse
+data.fit<-function(tim,growth,inocguess,xybounds,inits=list()){
+	if(length(inits)==0){
+		# Get initial guess for parameters
+		init<-guess(tim,growth,inocguess,xybounds)
+	}else{init=inits}
+	#xybounds$r=c(0.75*init$r,1.25*init$r)
+	#xybounds$r=c(0.1*init$r,10.0*init$r)
+	# Set initial guess to twice best estimate to bias against small r
+	#init$r=2.0*init$r
+	# Try to stop L-BFGS-B errors by moving away from minK
+	xybounds$K[1]=1.01*xybounds$K[1]
+	# Function to be optimized
+	objf<-function(modpars){
+		K<-modpars[1]; r<-modpars[2]
+		g<-modpars[3]; v<-modpars[4]
+		return(sumsq(K,r,g,v,growth,tim))
+	}
+	# Perform optimization
+	optsol<-optim(par=unlist(init),fn=objf,gr=NULL,method="L-BFGS-B",
+	lower=c(xybounds$K[1],xybounds$r[1],xybounds$g[1],xybounds$v[1]),
+	upper=c(xybounds$K[2],xybounds$r[2],xybounds$g[2],xybounds$v[2]),
+	control=list(maxit=1000,trace=0,parscale=c(0.2,10,inocguess,1)))
+	pars=as.numeric(optsol$par)
+	objval=objf(pars)
+	# Sanity check for fitted parameters (no negative growth)
+	if (pars[1]<pars[3]){
+		pars[1]=pars[3]; pars[2]=0; pars[4]=1
+		objval=objf(pars)}
+	pars=c(pars,objval)
+	if(optsol$message!="CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH") print(optsol$message)
+	return(pars)
+}
+
+### Provide initial guess for logistic model parameters ###
+guess<-function(tim,growth,inocguess,xybounds,minK=0.025){
+	# Sort time and growth
+	growth=growth[order(tim)]
+	tim=tim[order(tim)]
+	n=length(tim)
+
+	# Enforce positivity and monotonic increasing behaviour in growth
+	#growth[1]=max(c(growth[1],0.000000001))
+	#for (x in 2:length(growth)) growth[x]=max(c(max(growth[1:(x-1)]),growth[x],0.00000001))
+	G0g<-inocguess
+	Kg<-max(max(growth),minK)
+	vg=1 # Assume logistic model is adequate
+	rg=0
+	if(n>3){
+		# Guess for r is a bit more complicated
+		targ<-min(growth)+(max(growth)-min(growth))/2.0
+		approxspline=smooth.spline(tim,growth)
+		approxcurve=approxfun(approxspline$x,approxspline$y,rule=2)
+		solvefn<-function(x) approxcurve(x)-targ
+		if((approxcurve(max(tim))>=approxcurve(min(tim)))&(sign(solvefn(min(tim)))!=sign(solvefn(tim[which.max(growth)])))){
+			sol=uniroot(solvefn,c(min(tim),tim[which.max(growth)]))
+			tmrate=sol$root
+		}else{ # Too few points to fit spline curve, still do something sensible...
+			tmrate=(min(tim)+max(tim))/2.0;
+		}
+		if(Kg>G0g) rg=log((Kg-G0g)/G0g)/tmrate
+	}
+	# Sanity check for guessed parameter values
+	# If the data have low correlation, then set r=0
+	# If all elements of growth are equal (e.g. zero) then correlation function throws error...
+	if((length(unique(growth))==1)|(cor(tim,growth)<0.1)){ rg=0; Kg=minK}
+	return(list(K=Kg,r=rg,g=G0g,v=vg))
+}#guess
+
+# Sum of squared error
+sumsq<-function(K,r,g,v,growth,tim){
+	#ss=sum(abs(growth-Glogist(K,r,g,v,tim)))/length(growth)
+	ss=sum((growth-Glogist(K,r,g,v,tim))^2)/length(growth)
+	#ss=sum((log(growth)-log(Glogist(K,r,g,v,tim)))^2)/length(growth)
+	if(is.na(ss)){print("Problem with squared error!"); return(Inf)}else{return(ss)}
+}
+
+# Prevent zero or negative growth from occurring
+nozero<-function(growth){if (growth<=0){growth<-0.0000000000001} else {growth<-growth}}
 
 #### Get colony information ####
 colony.info<-function(position,bcdata){
