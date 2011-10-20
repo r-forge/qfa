@@ -70,6 +70,8 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	orf2gene=read.delim(ORF2gene,sep="\t",header=FALSE,stringsAsFactors=FALSE)
 	colnames(orf2gene)=c("orf","gene")
 	orf2gene$orf=toupper(orf2gene$orf)
+	# Add a "missing" row
+	orf2gene=rbind(orf2gene,c("missing","missing"))
 	# Create an ORF2Gene dictionary
 	orfdict=orf2gene$gene
 	names(orfdict)=orf2gene$orf
