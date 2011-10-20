@@ -24,7 +24,7 @@ NoSum_b<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_b)))
 dimr<-max(NoORF_a,NoORF_b);dimc<-max(NoTime_a,NoTime_b)
 
 y<-funcXY_J(a$Growth,b$Growth,M,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
-x<-funcXY_J(a$Expt.Time,b$Time,M,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
+x<-funcXY_J(a$Expt.Time,b$Expt.Time,M,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
 
 QFA.I<-list("NoORF"=cbind(NoORF_a,NoORF_b),"NoTime"=cbind(NoTime_a,NoTime_b)[-1,],"NoSum"=cbind(NoSum_a,NoSum_b),"N"=N,"M"=M,"gene"=gene,SHIFT=c(0,max(NoSum_a,NoSum_b))
 )
