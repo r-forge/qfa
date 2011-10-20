@@ -276,7 +276,7 @@ varposget<-function(var,orfn,norfs){
 ############################### Likelihood Functions ################################
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
-qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=TRUE,...){
+qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=TRUE,logTransform=FALSE,...){
 	# Define optimization bounds based on inocguess #
 	lowK<-max(0.9*inocguess,minK); upK<-1.0
 	lowr<-0; upr<-15
@@ -303,7 +303,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		positions<-lapply(1:length(dbc[,1]),index2pos,dbc)
 		positions<-unique(positions)
 		# Fit logistic model to each colony
-		bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,xybounds,globalOpt,detectThresh,minK,...))
+		bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,...))
 		info<-t(sapply(positions,colony.info,dbc))
 		rows<-sapply(positions,rcget,"row")
 		cols<-sapply(positions,rcget,"col")
@@ -324,7 +324,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 rcget<-function(posvec,rc) posvec[match(rc,c("row","col"))] 
 
 ### Function that does the optimization for one colony ###
-colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,minK,...){
+colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,...){
 	# Get row & column to restrict data
 	row<-position[1]; col<-position[2]
 	do<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
@@ -337,24 +337,24 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 	growth=as.numeric(d$Growth)
 	tim=as.numeric(d$Expt.Time)
 	if(globalOpt) {
-		pars=de.fit(tim,growth,inocguess,xybounds,initPop=TRUE)
+		pars=de.fit(tim,growth,inocguess,xybounds,initPop=TRUE,logTransform=logTransform)
 		# Check for high fraction of K at end of modelled experiment
 		GEnd=Glogist(pars[1],pars[2],pars[3],pars[4],max(tim))
 		if(GEnd/pars[1]<0.75){ # If experiment not quite finished...
 			# Put tight bounds on K and optimise again
 			Kmin=max(0.95*1.5*GEnd,minK); Kmax=max(1.05*1.5*GEnd,minK)
 			xybounds$K=c(Kmin,Kmax)
-			pars=de.fit(tim,growth,inocguess,xybounds,initPop=TRUE)
+			pars=de.fit(tim,growth,inocguess,xybounds,initPop=TRUE,logTransform=logTransform)
 		}
 	}else{
-		pars=data.fit(tim,growth,inocguess,xybounds)
+		pars=data.fit(tim,growth,inocguess,xybounds,logTransform=logTransform)
 		# Check for high fraction of K at end of modelled experiment
 		GEnd=Glogist(pars[1],pars[2],pars[3],pars[4],max(tim))
 		if(GEnd/pars[1]<0.75){ # If experiment not quite finished...
 			# Put tight bounds on K and optimise again
 			Kmin=max(0.95*1.5*GEnd,minK); Kmax=max(1.05*1.5*GEnd,minK)
 			xybounds$K=c(Kmin,Kmax)
-			pars=data.fit(tim,growth,inocguess,xybounds)
+			pars=data.fit(tim,growth,inocguess,xybounds,logTransform=logTransform)
 		}
 	}
 	# Check for spurious combination of relatively high r, low K, spend more time optimising...
@@ -363,17 +363,17 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 		xybounds$r=c(0,3) # Slow growth
 		xybounds$v=c(0.75,1.5) # More logistic growth
 		inits=list(K=pars[1],r=0.6,g=inocguess,v=1)
-		newpars=de.fit(tim,growth,inocguess,xybounds,inits=inits,initPop=TRUE,widenr=FALSE)			
+		newpars=de.fit(tim,growth,inocguess,xybounds,inits=inits,initPop=TRUE,widenr=FALSE,logTransform=logTransform)			
 		if(newpars[5]<=pars[5]) pars=newpars				
 	}
-	opt=sumsq(pars[1],pars[2],pars[3],pars[4],do$Growth,do$Expt.Time) # Use all data (not just data below detection thresh)
-	dead=sumsq(inocguess,0,inocguess,1,do$Growth,do$Expt.Time)
+	opt=sumsq(pars[1],pars[2],pars[3],pars[4],do$Growth,do$Expt.Time,logTransform=logTransform) # Use all data (not just data below detection thresh)
+	dead=sumsq(inocguess,0,inocguess,1,do$Growth,do$Expt.Time,logTransform=logTransform)
 	if(dead<=opt) pars=c(inocguess,0,inocguess,1,dead) # Try dead colony
 	return(pars)
 }
 
 ### Function that fits model to a timecourse
-de.fit<-function(tim,growth,inocguess,xybounds,inits=list(),initPop=FALSE,widenr=TRUE){
+de.fit<-function(tim,growth,inocguess,xybounds,inits=list(),initPop=FALSE,widenr=TRUE,logTransform=FALSE){
 	# Fit to growth curve with differential evolution
 	# Get initial guess for parameters
 	if(length(inits)==0){
@@ -386,7 +386,7 @@ de.fit<-function(tim,growth,inocguess,xybounds,inits=list(),initPop=FALSE,widenr
 	objf<-function(modpars){
 		K<-modpars[1]; r<-modpars[2]
 		g<-modpars[3]; v<-modpars[4]
-		res=sumsq(K,r,g,v,growth,tim)
+		res=sumsq(K,r,g,v,growth,tim,logTransform=logTransform)
 		return(res)
 	}
 
@@ -413,7 +413,7 @@ de.fit<-function(tim,growth,inocguess,xybounds,inits=list(),initPop=FALSE,widenr
 	}else{pop=NULL}
 
 	optsol=DEoptim(objf,lower=low,upper=up,
-	DEoptim.control(trace = FALSE,NP=NumParticles,initialpop=pop,itermax=200)
+	DEoptim.control(trace = FALSE,NP=NumParticles,initialpop=pop,itermax=2000)
 	)
 	pars=as.numeric(optsol$optim$bestmem)
 	objval=objf(pars)
@@ -426,7 +426,7 @@ de.fit<-function(tim,growth,inocguess,xybounds,inits=list(),initPop=FALSE,widenr
 }
 
 ### Function that fits to for a timecourse
-data.fit<-function(tim,growth,inocguess,xybounds,inits=list()){
+data.fit<-function(tim,growth,inocguess,xybounds,inits=list(),logTransform=FALSE){
 	if(length(inits)==0){
 		# Get initial guess for parameters
 		init<-guess(tim,growth,inocguess,xybounds)
@@ -441,7 +441,7 @@ data.fit<-function(tim,growth,inocguess,xybounds,inits=list()){
 	objf<-function(modpars){
 		K<-modpars[1]; r<-modpars[2]
 		g<-modpars[3]; v<-modpars[4]
-		return(sumsq(K,r,g,v,growth,tim))
+		return(sumsq(K,r,g,v,growth,tim,logTransform=logTransform))
 	}
 	# Perform optimization
 	optsol<-optim(par=unlist(init),fn=objf,gr=NULL,method="L-BFGS-B",
@@ -494,11 +494,45 @@ guess<-function(tim,growth,inocguess,xybounds,minK=0.025){
 	return(list(K=Kg,r=rg,g=G0g,v=vg))
 }#guess
 
+guessNEW<-function(tim,growth,inocguess,xybounds,minK=0.025){
+	# Sort time and growth
+	growth=growth[order(tim)]
+	tim=tim[order(tim)]
+	# Enforce positivity and monotonic increasing behaviour in growth
+	#growth[1]=max(c(growth[1],0.000000001))
+	#for (x in 2:length(growth)) growth[x]=max(c(max(growth[1:(x-1)]),growth[x],0.00000001))
+	G0g<-inocguess
+	Kg<-max(max(growth),minK)
+	vg=1 # Assume logistic model is adequate
+	rg=0
+	# Subset of data which will be linear on the log scale
+	growthadj=growth[growth<0.75*Kg]
+	timadj=tim[growth<0.75*Kg]
+	n=length(timadj)
+	if(n>=1){
+		fixed=lm(I(log(growthadj)-log(G0g))~timadj+0)
+		fixslope=fixed$coefficients[['timadj']]
+		free=lm(log(growthadj)~timadj)
+		freeslope=free$coefficients[['timadj']]
+		freeint=free$coefficients[['(Intercept)']]
+		
+		rguess=(freeslope*(Kg/G0g)^vg)/((Kg/G0g)^vg-1)
+		if(Kg>G0g) {rg=rguess}else{rg=0}
+	}
+	# Sanity check for guessed parameter values
+	# If the data have low correlation, then set r=0
+	# If all elements of growth are equal (e.g. zero) then correlation function throws error...
+	if((length(unique(growth))==1)|(cor(tim,growth)<0.1)){ rg=0; Kg=minK}
+	return(list(K=Kg,r=rg,g=G0g,v=vg))
+}#guess
+
 # Sum of squared error
-sumsq<-function(K,r,g,v,growth,tim){
-	#ss=sum(abs(growth-Glogist(K,r,g,v,tim)))/length(growth)
-	ss=sum((growth-Glogist(K,r,g,v,tim))^2)/length(growth)
-	#ss=sum((log(growth)-log(Glogist(K,r,g,v,tim)))^2)/length(growth)
+sumsq<-function(K,r,g,v,growth,tim,logTransform=FALSE){
+	if(logTransform){
+		ss=sum((log(growth)-log(Glogist(K,r,g,v,tim)))^2)/length(growth)
+	}else{
+		ss=sum((growth-Glogist(K,r,g,v,tim))^2)/length(growth)
+	}
 	if(is.na(ss)){print("Problem with squared error!"); return(Inf)}else{return(ss)}
 }
 
@@ -524,7 +558,7 @@ colony.info<-function(position,bcdata){
 }
 
 ##### Make PDFs #####
-qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.plates=c(),treatments=c(),screen.names=c(),backgrounds=c(),maxg=0,maxt=0){
+qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.plates=c(),treatments=c(),screen.names=c(),backgrounds=c(),maxg=0,maxt=0,logify=FALSE){
 	# Sort the data to be plotted sensibly, allowing easy comparison between repeats
 	results=results[order(results$MasterPlate.Number,results$Treatment,results$Screen.Name),]
 	# Get character vectors of requested barcodes, treatements,etc.; all if none specified
@@ -543,6 +577,7 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 	if (length(barcodes)==0){barcodes<-unique(results$Barcode)}
 	results<-results[results$Barcode%in%barcodes,]
 	d<-d[d$Barcode%in%barcodes,]
+	
 
 	print(paste("Plotting for",length(results[,1]),"colonies"))
 	# Produce PDF
@@ -570,7 +605,7 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 		op<-par(mfrow=c(nrow,ncol),oma=c(13,15,22,1),
 		mar=c(2,1,2,0.75),mgp=c(3,1,0),cex=cexfctr)
 		## Plot for each row of results for that bcode ##
-		z<-apply(rbc,1,rowplot,dbc,inoctime,maxg,fmt,maxt)
+		z<-apply(rbc,1,rowplot,dbc,inoctime,maxg,fmt,maxt,logify)
 		# Title for the plate
 		maintit<-paste(rbc$Barcode[1],"Treatment:",rbc$Treatment[1],
 		"Medium:",rbc$Medium[1],"Plate:",rbc$MasterPlate.Number[1],sep=" ")
@@ -583,7 +618,7 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 }
 
 #### Plot a colony's timecourse from a row of the results #####	
-rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt){
+rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify){
 	# Get logistic parameters, gene name and position
 	K<-as.numeric(resrow['K']); r<-as.numeric(resrow['r']); g<-as.numeric(resrow['g']); v<-as.numeric(resrow['v']);
 	row<-as.numeric(resrow['Row']); col<-as.numeric(resrow['Col'])
@@ -593,17 +628,18 @@ rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt){
 	growth<-sapply(dcol$Growth,nozero)
 	tim<-dcol$Expt.Time
 	# Draw the curves and data
-	logdraw(row,col,K,r,g,v,tim,growth,gene,maxg,mdrmdp,maxt)
+	logdraw(row,col,K,r,g,v,tim,growth,gene,maxg,mdrmdp,maxt,logify=logify)
 }
 
 ### Converts row no. to position vector ###	
 index2pos<-function(index,dbc) c(dbc[index,'Row'],dbc[index,'Col'])
 
 ### Do individual timecourse plot given parameters & data ###
-logdraw<-function(row,col,K,r,g,v,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0){
+logdraw<-function(row,col,K,r,g,v,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0,logify=FALSE){
+	if(logify) {ylog="y"}else{ylog=""}
 	# Add logistic curve
 	if(maxt==0) maxt=ceiling(max(tim))
-	curve(Glogist(K,r,g,v,x),n=31,xlim=c(0,maxt),ylim=c(0,1.2*maxg),xlab="",ylab="",main=gene,frame.plot=0,cex.main=3*scaleT,cex.axis=1*scaleT,lwd=2.5)
+	curve(Glogist(K,r,g,v,x),n=31,xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg),log=ylog,xlab="",ylab="",main=gene,frame.plot=0,cex.main=3*scaleT,cex.axis=1*scaleT,lwd=2.5)
 	# Add data points
 	points(tim,growth,col="red",cex=2*scaleT,pch=4,lwd=2)
 	# Add legend
