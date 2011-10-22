@@ -336,6 +336,8 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 	if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf))
 	growth=as.numeric(d$Growth)
 	tim=as.numeric(d$Expt.Time)
+	maxObs=max(growth)
+	#xybounds$K=c(0.9*maxObs,1.1*maxObs)
 	if(globalOpt) {
 		pars=de.fit(tim,growth,inocguess,xybounds,initPop=TRUE,logTransform=logTransform)
 		# Check for high fraction of K at end of modelled experiment
