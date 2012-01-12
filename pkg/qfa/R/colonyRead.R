@@ -88,7 +88,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 
 		# Create extra columns
 		iman$Growth=iman$Trimmed/(255*iman$Tile.Dimensions.X*iman$Tile.Dimensions.Y)
-		if(nchar(iman$Image.Name)==31){
+		if(nchar(iman$Image.Name[1])==31){
 			iman$Barcode=substr(iman$Image.Name,1,11)
 			iman$Date.Time=substr(iman$Image.Name,13,31)
 		}else{
@@ -103,7 +103,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 		# Create a dictionary for filename->photo number
 		getPhotoNum<-function(filename){
 			# Get plate name from filename
-			if(nchar(iman$Image.Name)==31){
+			if(nchar(iman$Image.Name[1])==31){
 				platename=substr(filename,1,11)
 			}else{
 				platename=substr(filename,1,15)
@@ -130,7 +130,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 		iman$Timeseries.order=as.numeric(sapply(iman$Image.Name,photoNum))
 		iman$Library.Name=sapply(iman$Barcode,barcLib)
 		iman$ORF=mapply(getORF, iman$Library, iman$MasterPlate.Number, iman$Row, iman$Col)
-		iman$Gene=sapply(iman$ORF,getGene)
+		iman$Gene=sapply(toupper(iman$ORF),getGene)
 		iman$Background=rep(background,length(iman$Image.Name))
 
 		fmt="%Y-%m-%d_%H-%M-%S"

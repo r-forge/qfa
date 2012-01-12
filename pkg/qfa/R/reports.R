@@ -75,7 +75,7 @@ correlationReport<-function(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185){
         colnames(corrs)=c("rep1","rep2","trt","p","correlate")
         corrs$p=as.numeric(corrs$p)
         corrs$correlate=as.numeric(corrs$correlate)
-        hist(corrs$correlate,xlim=c(0,1),xlab="Correlation Coefficient",ylab="Frequency",main=cfolder)
+        hist(corrs$correlate,xlim=c(0,1),xlab="Correlation Coefficient",ylab="Frequency",main=outputfile)
         })
 	  dev.off()
 }
