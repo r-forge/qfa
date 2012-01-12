@@ -225,6 +225,7 @@ pgis<-function(orf,m,cFs,dFs,cFms,dFms,wilcoxon=TRUE){
 	ldFS=length(dFs[[orf]]); lcFS=length(cFs[[orf]])
 	ludFS=length(unique(dFs[[orf]])); lucFS=length(unique(cFs[[orf]]))
 	if (((ludFS==1)&(ldFS>1)&(lcFS==1))|((lucFS==1)&(lcFS>1)&(ldFS==1))){return(c(1,median(dFs[[orf]],na.rm=TRUE)-m*median(cFs[[orf]],na.rm=TRUE)))}
+	if ((ludFS==1)&(lucFS==1)){return(c(1,median(dFs[[orf]],na.rm=TRUE)-m*median(cFs[[orf]],na.rm=TRUE)))}
 	# If both sets of cultures are dead (and fitnesses therefore equal) return appropriate p,gis
 	if(sum(dFs[[orf]]==m*cFs[[orf]])==length(dFs[[orf]]==m*cFs[[orf]])){
 		return(c(1,0))
@@ -279,9 +280,9 @@ varposget<-function(var,orfn,norfs){
 qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=TRUE,logTransform=FALSE,...){
 	# Define optimization bounds based on inocguess #
 	lowK<-max(0.9*inocguess,minK); upK<-1.0
-	lowr<-0; upr<-15
+	lowr<-0; upr<-25
 	lowg<-0.9*inocguess; upg<-1.1*inocguess
-	#lowg<-0.001*inocguess; upg<-1000.0*inocguess
+	#lowg<-0.00001*inocguess; upg<-100000.0*inocguess
 	lowv<-0.1; upv<-10.0
 	xybounds<-list(K=c(lowK,upK),r=c(lowr,upr),g=c(lowg,upg),v=c(lowv,upv))
 
@@ -317,6 +318,22 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		Threshold=info[,14],EdgeLength=info[,15],EdgePixels=info[,16],RepQuad=info[,17]))
 	} #bcode
 	if (ORF2gene!=FALSE){results$Gene<-sapply(as.character(results$ORF),orf2g,gdict)}
+	return(results)
+}
+
+makeFitness<-function(results,AUCLim=5){
+	# Fitness definitions from Addinall et al. 2011
+	results$MDRMDP=mdrmdp(results$K,results$r,results$g,results$v)	
+	results$MDP=mdp(results$K,results$r,results$g,results$v)
+	results$MDR=mdr(results$K,results$r,results$g,results$v)
+	# Set spurious fitnesses to zero
+	results$MDR[(results$r>7)&(results$K<0.0275)]=0
+	results$MDRMDP[(results$r>7)&(results$K<0.0275)]=0
+	# Doubling time (doublings per hour)
+	results$DT=(1/results$MDR)*24	
+	# Area under curve
+	AUC<-function(dno,tstar,dat) integrate(Glogist,lower=0,upper=tstar,K=dat$K[dno],r=dat$r[dno],g=dat$g[dno],v=dat$v[dno],subdivisions=1000)$value
+	results$AUC=sapply(1:length(results[,1]),AUC,tstar=AUCLim,dat=results)
 	return(results)
 }
 
@@ -579,13 +596,13 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 	if (length(barcodes)==0){barcodes<-unique(results$Barcode)}
 	results<-results[results$Barcode%in%barcodes,]
 	d<-d[d$Barcode%in%barcodes,]
-	
 
 	print(paste("Plotting for",length(results[,1]),"colonies"))
 	# Produce PDF
+	colmin<-min(results$Col); rowmin<-min(results$Col)
 	colmax<-max(results$Col); rowmax<-max(results$Row)
-	pdf(file,4*colmax,4*rowmax)
-	cexfctr<-(rowmax*colmax)/384
+	pdf(file,4*(colmax-colmin+1),4*(rowmax-rowmin+1))
+	if(rowmax*colmax>96) {cexfctr<-(rowmax*colmax)/384}else{cexfctr=1.0}
 	#cexfctr=1.0
 	bcount<-0; nbc<-length(barcodes)
 	for (bcode in barcodes){
@@ -600,7 +617,8 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 		inoctime<-rbc$Inoc.Time[1]
 		#as.POSIXlt(as.character(bigd$Date.Time),format=fmt)
 		# Find number of rows and columns on this plate
-		nrow<-max(rbc$Row)-min(rbc$Row)+1; ncol<-max(rbc$Col)-min(rbc$Col)+1
+		#nrow<-max(rbc$Row)-min(rbc$Row)+1; ncol<-max(rbc$Col)-min(rbc$Col)+1
+		nrow<-rowmax-rowmin+1; ncol=colmax-colmin+1
 		# Find max growth to set y-axis for this plate
 		if (maxg==0) maxg=max(dbc$Growth)
 		# Set graphics parameters for each plate
@@ -621,8 +639,6 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 
 #### Plot a colony's timecourse from a row of the results #####	
 rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify){
-	# Get logistic parameters, gene name and position
-	K<-as.numeric(resrow['K']); r<-as.numeric(resrow['r']); g<-as.numeric(resrow['g']); v<-as.numeric(resrow['v']);
 	row<-as.numeric(resrow['Row']); col<-as.numeric(resrow['Col'])
 	if ('Gene'%in%names(resrow)){gene<-resrow['Gene']} else {gene<-resrow['ORF']}
 	# Get data for that colony
@@ -630,14 +646,17 @@ rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify){
 	growth<-sapply(dcol$Growth,nozero)
 	tim<-dcol$Expt.Time
 	# Draw the curves and data
-	logdraw(row,col,K,r,g,v,tim,growth,gene,maxg,mdrmdp,maxt,logify=logify)
+	logdraw(row,col,resrow,tim,growth,gene,maxg,maxt,logify=logify)
 }
 
 ### Converts row no. to position vector ###	
 index2pos<-function(index,dbc) c(dbc[index,'Row'],dbc[index,'Col'])
 
 ### Do individual timecourse plot given parameters & data ###
-logdraw<-function(row,col,K,r,g,v,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0,logify=FALSE){
+logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0,logify=FALSE){
+	# Get logistic parameters, gene name and position
+	K<-as.numeric(resrow['K']); r<-as.numeric(resrow['r']); g<-as.numeric(resrow['g']); v<-as.numeric(resrow['v']);
+	MDR<-as.numeric(resrow['MDR']); MDP<-as.numeric(resrow['MDP']); AUC<-as.numeric(resrow['AUC']); DT<-as.numeric(resrow['DT']);
 	if(logify) {ylog="y"}else{ylog=""}
 	# Add logistic curve
 	if(maxt==0) maxt=ceiling(max(tim))
@@ -645,10 +664,8 @@ logdraw<-function(row,col,K,r,g,v,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.
 	# Add data points
 	points(tim,growth,col="red",cex=2*scaleT,pch=4,lwd=2)
 	# Add legend
-	# With fitness
-	F<-fitfunct(K,r,g,v)
-	legt1<-paste(c("K=","r=","g=","v=","F="),c(signif(K,3),signif(r,3),signif(g,3),signif(v,3),signif(F,3)),sep="")
-	legend(0,1.2*maxg,legt1,box.lty=0,cex=scaleT)
-	legend(0.9*maxt,1.2*maxg,c(row,col),box.lty=0,cex=0.5*scaleT)
+	legt1<-paste(c("K=","r=","g=","v=","MDR=","MDP=","AUC=","DT="),c(signif(K,3),signif(r,3),signif(g,3),signif(v,3),signif(MDR,3),signif(MDP,3),signif(AUC,3),signif(DT,3)),sep="")
+	if(logify){legend("bottomright",legt1,box.lty=0,cex=scaleT)}else{legend("topleft",legt1,box.lty=0,cex=scaleT)}
+	legend("topright",sprintf("R%02dC%02d",row,col),box.lty=0,cex=0.5*scaleT)
 }
 
