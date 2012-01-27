@@ -76,6 +76,9 @@ orfun<-function(row,environ){
 ### Function that converts orf 2 gene ###
 orf2g<-function(orf,dictenv){get(orf,envir=dictenv)}
 
+## Standard error of mean
+stderr <- function(x) sqrt(var(x)/length(x))
+
 ################################################## Epistasis Function ###########################################################
 qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE){
@@ -97,6 +100,8 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	if(wctest){cFms<-sapply(cFstats,median)}else{cFms<-sapply(cFstats,mean)}
 	names(cFms)<-orfs
 	if(wctest){dFms<-sapply(dFstats,median)}else{dFms<-sapply(dFstats,mean)}
+	cSe<-sapply(dFstats,stderr)
+	dSe<-sapply(cFstats,stderr)
 	names(dFms)<-orfs
 	### Fit genetic independence model ###
 	m<-lm.epi(dFms,cFms,modcheck)
@@ -125,7 +130,7 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	#gis<-dFms/mean(dFms)-cFms/mean(cFms)
 	gis<-pg$gis/meandiff
 	# Put into data.frame
-	results<-data.frame(ORF=orfs,Gene=genes,P=p,Q=q,GIS=gis,Median.Double=dFms,Median.Control=cFms)
+	results<-data.frame(ORF=orfs,Gene=genes,P=p,Q=q,GIS=gis,Median.Double=dFms,Median.Control=cFms,SE.Double=dSe,SE.Control=cSe)
 	results$Type<-apply(results,1,typemake,m)
 	results<-results[order(results$GIS,results$Q,results$Type),]
 	# Get rid of duplicate entries in results
@@ -277,12 +282,12 @@ varposget<-function(var,orfn,norfs){
 ############################### Likelihood Functions ################################
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
-qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=TRUE,logTransform=FALSE,...){
+qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=TRUE,logTransform=FALSE,fixG=TRUE,...){
 	# Define optimization bounds based on inocguess #
 	lowK<-max(0.9*inocguess,minK); upK<-1.0
 	lowr<-0; upr<-25
-	lowg<-0.9*inocguess; upg<-1.1*inocguess
-	#lowg<-0.00001*inocguess; upg<-100000.0*inocguess
+	# We often fix inoculation density, but maybe users might prefer to infer it from growth curves
+	if(fixG) {lowg<-0.9*inocguess; upg<-1.1*inocguess}else{lowg<-0.01*inocguess; upg<-100.0*inocguess}
 	lowv<-0.1; upv<-10.0
 	xybounds<-list(K=c(lowK,upK),r=c(lowr,upr),g=c(lowg,upg),v=c(lowv,upv))
 
@@ -466,7 +471,7 @@ data.fit<-function(tim,growth,inocguess,xybounds,inits=list(),logTransform=FALSE
 	optsol<-optim(par=unlist(init),fn=objf,gr=NULL,method="L-BFGS-B",
 	lower=c(xybounds$K[1],xybounds$r[1],xybounds$g[1],xybounds$v[1]),
 	upper=c(xybounds$K[2],xybounds$r[2],xybounds$g[2],xybounds$v[2]),
-	control=list(maxit=1000,trace=0,parscale=c(0.2,10,inocguess,1)))
+	control=list(maxit=10000,factr=1e5,trace=0,parscale=c(0.2,10,inocguess,1)))
 	pars=as.numeric(optsol$par)
 	objval=objf(pars)
 	# Sanity check for fitted parameters (no negative growth)

@@ -18,7 +18,7 @@ slopeFun=function(x,y,N){
 	
 }
 
-lin.fit<-function(tim,growth,inocguess=1,xybounds=1,inits=list(),logTransform=FALSE,dplot=FALSE,asking=FALSE...){
+lin.fit<-function(tim,growth,inocguess=1,xybounds=1,inits=list(),logTransform=FALSE,dplot=FALSE,asking=FALSE,orf="",...){
 	x=tim
 	y=growth
 	x=x[y>0]
@@ -31,9 +31,9 @@ lin.fit<-function(tim,growth,inocguess=1,xybounds=1,inits=list(),logTransform=FA
 
 	slopecutoff=0
 	ldenscutoff=1e-2
-	udenscutoff=0.07
-	#ldenscutoff=2e-3
-	#udenscutoff=0.5*Kest
+	#udenscutoff=0.07 
+	udenscutoff=0.5*Kest
+	
 	xnew=x[(s>slopecutoff)&(y>log(ldenscutoff))&(y<log(udenscutoff))]
 	ynew=y[(s>slopecutoff)&(y>log(ldenscutoff))&(y<log(udenscutoff))]
 	snew=s[(s>slopecutoff)&(y>log(ldenscutoff))&(y<log(udenscutoff))]
@@ -54,7 +54,7 @@ lin.fit<-function(tim,growth,inocguess=1,xybounds=1,inits=list(),logTransform=FA
 		dt=signif(24*log(2)/r,3)
 		inoc=signif(A0,3)
 
-		orf=dat$ORF[1]
+		#orf=dat$ORF[1]
 		op=par(mfrow=c(2,1))
 		plot(x,y,xlab="Time (d)",ylab="log cell density (AU)",main="Density cutoffs (green)")
 		points(xnew,ynew,col="red")
