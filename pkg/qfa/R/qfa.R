@@ -1,9 +1,12 @@
 require(DEoptim)
 
 #### Define Phenotype for fitness ####
-mdr<-function(K,r,g,v) sapply((r*v)/(log((K^v-g^v)/(K^v-(2^v)*(g^v)))+log(2)*v),na2zero)
+#mdr<-function(K,r,g,v) sapply((r*v)/(log((K^v-g^v)/(K^v-(2^v)*(g^v)))+log(2)*v),na2zero)
+mdr<-function(K,r,g,v) sapply((r*v)/log(1-(2^v-1)/((2^v)*(g/K)^v-1)),na2zero)
 mdp<-function(K,r,g,v) sapply(log(K/g)/log(2),na2zero)
 mdrmdp<-function(K,r,g,v) mdr(K,r,g,v)*mdp(K,r,g,v)
+# Doubling time for generalised logistic function, as a function of time t
+dt<-function(K,r,g,v,t) sapply((-(r*t*v) + log((2**v*(1 - (K/g)**v)*((1 + (-1 + (K/g)**v)/exp(r*t*v))**(-1/v))**v)/(-1 + 2**v*((1 + (-1 + (K/g)**v)/exp(r*t*v))**(-1/v))**v)))/(r*v),na2zero)
 
 # Logistic growth model #
 logist<-function(K,r,g,t) (K*g*exp(r*t))/(K+g*(exp(r*t)-1))
@@ -130,7 +133,13 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	#gis<-dFms/mean(dFms)-cFms/mean(cFms)
 	gis<-pg$gis/meandiff
 	# Put into data.frame
-	results<-data.frame(ORF=orfs,Gene=genes,P=p,Q=q,GIS=gis,Median.Double=dFms,Median.Control=cFms,SE.Double=dSe,SE.Control=cSe)
+	nObs=length(p)
+	if(wctest) {testType="wilcoxon"; sumType="median"}else{testType="t-test"; sumType="mean"}
+	results<-data.frame(ORF=orfs,Gene=genes,P=p,Q=q,GIS=gis,
+	QueryFitnessSummary=dFms,ControlFitnessSummary=cFms,QuerySE=dSe,ControlSE=cSe,
+	TestType=rep(testType,nObs),SummaryType=rep(sumType,nObs),
+	cTreat=rep(control$Treatment[1],nObs),cMed=rep(control$Medium[1],nObs),cBack=rep(control$Background[1],nObs),
+	qTreat=rep(double$Treatment[1],nObs),qMed=rep(double$Medium[1],nObs),qBack=rep(double$Background[1],nObs))
 	results$Type<-apply(results,1,typemake,m)
 	results<-results[order(results$GIS,results$Q,results$Type),]
 	# Get rid of duplicate entries in results
@@ -144,6 +153,32 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	return(final)
 }
 
+report.epi<-function(results,filename){
+	QFAversion=paste("R package version:",1)
+	sumType=paste("Summary type:",results$SummaryType[1])
+	testType=paste("Test type:",results$TestType[1])
+	cTreat=paste("Control treatment:",results$cTreat[1])
+	cMed=paste("Control medium:",results$cMed[1])
+	cBack=paste("Control background:",results$cBack[1])
+	qTreat=paste("Query treatment:",results$qTreat[1])
+	qMed=paste("Query medium:",results$qMed[1])
+	qBack=paste("Query background:",results$qBack[1])
+	spacer="#########################################################"
+	header=c(QFAversion,sumType,testType,cTreat,cMed,cBack,qTreat,qMed,qBack,spacer)
+	write.table(header,filename,sep="\t",quote=FALSE,row.names=FALSE,col.names=FALSE)
+	results$SummaryType=NULL
+	results$testType=NULL
+	results$cTreat=NULL
+	results$cMed=NULL
+	results$cBack=NULL
+	results$qTreat=NULL
+	results$qMed=NULL
+	results$qBack=NULL
+	write.table(results,"tmp.txt",sep="\t",quote=FALSE,row.names=FALSE)
+	file.append(filename,"tmp.txt")
+	file.remove("tmp.txt")	
+}
+
 ############### Epistasis Functions ##################
 # Makes epistasis plot for a given fdr level #
 qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot",fmax=0){
@@ -152,8 +187,8 @@ qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Co
 	others<-results[(!results$ORF%in%enhancers$ORF)&(!results$ORF%in%suppressors$ORF),]
 	if (fmax==0){
 		# Get plot parameters
-		ymax=1.1*max(results$Median.Double); ymin=0
-		xmax=1.1*max(results$Median.Control); xmin=0
+		ymax=1.1*max(results$QueryFitnessSummary); ymin=0
+		xmax=1.1*max(results$ControlFitnessSummary); xmin=0
 	}else{
 		ymin=0;ymax=fmax
 		xmin=0;xmax=fmax
@@ -163,25 +198,25 @@ qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Co
 	col=8,pch=19,cex=0.5)
 	# Add line for genetic independence
 	if (fitratio!=FALSE){abline(0,fitratio,lwd=2,col=8)} else {
-		abline(0,lm.epi(results$Median.Double,results$Median.Control,modcheck=FALSE),lwd=2,col=8)}
+		abline(0,lm.epi(results$QueryFitnessSummary,results$ControlFitnessSummary,modcheck=FALSE),lwd=2,col=8)}
 	# Add 1:1 fitness line
 	abline(0,1,lwd=2,lty=4,col=8)
 	# Add reference ORF fitnesses lines
 	if (ref.orf!=FALSE){
 		reforf<-results[results$ORF==ref.orf,]
-		abline(v=reforf$Median.Control,col="lightblue",lwd=2)
-		abline(h=reforf$Median.Double,col="lightblue",lwd=2)}
+		abline(v=reforf$ControlFitnessSummary,col="lightblue",lwd=2)
+		abline(h=reforf$QueryFitnessSummary,col="lightblue",lwd=2)}
 	# Add points for non-suppressors & non-enhancers
-	points(others$Median.Control,others$Median.Double,col="grey",cex=0.5,pch=19)
-	text(others$Median.Control,others$Median.Double,others$Gene,col="grey",pos=4,offset=0.1,cex=0.4)
+	points(others$ControlFitnessSummary,others$QueryFitnessSummary,col="grey",cex=0.5,pch=19)
+	text(others$ControlFitnessSummary,others$QueryFitnessSummary,others$Gene,col="grey",pos=4,offset=0.1,cex=0.4)
 	# Add suppressors & enhancers
 	if(length(enhancers$ORF)>0){
-		points(enhancers$Median.Control,enhancers$Median.Double,col='green',pch=19,cex=0.5)
-		text(enhancers$Median.Control,enhancers$Median.Double,enhancers$Gene,col=1,pos=4,offset=0.1,cex=0.4)
+		points(enhancers$ControlFitnessSummary,enhancers$QueryFitnessSummary,col='green',pch=19,cex=0.5)
+		text(enhancers$ControlFitnessSummary,enhancers$QueryFitnessSummary,enhancers$Gene,col=1,pos=4,offset=0.1,cex=0.4)
 	}
 	if(length(suppressors$ORF)>0){
-		points(suppressors$Median.Control,suppressors$Median.Double,col='red',pch=19,cex=0.5)
-		text(suppressors$Median.Control,suppressors$Median.Double,suppressors$Gene,col=1,pos=4,offset=0.1,cex=0.4)
+		points(suppressors$ControlFitnessSummary,suppressors$QueryFitnessSummary,col='red',pch=19,cex=0.5)
+		text(suppressors$ControlFitnessSummary,suppressors$QueryFitnessSummary,suppressors$Gene,col=1,pos=4,offset=0.1,cex=0.4)
 	}
 }
 
@@ -220,6 +255,8 @@ lm.epi<-function(doubles,controls,modcheck){
 		dev.off()}
 	return(m)
 }
+
+
 
 # Estimates probability of no interaction and estimated strength of interaction for max lik method #
 pgis<-function(orf,m,cFs,dFs,cFms,dFms,wilcoxon=TRUE){
@@ -261,9 +298,15 @@ pgis<-function(orf,m,cFs,dFs,cFms,dFms,wilcoxon=TRUE){
 }
 
 # Get type of interaction
-typemake<-function(row,m){md<-as.numeric(row['Median.Double']); c<-as.numeric(row['Median.Control'])
-	if (m<1){if (md>m*c){type<-"S"} else {type<-"E"}} else {
-	if (md>m*c){type<-"E"} else {type<-"S"}}
+typemake<-function(row,m){
+	md<-as.numeric(row['QueryFitnessSummary'])
+	c<-as.numeric(row['ControlFitnessSummary'])
+	if (m<1){
+		if (md>m*c){type<-"S"} else {type<-"E"}
+	} 
+	else {
+		if (md>m*c){type<-"E"} else {type<-"S"}
+	}
 	return(type)
 }
 
@@ -282,12 +325,13 @@ varposget<-function(var,orfn,norfs){
 ############################### Likelihood Functions ################################
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
-qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=TRUE,logTransform=FALSE,fixG=TRUE,...){
+qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,...){
 	# Define optimization bounds based on inocguess #
 	lowK<-max(0.9*inocguess,minK); upK<-1.0
 	lowr<-0; upr<-25
 	# We often fix inoculation density, but maybe users might prefer to infer it from growth curves
 	if(fixG) {lowg<-0.9*inocguess; upg<-1.1*inocguess}else{lowg<-0.01*inocguess; upg<-100.0*inocguess}
+	if(globalOpt==TRUE) {lowg<-1e-6*inocguess; upg<-1e6*inocguess}
 	lowv<-0.1; upv<-10.0
 	xybounds<-list(K=c(lowK,upK),r=c(lowr,upr),g=c(lowg,upg),v=c(lowv,upv))
 
@@ -317,7 +361,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		# s=bcfit[,4]
 		results<-rbind(results,data.frame(Barcode=info[,1],Row=rows,Col=cols,
 		Background=info[,9],Treatment=info[,2],Medium=info[,3],ORF=info[,4],
-		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],Screen.Name=info[,5],
+		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],Screen.Name=info[,5],
 		Library.Name=info[,6],MasterPlate.Number=info[,7],Timeseries.order=info[,8],
 		Inoc.Time=inoctime,TileX=info[,10],TileY=info[,11],XOffset=info[,12],YOffset=info[,13],
 		Threshold=info[,14],EdgeLength=info[,15],EdgePixels=info[,16],RepQuad=info[,17]))
@@ -335,7 +379,8 @@ makeFitness<-function(results,AUCLim=5){
 	results$MDR[(results$r>7)&(results$K<0.0275)]=0
 	results$MDRMDP[(results$r>7)&(results$K<0.0275)]=0
 	# Doubling time (doublings per hour)
-	results$DT=(1/results$MDR)*24	
+	#results$DT=(1/results$MDR)*24
+	results$DT=dt(results$K,results$r,results$g,results$v,results$t0)*24
 	# Area under curve
 	AUC<-function(dno,tstar,dat) integrate(Glogist,lower=0,upper=tstar,K=dat$K[dno],r=dat$r[dno],g=dat$g[dno],v=dat$v[dno],subdivisions=1000)$value
 	results$AUC=sapply(1:length(results[,1]),AUC,tstar=AUCLim,dat=results)
@@ -355,16 +400,19 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 	d=do[as.numeric(do$Growth)>=detectThresh,]
 	len2=length(d$Growth)
 	# If this has left us with too few points, return "dead colony"
-	if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf))
+	if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf,0))
 	growth=as.numeric(d$Growth)
 	tim=as.numeric(d$Expt.Time)
 	maxObs=max(growth)
+	# First *detectable* observation at time t0
+	t0=min(tim)
 	#xybounds$K=c(0.9*maxObs,1.1*maxObs)
 	if(globalOpt) {
 		pars=de.fit(tim,growth,inocguess,xybounds,initPop=TRUE,logTransform=logTransform)
 		# Check for high fraction of K at end of modelled experiment
 		GEnd=Glogist(pars[1],pars[2],pars[3],pars[4],max(tim))
 		if(GEnd/pars[1]<0.75){ # If experiment not quite finished...
+			#print("Modelled growth at end of experiment is less than 0.75 of K estimate...")
 			# Put tight bounds on K and optimise again
 			Kmin=max(0.95*1.5*GEnd,minK); Kmax=max(1.05*1.5*GEnd,minK)
 			xybounds$K=c(Kmin,Kmax)
@@ -375,6 +423,7 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 		# Check for high fraction of K at end of modelled experiment
 		GEnd=Glogist(pars[1],pars[2],pars[3],pars[4],max(tim))
 		if(GEnd/pars[1]<0.75){ # If experiment not quite finished...
+			#print("Modelled growth at end of experiment is less than 0.75 of K estimate...")
 			# Put tight bounds on K and optimise again
 			Kmin=max(0.95*1.5*GEnd,minK); Kmax=max(1.05*1.5*GEnd,minK)
 			xybounds$K=c(Kmin,Kmax)
@@ -383,6 +432,7 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 	}
 	# Check for spurious combination of relatively high r, low K, spend more time optimising...
 	if((mdr(pars[1],pars[2],pars[3],pars[4])>1.0)&((pars[1]<0.05)|(max(growth)<0.05)|(tail(growth,1)<0.05))){ # Try optimising with sick colony as guess
+		#print("Attempting to do global fit alternative sick colony growth curve")
 		Kmin=max(0.9*inocguess,minK); Kmax=1.5*max(pars[1],minK); xybounds$K=c(Kmin,Kmax); 
 		xybounds$r=c(0,3) # Slow growth
 		xybounds$v=c(0.75,1.5) # More logistic growth
@@ -393,11 +443,13 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 	opt=sumsq(pars[1],pars[2],pars[3],pars[4],do$Growth,do$Expt.Time,logTransform=logTransform) # Use all data (not just data below detection thresh)
 	dead=sumsq(inocguess,0,inocguess,1,do$Growth,do$Expt.Time,logTransform=logTransform)
 	if(dead<=opt) pars=c(inocguess,0,inocguess,1,dead) # Try dead colony
+	# Add on time of first obs.
+	pars=c(pars,t0)
 	return(pars)
 }
 
 ### Function that fits model to a timecourse
-de.fit<-function(tim,growth,inocguess,xybounds,inits=list(),initPop=FALSE,widenr=TRUE,logTransform=FALSE){
+de.fit<-function(tim,growth,inocguess,xybounds,inits=list(),initPop=FALSE,widenr=TRUE,logTransform=FALSE,mxit=2000){
 	# Fit to growth curve with differential evolution
 	# Get initial guess for parameters
 	if(length(inits)==0){
@@ -437,7 +489,7 @@ de.fit<-function(tim,growth,inocguess,xybounds,inits=list(),initPop=FALSE,widenr
 	}else{pop=NULL}
 
 	optsol=DEoptim(objf,lower=low,upper=up,
-	DEoptim.control(trace = FALSE,NP=NumParticles,initialpop=pop,itermax=2000)
+	DEoptim.control(trace = FALSE,NP=NumParticles,initialpop=pop,itermax=mxit)
 	)
 	pars=as.numeric(optsol$optim$bestmem)
 	objval=objf(pars)
@@ -471,7 +523,7 @@ data.fit<-function(tim,growth,inocguess,xybounds,inits=list(),logTransform=FALSE
 	optsol<-optim(par=unlist(init),fn=objf,gr=NULL,method="L-BFGS-B",
 	lower=c(xybounds$K[1],xybounds$r[1],xybounds$g[1],xybounds$v[1]),
 	upper=c(xybounds$K[2],xybounds$r[2],xybounds$g[2],xybounds$v[2]),
-	control=list(maxit=10000,factr=1e5,trace=0,parscale=c(0.2,10,inocguess,1)))
+	control=list(maxit=1000,factr=1e7,trace=0,parscale=c(0.2,10,inocguess,1)))
 	pars=as.numeric(optsol$par)
 	objval=objf(pars)
 	# Sanity check for fitted parameters (no negative growth)
@@ -553,7 +605,7 @@ guessNEW<-function(tim,growth,inocguess,xybounds,minK=0.025){
 # Sum of squared error
 sumsq<-function(K,r,g,v,growth,tim,logTransform=FALSE){
 	if(logTransform){
-		ss=sum((log(growth)-log(Glogist(K,r,g,v,tim)))^2)/length(growth)
+		ss=sum(((growth-Glogist(K,r,g,v,tim))/growth)^2)/length(growth)
 	}else{
 		ss=sum((growth-Glogist(K,r,g,v,tim))^2)/length(growth)
 	}
@@ -607,7 +659,9 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 	colmin<-min(results$Col); rowmin<-min(results$Col)
 	colmax<-max(results$Col); rowmax<-max(results$Row)
 	pdf(file,4*(colmax-colmin+1),4*(rowmax-rowmin+1))
-	if(rowmax*colmax>96) {cexfctr<-(rowmax*colmax)/384}else{cexfctr=1.0}
+	if(rowmax*colmax==96) {cexfctr=1.0;marge=c(2,1,2,0.75)} 
+	if(rowmax*colmax>96) {cexfctr<-(rowmax*colmax)/384; marge=c(2,1,2,0.75)}
+	if(rowmax*colmax>384) {cexfctr<-(rowmax*colmax)/1536; marge=c(2.0,1.5,2.0,1.5)}
 	#cexfctr=1.0
 	bcount<-0; nbc<-length(barcodes)
 	for (bcode in barcodes){
@@ -628,7 +682,7 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 		if (maxg==0) maxg=max(dbc$Growth)
 		# Set graphics parameters for each plate
 		op<-par(mfrow=c(nrow,ncol),oma=c(13,15,22,1),
-		mar=c(2,1,2,0.75),mgp=c(3,1,0),cex=cexfctr)
+		mar=marge,mgp=c(3,1,0),cex=cexfctr)
 		## Plot for each row of results for that bcode ##
 		z<-apply(rbc,1,rowplot,dbc,inoctime,maxg,fmt,maxt,logify)
 		# Title for the plate
@@ -651,7 +705,7 @@ rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify){
 	growth<-sapply(dcol$Growth,nozero)
 	tim<-dcol$Expt.Time
 	# Draw the curves and data
-	logdraw(row,col,resrow,tim,growth,gene,maxg,maxt,logify=logify)
+	logdraw(row,col,resrow,tim,growth,gene,maxg,maxt=maxt,logify=logify)
 }
 
 ### Converts row no. to position vector ###	
