@@ -236,41 +236,41 @@ visTool<-function(){
 	# Read in functionally related complex
 	# Largely from Benschopp Mol Cell 2010
 	# Can add some complexes manually
-	#compfile=system.file("data/FunctionalComplexes.txt", package = "qfa")
-	compfile=paste(system.file(package = "qfa"),"/data/FunctionalComplexes.txt",sep="")
-	Benschopp=read.delim(compfile,stringsAsFactors=FALSE,sep="\t")
+	#compfile=system.file("/FunctionalComplexes.txt", package = "qfa")
+	compfile=paste(system.file(package = "qfa"),"/FunctionalComplexes.txt",sep="")
+	Benschopp<<-read.delim(compfile,stringsAsFactors=FALSE,sep="\t")
 	colnames(Benschopp)
-	Benschopp$CompList=strsplit(Benschopp$Complex.members..systematic.name,"; ")
+	Benschopp$CompList<<-strsplit(Benschopp$Complex.members..systematic.name,"; ")
 
 	# Read in GIS files
-	datlist=list()
-	filenames=c(
+	datlist<<-list()
+	filenames<<-c(
 	"CDC13-1_20GIS.txt","CDC13-1_27GIS.txt","CDC13-1_36GIS.txt",
 	"YKU70_23GIS.txt","YKU70_30GIS.txt","YKU70_37GIS.txt","YKU70_37.5GIS.txt")
 	for (f in 1:length(filenames)){
-		#sysfile=system.file(paste("data/",filenames[f],sep=""), package = "qfa")
-		sysfile=paste(system.file(package = "qfa"),"/data/",filenames[f],sep="")
+		#sysfile=system.file(paste("/",filenames[f],sep=""), package = "qfa")
+		sysfile=paste(system.file(package = "qfa"),"/",filenames[f],sep="")
 		report=getResults(sysfile)
 		report$datname="Mean Fitnesses (MDR * MDP), t-test"
-		datlist[[f]]=report
+		datlist[[f]]<<-report
 	}
 
-	fxmax=c();fymax=c()
-	fxmin=c();fymin=c()
+	fxmax<<-c();fymax<<-c()
+	fxmin<<-c();fymin<<-c()
 
 	for(d in datlist){
-		fxmax=c(fxmax,d$fMax)
-		fymax=c(fymax,d$fMax)
-		fxmin=c(0,fxmin)
-		fymin=c(0,fymin)
+		fxmax<<-c(fxmax,d$fMax)
+		fymax<<-c(fymax,d$fMax)
+		fxmin<<-c(0,fxmin)
+		fymin<<-c(0,fymin)
 	}
 		
-	n=0
-	targs=c()
-	posits=c()
-	sel=0
-	selx=c()
-	sely=c()
+	n<<-0
+	targs<<-c()
+	posits<<-c()
+	sel<<-0
+	selx<<-c()
+	sely<<-c()
 
 	print("Windows mouse")
 	print("~~~~~~~~~~~~~~~")
@@ -292,21 +292,21 @@ visTool<-function(){
 	print("p: print current plot to QFAVisualisation.pdf")
 	print("q: quit")
 
-	datno=1
-	plotno=1
-	compno=0
-	pos=1
-	zooming=FALSE
-	zoomTL=c(-99,-99)
-	zoomBR=c(-99,-99)
+	datno<<-1
+	plotno<<-1
+	compno<<-0
+	pos<<-1
+	zooming<<-FALSE
+	zoomTL<<-c(-99,-99)
+	zoomBR<<-c(-99,-99)
 
 	dat<<-datlist[[datno]]$res
 
 	# Check if running under windows, if not, force X11
 	sysinf=Sys.info()
 	if( sysinf["sysname"]!="Windows") x11()
-	makePlot(datno)
-	getGraphicsEvent(prompt="L click: Highlight/Rotate, R click: SGD, M click: Remove, Left/Right: Change plot, z: select tool, s: add selection, c: clear, q: quit", onMouseDown=mouse, onKeybd=keybd)
-	print(dat$Gene[targs])
+		makePlot(datno)
+		getGraphicsEvent(prompt="L click: Highlight/Rotate, R click: SGD, M click: Remove, Left/Right: Change plot, z: select tool, s: add selection, c: clear, q: quit", onMouseDown=mouse, onKeybd=keybd)
+		print(dat$Gene[targs])
 	if( sysinf["sysname"]!="Windows") dev.off()
 }
