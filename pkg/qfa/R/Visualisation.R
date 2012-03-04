@@ -77,6 +77,7 @@ drawSel=function(selx,sely){
 
 mouse=function(buttons,x,y){
 	if(0%in%buttons) {
+		# Problem with Cairo coordinate system here...
 		xf=grconvertX(x,from="ndc",to="user")
 		yf=grconvertY(y,from="ndc",to="user")
 		if(zooming==TRUE){
@@ -304,9 +305,10 @@ visTool<-function(){
 
 	# Check if running under windows, if not, force X11
 	sysinf=Sys.info()
-	if( sysinf["sysname"]!="Windows") x11()
+	if( sysinf["sysname"]=="Mac") x11()
+	if( sysinf["sysname"]=="Linux") Cairo()
 		makePlot(datno)
 		getGraphicsEvent(prompt="L click: Highlight/Rotate, R click: SGD, M click: Remove, Left/Right: Change plot, z: select tool, s: add selection, c: clear, q: quit", onMouseDown=mouse, onKeybd=keybd)
 		print(dat$Gene[targs])
-	if( sysinf["sysname"]!="Windows") dev.off()
+	if( sysinf["sysname"]%in%c("Linux","Mac")) dev.off()
 }
