@@ -379,8 +379,11 @@ makeFitness<-function(results,AUCLim=5){
 	results$MDR[(results$r>7)&(results$K<0.0275)]=0
 	results$MDRMDP[(results$r>7)&(results$K<0.0275)]=0
 	# Doubling time (doublings per hour)
-	#results$DT=(1/results$MDR)*24
-	results$DT=dt(results$K,results$r,results$g,results$v,results$t0)*24
+	if("t0"%in%rownames(results)){
+		results$DT=dt(results$K,results$r,results$g,results$v,results$t0)*24
+	}else{
+		results$DT=(1/results$MDR)*24
+	}	
 	# Area under curve
 	AUC<-function(dno,tstar,dat) integrate(Glogist,lower=0,upper=tstar,K=dat$K[dno],r=dat$r[dno],g=dat$g[dno],v=dat$v[dno],subdivisions=1000)$value
 	results$AUC=sapply(1:length(results[,1]),AUC,tstar=AUCLim,dat=results)
