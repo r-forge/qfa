@@ -305,10 +305,10 @@ visTool<-function(){
 
 	# Check if running under windows, if not, force X11
 	sysinf=Sys.info()
-	if( sysinf["sysname"]=="Mac") x11()
-	if( sysinf["sysname"]=="Linux") Cairo()
+	#if( sysinf["sysname"]=="Mac") x11()
+	#if( sysinf["sysname"]=="Linux") Cairo()
 		makePlot(datno)
 		getGraphicsEvent(prompt="L click: Highlight/Rotate, R click: SGD, M click: Remove, Left/Right: Change plot, z: select tool, s: add selection, c: clear, q: quit", onMouseDown=mouse, onKeybd=keybd)
 		print(dat$Gene[targs])
-	if( sysinf["sysname"]%in%c("Linux","Mac")) dev.off()
+	#if( sysinf["sysname"]%in%c("Linux","Mac")) dev.off()
 }
