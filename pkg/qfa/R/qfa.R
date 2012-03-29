@@ -154,7 +154,7 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 }
 
 report.epi<-function(results,filename){
-	QFAversion=paste("R package version:",1)
+	QFAversion=paste("R package version:",2)
 	sumType=paste("Summary type:",results$SummaryType[1])
 	testType=paste("Test type:",results$TestType[1])
 	cTreat=paste("Control treatment:",results$cTreat[1])

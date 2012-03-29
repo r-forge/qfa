@@ -1,4 +1,4 @@
-R package version: 1
+R package version: 2
 Summary type: mean
 Test type: t-test
 Control treatment: 27
