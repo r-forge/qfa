@@ -5,20 +5,17 @@ fitnessReport<-function(treatment,outputfile,dataframe){
 
 	orflst=unique(as.character(fitdf$ORF))
 	orflst=sort(orflst)
-	
+
+	#meanRes=by(fitdf[,27:31],fitdf$ORF,median)
+	medRes=tapply(fitdf$fit,fitdf$ORF,median,na.rm=TRUE)
+	meanRes=tapply(fitdf$fit,fitdf$ORF,mean,na.rm=TRUE)
+	varRes=tapply(fitdf$fit,fitdf$ORF,var,na.rm=TRUE)
+	numRes=tapply(fitdf$fit,fitdf$ORF,length)
+	seRes=tapply(fitdf$fit,fitdf$ORF,sd,na.rm=TRUE)/sqrt(numRes)
+	orflst=names(medRes)
 	genelst=as.character(fitdf$Gene[match(orflst,as.character(fitdf$ORF))])
 
-	# Get median fitness and variance for each gene
-	calcStuff <- function(queryORF){
-		res=fitdf[as.character(fitdf$ORF)==queryORF,]
-		res=res[!is.na(res$fit),]
-		return(c(median(res$fit),mean(res$fit),var(res$fit),length(res$fit),sd(res$fit)/sqrt(length(res$fit))))
-	}
-
-	results=sapply(orflst,calcStuff)
-	results=data.frame(t(results))
-	results=cbind(genelst,orflst,results,rep(treatment,length(genelst)))
-	colnames(results)=c("Gene","ORF","MedianFit","MeanFit","VarianceFit","NumRepeats","SEFit","Treatment")
+	results=data.frame(Gene=genelst,ORF=orflst,MedianFit=medRes,MeanFit=meanRes,VarianceFit=varRes,NumRepeats=numRes,SEFit=seRes,Treatment=rep(treatment,length(orflst)))
 
 	write.table(results,file=outputfile,sep="\t",quote=FALSE,row.names=FALSE)
 	return(results)
