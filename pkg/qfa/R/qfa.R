@@ -370,7 +370,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 	return(results)
 }
 
-makeFitness<-function(results,AUCLim=5){
+makeFitness<-function(results,AUCLim=5,dtmax=25){
 	# Fitness definitions from Addinall et al. 2011
 	results$MDRMDP=mdrmdp(results$K,results$r,results$g,results$v)	
 	results$MDP=mdp(results$K,results$r,results$g,results$v)
@@ -383,7 +383,9 @@ makeFitness<-function(results,AUCLim=5){
 		results$DT=dt(results$K,results$r,results$g,results$v,results$t0)*24
 	}else{
 		results$DT=(1/results$MDR)*24
-	}	
+	}
+	# If doubling time is Inf, set to dtmax
+	results$DT[abs(results$DT)>25]=25
 	# Area under curve
 	AUC<-function(dno,tstar,dat) integrate(Glogist,lower=0,upper=tstar,K=dat$K[dno],r=dat$r[dno],g=dat$g[dno],v=dat$v[dno],subdivisions=1000)$value
 	results$AUC=sapply(1:length(results[,1]),AUC,tstar=AUCLim,dat=results)
