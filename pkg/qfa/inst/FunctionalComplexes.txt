@@ -1,17 +1,16 @@
 # Complex name	Source	Complex members (systematic name)	Complex members (standard gene name)	known in GO	known in lit.	comments	pubmed
 Checkpoint sliding clampandloader	Dave	YOR368W; YLR288C; YPL194W; YER173W					
-yku interactors	Dave	YBR274W; YBR136W; YDL101C; YDR217C; YOR033C; YOR368W; YLR288C; YPL194W; YER173W					
-Dave's chosen few	Dave	YBR274W; YBR136W; YDL101C; YDR217C; YOR033C; YOR368W; YLR288C; YPL194W; YER173W; YIL009C-A; YLR233C; TLC1; YLR318W; YMR106C; YMR284W; YDR369C; YMR224C; YNL250W; YBL088C; YHR031C; YML061C; YMR080C; YHR077C; YGR072W; YDR206W					
+Yku interactors	Dave	YBR274W; YBR136W; YDL101C; YDR217C; YOR033C; YOR368W; YLR288C; YPL194W; YER173W					
+Lydall lab interesting genes	Dave	YBR274W; YBR136W; YDL101C; YDR217C; YOR033C; YOR368W; YLR288C; YPL194W; YER173W; YIL009C-A; YLR233C; TLC1; YLR318W; YMR106C; YMR284W; YDR369C; YMR224C; YNL250W; YBL088C; YHR031C; YML061C; YMR080C; YHR077C; YGR072W; YDR206W					
 nuclear telomere cap complex (GO)	Copied from lower down	YBR275C; YDL042C; YDL220C; YDR082W; YDR227W; YGR099W; YLR010C; YLR150W; YLR442C; YLR453C; YNL216W	RIF1; SIR2; CDC13; STN1; SIR4; TEL2; TEN1; STM1; SIR3; RIF2; RAP1	YES			
 waif/stray repair proteins	Dave	YJL092W;  YLR032W; YER095W; YML061C; YKL113C;					
-SnyderChk1targets	Greg	YPR145W; YBR252W; YJR082C; YBR177C; 					
+Snyder Chk1 targets	Greg	YPR145W; YBR252W; YJR082C; YBR177C; 					
 MTC/RTCs	Dave	YBR255W; YDR128W; YEL033W; YGL226W; YHR151C;  YJL123C; YKL098W; YNL254C; YOL138C; YOR118W; YPL183W-A;  YBR147W;  YHR087W;  					
 SEA complex (RTC1/MTC5 etc)	Dave	YOL138C; YBL104C; YDR128W; YJR138W; 					
 adjacent to STN1/TEN1	Dave	YDR083W; YDRO81C; YLR009W; 				adjacent to STN1	
 NMD genes	Dave	YMR080C; YHR077C; YGR072W; 					
-Brian' favourites	Dave	YOR026W; YGR092W; YGR209C; YHR008C; YML007W; YHR206W; YER042W;  					
 Unfolded protein response	Dave	YHR079C; YFL031W; YJL034W;					
-Amazing Spermidine synthase complex	Conor	YKL184W; YOL052C; YPR069C; 	SPE1; SPE2; SPE3			Very interesting indeed	
+Spermidine synthase complex	Conor	YKL184W; YOL052C; YPR069C; 	SPE1; SPE2; SPE3				
 Spp381-Prp38 complex	curated consensus	YBR152W; YGR075C	SPP381; PRP38	NO	YES	genetic interaction + two-hybrid interaction	9858581
 Asf1-Rad53 complex	curated consensus	YJL115W; YPL153C	ASF1; RAD53	NO	YES		11331602; 11172707
 Pan1-End3 complex	curated consensus	YIR006C; YNL084C	PAN1; END3	NO	YES		9234686
@@ -286,22 +285,22 @@ putative Dre2-Tah18 complex	curated consensus	YKR071C; YPR048W	DRE2; TAH18	NO	NO
 putative Kex2-Sil1 complex	curated consensus	YNL238W; YOL031C	KEX2; SIL1	NO	NO		
 putative Ssl2-Yor352w complex	curated consensus	YIL143C; YOR352W	SSL2; YOR352W	NO	NO		
 putative Tdh3-Pgk1-Eno2-Fba1-Pgm1 complex	curated consensus	YGR192C; YCR012W; YHR174W; YKL060C; YKL152C	TDH3; PGK1; ENO2; FBA1; GPM1	NO	NO	All proteins are involved in gluconeogenesis	
-putative Cin8-Zwf1 complex	curated consensus	YEL061C; YNL241C	CIN8; ZWF1	NO	NO	
-putative Pcm1-Mgs1 complex	curated consensus	YEL058W; YNL218W	PCM1; MGS1	NO	NO	
-putative Yef1-Utr1 complex	curated consensus	YEL041W; YJR049C	YEF1; UTR1	NO	NO	both ATP-NAD kinases
-putative Ost1-Stt3 complex	curated consensus	YJL002C; YGL022W	OST1; STT3	NO	NO	Both proteins are part of the bigger oligosaccharyltransferase complex
-putative Osh2-Swh1 complex	curated consensus	YDL019C; YAR042W	OSH2; SWH1	NO	NO	
-putative Sit4-Sap185-Rts3-Hrk1 complex	curated consensus	YDL047W; YJL098W; YGR161C; YOR267C	SIT4; SAP185; RTS3; HRK1	NO	NO	Sit4 and Sap185 are known to be in a complex with eachother
-putative Grh1-Fmp38 complex	curated consensus	YDR517W; YOR205C	GRH1; LRC5	NO	NO	
-putative Tif1-Tif2 complex	curated consensus	YKR059W; YJL138C	TIF1; TIF2	NO	NO	Tif1 and Tif2 are identical
-putative Sah1-Caf16 complex	curated consensus	YER043C; YFL028C	SAH1; CAF16	NO	NO	Caf16 is a member of CCR4-NOT complex
-putative Bre1-Lge1 complex	curated consensus	YDL074C; YPL055C	BRE1; LGE1	NO	NO	
-putative Fmc1-Atp12 complex	curated consensus	YIL098C; YJL180C	FMC1; ATP12	NO	NO	Fmc1 is thought to hel the folding-stability or functioning of At12p
-putative Fpr3-Ssb2 complex	curated consensus	YML074C; YNL209W	FPR3; SSB2	NO	NO	
-putative Ptc7-Sec14 complex	curated consensus	YHR076W; YMR079W	PTC7; SEC14	NO	NO	
-putative Faa4-Ygl082w complex	curated consensus	YGL082W; YMR246W	YGL082W; FAA4	NO	NO	
-putative Ykl088w-Ppz1 complex	curated consensus	YKL088W; YML016C	CAB3; PPZ1	NO	NO	
-putative Hmt1-Scd6-Psp2 complex	curated consensus	YBR034C; YPR129W; YML017W	HMT1; SCD6; PSP2	NO	NO	Scd6 (Lsm13p) associates with methyltransferases (such as Hmt1p)
+putative Cin8-Zwf1 complex	curated consensus	YEL061C; YNL241C	CIN8; ZWF1	NO	NO		
+putative Pcm1-Mgs1 complex	curated consensus	YEL058W; YNL218W	PCM1; MGS1	NO	NO		
+putative Yef1-Utr1 complex	curated consensus	YEL041W; YJR049C	YEF1; UTR1	NO	NO	both ATP-NAD kinases	
+putative Ost1-Stt3 complex	curated consensus	YJL002C; YGL022W	OST1; STT3	NO	NO	Both proteins are part of the bigger oligosaccharyltransferase complex	
+putative Osh2-Swh1 complex	curated consensus	YDL019C; YAR042W	OSH2; SWH1	NO	NO		
+putative Sit4-Sap185-Rts3-Hrk1 complex	curated consensus	YDL047W; YJL098W; YGR161C; YOR267C	SIT4; SAP185; RTS3; HRK1	NO	NO	Sit4 and Sap185 are known to be in a complex with eachother	
+putative Grh1-Fmp38 complex	curated consensus	YDR517W; YOR205C	GRH1; LRC5	NO	NO		
+putative Tif1-Tif2 complex	curated consensus	YKR059W; YJL138C	TIF1; TIF2	NO	NO	Tif1 and Tif2 are identical	
+putative Sah1-Caf16 complex	curated consensus	YER043C; YFL028C	SAH1; CAF16	NO	NO	Caf16 is a member of CCR4-NOT complex	
+putative Bre1-Lge1 complex	curated consensus	YDL074C; YPL055C	BRE1; LGE1	NO	NO		
+putative Fmc1-Atp12 complex	curated consensus	YIL098C; YJL180C	FMC1; ATP12	NO	NO	Fmc1 is thought to hel the folding-stability or functioning of At12p	
+putative Fpr3-Ssb2 complex	curated consensus	YML074C; YNL209W	FPR3; SSB2	NO	NO		
+putative Ptc7-Sec14 complex	curated consensus	YHR076W; YMR079W	PTC7; SEC14	NO	NO		
+putative Faa4-Ygl082w complex	curated consensus	YGL082W; YMR246W	YGL082W; FAA4	NO	NO		
+putative Ykl088w-Ppz1 complex	curated consensus	YKL088W; YML016C	CAB3; PPZ1	NO	NO		
+putative Hmt1-Scd6-Psp2 complex	curated consensus	YBR034C; YPR129W; YML017W	HMT1; SCD6; PSP2	NO	NO	Scd6 (Lsm13p) associates with methyltransferases (such as Hmt1p)	
 putative Eft1-Eft2 complex	curated consensus	YOR133W; YDR385W	EFT1; EFT2	NO	NO	Both Eft1 and Eft2 encode for Elongation factor 2	
 putative Mnl1-Pdi1 complex	curated consensus	YHR204W; YCL043C	MNL1; PDI1	NO	NO	"both proteins located in the ER lumen, Pdi1 involved in formation disulfide bonds for secretory and cell-surface proteins, Mnl1 involved in degradation of glycoproteins"	
 putative Nnf2-Yel043w complex	curated consensus	YEL043W; YGR089W	YEL043W; NNF2	NO	NO		
@@ -334,38 +333,38 @@ putative Pex14-Pex17 complex	curated consensus	YGL153W; YNL214W	PEX14; PEX17	NO	
 putative Sum1-Rfm1 complex	curated consensus	YDR310C; YOR279C	SUM1; RFM1	NO	NO		
 putative Ptc4-Ydr186c complex	curated consensus	YBR125C; YDR186C	PTC4; YDR186C	NO	NO		
 putative Ybr137w-Sgt2-Mdy2-Yor164c complex	curated consensus	YBR137W; YOR007C; YOL111C; YOR164C	YBR137W; SGT2; MDY2; GET4	NO	NO	interaction between Mdy2 and YOR164c has been shown (16702403)	
-putative Ygr071c-Vid22-Tbf1 complex	curated consensus	YGR071C; YLR373C; YPL128C	YGR071C; VID22; TBF1	NO	NO	
-putative Yhb1-Aco1 complex	curated consensus	YGR234W; YLR304C	YHB1; ACO1	NO	NO	
-putative Yjr136c-Ykl033w complex	curated consensus	YJR136C; YKL033W	TTI2; TTI1	NO	NO	
-putative Lys20-Lys21 isozyme complex	curated consensus	YDL131W; YDL182W	LYS21; LYS20	NO	NO	
-putative Nth1-Bmh1-Bmh2 complex	curated consensus	YDR001C; YDR099W; YER177W	NTH1; BMH2; BMH1	NO	NO	Bmh1 is the major isoform of Bmh2p
-putative Met13-Yml082w complex	curated consensus	YGL125W; YML082W	MET13; YML082W	NO	NO	
-putative Pyc1-Pyc2 isozyme complex	curated consensus	YGL062W; YBR218C	PYC1; PYC2	NO	NO	"Pyc2 is an isozyme of Pyc1, only double deletion shows phenotype"
-putative Gir2-Rbg2 complex	curated consensus	YDR152W; YGR173W	GIR2; RBG2	NO	NO	
-putative Yhr131c-Rsp5 complex	curated consensus	YHR131C; YER125W	YHR131C; RSP5	NO	NO	
-putative Ptc3-Paa1 complex	curated consensus	YBL056W; YDR071C	PTC3; PAA1	NO	NO	
-putative Aro3-Bcs1 complex	curated consensus	YDR035W; YDR375C	ARO3; BCS1	NO	NO	
-putative Yor251c-Rev1 complex	curated consensus	YOR251C; YOR346W	TUM1; REV1	NO	NO	
-putative Cmd1-Mlc1-Myo2-Myo1-Mlc2 complex	curated consensus	YBR109C; YGL106W; YOR326W; YHR023W; YPR188C	CMD1; MLC1; MYO2; MYO1; MLC2	NO	NO	
-putative Efg1-Bud22 complex	curated consensus	YMR014W; YGR271C-A	BUD22; EFG1	NO	NO	
-putative Hsp42-Sis1 complex	curated consensus	YDR171W; YNL007C	HSP42; SIS1	NO	NO	
-putative Ygr017w-Vip1 complex	curated consensus	YGR017W; YLR410W	YGR017W; VIP1	NO	NO	
-putative Ygr130c-Ymr031c complex	curated consensus	YGR130C; YMR031C	YGR130C; YMR031C	NO	NO	
-putative Put1-Ymr315w complex	curated consensus	YLR142W; YMR315W	PUT1; YMR315W	NO	NO	
-putative Crm1-Mir1-Erd2-Tub1-Gea2-Mtr10-Kap104 complex	curated consensus	YGR218W; YJR077C; YBL040C; YML085C; YEL022W; YOR160W; YBR017C	CRM1; MIR1; ERD2; TUB1; GEA2; MTR10; KAP104	NO	NO	
-putative Kap95-Nup1 nuclear pore subcomplex	curated consensus	YLR347C; YOR098C	KAP95; NUP1	NO	NO	contains only part of the nuclear pore complex
-putative Emp24-Erv25-Erp3-Erp5 complex	curated consensus	YGL200C; YML012W; YDL018C; YHR110W	EMP24; ERV25; ERP3; ERP5	NO	NO	"Erp3p, Erp5 have protein similarity with Emp24 and Erv25p"
-putative Gdh1-Gdh3 isozyme complex	curated consensus	YOR375C; YAL062W	GDH1; GDH3	NO	NO	
-putative Sas3-Nto1-Ylr455w complex	curated consensus	YBL052C; YPR031W; YLR455W	SAS3; NTO1; YLR455W	NO	NO	Sas3 and Nto1 are part of the NuA3 complex
-putative Cwc2-Spp382-Ntr2 complex	curated consensus	YDL209C; YLR424W; YKR022C	CWC2; SPP382; NTR2	NO	NO	
-putative Heh2-Erg24 complex	curated consensus	YDR458C; YNL280C	HEH2; ERG24	NO	NO	
-putative Sgn1-Ygr250c complex	curated consensus	YGR250C; YIR001C	YGR250C; SGN1	NO	NO	
-putative Oca6-Oca5-Oca4-Oca3-Oca1-Oca2 complex	curated consensus	YDR067C; YHL029C; YCR095C; YNL032W; YNL099C; YNL056W	OCA6; OCA5; OCA4; SIW14; OCA1; OCA2	NO	NO	
-putative Yll032c-Yml119w complex	curated consensus	YLL032C; YML119W	YLL032C; YML119W	NO	NO	
-putative Map1-Ybr030w complex	curated consensus	YBR030W; YLR244C	RKM3; MAP1	NO	NO	
-putative core TFIIH Tfb5-Tfb2 subcomplex	curated consensus	YDR079C-A; YPL122C	TFB5; TFB2	NO	NO	
-putative Gsy1-Gsy2 complex	curated consensus	YLR258W; YFR015C	GSY2; GSY1	NO	NO	Gsy1 and Gsy2 are similar
-putative Ycp4-Rfs1-Pst2 complex	curated consensus	YCR004C; YBR052C; YDR032C	YCP4; RFS1; PST2	NO	NO	all proteins are members of the flavodoxin-like proteins
+putative Ygr071c-Vid22-Tbf1 complex	curated consensus	YGR071C; YLR373C; YPL128C	YGR071C; VID22; TBF1	NO	NO		
+putative Yhb1-Aco1 complex	curated consensus	YGR234W; YLR304C	YHB1; ACO1	NO	NO		
+putative Yjr136c-Ykl033w complex	curated consensus	YJR136C; YKL033W	TTI2; TTI1	NO	NO		
+putative Lys20-Lys21 isozyme complex	curated consensus	YDL131W; YDL182W	LYS21; LYS20	NO	NO		
+putative Nth1-Bmh1-Bmh2 complex	curated consensus	YDR001C; YDR099W; YER177W	NTH1; BMH2; BMH1	NO	NO	Bmh1 is the major isoform of Bmh2p	
+putative Met13-Yml082w complex	curated consensus	YGL125W; YML082W	MET13; YML082W	NO	NO		
+putative Pyc1-Pyc2 isozyme complex	curated consensus	YGL062W; YBR218C	PYC1; PYC2	NO	NO	"Pyc2 is an isozyme of Pyc1, only double deletion shows phenotype"	
+putative Gir2-Rbg2 complex	curated consensus	YDR152W; YGR173W	GIR2; RBG2	NO	NO		
+putative Yhr131c-Rsp5 complex	curated consensus	YHR131C; YER125W	YHR131C; RSP5	NO	NO		
+putative Ptc3-Paa1 complex	curated consensus	YBL056W; YDR071C	PTC3; PAA1	NO	NO		
+putative Aro3-Bcs1 complex	curated consensus	YDR035W; YDR375C	ARO3; BCS1	NO	NO		
+putative Yor251c-Rev1 complex	curated consensus	YOR251C; YOR346W	TUM1; REV1	NO	NO		
+putative Cmd1-Mlc1-Myo2-Myo1-Mlc2 complex	curated consensus	YBR109C; YGL106W; YOR326W; YHR023W; YPR188C	CMD1; MLC1; MYO2; MYO1; MLC2	NO	NO		
+putative Efg1-Bud22 complex	curated consensus	YMR014W; YGR271C-A	BUD22; EFG1	NO	NO		
+putative Hsp42-Sis1 complex	curated consensus	YDR171W; YNL007C	HSP42; SIS1	NO	NO		
+putative Ygr017w-Vip1 complex	curated consensus	YGR017W; YLR410W	YGR017W; VIP1	NO	NO		
+putative Ygr130c-Ymr031c complex	curated consensus	YGR130C; YMR031C	YGR130C; YMR031C	NO	NO		
+putative Put1-Ymr315w complex	curated consensus	YLR142W; YMR315W	PUT1; YMR315W	NO	NO		
+putative Crm1-Mir1-Erd2-Tub1-Gea2-Mtr10-Kap104 complex	curated consensus	YGR218W; YJR077C; YBL040C; YML085C; YEL022W; YOR160W; YBR017C	CRM1; MIR1; ERD2; TUB1; GEA2; MTR10; KAP104	NO	NO		
+putative Kap95-Nup1 nuclear pore subcomplex	curated consensus	YLR347C; YOR098C	KAP95; NUP1	NO	NO	contains only part of the nuclear pore complex	
+putative Emp24-Erv25-Erp3-Erp5 complex	curated consensus	YGL200C; YML012W; YDL018C; YHR110W	EMP24; ERV25; ERP3; ERP5	NO	NO	"Erp3p, Erp5 have protein similarity with Emp24 and Erv25p"	
+putative Gdh1-Gdh3 isozyme complex	curated consensus	YOR375C; YAL062W	GDH1; GDH3	NO	NO		
+putative Sas3-Nto1-Ylr455w complex	curated consensus	YBL052C; YPR031W; YLR455W	SAS3; NTO1; YLR455W	NO	NO	Sas3 and Nto1 are part of the NuA3 complex	
+putative Cwc2-Spp382-Ntr2 complex	curated consensus	YDL209C; YLR424W; YKR022C	CWC2; SPP382; NTR2	NO	NO		
+putative Heh2-Erg24 complex	curated consensus	YDR458C; YNL280C	HEH2; ERG24	NO	NO		
+putative Sgn1-Ygr250c complex	curated consensus	YGR250C; YIR001C	YGR250C; SGN1	NO	NO		
+putative Oca6-Oca5-Oca4-Oca3-Oca1-Oca2 complex	curated consensus	YDR067C; YHL029C; YCR095C; YNL032W; YNL099C; YNL056W	OCA6; OCA5; OCA4; SIW14; OCA1; OCA2	NO	NO		
+putative Yll032c-Yml119w complex	curated consensus	YLL032C; YML119W	YLL032C; YML119W	NO	NO		
+putative Map1-Ybr030w complex	curated consensus	YBR030W; YLR244C	RKM3; MAP1	NO	NO		
+putative core TFIIH Tfb5-Tfb2 subcomplex	curated consensus	YDR079C-A; YPL122C	TFB5; TFB2	NO	NO		
+putative Gsy1-Gsy2 complex	curated consensus	YLR258W; YFR015C	GSY2; GSY1	NO	NO	Gsy1 and Gsy2 are similar	
+putative Ycp4-Rfs1-Pst2 complex	curated consensus	YCR004C; YBR052C; YDR032C	YCP4; RFS1; PST2	NO	NO	all proteins are members of the flavodoxin-like proteins	
 putative Dhr2-Ubp10 complex	curated consensus	YKL078W; YNL186W	DHR2; UBP10	NO	NO		
 putative Ats1-Kti11 complex	curated consensus	YAL020C; YBL071W-A	ATS1; KTI11	NO	NO		
 putative Yer140w-Slp1 complex	curated consensus	YER140W; YOR154W	YER140W; SLP1	NO	NO		
@@ -382,38 +381,38 @@ putative Pet112-Ymr293c complex	curated consensus	YBL080C; YMR293C	PET112; HER2	
 putative Cul3-Yil001w complex	curated consensus	YGR003W; YIL001W	CUL3; YIL001W	NO	NO		
 putative Paa1-Ptc2 complex	curated consensus	YDR071C; YER089C	PAA1; PTC2	NO	NO		
 putative Ypt1-Dss4 complex	curated consensus	YFL038C; YPR017C	YPT1; DSS4	NO	NO	all proteins involved in post-Golgi vesicle mediated transport	
-putative Nma2-Nma1 complex	curated consensus	YGR010W; YLR328W	NMA2; NMA1	NO	NO	both proteins are involved in the NAD salvage pathway
-putative Cia1-Yhr122w-Met18-Nar1 complex	curated consensus	YDR267C; YHR122W; YIL128W; YNL240C	CIA1; YHR122W; MET18; NAR1	NO	NO	
-putative Ddi1-Pmt4 complex	curated consensus	YER143W; YJR143C	DDI1; PMT4	NO	NO	
-putative Ygr283c-Idp3 complex	curated consensus	YGR283C; YNL009W	YGR283C; IDP3	NO	NO	
-putative Abp1-Crn1 complex	curated consensus	YCR088W; YLR429W	ABP1; CRN1	NO	NO	"Abp1 is an activator of the Arp2-3 complex, whereas Crn1 inhibits its function"
-putative Met13-Met12 isozyme complex	curated consensus	YGL125W; YPL023C	MET13; MET12	NO	NO	
-putative Boi2-Cdc24 complex	curated consensus	YAL041W; YER114C	CDC24; BOI2	NO	NO	
-putative Fun19-Kap123 complex	curated consensus	YAL034C; YER110C	FUN19; KAP123	NO	NO	
-putative Ygr283c-Ymr310c complex	curated consensus	YGR283C; YMR310C	YGR283C; YMR310C	NO	NO	
-putative Trr1-Trr2 complex	curated consensus	YDR353W; YHR106W	TRR1; TRR2	NO	NO	"Trr1 is part of the cytoplasmic thioredoxin system, Trr2 is part of the mitochondrial thioredoxin system (both thioredoxin reductases)"
-putative Fbp26-Ylr345w complex	curated consensus	YJL155C; YLR345W	FBP26; YLR345W	NO	NO	"Ylr345w show similarity to 6-phosphofructo-2-kinase-fructose-2,6-bisphosphatase enzymes"
-putative Pck1-Eno1 complex	curated consensus	YBL105C; YGR254W	PKC1; ENO1	NO	NO	
-putative Tdh1-Tdh2 isozyme complex	curated consensus	YJL052W; YJR009C	TDH1; TDH2	NO	NO	
-putative Gdi1-Ypt6-Ypt1 complex	curated consensus	YER136W; YLR262C; YFL038C	GDI1; YPT6; YPT1	NO	NO	all proteins involved in post-Golgi vesicle mediated transport
-putative Bdh1-Bdh2 complex	curated consensus	YAL060W; YAL061W	BDH1; BDH2	NO	NO	"BDH2 has 51% homology with BDH1, putative alcohol dehydrogenase"
-putative Rps0a-Rps0b complex	curated consensus	YGR214W; YLR048W	RPS0A; RPS0B	NO	NO	Rps0a and Rps0b are nearly identical
-putative Ubp13-Yol087c complex	curated consensus	YBL067C; YOL087C	UBP13; DUF1	NO	NO	
-putative Pol4-Rpn5 complex	curated consensus	YCR014C; YDL147W	POL4; RPN5	NO	NO	
-putative Erg7-Erg27 complex	curated consensus	YHR072W; YLR100W	ERG7; ERG27	NO	NO	both proteins are involved in ergosterol biosynthesis
-putative Rrp7-Ifh1 complex	curated consensus	YCL031C; YLR223C	RRP7; IFH1	NO	NO	
-putative Asn1-Asn2 isozyme complex	curated consensus	YGR124W; YPR145W	ASN2; ASN1	NO	NO	
-putative Mdm10-Mpm1-Tom40-Yhm2 complex	curated consensus	YAL010C; YJL066C; YMR203W; YMR241W	MDM10; MPM1; TOM40; YHM2	NO	NO	
-putative Ybt1-Dak1 complex	curated consensus	YLL048C; YML070W	YBT1; DAK1	NO	NO	
-putative Cdc19-Pyk2 isozyme complex	curated consensus	YAL038W; YOR347C	CDC19; PYK2	NO	NO	Cdc19 and Pyk2 both encode pyruvate kinases and can compensate eachothers loss
-putative Pkh1-Mrp8-Pil1-Lsp1 complex	curated consensus	YDR490C; YKL142W; YGR086C; YPL004C	PKH1; MRP8; PIL1; LSP1	NO	NO	Pil1 and Lsp1 are known to be in the same complex (eiosome)
-putative Lsg1-Nmd3-Rei1 complex	curated consensus	YGL099W; YBR267W; YHR170W	LSG1; REI1; NMD3	NO	NO	
-putative Taf8-Taf14-Taf2 TFIID subcomplex	curated consensus	YML114C; YPL129W; YCR042C	TAF8; TAF14; TAF2	NO	NO	"All proteins are part of a bigger complex, TFIID"
-putative Ssd1-Psy4-Pph3-Psy2 complex	curated consensus	YDR293C; YBL046W; YDR075W; YNL201C	SSD1; PSY4; PPH3; PSY2	NO	NO	
-putative Rim1-Rad52 complex	curated consensus	YCR028C-A; YML032C	RIM1; RAD52	NO	NO	
-putative Nqm1-Tal1 complex	curated consensus	YGR043C; YLR354C	NQM1; TAL1	NO	NO	
-putative Vab2-Ydr357c-Ykl061w-YGL079w-Ynl086w complex	curated consensus	YDR357C; YKL061W; YEL005C; YGL079W; YNL086W	YDR357C; YKL061W; VAB2; YGL079W; YNL086W	NO	NO	
-putative Kap123-Ypr174c complex	curated consensus	YER110C; YPR174C	KAP123; YPR174C	NO	NO	
+putative Nma2-Nma1 complex	curated consensus	YGR010W; YLR328W	NMA2; NMA1	NO	NO	both proteins are involved in the NAD salvage pathway	
+putative Cia1-Yhr122w-Met18-Nar1 complex	curated consensus	YDR267C; YHR122W; YIL128W; YNL240C	CIA1; YHR122W; MET18; NAR1	NO	NO		
+putative Ddi1-Pmt4 complex	curated consensus	YER143W; YJR143C	DDI1; PMT4	NO	NO		
+putative Ygr283c-Idp3 complex	curated consensus	YGR283C; YNL009W	YGR283C; IDP3	NO	NO		
+putative Abp1-Crn1 complex	curated consensus	YCR088W; YLR429W	ABP1; CRN1	NO	NO	"Abp1 is an activator of the Arp2-3 complex, whereas Crn1 inhibits its function"	
+putative Met13-Met12 isozyme complex	curated consensus	YGL125W; YPL023C	MET13; MET12	NO	NO		
+putative Boi2-Cdc24 complex	curated consensus	YAL041W; YER114C	CDC24; BOI2	NO	NO		
+putative Fun19-Kap123 complex	curated consensus	YAL034C; YER110C	FUN19; KAP123	NO	NO		
+putative Ygr283c-Ymr310c complex	curated consensus	YGR283C; YMR310C	YGR283C; YMR310C	NO	NO		
+putative Trr1-Trr2 complex	curated consensus	YDR353W; YHR106W	TRR1; TRR2	NO	NO	"Trr1 is part of the cytoplasmic thioredoxin system, Trr2 is part of the mitochondrial thioredoxin system (both thioredoxin reductases)"	
+putative Fbp26-Ylr345w complex	curated consensus	YJL155C; YLR345W	FBP26; YLR345W	NO	NO	"Ylr345w show similarity to 6-phosphofructo-2-kinase-fructose-2,6-bisphosphatase enzymes"	
+putative Pck1-Eno1 complex	curated consensus	YBL105C; YGR254W	PKC1; ENO1	NO	NO		
+putative Tdh1-Tdh2 isozyme complex	curated consensus	YJL052W; YJR009C	TDH1; TDH2	NO	NO		
+putative Gdi1-Ypt6-Ypt1 complex	curated consensus	YER136W; YLR262C; YFL038C	GDI1; YPT6; YPT1	NO	NO	all proteins involved in post-Golgi vesicle mediated transport	
+putative Bdh1-Bdh2 complex	curated consensus	YAL060W; YAL061W	BDH1; BDH2	NO	NO	"BDH2 has 51% homology with BDH1, putative alcohol dehydrogenase"	
+putative Rps0a-Rps0b complex	curated consensus	YGR214W; YLR048W	RPS0A; RPS0B	NO	NO	Rps0a and Rps0b are nearly identical	
+putative Ubp13-Yol087c complex	curated consensus	YBL067C; YOL087C	UBP13; DUF1	NO	NO		
+putative Pol4-Rpn5 complex	curated consensus	YCR014C; YDL147W	POL4; RPN5	NO	NO		
+putative Erg7-Erg27 complex	curated consensus	YHR072W; YLR100W	ERG7; ERG27	NO	NO	both proteins are involved in ergosterol biosynthesis	
+putative Rrp7-Ifh1 complex	curated consensus	YCL031C; YLR223C	RRP7; IFH1	NO	NO		
+putative Asn1-Asn2 isozyme complex	curated consensus	YGR124W; YPR145W	ASN2; ASN1	NO	NO		
+putative Mdm10-Mpm1-Tom40-Yhm2 complex	curated consensus	YAL010C; YJL066C; YMR203W; YMR241W	MDM10; MPM1; TOM40; YHM2	NO	NO		
+putative Ybt1-Dak1 complex	curated consensus	YLL048C; YML070W	YBT1; DAK1	NO	NO		
+putative Cdc19-Pyk2 isozyme complex	curated consensus	YAL038W; YOR347C	CDC19; PYK2	NO	NO	Cdc19 and Pyk2 both encode pyruvate kinases and can compensate eachothers loss	
+putative Pkh1-Mrp8-Pil1-Lsp1 complex	curated consensus	YDR490C; YKL142W; YGR086C; YPL004C	PKH1; MRP8; PIL1; LSP1	NO	NO	Pil1 and Lsp1 are known to be in the same complex (eiosome)	
+putative Lsg1-Nmd3-Rei1 complex	curated consensus	YGL099W; YBR267W; YHR170W	LSG1; REI1; NMD3	NO	NO		
+putative Taf8-Taf14-Taf2 TFIID subcomplex	curated consensus	YML114C; YPL129W; YCR042C	TAF8; TAF14; TAF2	NO	NO	"All proteins are part of a bigger complex, TFIID"	
+putative Ssd1-Psy4-Pph3-Psy2 complex	curated consensus	YDR293C; YBL046W; YDR075W; YNL201C	SSD1; PSY4; PPH3; PSY2	NO	NO		
+putative Rim1-Rad52 complex	curated consensus	YCR028C-A; YML032C	RIM1; RAD52	NO	NO		
+putative Nqm1-Tal1 complex	curated consensus	YGR043C; YLR354C	NQM1; TAL1	NO	NO		
+putative Vab2-Ydr357c-Ykl061w-YGL079w-Ynl086w complex	curated consensus	YDR357C; YKL061W; YEL005C; YGL079W; YNL086W	YDR357C; YKL061W; VAB2; YGL079W; YNL086W	NO	NO		
+putative Kap123-Ypr174c complex	curated consensus	YER110C; YPR174C	KAP123; YPR174C	NO	NO		
 putative Spe3-Spe4 complex	curated consensus	YLR146C; YPR069C	SPE4; SPE3	NO	NO	both proteins are part of the pantothenic acid biosynthesis pathway	11154694
 putative Leu4-Leu9 isozyme complex	curated consensus	YNL104C; YOR108W	LEU4; LEU9	NO	NO		
 putative Snf7-Vps4 complex	curated consensus	YLR025W; YPR173C	SNF7; VPS4	NO	NO	Vps4 is needed for dissociation of the ESCRT II complex (of which Snf7 is part of)	
@@ -430,103 +429,103 @@ box H/ACA snoRNP complex (GO)	GeneOntology	YHR089C; YLR175W; snR10; snR11; snR16
 calcineurin complex (GO)	GeneOntology	YKL159C; YKL190W; YLR433C; YML057W	RCN1; CNB1; CNA1; CMP2	YES			
 CBF3 complex (GO)	GeneOntology	YDR328C; YGR140W; YMR094W; YMR168C	SKP1; CBF2; CTF13; CEP3	YES			
 CCR4-NOT complex (GO)	GeneOntology	YFL028C; YGR134W; YKR036C; YNL278W; YNL288W	CAF16; CAF130; CAF4; CAF120; CAF40	YES			
-chromatin accessibility complex (GO)	GeneOntology	YDR121W; YGL133W; YJL065C; YOR304W	DPB4; ITC1; DLS1; ISW2	YES
-chromatin assembly complex (GO)	GeneOntology	YER030W; YJL115W; YOL012C	CHZ1; ASF1; HTZ1	YES
-chromatin silencing complex (GO)	GeneOntology	YBR195C; YDR227W; YKR101W; YLR442C	MSI1; SIR4; SIR1; SIR3	YES
-cohesin loading complex (GO)	GeneOntology	YDR180W; YER147C	SCC2; SCC4	YES
-commitment complex (GO)	GeneOntology	YDR240C; YGR074W; YHR086W; YIL061C; YKL074C; YLR116W; YLR147C; YLR298C; YML046W; YMR125W; YPL178W; snR19	SNU56; SMD1; NAM8; SNP1; MUD2; MSL5; SMD3; YHC1; PRP39; STO1; CBC2; SNR19	YES
-Cul3-RING ubiquitin ligase complex (GO)	GeneOntology	YBR114W; YGR003W; YJR052W; YNL230C; YPL046C	RAD16; CUL3; RAD7; ELA1; ELC1	YES
-CURI complex (GO)	GeneOntology	YCL031C; YGR090W; YLR223C; YOR039W; YPR104C	RRP7; UTP22; IFH1; CKB2; FHL1	YES
-cyclin-dependent protein kinase holoenzyme complex (GO)	GeneOntology	YBR135W; YBR160W; YDL127W; YDL179W; YER059W; YGL134W; YGL215W; YHR071W; YIL050W; YNL289W; YOL001W; YPL219W; YPL256C	CKS1; CDC28; PCL2; PCL9; PCL6; PCL10; CLG1; PCL5; PCL7; PCL1; PHO80; PCL8; CLN2	YES
-cytoplasmic dynein complex (GO)	GeneOntology	YDR424C; YDR488C; YKR054C; YMR299C	DYN2; PAC11; DYN1; DYN3	YES
-Dbf4-dependent protein kinase complex (GO)	GeneOntology	YDL017W; YDR052C	CDC7; DBF4	YES
-DNA ligase IV complex (GO)	GeneOntology	YGL090W; YLR265C; YOR005C	LIF1; NEJ1; DNL4	YES
-"DNA-directed RNA polymerase II, holoenzyme (GO)"	GeneOntology	YBR236C; YDL115C; YGR097W	ABD1; IWR1; ASK10	YES
-DSIF complex (GO)	GeneOntology	YGR063C; YML010W	SPT4; SPT5	YES
-dynactin complex (GO)	GeneOntology	YDR106W; YHR129C; YMR294W; YPL174C	ARP10; ARP1; JNM1; NIP100	YES
-ESCRT III complex (GO)	GeneOntology	YKL002W; YKL041W; YLR025W; YMR077C	DID4; VPS24; SNF7; VPS20	YES
-exosome (RNase complex) (GO)	GeneOntology	YOR076C	SKI7	YES
-F-actin capping protein complex (GO)	GeneOntology	YIL034C; YKL007W	CAP2; CAP1	YES
-glutamate synthase complex (GO)	GeneOntology	YDL171C	GLT1	YES
-glycine cleavage complex (GO)	GeneOntology	YAL044C; YDR019C; YFL018C; YMR189W	GCV3; GCV1; LPD1; GCV2	YES
-glycosylphosphatidylinositol-N-acetylglucosaminyltransferase (GPI-GnT) complex (GO)	GeneOntology	YDR437W; YGR216C; YNL038W; YPL076W; YPL096C-A; YPL175W	GPI19; GPI1; GPI15; GPI2; ERI1; SPT14	YES
-heterogeneous nuclear ribonucleoprotein complex (GO)	GeneOntology	YNL004W; YNL016W	HRB1; PUB1	YES
-heterotrimeric G-protein complex (GO)	GeneOntology	YHR005C; YJR086W; YOR212W	GPA1; STE18; STE4	YES
-high affinity iron permease complex (GO)	GeneOntology	YER145C; YMR058W	FTR1; FET3	YES
-Holliday junction resolvase complex (GO)	GeneOntology	YBR098W; YDR386W	MMS4; MUS81	YES
-i-AAA complex (GO)	GeneOntology	YCL044C; YPR024W	MGR1; YME1	YES
-kinesin complex (GO)	GeneOntology	YBL063W; YEL061C; YGL216W; YMR198W; YPL155C; YPL253C	KIP1; CIN8; KIP3; CIK1; KIP2; VIK1	YES
-mannosyltransferase complex (GO)	GeneOntology	YBR004C; YNL158W	GPI18; PGA1	YES
-MCM complex (GO)	GeneOntology	YBL023C; YBR202W; YEL032W; YGL201C; YLR274W; YPR019W	MCM2; MCM7; MCM3; MCM6; MCM5; MCM4	YES
-Mdm10/Mdm12/Mmm1 complex (GO)	GeneOntology	YAL010C; YLL006W; YOL009C	MDM10; MMM1; MDM12	YES
-mitochondrial inner membrane peptidase complex (GO)	GeneOntology	YEL059C-A; YMR035W; YMR150C	SOM1; IMP2; IMP1	YES
-mitochondrial inner membrane presequence translocase complex (GO)	GeneOntology	YGR033C; YJL104W; YJL143W; YLR008C; YNR017W; YPL063W	TIM21; PAM16; TIM17; PAM18; TIM23; TIM50	YES
-mitochondrial inner membrane protein insertion complex (GO)	GeneOntology	YBR091C; YDL217C; YJL054W; YOR297C	TIM12; TIM22; TIM54; TIM18	YES
-mitochondrial intermembrane space protein transporter complex (GO)	GeneOntology	YEL020W-A; YGR181W; YHR005C-A; YJR135W-A	TIM9; TIM13; TIM10; TIM8	YES
-mitochondrial outer membrane translocase complex (GO)	GeneOntology	YGR082W; YKL195W; YMR203W; YNL070W; YNL121C; YNL131W; YOR045W; YPR133W-A	TOM20; MIA40; TOM40; TOM7; TOM70; TOM22; TOM6; TOM5	YES
-mitochondrial proton-transporting ATP synthase complex (GO)	GeneOntology	YDL130W-A; YDL181W; YGR008C	STF1; INH1; STF2	YES
-"mitochondrial proton-transporting ATP synthase complex, coupling factor F(o) (GO)"	GeneOntology	Q0080; Q0085; Q0130; YDR322C-A; YDR377W; YLR295C; YML081C-A; YOL077W-A; YPR020W	ATP8; ATP6; OLI1; TIM11; ATP17; ATP14; ATP18; ATP19; ATP20	YES
-mitochondrial respiratory chain complex II (GO)	GeneOntology	YDR178W; YKL141W; YKL148C; YLL041C	SDH4; SDH3; SDH1; SDH2	YES
-mitochondrial ribonuclease P complex (GO)	GeneOntology	YML091C	RPM2	YES
-mitochondrial ribosome (GO)	GeneOntology	YDL069C; YGL068W; YKL142W; YPL132W	CBS1; MNP1; MRP8; COX11	YES
-mitochondrial sorting and assembly machinery complex (GO)	GeneOntology	YAL010C; YHR083W; YMR060C; YNL026W	MDM10; SAM35; SAM37; SAM50	YES
-mitotic checkpoint complex (GO)	GeneOntology	YGL116W; YJL013C; YJL030W; YOR026W	CDC20; MAD3; MAD2; BUB3	YES
-monopolin complex (GO)	GeneOntology	YCR086W; YDR439W; YER106W; YPL204W	CSM1; LRS4; MAM1; HRR25	YES
-Mre11 complex (GO)	GeneOntology	YDR369C; YMR224C; YNL250W	XRS2; MRE11; RAD50	YES
-mRNA cap complex (GO)	GeneOntology	YJL124C; YKL204W; YOR276W	LSM1; EAP1; CAF20	YES
-MutLbeta complex (GO)	GeneOntology	YMR167W; YPL164C	MLH1; MLH3	YES
-myosin II complex (GO)	GeneOntology	YHR023W	MYO1	YES
-myosin V complex (GO)	GeneOntology	YAL029C; YOR326W	MYO4; MYO2	YES
-Noc1p-Noc2p complex (GO)	GeneOntology	YDR060W; YOR206W	MAK21; NOC2	YES
-Noc2p-Noc3p complex (GO)	GeneOntology	YLR002C; YOR206W	NOC3; NOC2	YES
-Noc4p-Nop14p complex (GO)	GeneOntology	YDL148C; YPR144C	NOP14; NOC4	YES
-NuA3 histone acetyltransferase complex (GO)	GeneOntology	YBL052C; YJR082C; YOR064C; YPL129W; YPR031W	SAS3; EAF6; YNG1; TAF14; NTO1	YES
-nuclear cap binding complex (GO)	GeneOntology	YMR125W; YPL178W	STO1; CBC2	YES
-nuclear RNA export factor complex (GO)	GeneOntology	YKL186C; YPL169C	MTR2; MEX67	YES
-nuclear SCF ubiquitin ligase complex (GO)	GeneOntology	YFL009W; YIL046W	CDC4; MET30	YES
-nuclear telomere cap complex (GO)	GeneOntology	YBR275C; YDL042C; YDL220C; YDR082W; YDR227W; YGR099W; YLR010C; YLR150W; YLR442C; YLR453C; YNL216W	RIF1; SIR2; CDC13; STN1; SIR4; TEL2; TEN1; STM1; SIR3; RIF2; RAP1	YES
-"nucleolar preribosome, large subunit precursor (GO)"	GeneOntology	YER126C; YGR103W; YLR022C; YLR221C; YNR038W; YPL093W	NSA2; NOP7; SDO1; RSA3; DBP6; NOG1	YES
-"nucleolar preribosome, small subunit precursor (GO)"	GeneOntology	YBR247C; YGR081C; YJL010C; YKL143W; YNL178W	ENP1; SLX9; NOP9; LTV1; RPS3	YES
-nucleotide-excision repair factor 1 complex (GO)	GeneOntology	YML095C; YMR201C; YPL022W	RAD10; RAD14; RAD1	YES
-nucleotide-excision repair factor 3 complex (GO)	GeneOntology	YDR460W; YGR258C	TFB3; RAD2	YES
-nucleotide-excision repair factor 4 complex (GO)	GeneOntology	YBR114W; YJR052W; YKL112W; YPL046C	RAD16; RAD7; ABF1; ELC1	YES
-oligosaccharyl transferase complex (GO)	GeneOntology	YDL232W; YEL002C; YGL022W; YGL226C-A; YJL002C; YML019W; YMR149W; YOR085W; YOR103C	OST4; WBP1; STT3; OST5; OST1; OST6; SWP1; OST3; OST2	YES
-palmitoyltransferase complex (GO)	GeneOntology	YLR246W; YOL110W	ERF2; SHR5	YES
-PCNA complex (GO)	GeneOntology	YBR088C	POL30	YES
-phosphopyruvate hydratase complex (GO)	GeneOntology	YGR254W; YHR174W	ENO1; ENO2	YES
-preribosome (GO)	GeneOntology	YDL166C; YOR056C	FAP7; NOB1	YES
-proteasome complex (GO)	GeneOntology	YBR082C; YDR059C; YDR069C; YDR177W; YEL037C; YGL058W; YGR184C; YHL030W; YHR052W	UBC4; UBC5; DOA4; UBC1; RAD23; RAD6; UBR1; ECM29; CIC1	YES
-proteasome core complex (GO)	GeneOntology	YFL007W	BLM10	YES
-proteasome regulatory particle (GO)	GeneOntology	YDL020C; YFR010W; YGR232W	RPN4; UBP6; NAS6	YES
-protein phosphatase type 1 complex (GO)	GeneOntology	YBR045C; YBR050C; YDR028C; YER054C; YER133W; YLR273C; YOR178C	GIP1; REG2; REG1; GIP2; GLC7; PIG1; GAC1	YES
-RecQ helicase-Topo III complex (GO)	GeneOntology	YLR234W; YMR190C; YPL024W	TOP3; SGS1; RMI1	YES
-RENT complex (GO)	GeneOntology	YDL042C; YFR028C; YJL076W; YPL126W	SIR2; CDC14; NET1; NAN1	YES
-repairosome (GO)	GeneOntology	YBR114W; YEL037C; YER162C; YJR052W	RAD16; RAD23; RAD4; RAD7	YES
-"retromer complex, outer shell (GO)"	GeneOntology	YOR069W; YOR132W	VPS5; VPS17	YES
-Rhp55-Rhp57 complex (GO)	GeneOntology	YDR004W; YDR076W	RAD57; RAD55	YES
-ribonuclease H2 complex (GO)	GeneOntology	YDR279W; YLR154C; YNL072W	RNH202; RNH203; RNH201	YES
-ribonucleoprotein complex (GO)	GeneOntology	YIL149C; YKR095W; YOR198C	MLP2; MLP1; BFR1	YES
-ribonucleoside-diphosphate reductase complex (GO)	GeneOntology	YER070W; YGR180C; YIL066C; YJL026W	RNR1; RNR4; RNR3; RNR2	YES
-RNA polymerase I transcription factor complex (GO)	GeneOntology	YBL014C; YER148W; YJL025W; YKL125W; YML043C	RRN6; SPT15; RRN7; RRN3; RRN11	YES
-RNA polymerase I upstream activating factor complex (GO)	GeneOntology	YBL025W; YLR141W; YMR270C; YOR295W	RRN10; RRN5; RRN9; UAF30	YES
-signal peptidase complex (GO)	GeneOntology	YIR022W; YJR010C-A; YLR066W; YML055W	SEC11; SPC1; SPC3; SPC2	YES
-Sin3 complex (GO)	GeneOntology	YMR053C; YNL309W; YOL004W	STB2; STB1; SIN3	YES
-Slx1-Slx4 complex (GO)	GeneOntology	YBR228W; YLR135W	SLX1; SLX4	YES
-small nuclear ribonucleoprotein complex (GO)	GeneOntology	YER127W; YPR057W; YPR137W	LCP5; BRR1; RRP9	YES
-SNARE complex (GO)	GeneOntology	YAL030W; YGR009C; YPL232W	SNC1; SEC9; SSO1	YES
-sulfite reductase complex (NADPH) (GO)	GeneOntology	YFR030W; YJR137C	MET10; ECM17	YES
-synaptonemal complex (GO)	GeneOntology	YGL249W; YNL088W	ZIP2; TOP2	YES
-telomerase catalytic core complex (GO)	GeneOntology	TLC1; YLR318W	TLC1; EST2	YES
-telomerase holoenzyme complex (GO)	GeneOntology	YIL009C-A; YLR233C	EST3; EST1	YES
-TORC1 complex (GO)	GeneOntology	YHR186C; YJR066W; YKL203C; YNL006W; YPL180W	KOG1; TOR1; TOR2; LST8; TCO89	YES
-TORC2 complex (GO)	GeneOntology	YER093C; YIL105C; YJL058C; YKL203C; YMR068W; YNL006W; YNL047C; YOL078W	TSC11; SLM1; BIT61; TOR2; AVO2; LST8; SLM2; AVO1	YES
-transcription elongation factor complex (GO)	GeneOntology	YER164W; YGR116W; YNL230C; YPL046C; YPR133C	CHD1; SPT6; ELA1; ELC1; SPN1	YES
-transcription factor complex (GO)	GeneOntology	YCR081W; YDR443C; YNL025C; YPL042C; YPR186C	SRB8; SSN2; SSN8; SSN3; PZF1	YES
-transcription factor TFIIIB complex (GO)	GeneOntology	YER148W; YGR246C; YNL039W	SPT15; BRF1; BDP1	YES
-translocon complex (GO)	GeneOntology	YBR283C; YDR086C; YER019C-A; YER087C-B; YLR378C	SSH1; SSS1; SBH2; SBH1; SEC61	YES
-tRNA-intron endonuclease complex (GO)	GeneOntology	YAR008W; YLR105C; YMR059W; YPL083C	SEN34; SEN2; SEN15; SEN54	YES
-ubiquitin conjugating enzyme complex (GO)	GeneOntology	YDR092W; YGL087C	UBC13; MMS2	YES
-ubiquitin ligase complex (GO)	GeneOntology	YDL013W; YDR219C; YDR306C; YER116C; YER125W; YLR224W; YML111W; YMR275C; YNL311C; YOR057W	SLX5; MFB1; YDR306C; SLX8; RSP5; YLR224W; BUL2; BUL1; YNL311C; SGT1	YES
-UDP-N-acetylglucosamine transferase complex (GO)	GeneOntology	YBR070C; YGL047W	ALG14; ALG13	YES
-vacuolar transporter chaperone complex (GO)	GeneOntology	YER072W; YFL004W; YJL012C; YPL019C	VTC1; VTC2; VTC4; VTC3	YES
-zeta DNA polymerase complex (GO)	GeneOntology	YIL139C; YPL167C	REV7; REV3	YES
+chromatin accessibility complex (GO)	GeneOntology	YDR121W; YGL133W; YJL065C; YOR304W	DPB4; ITC1; DLS1; ISW2	YES			
+chromatin assembly complex (GO)	GeneOntology	YER030W; YJL115W; YOL012C	CHZ1; ASF1; HTZ1	YES			
+chromatin silencing complex (GO)	GeneOntology	YBR195C; YDR227W; YKR101W; YLR442C	MSI1; SIR4; SIR1; SIR3	YES			
+cohesin loading complex (GO)	GeneOntology	YDR180W; YER147C	SCC2; SCC4	YES			
+commitment complex (GO)	GeneOntology	YDR240C; YGR074W; YHR086W; YIL061C; YKL074C; YLR116W; YLR147C; YLR298C; YML046W; YMR125W; YPL178W; snR19	SNU56; SMD1; NAM8; SNP1; MUD2; MSL5; SMD3; YHC1; PRP39; STO1; CBC2; SNR19	YES			
+Cul3-RING ubiquitin ligase complex (GO)	GeneOntology	YBR114W; YGR003W; YJR052W; YNL230C; YPL046C	RAD16; CUL3; RAD7; ELA1; ELC1	YES			
+CURI complex (GO)	GeneOntology	YCL031C; YGR090W; YLR223C; YOR039W; YPR104C	RRP7; UTP22; IFH1; CKB2; FHL1	YES			
+cyclin-dependent protein kinase holoenzyme complex (GO)	GeneOntology	YBR135W; YBR160W; YDL127W; YDL179W; YER059W; YGL134W; YGL215W; YHR071W; YIL050W; YNL289W; YOL001W; YPL219W; YPL256C	CKS1; CDC28; PCL2; PCL9; PCL6; PCL10; CLG1; PCL5; PCL7; PCL1; PHO80; PCL8; CLN2	YES			
+cytoplasmic dynein complex (GO)	GeneOntology	YDR424C; YDR488C; YKR054C; YMR299C	DYN2; PAC11; DYN1; DYN3	YES			
+Dbf4-dependent protein kinase complex (GO)	GeneOntology	YDL017W; YDR052C	CDC7; DBF4	YES			
+DNA ligase IV complex (GO)	GeneOntology	YGL090W; YLR265C; YOR005C	LIF1; NEJ1; DNL4	YES			
+"DNA-directed RNA polymerase II, holoenzyme (GO)"	GeneOntology	YBR236C; YDL115C; YGR097W	ABD1; IWR1; ASK10	YES			
+DSIF complex (GO)	GeneOntology	YGR063C; YML010W	SPT4; SPT5	YES			
+dynactin complex (GO)	GeneOntology	YDR106W; YHR129C; YMR294W; YPL174C	ARP10; ARP1; JNM1; NIP100	YES			
+ESCRT III complex (GO)	GeneOntology	YKL002W; YKL041W; YLR025W; YMR077C	DID4; VPS24; SNF7; VPS20	YES			
+exosome (RNase complex) (GO)	GeneOntology	YOR076C	SKI7	YES			
+F-actin capping protein complex (GO)	GeneOntology	YIL034C; YKL007W	CAP2; CAP1	YES			
+glutamate synthase complex (GO)	GeneOntology	YDL171C	GLT1	YES			
+glycine cleavage complex (GO)	GeneOntology	YAL044C; YDR019C; YFL018C; YMR189W	GCV3; GCV1; LPD1; GCV2	YES			
+glycosylphosphatidylinositol-N-acetylglucosaminyltransferase (GPI-GnT) complex (GO)	GeneOntology	YDR437W; YGR216C; YNL038W; YPL076W; YPL096C-A; YPL175W	GPI19; GPI1; GPI15; GPI2; ERI1; SPT14	YES			
+heterogeneous nuclear ribonucleoprotein complex (GO)	GeneOntology	YNL004W; YNL016W	HRB1; PUB1	YES			
+heterotrimeric G-protein complex (GO)	GeneOntology	YHR005C; YJR086W; YOR212W	GPA1; STE18; STE4	YES			
+high affinity iron permease complex (GO)	GeneOntology	YER145C; YMR058W	FTR1; FET3	YES			
+Holliday junction resolvase complex (GO)	GeneOntology	YBR098W; YDR386W	MMS4; MUS81	YES			
+i-AAA complex (GO)	GeneOntology	YCL044C; YPR024W	MGR1; YME1	YES			
+kinesin complex (GO)	GeneOntology	YBL063W; YEL061C; YGL216W; YMR198W; YPL155C; YPL253C	KIP1; CIN8; KIP3; CIK1; KIP2; VIK1	YES			
+mannosyltransferase complex (GO)	GeneOntology	YBR004C; YNL158W	GPI18; PGA1	YES			
+MCM complex (GO)	GeneOntology	YBL023C; YBR202W; YEL032W; YGL201C; YLR274W; YPR019W	MCM2; MCM7; MCM3; MCM6; MCM5; MCM4	YES			
+Mdm10/Mdm12/Mmm1 complex (GO)	GeneOntology	YAL010C; YLL006W; YOL009C	MDM10; MMM1; MDM12	YES			
+mitochondrial inner membrane peptidase complex (GO)	GeneOntology	YEL059C-A; YMR035W; YMR150C	SOM1; IMP2; IMP1	YES			
+mitochondrial inner membrane presequence translocase complex (GO)	GeneOntology	YGR033C; YJL104W; YJL143W; YLR008C; YNR017W; YPL063W	TIM21; PAM16; TIM17; PAM18; TIM23; TIM50	YES			
+mitochondrial inner membrane protein insertion complex (GO)	GeneOntology	YBR091C; YDL217C; YJL054W; YOR297C	TIM12; TIM22; TIM54; TIM18	YES			
+mitochondrial intermembrane space protein transporter complex (GO)	GeneOntology	YEL020W-A; YGR181W; YHR005C-A; YJR135W-A	TIM9; TIM13; TIM10; TIM8	YES			
+mitochondrial outer membrane translocase complex (GO)	GeneOntology	YGR082W; YKL195W; YMR203W; YNL070W; YNL121C; YNL131W; YOR045W; YPR133W-A	TOM20; MIA40; TOM40; TOM7; TOM70; TOM22; TOM6; TOM5	YES			
+mitochondrial proton-transporting ATP synthase complex (GO)	GeneOntology	YDL130W-A; YDL181W; YGR008C	STF1; INH1; STF2	YES			
+"mitochondrial proton-transporting ATP synthase complex, coupling factor F(o) (GO)"	GeneOntology	Q0080; Q0085; Q0130; YDR322C-A; YDR377W; YLR295C; YML081C-A; YOL077W-A; YPR020W	ATP8; ATP6; OLI1; TIM11; ATP17; ATP14; ATP18; ATP19; ATP20	YES			
+mitochondrial respiratory chain complex II (GO)	GeneOntology	YDR178W; YKL141W; YKL148C; YLL041C	SDH4; SDH3; SDH1; SDH2	YES			
+mitochondrial ribonuclease P complex (GO)	GeneOntology	YML091C	RPM2	YES			
+mitochondrial ribosome (GO)	GeneOntology	YDL069C; YGL068W; YKL142W; YPL132W	CBS1; MNP1; MRP8; COX11	YES			
+mitochondrial sorting and assembly machinery complex (GO)	GeneOntology	YAL010C; YHR083W; YMR060C; YNL026W	MDM10; SAM35; SAM37; SAM50	YES			
+mitotic checkpoint complex (GO)	GeneOntology	YGL116W; YJL013C; YJL030W; YOR026W	CDC20; MAD3; MAD2; BUB3	YES			
+monopolin complex (GO)	GeneOntology	YCR086W; YDR439W; YER106W; YPL204W	CSM1; LRS4; MAM1; HRR25	YES			
+Mre11 complex (GO)	GeneOntology	YDR369C; YMR224C; YNL250W	XRS2; MRE11; RAD50	YES			
+mRNA cap complex (GO)	GeneOntology	YJL124C; YKL204W; YOR276W	LSM1; EAP1; CAF20	YES			
+MutLbeta complex (GO)	GeneOntology	YMR167W; YPL164C	MLH1; MLH3	YES			
+myosin II complex (GO)	GeneOntology	YHR023W	MYO1	YES			
+myosin V complex (GO)	GeneOntology	YAL029C; YOR326W	MYO4; MYO2	YES			
+Noc1p-Noc2p complex (GO)	GeneOntology	YDR060W; YOR206W	MAK21; NOC2	YES			
+Noc2p-Noc3p complex (GO)	GeneOntology	YLR002C; YOR206W	NOC3; NOC2	YES			
+Noc4p-Nop14p complex (GO)	GeneOntology	YDL148C; YPR144C	NOP14; NOC4	YES			
+NuA3 histone acetyltransferase complex (GO)	GeneOntology	YBL052C; YJR082C; YOR064C; YPL129W; YPR031W	SAS3; EAF6; YNG1; TAF14; NTO1	YES			
+nuclear cap binding complex (GO)	GeneOntology	YMR125W; YPL178W	STO1; CBC2	YES			
+nuclear RNA export factor complex (GO)	GeneOntology	YKL186C; YPL169C	MTR2; MEX67	YES			
+nuclear SCF ubiquitin ligase complex (GO)	GeneOntology	YFL009W; YIL046W	CDC4; MET30	YES			
+nuclear telomere cap complex (GO)	GeneOntology	YBR275C; YDL042C; YDL220C; YDR082W; YDR227W; YGR099W; YLR010C; YLR150W; YLR442C; YLR453C; YNL216W	RIF1; SIR2; CDC13; STN1; SIR4; TEL2; TEN1; STM1; SIR3; RIF2; RAP1	YES			
+"nucleolar preribosome, large subunit precursor (GO)"	GeneOntology	YER126C; YGR103W; YLR022C; YLR221C; YNR038W; YPL093W	NSA2; NOP7; SDO1; RSA3; DBP6; NOG1	YES			
+"nucleolar preribosome, small subunit precursor (GO)"	GeneOntology	YBR247C; YGR081C; YJL010C; YKL143W; YNL178W	ENP1; SLX9; NOP9; LTV1; RPS3	YES			
+nucleotide-excision repair factor 1 complex (GO)	GeneOntology	YML095C; YMR201C; YPL022W	RAD10; RAD14; RAD1	YES			
+nucleotide-excision repair factor 3 complex (GO)	GeneOntology	YDR460W; YGR258C	TFB3; RAD2	YES			
+nucleotide-excision repair factor 4 complex (GO)	GeneOntology	YBR114W; YJR052W; YKL112W; YPL046C	RAD16; RAD7; ABF1; ELC1	YES			
+oligosaccharyl transferase complex (GO)	GeneOntology	YDL232W; YEL002C; YGL022W; YGL226C-A; YJL002C; YML019W; YMR149W; YOR085W; YOR103C	OST4; WBP1; STT3; OST5; OST1; OST6; SWP1; OST3; OST2	YES			
+palmitoyltransferase complex (GO)	GeneOntology	YLR246W; YOL110W	ERF2; SHR5	YES			
+PCNA complex (GO)	GeneOntology	YBR088C	POL30	YES			
+phosphopyruvate hydratase complex (GO)	GeneOntology	YGR254W; YHR174W	ENO1; ENO2	YES			
+preribosome (GO)	GeneOntology	YDL166C; YOR056C	FAP7; NOB1	YES			
+proteasome complex (GO)	GeneOntology	YBR082C; YDR059C; YDR069C; YDR177W; YEL037C; YGL058W; YGR184C; YHL030W; YHR052W	UBC4; UBC5; DOA4; UBC1; RAD23; RAD6; UBR1; ECM29; CIC1	YES			
+proteasome core complex (GO)	GeneOntology	YFL007W	BLM10	YES			
+proteasome regulatory particle (GO)	GeneOntology	YDL020C; YFR010W; YGR232W	RPN4; UBP6; NAS6	YES			
+protein phosphatase type 1 complex (GO)	GeneOntology	YBR045C; YBR050C; YDR028C; YER054C; YER133W; YLR273C; YOR178C	GIP1; REG2; REG1; GIP2; GLC7; PIG1; GAC1	YES			
+RecQ helicase-Topo III complex (GO)	GeneOntology	YLR234W; YMR190C; YPL024W	TOP3; SGS1; RMI1	YES			
+RENT complex (GO)	GeneOntology	YDL042C; YFR028C; YJL076W; YPL126W	SIR2; CDC14; NET1; NAN1	YES			
+repairosome (GO)	GeneOntology	YBR114W; YEL037C; YER162C; YJR052W	RAD16; RAD23; RAD4; RAD7	YES			
+"retromer complex, outer shell (GO)"	GeneOntology	YOR069W; YOR132W	VPS5; VPS17	YES			
+Rhp55-Rhp57 complex (GO)	GeneOntology	YDR004W; YDR076W	RAD57; RAD55	YES			
+ribonuclease H2 complex (GO)	GeneOntology	YDR279W; YLR154C; YNL072W	RNH202; RNH203; RNH201	YES			
+ribonucleoprotein complex (GO)	GeneOntology	YIL149C; YKR095W; YOR198C	MLP2; MLP1; BFR1	YES			
+ribonucleoside-diphosphate reductase complex (GO)	GeneOntology	YER070W; YGR180C; YIL066C; YJL026W	RNR1; RNR4; RNR3; RNR2	YES			
+RNA polymerase I transcription factor complex (GO)	GeneOntology	YBL014C; YER148W; YJL025W; YKL125W; YML043C	RRN6; SPT15; RRN7; RRN3; RRN11	YES			
+RNA polymerase I upstream activating factor complex (GO)	GeneOntology	YBL025W; YLR141W; YMR270C; YOR295W	RRN10; RRN5; RRN9; UAF30	YES			
+signal peptidase complex (GO)	GeneOntology	YIR022W; YJR010C-A; YLR066W; YML055W	SEC11; SPC1; SPC3; SPC2	YES			
+Sin3 complex (GO)	GeneOntology	YMR053C; YNL309W; YOL004W	STB2; STB1; SIN3	YES			
+Slx1-Slx4 complex (GO)	GeneOntology	YBR228W; YLR135W	SLX1; SLX4	YES			
+small nuclear ribonucleoprotein complex (GO)	GeneOntology	YER127W; YPR057W; YPR137W	LCP5; BRR1; RRP9	YES			
+SNARE complex (GO)	GeneOntology	YAL030W; YGR009C; YPL232W	SNC1; SEC9; SSO1	YES			
+sulfite reductase complex (NADPH) (GO)	GeneOntology	YFR030W; YJR137C	MET10; ECM17	YES			
+synaptonemal complex (GO)	GeneOntology	YGL249W; YNL088W	ZIP2; TOP2	YES			
+telomerase catalytic core complex (GO)	GeneOntology	TLC1; YLR318W	TLC1; EST2	YES			
+telomerase holoenzyme complex (GO)	GeneOntology	YIL009C-A; YLR233C	EST3; EST1	YES			
+TORC1 complex (GO)	GeneOntology	YHR186C; YJR066W; YKL203C; YNL006W; YPL180W	KOG1; TOR1; TOR2; LST8; TCO89	YES			
+TORC2 complex (GO)	GeneOntology	YER093C; YIL105C; YJL058C; YKL203C; YMR068W; YNL006W; YNL047C; YOL078W	TSC11; SLM1; BIT61; TOR2; AVO2; LST8; SLM2; AVO1	YES			
+transcription elongation factor complex (GO)	GeneOntology	YER164W; YGR116W; YNL230C; YPL046C; YPR133C	CHD1; SPT6; ELA1; ELC1; SPN1	YES			
+transcription factor complex (GO)	GeneOntology	YCR081W; YDR443C; YNL025C; YPL042C; YPR186C	SRB8; SSN2; SSN8; SSN3; PZF1	YES			
+transcription factor TFIIIB complex (GO)	GeneOntology	YER148W; YGR246C; YNL039W	SPT15; BRF1; BDP1	YES			
+translocon complex (GO)	GeneOntology	YBR283C; YDR086C; YER019C-A; YER087C-B; YLR378C	SSH1; SSS1; SBH2; SBH1; SEC61	YES			
+tRNA-intron endonuclease complex (GO)	GeneOntology	YAR008W; YLR105C; YMR059W; YPL083C	SEN34; SEN2; SEN15; SEN54	YES			
+ubiquitin conjugating enzyme complex (GO)	GeneOntology	YDR092W; YGL087C	UBC13; MMS2	YES			
+ubiquitin ligase complex (GO)	GeneOntology	YDL013W; YDR219C; YDR306C; YER116C; YER125W; YLR224W; YML111W; YMR275C; YNL311C; YOR057W	SLX5; MFB1; YDR306C; SLX8; RSP5; YLR224W; BUL2; BUL1; YNL311C; SGT1	YES			
+UDP-N-acetylglucosamine transferase complex (GO)	GeneOntology	YBR070C; YGL047W	ALG14; ALG13	YES			
+vacuolar transporter chaperone complex (GO)	GeneOntology	YER072W; YFL004W; YJL012C; YPL019C	VTC1; VTC2; VTC4; VTC3	YES			
+zeta DNA polymerase complex (GO)	GeneOntology	YIL139C; YPL167C	REV7; REV3	YES			
