@@ -5,8 +5,7 @@
 Given a series of culture density observations from colonyzer.read, this function will fit the generalised logistic growth model to timecourse observations for all colonies by least squares using either the L-BFGS-B algorithm in R's optim function, or the differential evolution, stochastic global optimisation package DEoptim.
 }
 \usage{
-qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,
-detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,...)
+qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt,minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,...)
 }
 \arguments{
   \item{d}{The data.frame containing the timecourse data for each colony (returned from colonyzer.read).}
