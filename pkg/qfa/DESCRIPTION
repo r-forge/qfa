@@ -2,7 +2,7 @@ Package: qfa
 Version: 0.0-2
 Date: 2011-10-20
 Title: Tools for modelling the growth dynamics of arrays of large numbers of colonies and performing quantitative fitness analysis (QFA).
-Author: Alexander Young <alextisyoung@gmail.com>, with contributions from Conor Lawless <conor.lawless@ncl.ac.uk> and Darren Wilkinson <d.j.wilkinson@ncl.ac.uk>
+Author: Conor Lawless <conor.lawless@ncl.ac.uk>, with contributions from Alexander Young <alextisyoung@gmail.com> and Darren Wilkinson <d.j.wilkinson@ncl.ac.uk>
 Maintainer: Conor Lawless <conor.lawless@ncl.ac.uk>
 Depends: R (>= 2.10.1), sp, DEoptim
 Suggests:

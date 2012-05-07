@@ -1,8 +1,8 @@
 \name{rod.read}
 \alias{rod.read}
-\title{Reading of ROD raw timecourse data}
+\title{Reading of ROD raw timecourse data.  Deprecated.}
 \description{
-Reads in and binds together all of the ROD output files in a directory, so they are checked and ready for bayesian or likelihood inference 
+Reads in and binds together all of the ROD output files in a directory, so they are checked and ready for bayesian or likelihood inference .  Deprecated.
 }
 \usage{
 rod.read(path=".",files=c(),inoctimes="BarcodeTimes.txt",background="",
