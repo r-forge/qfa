@@ -247,8 +247,10 @@ visTool<-function(){
 	# Can add some complexes manually
 	#compfile=system.file("/FunctionalComplexes.txt", package = "qfa")
 	compfile=paste(system.file(package = "qfa"),"/FunctionalComplexes.txt",sep="")
-	Benschopp<<-Benschopp$CompListread.delim(compfile,stringsAsFactors=FALSE,sep="\t")
-	colnames(Benschopp)
+	Benschopp$CompList=strsplit(Benschopp$Complex.members..systematic.name,"; ")
+
+	ORFGENE=read.delim("ORF2GENE.txt",stringsAsFactors=FALSE,sep="\t",header=FALSE)
+	#colnames(Benschopp)
 	Benschopp$CompList<-strsplit(Benschopp$Complex.members..systematic.name,"; ")
 
 	orffile=paste(system.file(package = "qfa"),"/ORF2GENE.txt",sep="")
@@ -574,8 +576,12 @@ visTool<-function(){
 	#compfile=system.file("/FunctionalComplexes.txt", package = "qfa")
 	compfile=paste(system.file(package = "qfa"),"/FunctionalComplexes.txt",sep="")
 	Benschopp<<-read.delim(compfile,stringsAsFactors=FALSE,sep="\t")
-	colnames(Benschopp)
 	Benschopp$CompList<<-strsplit(Benschopp$Complex.members..systematic.name,"; ")
+	
+	orfile=paste(system.file(package = "qfa"),"/ORF2GENE.txt",sep="")
+	ORFGENE=read.delim(orfile,stringsAsFactors=FALSE,sep="\t",header=FALSE)
+	colnames(ORFGENE)=c("ORF","Gene")
+	ORFGENE<-ORFGENE[!duplicated(ORFGENE$ORF),]
 
 	# Read in GIS files
 	datlist<<-list()
