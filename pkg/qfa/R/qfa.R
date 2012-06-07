@@ -466,7 +466,7 @@ de.fit<-function(tim,growth,inocguess,xybounds,inits=list(),initPop=FALSE,widenr
 	# Function to be optimized
 	objf<-function(modpars){
 		K<-modpars[1]; r<-modpars[2]
-		g<-modpars[3]; v<-modpars[4]
+		g<-modpars[3]; v<-abs(modpars[4])
 		res=sumsq(K,r,g,v,growth,tim,logTransform=logTransform)
 		return(res)
 	}
@@ -496,7 +496,7 @@ de.fit<-function(tim,growth,inocguess,xybounds,inits=list(),initPop=FALSE,widenr
 	optsol=DEoptim(objf,lower=low,upper=up,
 	DEoptim.control(trace = FALSE,NP=NumParticles,initialpop=pop,itermax=mxit)
 	)
-	pars=as.numeric(optsol$optim$bestmem)
+	pars=abs(as.numeric(optsol$optim$bestmem))
 	objval=objf(pars)
 	# Sanity check for fitted parameters (no negative growth)
 	if (pars[1]<pars[3]){
@@ -521,7 +521,7 @@ data.fit<-function(tim,growth,inocguess,xybounds,inits=list(),logTransform=FALSE
 	# Function to be optimized
 	objf<-function(modpars){
 		K<-modpars[1]; r<-modpars[2]
-		g<-modpars[3]; v<-modpars[4]
+		g<-modpars[3]; v<-abs(modpars[4])
 		return(sumsq(K,r,g,v,growth,tim,logTransform=logTransform))
 	}
 	# Perform optimization
@@ -529,7 +529,7 @@ data.fit<-function(tim,growth,inocguess,xybounds,inits=list(),logTransform=FALSE
 	lower=c(xybounds$K[1],xybounds$r[1],xybounds$g[1],xybounds$v[1]),
 	upper=c(xybounds$K[2],xybounds$r[2],xybounds$g[2],xybounds$v[2]),
 	control=list(maxit=1000,factr=1e7,trace=0,parscale=c(0.2,10,inocguess,1)))
-	pars=as.numeric(optsol$par)
+	pars=abs(as.numeric(optsol$par))
 	objval=objf(pars)
 	# Sanity check for fitted parameters (no negative growth)
 	if (pars[1]<pars[3]){
