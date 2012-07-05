@@ -23,8 +23,12 @@ NoSum_b<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_b)))
 
 dimr<-max(NoORF_a,NoORF_b);dimc<-max(NoTime_a,NoTime_b)
 
-y<-funcXY_J(a$Growth,b$Growth,M,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
-x<-funcXY_J(a$Expt.Time,b$Expt.Time,M,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
+Ma<-length(unique(a$ID))
+Mb<-length(unique(b$ID))
+M<-max(Ma,Mb)
+y<-funcXY_J(a$Growth,b$Growth,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
+x<-funcXY_J(a$Expt.Time,b$Expt.Time,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
+
 
 QFA.I<-list("NoORF"=cbind(NoORF_a,NoORF_b),"NoTime"=cbind(NoTime_a,NoTime_b)[-1,],"NoSum"=cbind(NoSum_a,NoSum_b),"N"=N,"M"=M,"gene"=gene,SHIFT=c(0,max(NoSum_a,NoSum_b))
 )
@@ -146,7 +150,7 @@ print("plot fitted with Conditioning on delta=1")
 pdf(paste("Plots_Inter",work,".pdf",sep=""))
 plot(1,type="n",main=paste("Treatment",Treat,"Degrees"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Control",ylab="Query",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=2)
-abline(lm(c(colMeans(y[,,,1],na.rm=TRUE))~0+c(colMeans(y[,,,2],na.rm=TRUE))),col="grey",lty=3)
+abline(lm(c(colMeans(y[,,,2],na.rm=TRUE))~0+c(colMeans(y[,,,1],na.rm=TRUE))),col="grey",lty=3)
 if (sum((1:N)[gene=="HIS3"])==1){
 lines(c(mu_a[gene=="HIS3"],mu_b[gene=="HIS3"]),c(-1000,1000),lwd=2)
 lines(c(-1000,1000),c(mean(defb[gene=="HIS3"]),mean(defb[gene=="HIS3"])),lwd=2)}
@@ -162,6 +166,8 @@ legend(1,limmax, c("1-1","simple Lin Reg"), cex=0.5,col=c("grey","grey","black")
 if (sum((1:N)[gene=="HIS3"])==1){
 legend(1,limmax, c("1-1","simple Lin Reg","HIS3 Fit"), cex=0.5,col=c("grey","grey","black"), lty=c(2,3,1))
 }
+
+
 plot(1,type="n",main=paste("Treatment",Treat,"Degrees"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Control",ylab="Query",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=2)
 abline(lm(c(colMeans(y[,,,1],na.rm=TRUE))~0+c(colMeans(y[,,,2],na.rm=TRUE))),col="grey",lty=3)
