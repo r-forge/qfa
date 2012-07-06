@@ -9,6 +9,8 @@
 #include <time.h>
 #include <gsl/gsl_sf_gamma.h>
 #include <string.h>
+#include <R.h>
+#include <Rmath.h>
 
 typedef struct struct_data {
   double *y, *x;
