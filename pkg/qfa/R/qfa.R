@@ -387,7 +387,7 @@ makeFitness<-function(results,AUCLim=5,dtmax=25){
 	# If doubling time is Inf, set to dtmax
 	results$DT[abs(results$DT)>25]=25
 	# Area under curve
-	AUC<-function(dno,tstar,dat) integrate(Glogist,lower=0,upper=tstar,K=dat$K[dno],r=dat$r[dno],g=dat$g[dno],v=dat$v[dno],subdivisions=1000)$value
+	AUC<-function(dno,tstar,dat) max(0,integrate(Glogist,lower=0,upper=tstar,K=dat$K[dno],r=dat$r[dno],g=dat$g[dno],v=dat$v[dno],subdivisions=1000)$value - tstar*dat$g[dno])
 	results$AUC=sapply(1:length(results[,1]),AUC,tstar=AUCLim,dat=results)
 	return(results)
 }
