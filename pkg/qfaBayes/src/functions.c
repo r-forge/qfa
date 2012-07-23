@@ -350,7 +350,7 @@ int gibbsandMHloop(int iter,int thin,struct_data *D,struct_para *D_para,struct_p
   int i,j,l,m,mm,*T,t;
 T=&t;
 *T=0;
-D->L=imin2(D->L,CAPL);
+D->L=fmin(D->L,CAPL);
 if (print==0){printheader(D,HEADER);}
 	for (i=0;i<iter;i++){
 for (j=0;j<thin;j++){
