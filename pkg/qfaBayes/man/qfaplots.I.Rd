@@ -5,11 +5,11 @@
 Creates and stores plots for qfa.Interaction() output to .pdf
 }
 \usage{
-qfaplots.H(work,QFA,LinearGaussian=FALSE)
+qfaplots.I(QFA,work,defa,defb,alpha_a,alpha_b,gam_b,mu_a,mu_b,tau_a,tau_b)
 }
 \arguments{
-  \item{work}{A unique name to identify the functions output.}
   \item{QFA}{Output from qfa.Interaction(). }
+  \item{work}{A unique name to identify the functions output.}
 \item{LinearGaussian}{Have you used a linear gaussian model? TRUE or FALSE.}
 }
 \value{

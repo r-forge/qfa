@@ -42,7 +42,7 @@ samp<-funcFITandUPDATE_J(QFA.I,QFA.D,QFA.P)
 QFA.O<-funcPosterior_J(samp,N,M,iter,thin,upd)
 
 QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)
-if(PlotOutput==TRUE){qfaplots.J(QFA,work)}
+if(PlotOutput==TRUE){qfaplots.J(QFA,work,defb)}
 return(QFA)
 }
 
@@ -50,7 +50,7 @@ return(QFA)
 
 
 ### Joint Hierachical Logistic Curve Model Plots to Pdf###
-qfaplots.J<-function(QFA,work,CustomInteractionDef=FALSE){
+qfaplots.J<-function(QFA,work,defb,CustomInteractionDef=FALSE){
 Treat="FIX"#######
 samp<-QFA$samp
 iter<-QFA$iter

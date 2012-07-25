@@ -181,7 +181,7 @@ model {
 }
 
 ### Load priors ###
-funcPRIORS<-function(CustomModel){
+funcPRIORS<-function(CustomModel,Priors){
 if (!(CustomModel==FALSE)){source(paste(CustomModel,"Priors",sep="."))} else {data(PriorsH)}
 list(
 K_s=Priors$K_s,
@@ -207,7 +207,7 @@ delta_sd=Priors$delta_sd
 
 
 ### Load priors (Joint Model Specific) ###
-funcPRIORS_J<-function(CustomModel){
+funcPRIORS_J<-function(CustomModel,Priors){
 
 if (!(CustomModel==FALSE)){source(paste(CustomModel,"Priors",sep="."))} else {data(PriorsJ)}
 list(
@@ -239,7 +239,7 @@ funcJagsTime<-function(iter,upd,jags){
 }
 
 ### Fit, update and sample from the rjags model ###
-funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P,inits){
+funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P,inits,iter,upd){
 jags <- jags.model('model1.bug',
                    data = list('x' = QFA.D$x,
                                'y' = QFA.D$y,
@@ -293,7 +293,7 @@ samp
 }
 
 ### Fit, update and sample from the rjags model (Joint Model Specific) ###
-funcFITandUPDATE_J<-function(QFA.I,QFA.D,QFA.P){
+funcFITandUPDATE_J<-function(QFA.I,QFA.D,QFA.P,iter,upd){
 jags <- jags.model('model1.bug',
                    data = list('x' = QFA.D$x,
                                'y' = QFA.D$y,'SHIFT'=QFA.I$SHIFT,'p'=QFA.P$p,'alpha_a'=QFA.P$alpha_a,'alpha_b'=QFA.P$alpha_b,'gam_b'=QFA.P$gam_b,'omega_b'=QFA.P$omega_b,

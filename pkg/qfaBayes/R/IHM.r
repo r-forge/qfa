@@ -1,5 +1,5 @@
 ### Adds NA values at the end of an ORF to give consistent row length for an array###
-funcVecArray<-function(x,defa,defb){
+funcVecArray<-function(x,defa,defb,aNoSum,bNoSum,dimr){
 c(defa[(aNoSum[x]+1):(aNoSum[x+1])],rep(NA,dimr-length(defa[(aNoSum[x]+1):(aNoSum[x+1])])),defb[(bNoSum[x]+1):(bNoSum[x+1])],rep(NA,dimr-length(defb[(bNoSum[x]+1):(bNoSum[x+1])])))
 }
 
@@ -28,7 +28,7 @@ as.numeric(lapply(vecMDPa,funcInfToNA))*as.numeric(lapply(vecMDRa,funcInfToNA))
 }
 
 ### Outputs posterior sample in a named list ###
-funcPosterior_I<-function(samp,N,M,iter,thin,upd){
+funcPosterior_I<-function(samp,N,iter,thin,upd){
 if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-samp}
 if(nrow(samp)>1) {deltagamma<-colMeans(samp[,(N+3):(2*N+2)]*samp[,(3*N+3):(4*N+2)])} else {deltagamma<-(samp[,(N+3):(2*N+2)]*samp[,(3*N+3):(4*N+2)])}
 delta=vecsamp[(N+3):(2*N+2)]
@@ -105,16 +105,16 @@ samp<-coda.samples(jags,
             iter,thin=thin)
 samp<-samp[[1]]
 
-QFA.S<-funcPosterior_I(samp,N,M,iter,thin,upd)
+QFA.S<-funcPosterior_I(samp,N,iter,thin,upd)
 QFA.l<-list(N=N,gene=a$gene,treat="27",y=y,NoORF=NoORF)
 QFA<-c(QFA.S,QFA.P,QFA.l)
-if(PlotOutput==TRUE){qfaplots.I(QFA,work)}
+if(PlotOutput==TRUE){qfaplots.I(QFA,workdefa,defb,alpha_a,alpha_b,gam_b,mu_a,mu_b,tau_a,tau_b)}
 return(QFA)
 }
 
 
 ### Interaction Model Plots to Pdf###
-qfaplots.I<-function(QFA,work){
+qfaplots.I<-function(QFA,work,defa,defb,alpha_a,alpha_b,gam_b,mu_a,mu_b,tau_a,tau_b){
 
 vecsamp=QFA$vecsamp
 namesamp=QFA$namesamp

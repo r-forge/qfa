@@ -5,11 +5,11 @@
 Creates and stores plots for qfa.Joint() output to .pdf
 }
 \usage{
-qfaplots.H(work,QFA,LinearGaussian=FALSE)
+qfaplots.J(QFA,work,defb,CustomInteractionDef=FALSE)
 }
 \arguments{
-  \item{work}{A unique name to identify the functions output.}
   \item{QFA}{Output from qfa.Joint(). }
+  \item{work}{A unique name to identify the functions output.}
 \item{LinearGaussian}{Have you used a linear gaussian model? TRUE or FALSE.}
 }
 \value{
