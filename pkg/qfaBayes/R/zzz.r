@@ -15,11 +15,7 @@ detach(pos = pos)
 
 
 .onLoad <- function(lib, pkg){
-     # do whatever needs to be done when the package is loaded
-     # some people use it to bombard users with 
-     # messages using 
 library.dynam("qfaBayes", pkg, lib)
 require(MASS)
-     packageStartupMessage( "my package is so cool" )
-     packageStartupMessage( "so I will print these lines each time you load it")
+     packageStartupMessage( "Bayesian QFA" )
 }
