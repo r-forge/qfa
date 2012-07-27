@@ -5,7 +5,7 @@
 Creates and stores plots for qfa.Joint() output to .pdf
 }
 \usage{
-qfaplots.J(QFA,work,defb,CustomInteractionDef=FALSE)
+qfaplots.J(QFA,work,CustomInteractionDef=FALSE)
 }
 \arguments{
   \item{QFA}{Output from qfa.Joint(). }

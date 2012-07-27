@@ -6,6 +6,7 @@ Fits a hierachical logistic curve model. Custom models may be used
 }
 \usage{
 qfa.Hierachical(experiment,Scaling,iter,upd,thin,inits,PlotOutput=TRUE,work,CustomModel=FALSE)
+}
 \arguments{
   \item{experiment}{A data set obtained from Rod.Read() for one experiment.}
   \item{Scaling}{Do you require the data set to be scaled from (0-1)? Are your priors set for a scaled data set? TRUE or FALSE.}

@@ -42,7 +42,7 @@ samp<-funcFITandUPDATE_J(QFA.I,QFA.D,QFA.P)
 QFA.O<-funcPosterior_J(samp,N,M,iter,thin,upd)
 
 QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)
-if(PlotOutput==TRUE){qfaplots.J(QFA,work,defb)}
+if(PlotOutput==TRUE){qfaplots.J(QFA,work)}
 return(QFA)
 }
 
@@ -50,7 +50,7 @@ return(QFA)
 
 
 ### Joint Hierachical Logistic Curve Model Plots to Pdf###
-qfaplots.J<-function(QFA,work,defb,CustomInteractionDef=FALSE){
+qfaplots.J<-function(QFA,work,CustomInteractionDef=FALSE){
 Treat="FIX"#######
 samp<-QFA$samp
 iter<-QFA$iter
@@ -153,7 +153,7 @@ lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=2)
 abline(lm(c(colMeans(y[,,,2],na.rm=TRUE))~0+c(colMeans(y[,,,1],na.rm=TRUE))),col="grey",lty=3)
 if (sum((1:N)[gene=="HIS3"])==1){
 lines(c(mu_a[gene=="HIS3"],mu_b[gene=="HIS3"]),c(-1000,1000),lwd=2)
-lines(c(-1000,1000),c(mean(defb[gene=="HIS3"]),mean(defb[gene=="HIS3"])),lwd=2)}
+lines(c(-1000,1000),c(mean(mu_a[gene=="HIS3"]),mean(mu_b[gene=="HIS3"])),lwd=2)}
 i=1:N
 points(mu_a[i],mu_b[i],main=paste("Treatment",Treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single (=Alpha1*mu_i)",ylab="Double (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
 i=vecorder[gamdelt[order][1:sig]>0]
@@ -173,7 +173,7 @@ lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=2)
 abline(lm(c(colMeans(y[,,,1],na.rm=TRUE))~0+c(colMeans(y[,,,2],na.rm=TRUE))),col="grey",lty=3)
 if (sum((1:N)[gene=="HIS3"])==1){
 lines(c(mu_a[gene=="HIS3"],mu_b[gene=="HIS3"]),c(-1000,1000),lwd=2)
-lines(c(-1000,1000),c(mean(defb[gene=="HIS3"]),mean(defb[gene=="HIS3"])),lwd=2)}
+lines(c(-1000,1000),c(mean(mu_a[gene=="HIS3"]),mean(mu_b[gene=="HIS3"])),lwd=2)}
 i=1:N
 points(mu_a[i],mu_b[i],main=paste("Treatment",Treat,"Degrees","(Conditioning on deltas=1)"),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single (=Alpha1*mu_i)",ylab="Double (=Alpha2*(mu_i+gamma_i))",col=8,pch=19,cex=0.5)
 i=vecorder[omegadelt[order][1:sig]>0]
