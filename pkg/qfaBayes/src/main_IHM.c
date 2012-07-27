@@ -12,7 +12,7 @@
 
 
 	int burn,iters,thin;
-	long seed;
+
 
 	/*testargc(argc);*/
 
@@ -20,12 +20,12 @@
 	iters=*argb;    /*iterations*/
 	thin=*argc;        /*thining*/
        inzstruct_data_IHM(data,QFAIA,QFADyA,QFADNoORFA,QFAIB,QFADyB,QFADNoORFB);
-	/*inzstruct_priors_IHM(priors,PRIORS);
+	inzstruct_priors_IHM(priors,PRIORS);
 	inzstruct_para_IHM(para,data,priors);
 	inzstruct_MH_IHM(MH);
 
 	gibbsandMHloop_IHM(burn,1,data,para,priors,MH,0,OUT,HEADER);
-	gibbsandMHloop_IHM(iters,thin,data,para,priors,MH,1,OUT,HEADER);*/
+	gibbsandMHloop_IHM(iters,thin,data,para,priors,MH,1,OUT,HEADER);
 
 	return 0;
 }

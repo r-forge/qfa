@@ -3,16 +3,16 @@ funcVecArray<-function(x,defa,defb,aNoSum,bNoSum,dimr){
 c(defa[(aNoSum[x]+1):(aNoSum[x+1])],rep(NA,dimr-length(defa[(aNoSum[x]+1):(aNoSum[x+1])])),defb[(bNoSum[x]+1):(bNoSum[x+1])],rep(NA,dimr-length(defb[(bNoSum[x]+1):(bNoSum[x+1])])))
 }
 
-### Interaction Definition MDR ### EXAMPLE funcCustomInterDef<-funcInterDefMDR
+### Interaction Definition MDR ### EXAMPLE 
 funcInterDefMDR<-function(x){
 x$r/log(2*(x$K-x$g)/(x$K-2*x$g)) 
 }
-
-### Interaction Definition MDP ### EXAMPLE funcCustomInterDef<-funcInterDefMDP
+funcCustomInterDef<-funcInterDefMDR
+### Interaction Definition MDP ### EXAMPLE 
 funcInterDefMDP<-function(x){
 log(x$K/x$g)/log(2)
 }
-
+funcCustomInterDef<-funcInterDefMDP
 ### -Inf values become NA ###
 funcInfToNA<-function(x){
 x[is.na(x)]=-Inf
@@ -108,7 +108,7 @@ samp<-samp[[1]]
 QFA.S<-funcPosterior_I(samp,N,iter,thin,upd)
 QFA.l<-list(N=N,gene=a$gene,treat="27",y=y,NoORF=NoORF)
 QFA<-c(QFA.S,QFA.P,QFA.l)
-if(PlotOutput==TRUE){qfaplots.I(QFA,workdefa,defb,alpha_a,alpha_b,gam_b,mu_a,mu_b,tau_a,tau_b)}
+if(PlotOutput==TRUE){qfaplots.I(QFA,work,defa,defb,alpha_a,alpha_b,gam_b,mu_a,mu_b,tau_a,tau_b)}
 return(QFA)
 }
 

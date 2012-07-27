@@ -5,7 +5,7 @@
 Creates and stores plots for qfa.Hierarchical() output to .pdf
 }
 \usage{
-qfaplots.H(work,QFA,LinearGaussian=FALSE)
+qfaplots.H(QFA,work,LinearGaussian=FALSE)
 }
 \arguments{
   \item{QFA}{Output from qfa.Hierarchical()}
