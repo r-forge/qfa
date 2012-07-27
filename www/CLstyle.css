@@ -12,13 +12,13 @@ A {	text-decoration:none;
 A:LINK {	color: black;
 		font-weight: bold; 
 		text-decoration: none;
-		border-bottom:1px dashed
+		border-bottom:0px dashed
 	}
 
 A:VISITED {	color: black;
 		font-weight: bold; 
 		text-decoration: none;
-		border-bottom:1px dashed
+		border-bottom:0px dashed
 	}
 
 A:HOVER {	background: black;
