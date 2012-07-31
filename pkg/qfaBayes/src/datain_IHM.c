@@ -177,6 +177,7 @@ int inzstruct_para_IHM(struct_para_IHM *para,struct_data_IHM *data,struct_priors
 	para->delta_l=malloc(size*sizeof(double));
 	para->gamma_cl=malloc(size*sizeof(double));
 	para->Z_l=malloc(size*sizeof(double));
+	size=data->L*2;
 	para->nu_l=malloc(size*sizeof(double));
 	size=2;
 	para->alpha_c=malloc(size*sizeof(double));
@@ -248,7 +249,7 @@ int fillpara_IHM(struct_para_IHM *D_para, struct_data_IHM *D,struct_priors_IHM *
 	D_para->sigma_Z=D_priors->eta_Z;     
 
 
-	for (l=0;l<D->L;l++)          {D_para->nu_l[l]=D_priors->nu_mu;}          
+	for (l=0;l<2*D->L;l++)          {D_para->nu_l[l]=D_priors->nu_mu;}          
 	D_para->sigma_nu=D_priors->eta_nu;   
   
 	D_para->nu_p=D_priors->nu_mu;    

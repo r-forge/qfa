@@ -194,6 +194,7 @@ int inzstruct_para_JHM(struct_para_JHM *para,struct_data_JHM *data,struct_priors
 	size=data->L*2;
 	para->tau_K_cl=malloc(size*sizeof(double));
 	para->tau_r_cl=malloc(size*sizeof(double));
+	para->nu_l=malloc(size*sizeof(double));
 	size=data->maxTIMEa+data->maxTIMEb;/*inputfromfile*/
 	para->K_clm=malloc(size*sizeof(double));
 	para->r_clm=malloc(size*sizeof(double));
@@ -203,7 +204,6 @@ int inzstruct_para_JHM(struct_para_JHM *para,struct_data_JHM *data,struct_priors
 	para->omega_cl=malloc(size*sizeof(double));
 	para->K_o_l=malloc(size*sizeof(double));
 	para->r_o_l=malloc(size*sizeof(double));
-	para->nu_l=malloc(size*sizeof(double));
 	size=2;
 	para->alpha_c=malloc(size*sizeof(double));
 	para->beta_c=malloc(size*sizeof(double));
@@ -302,7 +302,7 @@ for (c=0;c<2;c++){
 	D_para->r_p=D_priors->r_mu;    
 	
 	
-	for (l=0;l<D->L;l++)          {D_para->nu_l[l]=D_priors->nu_mu;}                     
+	for (l=0;l<2*D->L;l++)          {D_para->nu_l[l]=D_priors->nu_mu;}                     
 	D_para->sigma_nu=D_priors->eta_nu;   
 
 	D_para->nu_p=D_priors->nu_mu; 

@@ -76,7 +76,7 @@ double MCMC_nu_l_IHM(struct_data_IHM *D,struct_para_IHM *D_para,struct_priors_IH
 
 double MCMC_sigma_nu_IHM(struct_data_IHM *D,struct_para_IHM *D_para,struct_priors_IHM *D_priors,double para,int c,int l, int m){
   double density,SUM=0,F;
-  for (l=0;l<D->L;l++){
+  for (l=0;l<2*D->L;l++){
     F=D_para->nu_l[l]-D_para->nu_p;
     SUM=-para+F*F*exp(para)+SUM;
   }
@@ -117,7 +117,7 @@ double MCMC_alpha_c_IHM(struct_data_IHM *D,struct_para_IHM *D_para,struct_priors
     for (m=0;m<D->NoORF[ll];m++){
       mm=D->NoSUM[ll]+m;
       F=D->y[mm]-exp( para+D_para->Z_l[l]+D_para->delta_l[l]*D_para->gamma_cl[l]);
-      SUM=F*F*exp(D_para->nu_l[l]+D_para->upsilon_c[1])+SUM;
+      SUM=F*F*exp(D_para->nu_l[ll])+SUM;
     }
   }
   F=para-D_priors->alpha_mu;
@@ -135,7 +135,7 @@ double MCMC_upsilon_c_IHM(struct_data_IHM *D,struct_para_IHM *D_para,struct_prio
     for (m=0;m<D->NoORF[ll];m++){
       mm=D->NoSUM[ll]+m;
       F=D->y[mm]-exp(D_para->alpha_c[1]+D_para->Z_l[l]+D_para->delta_l[l]*D_para->gamma_cl[l] );
-      SUM=-para+F*F*exp(D_para->nu_l[l]+para)+SUM;
+      SUM=-para+F*F*exp(D_para->nu_l[ll]+para)+SUM;
     }
   }
   F=para-D_priors->upsilon_mu;
@@ -160,7 +160,7 @@ double aug_delta_l_IHM(struct_data_IHM *D,struct_para_IHM *D_para,struct_priors_
   for (m=0;m<D->NoORF[ll];m++){
     mm=D->NoSUM[ll]+m;
     F=D->y[mm]-exp(D_para->alpha_c[1]+D_para->Z_l[l]);
-    precision=exp(D_para->nu_l[l]+D_para->upsilon_c[1]);
+    precision=exp(D_para->nu_l[ll]);
     PRODa=PRODa*exp(-0.5*F*F*precision);
   }
   PRODa=(1-D_priors->p)*PRODa;
@@ -168,7 +168,7 @@ double aug_delta_l_IHM(struct_data_IHM *D,struct_para_IHM *D_para,struct_priors_
   for (m=0;m<D->NoORF[ll];m++){
     mm=D->NoSUM[ll]+m;
     F=D->y[mm]-exp(D_para->alpha_c[1]+D_para->Z_l[l]+D_para->gamma_cl[l]);
-    precision=exp(D_para->nu_l[l]+D_para->upsilon_c[1]);
+    precision=exp(D_para->nu_l[ll]);
     PRODb=PRODb*exp(-0.5*F*F*precision);
   }
   PRODb=D_priors->p*PRODb;
@@ -198,7 +198,7 @@ double MCMC_Z_l_IHM(struct_data_IHM *D,struct_para_IHM *D_para,struct_priors_IHM
     for (m=0;m<D->NoORF[ll];m++){
       mm=D->NoSUM[ll]+m;
       F=D->y[mm]-/**/para*exp(D_para->alpha_c[c]/*+log(para)*/+c*D_para->delta_l[l]*D_para->gamma_cl[l]);
-      SUM+=F*F*exp(D_para->nu_l[l]+D_para->upsilon_c[c]);
+      SUM+=F*F*exp(D_para->nu_l[ll]);
     }
   }
   F=para-D_para->Z_p;
@@ -223,7 +223,7 @@ double MCMC_gamma_cl_IHM(struct_data_IHM *D,struct_para_IHM *D_para,struct_prior
   for (m=0;m<D->NoORF[ll];m++){
     mm=D->NoSUM[ll]+m;
     F=D->y[mm]-exp( D_para->alpha_c[1]+D_para->Z_l[l]+D_para->delta_l[l]*log(para));
-    SUM=F*F*exp(D_para->nu_l[l]+D_para->upsilon_c[1])+SUM;
+    SUM=F*F*exp(D_para->nu_l[ll])+SUM;
   }
   F=para-1;
   density=(1+D_priors->df)*log(1+pow(F,2)*exp(D_para->sigma_gamma)/D_priors->df)+SUM; 
@@ -246,7 +246,7 @@ double MCMC_sigma_gamma_IHM(struct_data_IHM *D,struct_para_IHM *D_para,struct_pr
 /*Gibbs and MH steps*/
 
 int gibbsandMHloop_IHM(int iter,int thin,struct_data_IHM *D,struct_para_IHM *D_para,struct_priors_IHM *D_priors ,struct_MH_IHM *D_MH,int print,double *OUT,char **HEADER){
-  int i,j,l,*T,t;
+  int i,j,l,*T,t,c,ll;
 T=&t;
 *T=0;
   if (print==0){printheader_IHM(D,HEADER);}
@@ -283,10 +283,10 @@ T=&t;
 
       D_para->sigma_gamma=MCMC_base_IHM(D,D_para,D_priors,&D_MH->accept_Z,&D_MH->hsigma_gamma,D_para->sigma_gamma,MCMC_sigma_gamma_IHM,-999,-999,-999);
 
-      D_para->upsilon_c[1]=MCMC_base_IHM(D,D_para,D_priors,&D_MH->accept_up,&D_MH->hupsilon_c,D_para->upsilon_c[1],MCMC_upsilon_c_IHM,-999,-999,-999);
-
+      D_para->upsilon_c[1]=0;/*MCMC_base_IHM(D,D_para,D_priors,&D_MH->accept_up,&D_MH->hupsilon_c,D_para->upsilon_c[1],MCMC_upsilon_c_IHM,-999,-999,-999);*/
+/*
       D_para->sigma_upsilon=MCMC_base_IHM(
-				      D,D_para,D_priors,&D_MH->accept_Z,&D_MH->hsigma_upsilon,D_para->sigma_upsilon,MCMC_sigma_upsilon_IHM,-999,-999,-999);
+				      D,D_para,D_priors,&D_MH->accept_Z,&D_MH->hsigma_upsilon,D_para->sigma_upsilon,MCMC_sigma_upsilon_IHM,-999,-999,-999);*/
 
       D_para->sigma_nu=MCMC_base_IHM(D,D_para,D_priors,&D_MH->accept_Z,&D_MH->hsigma_nu,D_para->sigma_nu,MCMC_sigma_nu_IHM,-999,-999,-999);
 
@@ -295,7 +295,7 @@ T=&t;
       D_para->sigma_Z=MCMC_base_IHM(
 				D,D_para,D_priors,&D_MH->accept_Z,&D_MH->hsigma_Z,D_para->sigma_Z,MCMC_sigma_Z_IHM,-999,-999,-999);
 
-      D_para->nu_p=gauss_sample_IHM(D,0,D->L,D_para->nu_l,exp(D_para->sigma_nu),D_priors->nu_mu,D_priors->eta_nu_p);
+      D_para->nu_p=gauss_sample_IHM(D,0,2*D->L,D_para->nu_l,exp(D_para->sigma_nu),D_priors->nu_mu,D_priors->eta_nu_p);
 
 
       for (l=0;l<D->L;l++){
@@ -307,9 +307,10 @@ D_para->gamma_cl[l]=log( D_para->gamma_cl[l]);
 
 	D_para->Z_l[l]=MCMC_base_truncate_low_IHM(0,D,D_para,D_priors,&D_MH->accept_Z,&D_MH->hZ_l,exp(D_para->Z_l[l]),MCMC_Z_l_IHM,-999,l,-999);
 	D_para->Z_l[l]=log( D_para->Z_l[l]);
-
-	D_para->nu_l[l]=MCMC_base_IHM(D,D_para,D_priors,&D_MH->accept_Z,&D_MH->hnu_l,D_para->nu_l[l],MCMC_nu_l_IHM,-999,l,-999);
-
+	for (c=0;c<2;c++){
+	  ll=c*D->L+l;
+	D_para->nu_l[ll]=MCMC_base_IHM(D,D_para,D_priors,&D_MH->accept_Z,&D_MH->hnu_l,D_para->nu_l[ll],MCMC_nu_l_IHM,c,l,-999);
+	}
       }
     }
   if (print==1){printdata_IHM(D,D_para,D_MH,OUT,T);}
