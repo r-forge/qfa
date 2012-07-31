@@ -17,13 +17,9 @@ qfa.Interaction(Control,Query,iter,upd,thin,PlotOutput=TRUE,work,CustomModel=FAL
   \item{work}{A unique name to identify the functions output.}
   \item{CustomModel}{To fit a custom model, set as custom model file name, otherwise CustomModel should remain defined as FALSE.}
   \item{CustomInteractionDef}{To fit a custom interaction defintion, set as custom interaction defintion file name, otherwise CustomInteractionDef should remain defined as FALSE.}
+  \item{Priors}{!!!!!!!!}
 }
 \value{
 An R list that includes the posterior sample means, the data set... This can be then fed into the functions qfaplots.I().
-}
-\examples{
-# example
-# demo(Interaction)
-#
 }
 \keyword{qfaBayes}

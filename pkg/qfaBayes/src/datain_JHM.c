@@ -8,7 +8,7 @@ int testargc_JHM(int argc)
 {
  	if (argc!=4) {
     		perror("argc failed");
-    		exit(EXIT_FAILURE);
+    		/*exit(EXIT_FAILURE);*/
   	}
 return 0;
 }
@@ -17,7 +17,7 @@ int testsame_JHM(int a,int b)
 {
  	if (a!=b) {
     		perror("data int failed");
-    		exit(EXIT_FAILURE);
+    		/*exit(EXIT_FAILURE);*/
   	}
 return 0;
 }
@@ -160,7 +160,7 @@ int inzstruct_data_JHM(struct_data_JHM *data,int *QFAIA,double *QFADyA,double *Q
 	
 	if (data->y==NULL||data->x==NULL||data->NoORF==NULL||data->NoSUM==NULL||data->NoTIME==NULL) {
 		perror("malloc failed");
-    		exit(EXIT_FAILURE);
+    		/*exit(EXIT_FAILURE);*/
   	}
  for (i=0;i<(data->maxy);i++){
 data->y[i]=QFADyA[i];

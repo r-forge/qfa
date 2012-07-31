@@ -22,9 +22,4 @@ qfa.Joint(Control,Query,Scaling,iter,upd,thin,PlotOutput=TRUE,work,CustomModel=F
 \value{
 An R list that includes the posterior sample means, the data set... This can be then fed into the functions qfaplots.I().
 }
-\examples{
-# example
-# demo(Joint)
-#
-}
 \keyword{qfaBayes}

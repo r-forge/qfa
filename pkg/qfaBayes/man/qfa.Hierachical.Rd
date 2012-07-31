@@ -16,14 +16,9 @@ qfa.Hierachical(experiment,Scaling,iter,upd,thin,inits,PlotOutput=TRUE,work,Cust
   \item{PlotOutput}{TRUE or FALSE argument, whether to create plots that are then stored to .pdf files in the working directory.}
   \item{work}{A unique name to identify the functions output.}
   \item{CustomModel}{To fit a custom model, set as custom model file name, otherwise CustomModel should remain defined as FALSE.}
-
+  \item{inits}{!!!!!!!}
 }
 \value{
 An R list that includes the posterior sample means, the data set... This can be then fed into the functions qfaplots.H() or qfa.Interaction().
-}
-\examples{
-# example
-# demo(Hierarchical7)
-#
 }
 \keyword{qfaBayes}

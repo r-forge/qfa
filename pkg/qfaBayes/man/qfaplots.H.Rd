@@ -15,10 +15,5 @@ qfaplots.H(QFA,work,LinearGaussian=FALSE)
 \value{
 Creates plots and stores then to .pdf in your working directory.
 }
-\examples{
-# example
-# demo(Hierarchical7)
-#
 
-}
 \keyword{qfaBayes}

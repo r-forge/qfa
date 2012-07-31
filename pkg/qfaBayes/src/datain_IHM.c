@@ -8,7 +8,7 @@ int testargc_IHM(int argc)
 {
  	if (argc!=4) {
     		perror("argc failed");
-    		exit(EXIT_FAILURE);
+    		/*exit(EXIT_FAILURE);*/
   	}
 return 0;
 }
@@ -17,7 +17,7 @@ int testsame_IHM(int a,int b)
 {
  	if (a!=b) {
     		perror("data int failed");
-    		exit(EXIT_FAILURE);
+    		/*exit(EXIT_FAILURE);*/
   	}
 return 0;
 }
