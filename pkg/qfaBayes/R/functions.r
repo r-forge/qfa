@@ -239,72 +239,72 @@ funcJagsTime<-function(iter,upd,jags){
 }
 
 ### Fit, update and sample from the rjags model ###
-funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P,inits,iter,upd){
-jags <- jags.model('model1.bug',
-                   data = list('x' = QFA.D$x,
-                               'y' = QFA.D$y,
-                               'N' = QFA.I$N,
-'NoTime' = QFA.I$NoTime,
-'NoORF' = QFA.I$NoORF,
-'NoSum' = QFA.I$NoSum, 
-'K_s' = QFA.P$K_s,
-'r_s' = QFA.P$r_s,
-'PO_s' = QFA.P$PO_s,
-'beta' = QFA.P$beta,
-'tau_s' = QFA.P$tau_s,
-'delta'=QFA.P$delta,
-'alpha' = QFA.P$alpha,
-'alpha_i' = QFA.P$alpha_i,
-'alpha_i_tau'=QFA.P$alpha_i_tau,
-'alpha_ij' = QFA.P$alpha_ij,
-'alpha_ij_tau'=QFA.P$alpha_ij_tau,
-'gamma' = QFA.P$gamma,
-'gamma_i' = QFA.P$gamma_i,
-'gamma_i_tau'=QFA.P$gamma_i_tau,
-'gamma_ij' = QFA.P$gamma_ij,
-'gamma_ij_tau'=QFA.P$gamma_ij_tau,
-'delta_mu'=QFA.P$delta_mu,
-'delta_sd'=QFA.P$delta_sd
-),
-                   n.chains = 1,
-                   n.adapt = 100,
-			 inits=inits
-)
-funcJagsTime(iter,upd,jags)
-update(jags, upd)
-samp<-coda.samples(jags,
-c('K_ij',
-'r_ij',
-'K_i',
-'r_i',
-'K',
-'PO',
-'r',
-'tau',
-'tau_i',
-'K_ij_tau',
-'r_ij_tau',
-'K_i_tau',
-'r_i_tau',
-'delta_tau'),
-             iter,thin=thin)
-samp<-samp[[1]]
-samp
+funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P,inits,iter,upd,thin){
+#jags <- jags.model('model1.bug',
+#                   data = list('x' = QFA.D$x,
+#                               'y' = QFA.D$y,
+#                               'N' = QFA.I$N,
+#'NoTime' = QFA.I$NoTime,
+#'NoORF' = QFA.I$NoORF,
+#'NoSum' = QFA.I$NoSum, 
+#'K_s' = QFA.P$K_s,
+#'r_s' = QFA.P$r_s,
+#'PO_s' = QFA.P$PO_s,
+#'beta' = QFA.P$beta,
+#'tau_s' = QFA.P$tau_s,
+#'delta'=QFA.P$delta,
+#'alpha' = QFA.P$alpha,
+#'alpha_i' = QFA.P$alpha_i,
+#'alpha_i_tau'=QFA.P$alpha_i_tau,
+#'alpha_ij' = QFA.P$alpha_ij,
+#'alpha_ij_tau'=QFA.P$alpha_ij_tau,
+#'gamma' = QFA.P$gamma,
+#'gamma_i' = QFA.P$gamma_i,
+#'gamma_i_tau'=QFA.P$gamma_i_tau,
+#'gamma_ij' = QFA.P$gamma_ij,
+#'gamma_ij_tau'=QFA.P$gamma_ij_tau,
+#'delta_mu'=QFA.P$delta_mu,
+#'delta_sd'=QFA.P$delta_sd
+#),
+#                   n.chains = 1,
+#                   n.adapt = 100,
+#			 inits=inits
+#)
+#funcJagsTime(iter,upd,jags)
+#update(jags, upd)
+#samp<-coda.samples(jags,
+#c('K_ij',
+#'r_ij',
+#'K_i',
+#'r_i',
+#'K',
+#'PO',
+#'r',
+#'tau',
+#'tau_i',
+#'K_ij_tau',
+#'r_ij_tau',
+#'K_i_tau',
+#'r_i_tau',
+#'delta_tau'),
+#             iter,thin=thin)
+#samp<-samp[[1]]
+#samp
 }
 
 ### Fit, update and sample from the rjags model (Joint Model Specific) ###
-funcFITandUPDATE_J<-function(QFA.I,QFA.D,QFA.P,iter,upd){
-jags <- jags.model('model1.bug',
-                   data = list('x' = QFA.D$x,
-                               'y' = QFA.D$y,'SHIFT'=QFA.I$SHIFT,'p'=QFA.P$p,'alpha_a'=QFA.P$alpha_a,'alpha_b'=QFA.P$alpha_b,'gam_b'=QFA.P$gam_b,'omega_b'=QFA.P$omega_b,
-                               'N' = QFA.I$N,'alpha_ij_sd'=QFA.P$alpha_ij_sd,'gamma_ij_sd'=QFA.P$gamma_ij_sd,'NoTime' = QFA.I$NoTime,'NoORF' = QFA.I$NoORF,'NoSum' = QFA.I$NoSum, 'K_s' = QFA.P$K_s,'PO_s' = QFA.P$PO_s,'r_s' = QFA.P$r_s,'tau_s' = QFA.P$tau_s,'delta'=QFA.P$delta,'alpha' = QFA.P$alpha,'beta' = QFA.P$beta,'gamma' = QFA.P$gamma,'alpha_i' = QFA.P$alpha_i,'gamma_i' = QFA.P$gamma_i,'alpha_ij' = QFA.P$alpha_ij,'gamma_ij' = QFA.P$gamma_ij),
-                   n.chains = 1,
-                   n.adapt = 100)
-funcJagsTime(iter,upd,jags)
-update(jags, upd)
-samp<-coda.samples(jags,c('K','K_i','K_ij','PO','alph','bet','delt','gam','k_tau','r_tau','nu','nuc','omega','r','r_i','r_ij','tau','tau_m'),iter,thin=thin)
-samp<-samp[[1]]
-samp
+funcFITandUPDATE_J<-function(QFA.I,QFA.D,QFA.P,iter,upd,thin){
+#jags <- jags.model('model1.bug',
+#                   data = list('x' = QFA.D$x,
+#                               'y' = QFA.D$y,'SHIFT'=QFA.I$SHIFT,'p'=QFA.P$p,'alpha_a'=QFA.P$alpha_a,'alpha_b'=QFA.P$alpha_b,'gam_b'=QFA.P#$gam_b,'omega_b'=QFA.P$omega_b,
+#                               'N' = QFA.I$N,'alpha_ij_sd'=QFA.P$alpha_ij_sd,'gamma_ij_sd'=QFA.P$gamma_ij_sd,'NoTime' = QFA.I$NoTime,'NoORF' = QFA.I$NoORF,'NoSum' = QFA.I$NoSum, 'K_s' = QFA.P$K_s,'PO_s' = QFA.P$PO_s,'r_s' = QFA.P$r_s,'tau_s' = QFA.P$tau_s,'delta'=QFA.P$delta,'alpha' = QFA.P$alpha,'beta' = QFA.P$beta,'gamma' = QFA.P$gamma,'alpha_i' = QFA.P$alpha_i,'gamma_i' = QFA.P$gamma_i,'alpha_ij' = QFA.P$alpha_ij,'gamma_ij' = QFA.P$gamma_ij),
+#                   n.chains = 1,
+#                   n.adapt = 100)
+#funcJagsTime(iter,upd,jags)
+#update(jags, upd)
+#samp<-coda.samples(jags,c('K','K_i','K_ij','PO','alph','bet','delt','gam','k_tau','r_tau','nu','nuc','omega','r','r_i','r_ij','tau','tau_m'),iter,thin=thin)
+#samp<-samp[[1]]
+#samp
 }
 
 ### Outputs posterior sample in a named list ###

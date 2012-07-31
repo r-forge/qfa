@@ -96,20 +96,20 @@ tau_b=max(na.omit(c(y)))
 }
 QFA.P<-list(p=p,mu_a=mu_a,mu_b=mu_b,alpha_a=alpha_a,alpha_b=alpha_b,gam_b=gam_b,tau_a=tau_a,tau_b=tau_b)
 
-library("rjags")
-jags <- jags.model('model1.bug',data = list('y'=y,'NoORF'=NoORF,'p'=p,'N' = N,'mu_a'=mu_a,'mu_b'=mu_b,'alpha_a'=alpha_a,'alpha_b'=alpha_b,'gam_b'=gam_b,'tau_a' = tau_a,'tau_b' = tau_b),n.chains = 1,n.adapt = 100)
-funcJagsTime(iter,upd,jags)
-update(jags, upd)
-samp<-coda.samples(jags,
-          c('mui','gam','delt','tau','nu','alpha','mu','taui','nuj'),
-            iter,thin=thin)
-samp<-samp[[1]]
+#library("rjags")
+#jags <- jags.model('model1.bug',data = list('y'=y,'NoORF'=NoORF,'p'=p,'N' = N,'mu_a'=mu_a,'mu_b'=mu_b,'alpha_a'=alpha_a,'alpha_b'=alpha_b,'gam_b'=gam_b,'tau_a' = tau_a,'tau_b' = tau_b),n.chains = 1,n.adapt = 100)
+#funcJagsTime(iter,upd,jags)
+#update(jags, upd)
+#samp<-coda.samples(jags,
+#          c('mui','gam','delt','tau','nu','alpha','mu','taui','nuj'),
+#            iter,thin=thin)
+#samp<-samp[[1]]
 
-QFA.S<-funcPosterior_I(samp,N,iter,thin,upd)
-QFA.l<-list(N=N,gene=a$gene,treat="27",y=y,NoORF=NoORF)
-QFA<-c(QFA.S,QFA.P,QFA.l)
-if(PlotOutput==TRUE){qfaplots.I(QFA,work,defa,defb,alpha_a,alpha_b,gam_b,mu_a,mu_b,tau_a,tau_b)}
-return(QFA)
+#QFA.S<-funcPosterior_I(samp,N,iter,thin,upd)
+#QFA.l<-list(N=N,gene=a$gene,treat="27",y=y,NoORF=NoORF)
+#QFA<-c(QFA.S,QFA.P,QFA.l)
+#if(PlotOutput==TRUE){qfaplots.I(QFA,work,defa,defb,alpha_a,alpha_b,gam_b,mu_a,mu_b,tau_a,tau_b)}
+#return(QFA)
 }
 
 
