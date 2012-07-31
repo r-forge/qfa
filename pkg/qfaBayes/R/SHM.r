@@ -23,7 +23,7 @@ QFA.P<-funcPRIORS(CustomModel)
 #ans<-readline()
 #if (!(ans=="y")) stop() else print("Fitting Model")
  
-samp<-funcFITandUPDATE(QFA.I,QFA.D,QFA.P,inits)
+samp<-funcFITandUPDATE(QFA.I,QFA.D,QFA.P,inits,iter,upd,thin)
 QFA.O<-funcPosterior(samp,N,M,iter,thin,upd)
 QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)
 if(PlotOutput==TRUE){qfaplots.H(QFA,work)}

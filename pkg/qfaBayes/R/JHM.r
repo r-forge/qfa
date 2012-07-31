@@ -38,7 +38,7 @@ QFA.D<-list(x=x,y=y)
 if (!(CustomModel==FALSE)){source(CustomModel)} else {funcMODELJoint()}
 QFA.P<-funcPRIORS_J(CustomModel)
 
-samp<-funcFITandUPDATE_J(QFA.I,QFA.D,QFA.P)
+samp<-funcFITandUPDATE_J(QFA.I,QFA.D,QFA.P,iter,upd,thin)
 QFA.O<-funcPosterior_J(samp,N,M,iter,thin,upd)
 
 QFA<-c(QFA.O,QFA.I,QFA.D,QFA.P)

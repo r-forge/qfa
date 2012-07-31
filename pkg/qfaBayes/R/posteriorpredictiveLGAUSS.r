@@ -364,11 +364,11 @@ plot(density(vec[,i]),main=name[i])
 par(mfrow=c(1,1))
 for (i in 1:length(name)){
 plot(density(vec[,i]),main=name[i])
-mtext( paste(round(quantile(vec[,i])[1],digit=3),
-round(quantile(vec[,i])[2],digit=3),
-round(quantile(vec[,i])[3],digit=3),
-round(quantile(vec[,i])[4],digit=3),
-round(quantile(vec[,i])[5],digit=3)
+mtext( paste(round(quantile(vec[,i])[1],digits=3),
+round(quantile(vec[,i])[2],digits=3),
+round(quantile(vec[,i])[3],digits=3),
+round(quantile(vec[,i])[4],digits=3),
+round(quantile(vec[,i])[5],digits=3)
 ))
 }
 
