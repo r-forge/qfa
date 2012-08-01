@@ -72,7 +72,7 @@ summarise<-function(data,wctest=TRUE){
 	names(mdrsumm)<-orfs
 	if(wctest){mdpsumm<-sapply(mdps,median)}else{mdpsumm<-sapply(mdps,mean)}
 	names(mdpsumm)<-orfs
-	mdrSE<-sapply(mdrs,stderr)
-	mdpSE<-sapply(mdps,stderr)
+	mdrSE<-sapply(mdrs,sterr)
+	mdpSE<-sapply(mdps,sterr)
 	res=data.frame(ORF=as.character(orfs),Gene=as.character(genes),MDR=as.numeric(mdrsumm),MDP=as.numeric(mdpsumm),MDRSE=as.numeric(mdrSE),MDPSE=as.numeric(mdpSE))
 }
