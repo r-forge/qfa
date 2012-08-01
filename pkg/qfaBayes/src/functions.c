@@ -349,6 +349,7 @@ T=&t;
 D->L=fmin(D->L,CAPL);
 if (print==0){printheader(D,HEADER);}
 	for (i=0;i<iter;i++){
+
 for (j=0;j<thin;j++){
 		D_para->P=MCMC_base(D,D_para,D_priors,&D_MH->accept_P,&D_MH->hP,D_para->P,MCMC_P,-999,-999);
 D_MH->hP=1;
