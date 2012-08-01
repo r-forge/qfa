@@ -6,7 +6,7 @@ mdr<-function(K,r,g,v) sapply((r*v)/log(1-(2^v-1)/((2^v)*(g/K)^v-1)),na2zero)
 mdp<-function(K,r,g,v) sapply(log(K/g)/log(2),na2zero)
 mdrmdp<-function(K,r,g,v) mdr(K,r,g,v)*mdp(K,r,g,v)
 # Doubling time for generalised logistic function, as a function of time t
-dt<-function(K,r,g,v,t) sapply((-(r*t*v) + log((2**v*(1 - (K/g)**v)*((1 + (-1 + (K/g)**v)/exp(r*t*v))**(-1/v))**v)/(-1 + 2**v*((1 + (-1 + (K/g)**v)/exp(r*t*v))**(-1/v))**v)))/(r*v),na2zero)
+dtl<-function(K,r,g,v,t) sapply((-(r*t*v) + log((2**v*(1 - (K/g)**v)*((1 + (-1 + (K/g)**v)/exp(r*t*v))**(-1/v))**v)/(-1 + 2**v*((1 + (-1 + (K/g)**v)/exp(r*t*v))**(-1/v))**v)))/(r*v),na2zero)
 
 # Logistic growth model #
 logist<-function(K,r,g,t) (K*g*exp(r*t))/(K+g*(exp(r*t)-1))
@@ -80,7 +80,7 @@ orfun<-function(row,environ){
 orf2g<-function(orf,dictenv){get(orf,envir=dictenv)}
 
 ## Standard error of mean
-stderr <- function(x) sqrt(var(x)/length(x))
+sterr <- function(x) sqrt(var(x)/length(x))
 
 ################################################## Epistasis Function ###########################################################
 qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
@@ -103,8 +103,8 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	if(wctest){cFms<-sapply(cFstats,median)}else{cFms<-sapply(cFstats,mean)}
 	names(cFms)<-orfs
 	if(wctest){dFms<-sapply(dFstats,median)}else{dFms<-sapply(dFstats,mean)}
-	cSe<-sapply(dFstats,stderr)
-	dSe<-sapply(cFstats,stderr)
+	cSe<-sapply(dFstats,sterr)
+	dSe<-sapply(cFstats,sterr)
 	names(dFms)<-orfs
 	### Fit genetic independence model ###
 	m<-lm.epi(dFms,cFms,modcheck)
@@ -380,7 +380,7 @@ makeFitness<-function(results,AUCLim=5,dtmax=25){
 	results$MDRMDP[(results$r>7)&(results$K<0.0275)]=0
 	# Doubling time (doublings per hour)
 	if("t0"%in%rownames(results)){
-		results$DT=dt(results$K,results$r,results$g,results$v,results$t0)*24
+		results$DT=dtl(results$K,results$r,results$g,results$v,results$t0)*24
 	}else{
 		results$DT=(1/results$MDR)*24
 	}
@@ -589,6 +589,7 @@ guessNEW<-function(tim,growth,inocguess,xybounds,minK=0.025){
 	# Subset of data which will be linear on the log scale
 	growthadj=growth[growth<0.75*Kg]
 	timadj=tim[growth<0.75*Kg]
+
 	n=length(timadj)
 	if(n>=1){
 		fixed=lm(I(log(growthadj)-log(G0g))~timadj+0)
