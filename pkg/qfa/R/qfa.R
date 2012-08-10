@@ -129,7 +129,8 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	}
 	
 	# Get genetic interaction scores
-	meandiff<-mean(dFms-cFms)
+	#meandiff<-mean(dFms-cFms)
+	meandiff=1
 	#gis<-dFms/mean(dFms)-cFms/mean(cFms)
 	gis<-pg$gis/meandiff
 	# Put into data.frame
