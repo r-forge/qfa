@@ -325,7 +325,7 @@ varposget<-function(var,orfn,norfs){
 ############################### Likelihood Functions ################################
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
-qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,...){
+qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,...){
 	# Define optimization bounds based on inocguess #
 	lowK<-max(0.9*inocguess,minK); upK<-1.0
 	lowr<-0; upr<-25
@@ -353,7 +353,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		positions<-lapply(1:length(dbc[,1]),index2pos,dbc)
 		positions<-unique(positions)
 		# Fit logistic model to each colony
-		bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,...))
+		bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,AUCLim,...))
 		info<-t(sapply(positions,colony.info,dbc))
 		rows<-sapply(positions,rcget,"row")
 		cols<-sapply(positions,rcget,"col")
@@ -361,7 +361,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		# s=bcfit[,4]
 		results<-rbind(results,data.frame(Barcode=info[,1],Row=rows,Col=cols,
 		Background=info[,9],Treatment=info[,2],Medium=info[,3],ORF=info[,4],
-		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],Screen.Name=info[,5],
+		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],Screen.Name=info[,5],
 		Library.Name=info[,6],MasterPlate.Number=info[,7],Timeseries.order=info[,8],
 		Inoc.Time=inoctime,TileX=info[,10],TileY=info[,11],XOffset=info[,12],YOffset=info[,13],
 		Threshold=info[,14],EdgeLength=info[,15],EdgePixels=info[,16],RepQuad=info[,17]))
@@ -395,17 +395,32 @@ makeFitness<-function(results,AUCLim=5,dtmax=25){
 # Extract row & col from list of position vectors
 rcget<-function(posvec,rc) posvec[match(rc,c("row","col"))] 
 
+# Closure returning a loess-based approximating function for a timeseries
+loapproxfun=function(t,g,span=0.2){
+	lo=loess(g~t,span=span)
+	loex=function(t){
+		cdens=predict(lo,t)
+		cdens[t<min(lo$x)]=predict(lo,min(lo$x))
+		cdens[t>max(lo$x)]=predict(lo,max(lo$x))
+		return(cdens)
+	}
+	return(loex)
+}
+
 ### Function that does the optimization for one colony ###
-colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,...){
+colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,AUCLim=5,...){
 	# Get row & column to restrict data
 	row<-position[1]; col<-position[2]
 	do<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
 	len1=length(do$Growth)
+	# Generate numerical AUC
+	loapprox=loapproxfun(as.numeric(do$Expt.Time),as.numeric(do$Growth))
+	nAUC=integrate(loapprox,0,AUCLim)$value
 	# Throw away observations below the detectable threshold
 	d=do[as.numeric(do$Growth)>=detectThresh,]
 	len2=length(d$Growth)
 	# If this has left us with too few points, return "dead colony"
-	if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf,0))
+	if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf,0,nAUC))
 	growth=as.numeric(d$Growth)
 	tim=as.numeric(d$Expt.Time)
 	maxObs=max(growth)
@@ -448,8 +463,8 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 	opt=sumsq(pars[1],pars[2],pars[3],pars[4],do$Growth,do$Expt.Time,logTransform=logTransform) # Use all data (not just data below detection thresh)
 	dead=sumsq(inocguess,0,inocguess,1,do$Growth,do$Expt.Time,logTransform=logTransform)
 	if(dead<=opt) pars=c(inocguess,0,inocguess,1,dead) # Try dead colony
-	# Add on time of first obs.
-	pars=c(pars,t0)
+	# Add on time of first obs. and numerical AUC
+	pars=c(pars,t0,nAUC)
 	return(pars)
 }
 
