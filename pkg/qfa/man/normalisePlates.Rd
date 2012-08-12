@@ -13,6 +13,6 @@ normalisePlates(d,column)}
   \item{column}{String name of column to normalise (typically the fitness measure of interest).  See qfa.fit and makeFitness help files for descriptions of available culture fitness measures.}
 }
 \examples{
-normalisePlates(control.fit,"mdrmdp")
+
 }
 \keyword{normalisePlates}
