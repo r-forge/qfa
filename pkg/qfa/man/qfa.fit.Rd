@@ -1,11 +1,11 @@
 \name{qfa.fit}
 \alias{qfa.fit}
-\title{Optimization procedure for logistic growth modelling}
+\title{Growth curve modelling}
 \description{
-Given a series of culture density observations from colonyzer.read, this function will fit the generalised logistic growth model to timecourse observations for all colonies by least squares using either the L-BFGS-B algorithm in R's optim function, or the differential evolution, stochastic global optimisation package DEoptim.
+Given a series of culture density observations from colonyzer.read, this function will fit the generalised logistic growth model to timecourse observations for all colonies by least squares using either the L-BFGS-B algorithm in R's optim function, or the differential evolution, stochastic global optimisation package DEoptim.  It will also calculate a numerical Area Under Curve (nAUC) fitness measure by integrating under a loess smooothed version of the dataset if there are sufficient observations or under a linear interpolation between observations if observations are too infrequent. 
 }
 \usage{
-qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt,minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,...)
+qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt,minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,...)
 }
 \arguments{
   \item{d}{The data.frame containing the timecourse data for each colony (returned from colonyzer.read).}
@@ -17,10 +17,12 @@ qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt,minK=0.025,detectThresh=0.0005,g
   \item{globalOpt}{Flag indicating whether qfa.fit should use the slower, but more robust DEoptim global optimisation functions to fit the generalised logistic model to the data, or the quicker optim function.}
   \item{logTranform}{Experimental flag signalling use of different objective function for optimisation.  You should probably ignore this or set it to FALSE}
   \item{fixG}{Flag indicating whether to allow g parameter to vary over a wide or narrow range during optimisation.  fixG=TRUE corresponds to narrow constraints on g.}
+  \item{AUCLim}{Numerical AUC (nAUC) is calculated as the integral of an approximation of the growth curve between time 0 and AUCLim} 
   \item{...}{Extra arguments passed to optim} 
 }
 \value{
-R data.frame, similar to that returned by the colonyzer.read function.  The major difference is that instead of a row for every cell density observation for every culture, this object summarises all timecourse density observations for each culture with fitted generalised logistic parameters.
+R data.frame, similar to that returned by the colonyzer.read function.  The major difference is that instead of a row for every cell density observation for every culture, this object summarises all timecourse density observations for each culture with fitted generalised logistic parameters and nAUC.
+}
 
 \itemize{
 \item Barcode - See colonyzer.read
@@ -36,6 +38,7 @@ R data.frame, similar to that returned by the colonyzer.read function.  The majo
 \item v - Generalised logistic model shape parameter (set to 1 to recover logistic model)
 \item obj - Objective function value at selected optimum
 \item t0 - Time of first detectable cell density observation (i.e. above detectThresh)
+\item nAUC - Numerical Area Under Curve.  This is a model-free fitness estimate.
 \item Screen.Name - See colonyzer.read
 \item Library.Name - See colonyzer.read
 \item MasterPlate.Number - See colonyzer.read
