@@ -257,7 +257,7 @@ lm.epi<-function(doubles,controls,modcheck){
 	return(m)
 }
 
-# Estimates probability of no interaction and estimated strength of interaction
+# Estimates p-value and estimated strength of interaction
 pgis<-function(orf,m,cFs,dFs,wilcoxon=TRUE){
 	# If this orf is not present in both lists, return appropriate p,gis
 	if((length(dFs[[orf]])==0)|(length(cFs[[orf]])==0)){return(c(1,0))}
@@ -384,7 +384,7 @@ makeFitness<-function(results,AUCLim=5,dtmax=25){
 		results$DT=(1/results$MDR)*24
 	}
 	# If doubling time is Inf, set to dtmax
-	results$DT[abs(results$DT)>25]=25
+	results$DT[abs(results$DT)>dtmax]=dtmax
 	# Area under curve
 	AUC<-function(dno,tstar,dat) max(0,integrate(Glogist,lower=0,upper=tstar,K=dat$K[dno],r=dat$r[dno],g=dat$g[dno],v=dat$v[dno],subdivisions=1000)$value - tstar*dat$g[dno])
 	results$AUC=sapply(1:length(results[,1]),AUC,tstar=AUCLim,dat=results)
