@@ -396,18 +396,17 @@ rcget<-function(posvec,rc) posvec[match(rc,c("row","col"))]
 
 # Closure returning a loess-based approximating function for a timeseries
 loapproxfun=function(t,g,span=0.2){
-	t=t[!is.na(g)]
-	g=g[!is.na(g)]
-	if(length(g)>0){
-		lo=loess(g~t,span=span)
+	lo=loess(g~t,span=span)
+	# If loess smoothing with specified span does not work (e.g. too few points), revert to linear interpolation
+	if(is.na(lo$fitted)){
+		loex=approxfun(t,g,method="linear",rule=2)
+	}else{
 		loex=function(t){
 			cdens=predict(lo,t)
 			cdens[t<min(lo$x)]=predict(lo,min(lo$x))
 			cdens[t>max(lo$x)]=predict(lo,max(lo$x))
 			return(cdens)
 		}
-	}else{
-		loex=function(t) return(0)
 	}
 	return(loex)
 }
