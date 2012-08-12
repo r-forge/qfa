@@ -111,7 +111,7 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	print(paste("Ratio of background mutant fitness to wildtype fitness =",round(m,4)))
 	###### Estimate probability of interaction #######
 	print("Calculating interaction probabilities")
-	pg<-sapply(orfs,pgis,m,cFstats,dFstats,cFms,dFms,wilcoxon=wctest)
+	pg<-sapply(orfs,pgis,m,cFstats,dFstats,wilcoxon=wctest)
 	pg<-as.data.frame(t(pg))
 	colnames(pg)=c("p","gis")
 	p<-pg$p
@@ -155,7 +155,7 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 }
 
 report.epi<-function(results,filename){
-	QFAversion=paste("R package version:",2)
+	QFAversion=paste("R package version:",3)
 	sumType=paste("Summary type:",results$SummaryType[1])
 	testType=paste("Test type:",results$TestType[1])
 	cTreat=paste("Control treatment:",results$cTreat[1])
@@ -257,10 +257,8 @@ lm.epi<-function(doubles,controls,modcheck){
 	return(m)
 }
 
-
-
-# Estimates probability of no interaction and estimated strength of interaction for max lik method #
-pgis<-function(orf,m,cFs,dFs,cFms,dFms,wilcoxon=TRUE){
+# Estimates probability of no interaction and estimated strength of interaction
+pgis<-function(orf,m,cFs,dFs,wilcoxon=TRUE){
 	# If this orf is not present in both lists, return appropriate p,gis
 	if((length(dFs[[orf]])==0)|(length(cFs[[orf]])==0)){return(c(1,0))}
 	# If fitnesses are not unique in one condition (e.g. all dead) and only one repeat in another (e.g. after stripping)
