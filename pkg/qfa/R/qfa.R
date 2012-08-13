@@ -360,7 +360,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		# s=bcfit[,4]
 		results<-rbind(results,data.frame(Barcode=info[,1],Row=rows,Col=cols,
 		Background=info[,9],Treatment=info[,2],Medium=info[,3],ORF=info[,4],
-		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],Screen.Name=info[,5],
+		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],nSTP=bcfit[,8],Screen.Name=info[,5],
 		Library.Name=info[,6],MasterPlate.Number=info[,7],Timeseries.order=info[,8],
 		Inoc.Time=inoctime,TileX=info[,10],TileY=info[,11],XOffset=info[,12],YOffset=info[,13],
 		Threshold=info[,14],EdgeLength=info[,15],EdgePixels=info[,16],RepQuad=info[,17]))
@@ -412,7 +412,7 @@ loapproxfun=function(t,g,span=0.2){
 }
 
 ### Function that does the optimization for one colony ###
-colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,AUCLim=5,...){
+colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,AUCLim=5,STP=10,modelFit=TRUE,...){
 	# Get row & column to restrict data
 	row<-position[1]; col<-position[2]
 	do<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
@@ -420,55 +420,58 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 	# Generate numerical AUC
 	loapprox=loapproxfun(as.numeric(do$Expt.Time),as.numeric(do$Growth))
 	nAUC=integrate(loapprox,0,AUCLim)$value
-	# Throw away observations below the detectable threshold
-	d=do[as.numeric(do$Growth)>=detectThresh,]
-	len2=length(d$Growth)
-	# If this has left us with too few points, return "dead colony"
-	if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf,0,nAUC))
-	growth=as.numeric(d$Growth)
-	tim=as.numeric(d$Expt.Time)
-	maxObs=max(growth)
-	# First *detectable* observation at time t0
-	t0=min(tim)
-	#xybounds$K=c(0.9*maxObs,1.1*maxObs)
-	if(globalOpt) {
-		pars=de.fit(tim,growth,inocguess,xybounds,initPop=TRUE,logTransform=logTransform)
-		# Check for high fraction of K at end of modelled experiment
-		GEnd=Glogist(pars[1],pars[2],pars[3],pars[4],max(tim))
-		if(GEnd/pars[1]<0.75){ # If experiment not quite finished...
-			#print("Modelled growth at end of experiment is less than 0.75 of K estimate...")
-			# Put tight bounds on K and optimise again
-			Kmin=max(0.95*1.5*GEnd,minK); Kmax=max(1.05*1.5*GEnd,minK)
-			xybounds$K=c(Kmin,Kmax)
+	nSTP=loapprox(STP)
+	if(modelFit){
+		# Throw away observations below the detectable threshold
+		d=do[as.numeric(do$Growth)>=detectThresh,]
+		len2=length(d$Growth)
+		# If this has left us with too few points, return "dead colony"
+		if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf,0,nAUC))
+		growth=as.numeric(d$Growth)
+		tim=as.numeric(d$Expt.Time)
+		maxObs=max(growth)
+		# First *detectable* observation at time t0
+		t0=min(tim)
+		#xybounds$K=c(0.9*maxObs,1.1*maxObs)
+		if(globalOpt) {
 			pars=de.fit(tim,growth,inocguess,xybounds,initPop=TRUE,logTransform=logTransform)
-		}
-	}else{
-		pars=data.fit(tim,growth,inocguess,xybounds,logTransform=logTransform)
-		# Check for high fraction of K at end of modelled experiment
-		GEnd=Glogist(pars[1],pars[2],pars[3],pars[4],max(tim))
-		if(GEnd/pars[1]<0.75){ # If experiment not quite finished...
-			#print("Modelled growth at end of experiment is less than 0.75 of K estimate...")
-			# Put tight bounds on K and optimise again
-			Kmin=max(0.95*1.5*GEnd,minK); Kmax=max(1.05*1.5*GEnd,minK)
-			xybounds$K=c(Kmin,Kmax)
+			# Check for high fraction of K at end of modelled experiment
+			GEnd=Glogist(pars[1],pars[2],pars[3],pars[4],max(tim))
+			if(GEnd/pars[1]<0.75){ # If experiment not quite finished...
+				#print("Modelled growth at end of experiment is less than 0.75 of K estimate...")
+				# Put tight bounds on K and optimise again
+				Kmin=max(0.95*1.5*GEnd,minK); Kmax=max(1.05*1.5*GEnd,minK)
+				xybounds$K=c(Kmin,Kmax)
+				pars=de.fit(tim,growth,inocguess,xybounds,initPop=TRUE,logTransform=logTransform)
+			}
+		}else{
 			pars=data.fit(tim,growth,inocguess,xybounds,logTransform=logTransform)
+			# Check for high fraction of K at end of modelled experiment
+			GEnd=Glogist(pars[1],pars[2],pars[3],pars[4],max(tim))
+			if(GEnd/pars[1]<0.75){ # If experiment not quite finished...
+				#print("Modelled growth at end of experiment is less than 0.75 of K estimate...")
+				# Put tight bounds on K and optimise again
+				Kmin=max(0.95*1.5*GEnd,minK); Kmax=max(1.05*1.5*GEnd,minK)
+				xybounds$K=c(Kmin,Kmax)
+				pars=data.fit(tim,growth,inocguess,xybounds,logTransform=logTransform)
+			}
 		}
-	}
-	# Check for spurious combination of relatively high r, low K, spend more time optimising...
-	if((mdr(pars[1],pars[2],pars[3],pars[4])>1.0)&((pars[1]<0.05)|(max(growth)<0.05)|(tail(growth,1)<0.05))){ # Try optimising with sick colony as guess
-		#print("Attempting to do global fit alternative sick colony growth curve")
-		Kmin=max(0.9*inocguess,minK); Kmax=1.5*max(pars[1],minK); xybounds$K=c(Kmin,Kmax); 
-		xybounds$r=c(0,3) # Slow growth
-		xybounds$v=c(0.75,1.5) # More logistic growth
-		inits=list(K=pars[1],r=0.6,g=inocguess,v=1)
-		newpars=de.fit(tim,growth,inocguess,xybounds,inits=inits,initPop=TRUE,widenr=FALSE,logTransform=logTransform)			
-		if(newpars[5]<=pars[5]) pars=newpars				
-	}
-	opt=sumsq(pars[1],pars[2],pars[3],pars[4],do$Growth,do$Expt.Time,logTransform=logTransform) # Use all data (not just data below detection thresh)
-	dead=sumsq(inocguess,0,inocguess,1,do$Growth,do$Expt.Time,logTransform=logTransform)
-	if(dead<=opt) pars=c(inocguess,0,inocguess,1,dead) # Try dead colony
-	# Add on time of first obs. and numerical AUC
-	pars=c(pars,t0,nAUC)
+		# Check for spurious combination of relatively high r, low K, spend more time optimising...
+		if((mdr(pars[1],pars[2],pars[3],pars[4])>1.0)&((pars[1]<0.05)|(max(growth)<0.05)|(tail(growth,1)<0.05))){ # Try optimising with sick colony as guess
+			#print("Attempting to do global fit alternative sick colony growth curve")
+			Kmin=max(0.9*inocguess,minK); Kmax=1.5*max(pars[1],minK); xybounds$K=c(Kmin,Kmax); 
+			xybounds$r=c(0,3) # Slow growth
+			xybounds$v=c(0.75,1.5) # More logistic growth
+			inits=list(K=pars[1],r=0.6,g=inocguess,v=1)
+			newpars=de.fit(tim,growth,inocguess,xybounds,inits=inits,initPop=TRUE,widenr=FALSE,logTransform=logTransform)			
+			if(newpars[5]<=pars[5]) pars=newpars				
+		}
+		opt=sumsq(pars[1],pars[2],pars[3],pars[4],do$Growth,do$Expt.Time,logTransform=logTransform) # Use all data (not just data below detection thresh)
+		dead=sumsq(inocguess,0,inocguess,1,do$Growth,do$Expt.Time,logTransform=logTransform)
+		if(dead<=opt) pars=c(inocguess,0,inocguess,1,dead) # Try dead colony
+	}else{pars=c(NA,NA,NA,NA,NA)}
+	# Add on time of first obs. and numerical AUC, STP
+	pars=c(pars,t0,nAUC,nSTP)
 	return(pars)
 }
 
