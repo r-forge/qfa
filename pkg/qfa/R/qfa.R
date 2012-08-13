@@ -324,7 +324,7 @@ varposget<-function(var,orfn,norfs){
 ############################### Likelihood Functions ################################
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
-qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,...){
+qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,modelFit=TRUE,...){
 	# Define optimization bounds based on inocguess #
 	lowK<-max(0.9*inocguess,minK); upK<-1.0
 	lowr<-0; upr<-25
@@ -352,7 +352,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		positions<-lapply(1:length(dbc[,1]),index2pos,dbc)
 		positions<-unique(positions)
 		# Fit logistic model to each colony
-		bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,AUCLim,...))
+		bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,modelFit,...))
 		info<-t(sapply(positions,colony.info,dbc))
 		rows<-sapply(positions,rcget,"row")
 		cols<-sapply(positions,rcget,"col")
@@ -398,7 +398,7 @@ rcget<-function(posvec,rc) posvec[match(rc,c("row","col"))]
 loapproxfun=function(t,g,span=0.2){
 	lo=loess(g~t,span=span)
 	# If loess smoothing with specified span does not work (e.g. too few points), revert to linear interpolation
-	if(is.na(lo$fitted)){
+	if(is.na(lo$fitted[1])){
 		loex=approxfun(t,g,method="linear",rule=2)
 	}else{
 		loex=function(t){
@@ -419,19 +419,20 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 	len1=length(do$Growth)
 	# Generate numerical AUC
 	loapprox=loapproxfun(as.numeric(do$Expt.Time),as.numeric(do$Growth))
-	nAUC=integrate(loapprox,0,AUCLim)$value
-	nSTP=loapprox(STP)
+	nAUC=as.numeric(integrate(loapprox,0,AUCLim)$value)
+	nSTP=as.numeric(loapprox(STP))
+	
+	# Throw away observations below the detectable threshold
+	d=do[as.numeric(do$Growth)>=detectThresh,]
+	len2=length(d$Growth)
+	# If this has left us with too few points, return "dead colony"
+	if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf,0,nAUC,nSTP))
+	growth=as.numeric(d$Growth)
+	tim=as.numeric(d$Expt.Time)
+	maxObs=max(growth)
+	# First *detectable* observation at time t0
+	t0=min(tim)
 	if(modelFit){
-		# Throw away observations below the detectable threshold
-		d=do[as.numeric(do$Growth)>=detectThresh,]
-		len2=length(d$Growth)
-		# If this has left us with too few points, return "dead colony"
-		if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf,0,nAUC))
-		growth=as.numeric(d$Growth)
-		tim=as.numeric(d$Expt.Time)
-		maxObs=max(growth)
-		# First *detectable* observation at time t0
-		t0=min(tim)
 		#xybounds$K=c(0.9*maxObs,1.1*maxObs)
 		if(globalOpt) {
 			pars=de.fit(tim,growth,inocguess,xybounds,initPop=TRUE,logTransform=logTransform)
