@@ -12,7 +12,7 @@ loapproxfun(t,g,span)
   \item{g}{List of cell density observations corresponding to the times in t.}
   \item{span}{Loess smoothing span.  If the user specifies too small a value for a given frequency of data capture, loess smoothing will not be possible and linear interpolation will be used instead.}
 }
-\values{
+\value{
 Returns a function of time t.
 }
 \examples{

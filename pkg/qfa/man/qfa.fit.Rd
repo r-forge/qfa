@@ -22,7 +22,6 @@ qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt,minK=0.025,detectThresh=0.0005,g
 }
 \value{
 R data.frame, similar to that returned by the colonyzer.read function.  The major difference is that instead of a row for every cell density observation for every culture, this object summarises all timecourse density observations for each culture with fitted generalised logistic parameters and nAUC.
-}
 
 \itemize{
 \item Barcode - See colonyzer.read
@@ -55,4 +54,5 @@ R data.frame, similar to that returned by the colonyzer.read function.  The majo
 }
 
 }
+
 \keyword{qfa}
