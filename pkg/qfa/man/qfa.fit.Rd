@@ -17,7 +17,9 @@ qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt,minK=0.025,detectThresh=0.0005,g
   \item{globalOpt}{Flag indicating whether qfa.fit should use the slower, but more robust DEoptim global optimisation functions to fit the generalised logistic model to the data, or the quicker optim function.}
   \item{logTranform}{Experimental flag signalling use of different objective function for optimisation.  You should probably ignore this or set it to FALSE}
   \item{fixG}{Flag indicating whether to allow g parameter to vary over a wide or narrow range during optimisation.  fixG=TRUE corresponds to narrow constraints on g.}
-  \item{AUCLim}{Numerical AUC (nAUC) is calculated as the integral of an approximation of the growth curve between time 0 and AUCLim} 
+  \item{AUCLim}{Numerical AUC (nAUC) is calculated as the integral of an approximation of the growth curve between time 0 and AUCLim}
+  \item{STP}{Time to use for "Single Time Point" fitness estimate.  Defaults to 20 days (very late in growth curve) which is like carrying capacity.}
+  \item{modelFit}{Boolean indicating whether to generate growth curve model parameters (Generalised logistic model).  Model-free fitnesses (nAUC and nSTP) are generated in any case, but setting this value to FALSE disables model fitting (and can save a little time).}
   \item{...}{Extra arguments passed to optim} 
 }
 \value{
@@ -38,6 +40,7 @@ R data.frame, similar to that returned by the colonyzer.read function.  The majo
 \item obj - Objective function value at selected optimum
 \item t0 - Time of first detectable cell density observation (i.e. above detectThresh)
 \item nAUC - Numerical Area Under Curve.  This is a model-free fitness estimate.
+\item nSTP - Single Time Point fitness.  Cell density at time STP, as estimated with approximating function.  This is a model-free fitness estimate.
 \item Screen.Name - See colonyzer.read
 \item Library.Name - See colonyzer.read
 \item MasterPlate.Number - See colonyzer.read
@@ -55,4 +58,4 @@ R data.frame, similar to that returned by the colonyzer.read function.  The majo
 
 }
 
-\keyword{qfa}
+\keyword{qfa.fit}
