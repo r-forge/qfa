@@ -418,9 +418,15 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 	do<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
 	len1=length(do$Growth)
 	# Generate numerical AUC
-	loapprox=loapproxfun(as.numeric(do$Expt.Time),as.numeric(do$Growth))
-	nAUC=as.numeric(integrate(loapprox,0,AUCLim)$value)
-	nSTP=as.numeric(loapprox(STP))
+	if(len1>1){
+		loapprox=loapproxfun(as.numeric(do$Expt.Time),as.numeric(do$Growth))
+		nAUC=as.numeric(integrate(loapprox,0,AUCLim)$value)
+		nSTP=as.numeric(loapprox(STP))
+	}else{
+		# If there's only one photograph (e.g. single time point 1536 assay)
+		nAUC=NA
+		nSTP=Growth[1]
+	}
 	
 	# Throw away observations below the detectable threshold
 	d=do[as.numeric(do$Growth)>=detectThresh,]
