@@ -360,7 +360,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		# s=bcfit[,4]
 		results<-rbind(results,data.frame(Barcode=info[,1],Row=rows,Col=cols,
 		Background=info[,9],Treatment=info[,2],Medium=info[,3],ORF=info[,4],
-		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],nSTP=bcfit[,8],Screen.Name=info[,5],
+		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],nSTP=bcfit[,8],d0=bcfit[,9],Screen.Name=info[,5],
 		Library.Name=info[,6],MasterPlate.Number=info[,7],Timeseries.order=info[,8],
 		Inoc.Time=inoctime,TileX=info[,10],TileY=info[,11],XOffset=info[,12],YOffset=info[,13],
 		Threshold=info[,14],EdgeLength=info[,15],EdgePixels=info[,16],RepQuad=info[,17]))
@@ -432,7 +432,7 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 	d=do[as.numeric(do$Growth)>=detectThresh,]
 	len2=length(d$Growth)
 	# If this has left us with too few points, return "dead colony"
-	if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf,0,nAUC,nSTP))
+	if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf,0,nAUC,nSTP,Growth[1]))
 	growth=as.numeric(d$Growth)
 	tim=as.numeric(d$Expt.Time)
 	maxObs=max(growth)
@@ -478,7 +478,7 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 		if(dead<=opt) pars=c(inocguess,0,inocguess,1,dead) # Try dead colony
 	}else{pars=c(NA,NA,NA,NA,NA)}
 	# Add on time of first obs. and numerical AUC, STP
-	pars=c(pars,t0,nAUC,nSTP)
+	pars=c(pars,t0,nAUC,nSTP,Growth[1])
 	return(pars)
 }
 
