@@ -428,14 +428,14 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 	}else{
 		# If there's only one photograph (e.g. single time point 1536 assay)
 		nAUC=NA
-		nSTP=Growth[1]
+		nSTP=do$Growth[1]
 	}
 	
 	# Throw away observations below the detectable threshold
 	d=do[as.numeric(do$Growth)>=detectThresh,]
 	len2=length(d$Growth)
 	# If this has left us with too few points, return "dead colony"
-	if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf,0,nAUC,nSTP,Growth[1]))
+	if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf,0,nAUC,nSTP,do$Growth[1]))
 	growth=as.numeric(d$Growth)
 	tim=as.numeric(d$Expt.Time)
 	maxObs=max(growth)
@@ -481,7 +481,7 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 		if(dead<=opt) pars=c(inocguess,0,inocguess,1,dead) # Try dead colony
 	}else{pars=c(NA,NA,NA,NA,NA)}
 	# Add on time of first obs. and numerical AUC, STP
-	pars=c(pars,t0,nAUC,nSTP,Growth[1])
+	pars=c(pars,t0,nAUC,nSTP,do$Growth[1])
 	return(pars)
 }
 
