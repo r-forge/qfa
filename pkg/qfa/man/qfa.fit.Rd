@@ -5,7 +5,7 @@
 Given a series of culture density observations from colonyzer.read, this function will fit the generalised logistic growth model to timecourse observations for all colonies by least squares using either the L-BFGS-B algorithm in R's optim function, or the differential evolution, stochastic global optimisation package DEoptim.  It will also calculate a numerical Area Under Curve (nAUC) fitness measure by integrating under a loess smooothed version of the dataset if there are sufficient observations or under a linear interpolation between observations if observations are too infrequent. 
 }
 \usage{
-qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt,minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,...)
+qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt,minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,modelFit=TRUE,...)
 }
 \arguments{
   \item{d}{The data.frame containing the timecourse data for each colony (returned from colonyzer.read).}
@@ -41,6 +41,7 @@ R data.frame, similar to that returned by the colonyzer.read function.  The majo
 \item t0 - Time of first detectable cell density observation (i.e. above detectThresh)
 \item nAUC - Numerical Area Under Curve.  This is a model-free fitness estimate.
 \item nSTP - Single Time Point fitness.  Cell density at time STP, as estimated with approximating function.  This is a model-free fitness estimate.
+\item d0 - Normalised cell density of first observation (be careful about condensation on plates when using this).  Note this is not necessarily the density at t0.
 \item Screen.Name - See colonyzer.read
 \item Library.Name - See colonyzer.read
 \item MasterPlate.Number - See colonyzer.read
