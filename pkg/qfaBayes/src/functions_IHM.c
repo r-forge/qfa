@@ -60,14 +60,12 @@ double MCMC_base_truncate_low_IHM(double truncate, struct_data_IHM *D,struct_par
 double MCMC_nu_l_IHM(struct_data_IHM *D,struct_para_IHM *D_para,struct_priors_IHM *D_priors,double para,int c,int l, int m){
   double density,F,SUM=0;
   int ll,mm;
-  for (c=0;c<2;c++){
     ll=c*D->L+l;
     for (m=0;m<D->NoORF[ll];m++){
       mm=D->NoSUM[ll]+m;
       F=D->y[mm]-exp(D_para->alpha_c[c]+D_para->Z_l[l]+c*D_para->delta_l[l]*D_para->gamma_cl[l]);
-      SUM=-para+F*F*exp(para+D_para->upsilon_c[c])+SUM;
+      SUM=-para+F*F*exp(para)+SUM;
     }
-  }
   F=para-D_para->nu_p;
   density=F*F*exp(D_para->sigma_nu)+SUM; 
   return(-0.5*density); 
