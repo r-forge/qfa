@@ -380,20 +380,19 @@ D_MH->hP=0.2;
 
 		  D_para->tau_r_l[l]=MCMC_base(D,D_para,D_priors,&D_MH->accept_P,&D_MH->hP,D_para->tau_r_l[l],MCMC_tau_r_l,l,-999);
 
-		  D_MH->hK=0.04;
+		  D_MH->hK=0.01;
 		  D_para->K_o_l[l]=MCMC_base_truncate_low(0,D,D_para,D_priors,&D_MH->accept_K,&D_MH->hK,exp(D_para->K_o_l[l]),MCMC_K_o_l,l,-999);
 		  D_MH->hK=0.1;
 		D_para->K_o_l[l]=log(D_para->K_o_l[l]);
-		D_MH->hK=0.4;
+
 		D_para->r_o_l[l]=MCMC_base_truncate_low(0,D,D_para,D_priors,&D_MH->accept_K,&D_MH->hr,exp(D_para->r_o_l[l]),MCMC_r_o_l,l,-999);
-D_MH->hK=0.1;
 		D_para->r_o_l[l]=log(D_para->r_o_l[l]);
 
 			D_para->nu_l[l]=MCMC_base(D,D_para,D_priors,&D_MH->accept_nu,&D_MH->hnu,D_para->nu_l[l],MCMC_nu_l,l,-999);
 
 			for (m=0;m<D->NoORF[l];m++){ 
 				mm=D->NoSUM[l]+m;
-				D_MH->hK=0.03; 
+				D_MH->hK=0.05; 
 				D_para->K_lm[mm]=MCMC_base_truncate_high(0,D,D_para,D_priors,&D_MH->accept_K,&D_MH->hK,D_para->K_lm[mm],MCMC_K_lm,l,m);
 
 				D_MH->hK=0.1; 

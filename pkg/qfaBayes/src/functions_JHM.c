@@ -128,7 +128,6 @@ double MCMC_tau_r_cl_JHM(struct_data_JHM *D,struct_para_JHM *D_para,struct_prior
 double MCMC_nu_l_JHM(struct_data_JHM *D,struct_para_JHM *D_para,struct_priors_JHM *D_priors,double para,int c,int l, int m){
 	double density,F,SUM=0;
 	int n,mm,nn,ll;
-	for (c=0;c<2;c++){
 		ll=c*D->L+l;
 		for (m=0;m<D->NoORF[ll];m++){
 			mm=D->NoSUM[ll]+m;
@@ -138,7 +137,7 @@ double MCMC_nu_l_JHM(struct_data_JHM *D,struct_para_JHM *D_para,struct_priors_JH
 				SUM+=-para+F*F*exp(para+D_para->upsilon_c[c]);
 			}
 		}
-	}
+
 	F=para-D_para->nu_p;
 	density=F*F*exp(D_para->sigma_nu)+SUM; 
 	return(-0.5*density); 
@@ -603,19 +602,17 @@ T=&t;
 
 				D_para->omega_cl[l]=MCMC_base_truncate_low_JHM(0,D,D_para,D_priors,&D_MH->accept_nu,&D_MH->hnu,exp(D_para->omega_cl[l]),MCMC_omega_cl_JHM,-999,l,-999);
 	  D_para->omega_cl[l]=log(D_para->omega_cl[l]);
-
 	  D_para->delta_l[l]=aug_delta_l_JHM(D,D_para,D_priors,l);
 
 				for (c=0;c<2;c++){
 
 					ll=c*D->L+l;
-
 	D_para->nu_l[ll]=MCMC_base_JHM(D,D_para,D_priors,&D_MH->accept_nu,&D_MH->hnu,D_para->nu_l[ll],MCMC_nu_l_JHM,c,l,-999);
 	D_MH->hK=0.2;
 					D_para->tau_K_cl[ll]=MCMC_base_truncate_low_JHM(0,D,D_para,D_priors,&D_MH->accept_nu,&D_MH->hnu,D_para->tau_K_cl[ll],MCMC_tau_K_cl_JHM,c,l,-999);
-
-					D_para->tau_r_cl[ll]=MCMC_base_JHM(D,D_para,D_priors,&D_MH->accept_nu,&D_MH->hnu,D_para->tau_r_cl[ll],MCMC_tau_r_cl_JHM,c,l,-999);
  D_MH->hK=0.1;
+					D_para->tau_r_cl[ll]=MCMC_base_JHM(D,D_para,D_priors,&D_MH->accept_nu,&D_MH->hnu,D_para->tau_r_cl[ll],MCMC_tau_r_cl_JHM,c,l,-999);
+
 
 					for (m=0;m<D->NoORF[l];m++){ 
 						mm=D->NoSUM[ll]+m;
