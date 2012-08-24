@@ -2,8 +2,8 @@ require(DEoptim)
 
 #### Define Phenotype for fitness ####
 #mdr<-function(K,r,g,v) sapply((r*v)/(log((K^v-g^v)/(K^v-(2^v)*(g^v)))+log(2)*v),na2zero)
-mdr<-function(K,r,g,v) sapply((r*v)/log(1-(2^v-1)/((2^v)*(g/K)^v-1)),na2zero)
-mdp<-function(K,r,g,v) sapply(log(K/g)/log(2),na2zero)
+mdr<-function(K,r,g,v) sapply((r*v)/log(1-(2^v-1)/((2^v)*(g/max(K,g))^v-1)),na2zero)
+mdp<-function(K,r,g,v) sapply(log(max(K,g)/g)/log(2),na2zero)
 mdrmdp<-function(K,r,g,v) mdr(K,r,g,v)*mdp(K,r,g,v)
 # Doubling time for generalised logistic function, as a function of time t
 dtl<-function(K,r,g,v,t) sapply((-(r*t*v) + log((2**v*(1 - (K/g)**v)*((1 + (-1 + (K/g)**v)/exp(r*t*v))**(-1/v))**v)/(-1 + 2**v*((1 + (-1 + (K/g)**v)/exp(r*t*v))**(-1/v))**v)))/(r*v),na2zero)
