@@ -6,7 +6,7 @@ Reads in and binds together all of the ROD output files in a directory, so they 
 }
 \usage{
 rod.read(path=".",files=c(),inoctimes="BarcodeTimes.txt",background="",
-treatments=c(),barcodes=c(),master.plates=c(),screen.names=c())
+treatments=c(),barcodes=c(),master.plates=c(),screen.names=c(),ORF2gene = "")
 }
 \arguments{
   \item{path}{The path to the folder containing the ROD files to be read: working directory by default. Do not have other text files here.}
@@ -17,6 +17,7 @@ treatments=c(),barcodes=c(),master.plates=c(),screen.names=c())
   \item{barcodes}{Store data only for the plates with barcodes in this character vecor; all by default.}
   \item{master.plates}{Store data only for the plates from master.plates in this character vecor; all by default.}
   \item{screen.names}{Store data only for the plates with screen.names in this character vecor; all by default.}
+  \item{ORF2gene}{Path to a tab-delimited text file containing two columns (with no headers) associating unique, systematic strain identifiers (e.g. yeast ORF Y-numbers) with human readable gene names (e.g. standard names from SGD).}
 }
 \value{
 An R data.frame where each row corresponds to a single observation on a single colony, with the value of the growth measurement in 'Growth', and the date and time of the measurement in 'Date.Time'. Other information about the observation is stored in the other columns.

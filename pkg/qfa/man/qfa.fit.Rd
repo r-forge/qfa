@@ -15,7 +15,7 @@ qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt,minK=0.025,detectThresh=0.0005,g
   \item{minK}{The minimum value of K above which a strain is said to be alive.  Strains with K optimised to lie below this value will be classified as dead, by setting r to be zero.}
   \item{detectThresh}{The minimum detectable cell density (or Growth value) which reliably identifies the presence of cells.  Cell densities below this value are classified as noise and discarded.}
   \item{globalOpt}{Flag indicating whether qfa.fit should use the slower, but more robust DEoptim global optimisation functions to fit the generalised logistic model to the data, or the quicker optim function.}
-  \item{logTranform}{Experimental flag signalling use of different objective function for optimisation.  You should probably ignore this or set it to FALSE}
+  \item{logTransform}{Experimental flag signalling use of different objective function for optimisation.  You should probably ignore this or set it to FALSE}
   \item{fixG}{Flag indicating whether to allow g parameter to vary over a wide or narrow range during optimisation.  fixG=TRUE corresponds to narrow constraints on g.}
   \item{AUCLim}{Numerical AUC (nAUC) is calculated as the integral of an approximation of the growth curve between time 0 and AUCLim}
   \item{STP}{Time to use for "Single Time Point" fitness estimate.  Defaults to 20 days (very late in growth curve) which is like carrying capacity.}

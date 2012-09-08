@@ -20,6 +20,7 @@ maxg=0,maxt=0,logify=FALSE)}
   \item{backgrounds}{Plot only for the plates with genetic background in this character vector; all by default.}
   \item{maxg}{Upper cell density (y-axis limit) for all growth curve plots.  Default value is zero.  If maxg=0, then upper fitnesses are chosen automatically to show all datapoints.}
   \item{maxt}{Growth curve is plotted from time t = 0 to maxt.}
+  \item{logify}{Boolean indicating whether growth curve plots should be on a semilog scale.  Cell density (y-axis) only.}
 }
 \examples{
 }
