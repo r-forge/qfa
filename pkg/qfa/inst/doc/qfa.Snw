@@ -1,11 +1,10 @@
+\include{Sweave}
 \documentclass [a4paper]{article}
+%\VignetteIndexEntry{qfa}
 \usepackage{url}
 \usepackage{hyperref}            
-\hypersetup{pdfpagelayout=SinglePage}
 \title{qfa - An R package for carrying out Quantitative Fitness Analysis}
 \author{Conor Lawless}
-\date{September 2012}
-%\VignetteIndexEntry{qfa}
 \begin{document}
 \maketitle
 
