@@ -301,13 +301,13 @@ pgis<-function(orf,m,cFs,dFs,wilcoxon=TRUE){
 
 # Get type of interaction
 typemake<-function(row,m){
-	md<-as.numeric(row['QueryFitnessSummary'])
-	c<-as.numeric(row['ControlFitnessSummary'])
+	summd<-as.numeric(row['QueryFitnessSummary'])
+	summc<-as.numeric(row['ControlFitnessSummary'])
 	if (m<1){
-		if (md>m*c){type<-"S"} else {type<-"E"}
+		if (summd>m*summc){type<-"S"} else {type<-"E"}
 	} 
 	else {
-		if (md>m*c){type<-"E"} else {type<-"S"}
+		if (summd>m*summc){type<-"E"} else {type<-"S"}
 	}
 	return(type)
 }
