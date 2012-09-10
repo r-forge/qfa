@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.3.7)  8 SEP 2012 22:57
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.3.7)  9 SEP 2012 13:00
 entering extended mode
 **qfa.tex
 (F:\QFA\pkg\qfa\inst\doc\qfa.tex
@@ -225,103 +225,63 @@ ime-series pho-tographs
  []
 
 [2]
-! Misplaced alignment tab character &.
-l.58 ...imates with culture type (e.g. genotype) &
-                                                   treatment (e.g. temperatu...
-
-? 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.64 \frac{dg}{dt}
-                  =rg(1-(\frac{g}{K})^\nu)
-? 
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <7> on input line 64.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <5> on input line 64.
-! Extra }, or forgotten $.
-\frac #1#2->{\begingroup #1\endgroup \over #2}
-                                              
-l.64 \frac{dg}{dt}
-                  =rg(1-(\frac{g}{K})^\nu)
+ [3]
+! Missing $ inserted.
+<inserted text> 
+                $
+l.77 \nu
+        	Shape parameter. Recover logistic model with v = 1.
 ? 
 ! Missing $ inserted.
 <inserted text> 
                 $
-l.65 
-     
-? 
-[3]
-! Missing $ inserted.
-<inserted text> 
-                $
-l.68 g(x,g_
-           0,r,K,\nu)=\frac{K}{(1+(-1+(\frac{K}{g})^v)e^{-rvt})^\frac{1}{\nu}}
-? 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.69 
-     
-? 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.73 \nu
-        	Shape parameter. Recover logistic model with v = 0.
-? 
-! Missing $ inserted.
-<inserted text> 
-                $
-l.75 
+l.79 
      
 ? 
 
-Overfull \hbox (26.72188pt too wide) in paragraph at lines 70--75
+Overfull \hbox (26.72188pt too wide) in paragraph at lines 74--79
 \OT1/cmr/m/n/10 curve. $\OML/cmm/m/it/10 Shapeparameter:Recoverlogisticmodelwi
-thv \OT1/cmr/m/n/10 = 0\OML/cmm/m/it/10 :tTimesinceinoculation\OT1/cmr/m/n/10 (
+thv \OT1/cmr/m/n/10 = 1\OML/cmm/m/it/10 :tTimesinceinoculation\OT1/cmr/m/n/10 (
 \OML/cmm/m/it/10 d\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 :$ 
  []
 
 [4]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 89.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 93.
  [5]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 89.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 93.
  (F:\QFA\pkg\qfa\inst\doc\qfa.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 89.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 89.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 93.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 93.
 Package rerunfilecheck Info: File `qfa.out' has not changed.
 (rerunfilecheck)             Checksum: 846196D01D6CA1F9CDEFC24E0068B854;673.
- )
-(\end occurred inside a group at level 1)
-
-### simple group (level 1) entered at line 64 ({)
-### bottom level 
+ ) 
 Here is how much of TeX's memory you used:
  4111 strings out of 494045
- 61614 string characters out of 3145970
+ 61617 string characters out of 3145970
  141883 words of memory out of 3000000
- 7409 multiletter control sequences out of 15000+200000
- 7924 words of font info for 29 fonts, out of 3000000 for 9000
+ 7408 multiletter control sequences out of 15000+200000
+ 7755 words of font info for 28 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 29i,6n,28p,1192b,365s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/
-cm/cmbx12.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm
-/cmmi10.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/c
-mmi5.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi
-7.pfb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.p
-fb><C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb>
-<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:
-/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Pro
-gram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program
- Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy5.pfb><C:/Program Fi
-les (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files
- (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Program Files (
-x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on qfa.pdf (5 pages, 161680 bytes).
+ 29i,6n,28p,1192b,335s stack positions out of 5000i,500n,10000p,200000b,50000s
+<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+<C:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C
+:/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi5.pfb><C:/P
+rogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Prog
+ram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program
+ Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Fi
+les (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Program Files
+ (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr5.pfb><C:/Program Files (x8
+6)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Program Files (x86)/M
+iKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/Program Files (x86)/MiK
+TeX 2.9/fonts/type1/public/amsfonts/cm/cmsy7.pfb><C:/Program Files (x86)/MiKTeX
+ 2.9/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on qfa.pdf (5 pages, 154601 bytes).
 PDF statistics:
- 132 PDF objects out of 1000 (max. 8388607)
- 16 named destinations out of 1000 (max. 500000)
+ 130 PDF objects out of 1000 (max. 8388607)
+ 18 named destinations out of 1000 (max. 500000)
  81 words of extra memory for PDF output out of 10000 (max. 10000000)
 
