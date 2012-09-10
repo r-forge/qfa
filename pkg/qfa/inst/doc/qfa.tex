@@ -1,9 +1,9 @@
 \documentclass [a4paper]{article}
 \usepackage{url}
 \usepackage{hyperref}            
-\hypersetup{pdfpagelayout=SinglePage} % http://www.tug.org/applications/hyperref/ftp/doc/manual.html
+\hypersetup{pdfpagelayout=SinglePage}
 \title{qfa - An R package for carrying out Quantitative Fitness Analysis}
-\author{Conor Lawless \texttt{conor.lawless@ncl.ac.uk}}
+\author{Conor Lawless}
 \date{September 2012}
 %\VignetteIndexEntry{qfa}
 \usepackage{Sweave}
@@ -55,22 +55,26 @@ This R package consists of a wide range of functions, which can be grouped accor
 
 \subsection{Reading and formatting data}
 \verb$colonyzer.read$
-This function reads in image analysis output from Colonyzer, together with files containing experimental metadata and it associates cell density estimates with culture type (e.g. genotype) & treatment (e.g. temperature, drug concentration) for each culture.  All data are bound together into a data.frame object, with rows representing unique observations of individual cultures.
+This function reads in image analysis output from Colonyzer, together with files containing experimental metadata and it associates cell density estimates with culture type (e.g. genotype) and treatment (e.g. temperature, drug concentration) for each culture.  All data are bound together into a data.frame object, with rows representing unique observations of individual cultures.
 
 \subsection{Summarizing observed growth curves}
 \verb$Glogist$
 The original QFA analysis presented in \href{http://dx.doi.org/10.1371/journal.pgen.1001362}{Addinall et al. (2011)} involved fitting the logistic equation to experimentally observed growth curves.  In this package we use the more flexible generalised logistic differential equation:
 
+\begin{equation}
 \frac{dg}{dt}=rg(1-(\frac{g}{K})^\nu)
+\end{equation}
 
 Which has an analytical solution:
 
+\begin{equation}
 g(x,g_0,r,K,\nu)=\frac{K}{(1+(-1+(\frac{K}{g})^v)e^{-rvt})^\frac{1}{\nu}}
+\end{equation}
 
 K	Culture carrying capacity (AU). Same units as (normalised) cell density observed in growth curve.
 r	Culture growth rate parameter (per day).
 g	Inoculum denisty (AU). Same units as (normalised) cell density observed in growth curve.
-\nu	Shape parameter. Recover logistic model with v = 0.
+\nu	Shape parameter. Recover logistic model with v = 1.
 t	Time since inoculation (d).
 
 \verb$loapproxfun$
