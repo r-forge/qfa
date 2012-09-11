@@ -72,7 +72,7 @@ g(x,g_0,r,K,\nu)=\frac{K}{(1+(-1+(\frac{K}{g})^v)e^{-rvt})^\frac{1}{\nu}}
 K	Culture carrying capacity (AU). Same units as (normalised) cell density observed in growth curve.
 r	Culture growth rate parameter (per day).
 g	Inoculum denisty (AU). Same units as (normalised) cell density observed in growth curve.
-\nu	Shape parameter. Recover logistic model with v = 1.
+$\nu$	Shape parameter. Recover logistic model with v = 1.
 t	Time since inoculation (d).
 
 \verb$loapproxfun$
