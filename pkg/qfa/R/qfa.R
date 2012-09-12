@@ -423,8 +423,8 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,m
 	# Generate numerical AUC
 	if(len1>1){
 		loapprox=loapproxfun(as.numeric(do$Expt.Time),as.numeric(do$Growth))
-		nAUC=as.numeric(integrate(loapprox,0,AUCLim)$value)
-		nSTP=as.numeric(loapprox(STP))
+		nAUC=max(0,as.numeric(integrate(loapprox,0,AUCLim)$value)-loapprox(0)*AUCLim)
+		nSTP=max(0,as.numeric(loapprox(STP)))
 	}else{
 		# If there's only one photograph (e.g. single time point 1536 assay)
 		nAUC=NA
