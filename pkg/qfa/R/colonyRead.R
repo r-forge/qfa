@@ -25,12 +25,13 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	names(libdict)=liblist
 	#libs=libs[libs$Library==library,]
 	# Make an array for storing info about spots
-	NROW=max(libs$Row)
-	NCOL=max(libs$Column)
-	NPLATE=max(libs$Plate)
+	NROW=max(libs$Row,na.rm=TRUE)
+	NCOL=max(libs$Column,na.rm=TRUE)
+	NPLATE=max(libs$Plate,na.rm=TRUE)
+
 	SPOTARRAY=array("missing",dim=c(NLIB,NPLATE,NROW,NCOL))
 	# Fill the spot array object
-	for (x in 1:length(libs$Plate)) SPOTARRAY[libdict[[libs[x,"Library"]]],libs[x,"Plate"],libs[x,"Row"],libs[x,"Column"]]=libs[x,"ORF"]
+	for (x in 1:NPLATE) SPOTARRAY[libdict[[libs[x,"Library"]]],libs[x,"Plate"],libs[x,"Row"],libs[x,"Column"]]=libs[x,"ORF"]
 	getORF<-function(lib,plate,row,col) SPOTARRAY[libdict[[lib]],plate,row,col]
 
 	# Open the experimental description
