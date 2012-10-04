@@ -35,7 +35,7 @@ R data.frame, similar to that returned by the colonyzer.read function.  The majo
 \item ORF - See colonyzer.read
 \item K - Generalised logistic model carrying capacity
 \item r - Generalised logistic model rate parameter
-\item g - Generalised logistic model inoculum density
+\item g - Generalised logistic model inoculum density (referred to in vignette as $g_0$)
 \item v - Generalised logistic model shape parameter (set to 1 to recover logistic model)
 \item obj - Objective function value at selected optimum
 \item t0 - Time of first detectable cell density observation (i.e. above detectThresh)
