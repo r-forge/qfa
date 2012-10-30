@@ -155,7 +155,7 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 }
 
 report.epi<-function(results,filename){
-	packs = installed.packages()
+	packs = data.frame(installed.packages(),stringsAsFactors=FALSE)
 	vno=packs$Version[packs$Package=="qfa"]
 
 	QFAversion=paste("R package version:",vno)
