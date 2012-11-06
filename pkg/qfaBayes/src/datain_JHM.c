@@ -1,48 +1,26 @@
 #include "headers_JHM.h"
 #include "datain_JHM.h"
 
-
 /*TEST*/
 
-int testargc_JHM(int argc)
+int testargc(int argc)
 {
  	if (argc!=4) {
     		perror("argc failed");
-    		/*exit(EXIT_FAILURE);*/
+    		exit(EXIT_FAILURE);
   	}
 return 0;
 }
 
-int testsame_JHM(int a,int b)
+int testsame(int a,int b)
 {
  	if (a!=b) {
     		perror("data int failed");
-    		/*exit(EXIT_FAILURE);*/
+    		exit(EXIT_FAILURE);
   	}
 return 0;
 }
 
-/*READ IN*/
-
-
-int datadouble_JHM(char filename[], char filename2[], double datavec[],int length)
-{
-
-return 0;
-}
-
-int dataint_JHM(char filename[],char filename2[], int datavec[] ,int lengtha,int lengthb )
-{
-
-
-return 0;
-}
-
-int dataLMN_JHM(char filename[],char filename2[], int *datavecL,int *datavecM,int *datavecN,int *datavecmaxy,int *datavecmaxTIMEa,int *datavecmaxTIMEb)
-{
-	
-return 0;
-}
 
 /*INZ*/
 
@@ -114,17 +92,12 @@ int inzstruct_priors_JHM(struct_priors_JHM *D_priors,double *PRIORS)
 	D_priors->eta_omega=PRIORS[26];	
 
 D_priors->psi_omega=PRIORS[27];
-
-	D_priors->eta_upsilon=PRIORS[28];	
-
- 	   D_priors->psi_upsilon=PRIORS[29];	    
-
-	D_priors->upsilon_mu=PRIORS[30];	
+   
 	D_priors->df=3;
-	D_priors->df2=5;
 	D_priors->eta_tau_K=D_priors->eta_tau_K_p;  D_priors->psi_tau_K=D_priors->eta_tau_K_p;
 	D_priors->eta_tau_r=D_priors->eta_tau_r_p;  D_priors->psi_tau_r=D_priors->eta_tau_r_p;
 	/*fillpriors(priors);*/
+
 return 0;
 }
 
@@ -145,9 +118,6 @@ int inzstruct_data_JHM(struct_data_JHM *data,int *QFAIA,double *QFADyA,double *Q
 		data->maxy=QFAIB[3];
 		data->maxTIMEb=QFAIB[4];
 
-		/*dataLMN("LMNmaxdataA1.txt","LMNmaxdataB1.txt",
-		&data->L,&data->M,&data->N,&data->maxy,&data->maxTIMEa,&data->maxTIMEb);*/     
-		
 	data->SHIFTlmn=data->maxy;
 	size=data->maxy*2;
   	data->y=malloc(size*sizeof(double));  
@@ -160,8 +130,9 @@ int inzstruct_data_JHM(struct_data_JHM *data,int *QFAIA,double *QFADyA,double *Q
 	
 	if (data->y==NULL||data->x==NULL||data->NoORF==NULL||data->NoSUM==NULL||data->NoTIME==NULL) {
 		perror("malloc failed");
-    		/*exit(EXIT_FAILURE);*/
+    		exit(EXIT_FAILURE);
   	}
+/**/
  for (i=0;i<(data->maxy);i++){
 data->y[i]=QFADyA[i];
 data->x[i]=QFADxA[i];
@@ -179,12 +150,8 @@ data->NoTIME[i]=QFADNoTIMEA[i];
  for (i=0;i<(data->maxTIMEb);i++){
 data->NoTIME[i+data->maxTIMEa]=QFADNoTIMEA[i];
 }
-	/*datadouble("ydataA1.txt","ydataB1.txt",data->y,data->maxy);
-        datadouble("xdataA1.txt","xdataB1.txt",data->x,data->maxy);
-        dataint("NoORFdataA1.txt","NoORFdataB1.txt",data->NoORF,data->L,data->L);
-        dataint("NoTIMEdataA1.txt","NoTIMEdataB1.txt",data->NoTIME,data->maxTIMEa,data->maxTIMEb);*/
-
-filldata_JHM(data);
+/**/
+	filldata_JHM(data);
 return 0;
 }
 
@@ -192,9 +159,9 @@ int inzstruct_para_JHM(struct_para_JHM *para,struct_data_JHM *data,struct_priors
 {
 	long size;
 	size=data->L*2;
+	para->nu_l=malloc(size*sizeof(double));
 	para->tau_K_cl=malloc(size*sizeof(double));
 	para->tau_r_cl=malloc(size*sizeof(double));
-	para->nu_l=malloc(size*sizeof(double));
 	size=data->maxTIMEa+data->maxTIMEb;/*inputfromfile*/
 	para->K_clm=malloc(size*sizeof(double));
 	para->r_clm=malloc(size*sizeof(double));
@@ -204,10 +171,10 @@ int inzstruct_para_JHM(struct_para_JHM *para,struct_data_JHM *data,struct_priors
 	para->omega_cl=malloc(size*sizeof(double));
 	para->K_o_l=malloc(size*sizeof(double));
 	para->r_o_l=malloc(size*sizeof(double));
+
 	size=2;
 	para->alpha_c=malloc(size*sizeof(double));
 	para->beta_c=malloc(size*sizeof(double));
-	para->upsilon_c=malloc(size*sizeof(double));
 
 	para->tau_K_p=malloc(size*sizeof(double));
 	  para->tau_r_p=malloc(size*sizeof(double));
@@ -252,10 +219,8 @@ int fillpara_JHM(struct_para_JHM *D_para, struct_data_JHM *D,struct_priors_JHM *
 {
 int c,l,m,ll,mm;
  double SUM=0,SUMa=0,SUMb=0;
-
- D_para->A=0;
- D_para->B=0;
-
+	/*initials*/
+  /*K*/
 for (c=0;c<2;c++){
     for (l=0;l<D->L;l++){
       ll=c*D->L+l;
@@ -263,7 +228,7 @@ for (c=0;c<2;c++){
 	mm=D->NoSUM[ll]+m;
 	if (D->y[c*D->SHIFTlmn+l*D->M*D->N + m*D->N + D->NoTIME[mm]-1]<=0){D_para->K_clm[mm]=D_priors->P_mu;}
 	else{     
-		D_para->K_clm[mm]=log(D->y[c*D->SHIFTlmn+l*D->M*D->N + m*D->N + D->NoTIME[mm]-1]);
+		D_para->K_clm[mm]=gsl_sf_log(D->y[c*D->SHIFTlmn+l*D->M*D->N + m*D->N + D->NoTIME[mm]-1]);
 		}
 	if (c==0){SUMa+=exp(D_para->K_clm[mm]);SUM+=D_para->K_clm[mm];}
 	  else{ SUMb+=exp(D_para->K_clm[mm]);}
@@ -272,17 +237,17 @@ for (c=0;c<2;c++){
       SUM=0;
       }
   }
- D_para->alpha_c[1]=log((SUMb/(2*D->maxy-D->SHIFTlmn))/(SUMa/D->SHIFTlmn));
+ D_para->alpha_c[1]=gsl_sf_log((SUMb/(2*D->maxy-D->SHIFTlmn))/(SUMa/D->SHIFTlmn));
  D_para->beta_c[1]=D_para->alpha_c[1];
  SUM=0;
  for (l=0;l<(D->L);l++){SUM+=D_para->K_o_l[l];}
  D_para->K_p=SUM/D->L;
 				
-	for (l=0;l<(2*D->L);l++)          {D_para->tau_K_cl[l]=D_priors->tau_K_mu;}             
+	for (l=0;l<(2*D->L);l++)          {D_para->tau_K_cl[l]=D_priors->tau_K_mu;}                  /*Precision*/
        
-	D_para->sigma_K_o=D_priors->eta_K_o;              
+	D_para->sigma_K_o=D_priors->eta_K_o;               /*Precision*/
 
-
+	/*r*/
 	for (c=0;c<2;c++){
 		for (l=0;l<D->L;l++){
 			ll=c*D->L+l;
@@ -293,21 +258,20 @@ for (c=0;c<2;c++){
 		}  
 	}
                
+	for (l=0;l<2*D->L;l++)          {D_para->tau_r_cl[l]=D_priors->tau_r_mu;}                  /*Precision*/
 
-	for (l=0;l<2*D->L;l++)          {D_para->tau_r_cl[l]=D_priors->tau_r_mu;}           
+	for (l=0;l<D->L;l++)          {D_para->r_o_l[l]=D_priors->r_mu;}     	   /*LMean*/
+	D_para->sigma_r_o=D_priors->eta_r_o;               /*Precision*/
 
-	for (l=0;l<D->L;l++)          {D_para->r_o_l[l]=D_priors->r_mu;}     	   
-	D_para->sigma_r_o=D_priors->eta_r_o;          
-
-	D_para->r_p=D_priors->r_mu;    
+	D_para->r_p=D_priors->r_mu;       /*LMean*/
 	
-	
-	for (l=0;l<2*D->L;l++)          {D_para->nu_l[l]=D_priors->nu_mu;}                     
-	D_para->sigma_nu=D_priors->eta_nu;   
+	/*nu*/
+	for (l=0;l<2*D->L;l++)          {D_para->nu_l[l]=D_priors->nu_mu;}                      /*LMean*/
+	D_para->sigma_nu=D_priors->eta_nu;   /*Precision for lMean*/
 
-	D_para->nu_p=D_priors->nu_mu; 
-	
-  D_para->P=D_priors->P_mu;   
+	D_para->nu_p=D_priors->nu_mu;   /*LMean*/
+	/*P*/
+  D_para->P=D_priors->P_mu;      /*LMean*/
 
 	for (l=0;l<D->L;l++)          {D_para->gamma_cl[l]=0;} 
 
@@ -318,9 +282,7 @@ for (c=0;c<2;c++){
 	D_para->beta_c[0]=0;
 	D_para->sigma_gamma=D_priors->eta_gamma;
 	D_para->sigma_omega=D_priors->eta_omega;
-	D_para->upsilon_c[0]=0; 
-	D_para->upsilon_c[1]=D_priors->upsilon_mu;      
-        D_para->sigma_upsilon=D_priors->eta_upsilon;
+ 
 	for (c=0;c<2;c++){
 	D_para->tau_K_p[c]=D_priors->tau_K_mu;
 	D_para->sigma_tau_K[c]=D_priors->eta_tau_K;
@@ -330,8 +292,3 @@ for (c=0;c<2;c++){
 return 0;
 }
 
-int fillpriors_JHM(struct_priors_JHM *D_priors)
-{
- 
-return 0;
-}

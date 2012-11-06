@@ -3,7 +3,7 @@
 #include "functions.h"
 #include "print.h"
      int
-     main (int *arga,int *argb,int *argc,int *argd,double *OUT, char **HEADER,int *QFAI,double *QFADy,double *QFADx,int *QFADNoORF,int *QFADNoTIME,double *PRIORS)/****/
+     main (int *arga,int *argb,int *argc,int *argd,double *OUT, char **HEADER,int *QFAI,double *QFADy,double *QFADx,int *QFADNoORF,int *QFADNoTIME,double *PRIORS)
      {
 	struct_data *data= malloc(sizeof(struct_data));
 	struct_para *para= malloc(sizeof(struct_para));
@@ -12,14 +12,12 @@
 
 	int burn,iters,thin, CAPL;
 
-	/*testargc(argc);*//********/
-   
-	burn=*arga;   /**********/
-	iters=*argb;  /**************/
-	thin=*argc;       /**************/
+	burn=*arga;    /*Burn in*/
+	iters=*argb;    /*iterations*/
+	thin=*argc;         /*thining*/
 
-	CAPL=*argd;        /**************/
-	
+	CAPL=*argd;              /*CAP D->L*/
+
         inzstruct_data(data,QFAI,QFADy,QFADx,QFADNoORF,QFADNoTIME);
 	inzstruct_priors(priors,PRIORS);
 	inzstruct_para(para,data,priors);

@@ -12,9 +12,6 @@ int
 
 	int burn,iters,thin;
 
-	/*testargc(argc);*/
-
-
 	burn=*arga;   /*Burn in*/
 	iters=*argb;    /*iterations*/
 	thin=*argc;        /*thining*/

@@ -8,7 +8,7 @@ int testargc(int argc)
 {
   if (argc!=5) {
     perror("argc failed");
-   /* exit(EXIT_FAILURE);*/
+    exit(EXIT_FAILURE);
   }
   return 0;
 }
@@ -17,31 +17,8 @@ int testsame(int a,int b)
 {
   if (a!=b) {
     perror("data int failed");
-    /* exit(EXIT_FAILURE);*/
+    exit(EXIT_FAILURE);
   }
-  return 0;
-}
-
-
-
-/*READ IN*/
-
-
-int datadouble(char filename[], double datavec[],int length )
-{
-
-  return 0;
-}
-
-int dataint(char filename[], int datavec[], int length)
-{
-
-  return 0;
-}
-
-int dataLMN(char filename[], int *datavecL,int *datavecM,int *datavecN,int *datavecmaxy,int *datavecmaxTIME)
-{
- 
   return 0;
 }
 
@@ -55,7 +32,7 @@ int inzstruct_MH(struct_MH *MH)
 
 int inzstruct_priors(struct_priors *D_priors,double *PRIORS)
 {
-    /*K*/
+   /*K*/
     D_priors->sigma_K=D_priors->tau_K_mu=PRIORS[0];
    
     D_priors->phi_K=D_priors->eta_tau_K_p=PRIORS[1];          
@@ -95,7 +72,6 @@ int inzstruct_priors(struct_priors *D_priors,double *PRIORS)
 
     D_priors->eta_P=PRIORS[17];   /*Normal  LMean; Precisions */
     D_priors->df=3;
-    D_priors->df2=5;
     D_priors->eta_tau_K=D_priors->eta_tau_K_p;  D_priors->psi_tau_K=D_priors ->eta_tau_K_p;
     D_priors->eta_tau_r=D_priors->eta_tau_r_p;  D_priors->psi_tau_r=D_priors->eta_tau_r_p;
   /*fillpriors(priors);*/
@@ -111,7 +87,6 @@ int inzstruct_data(struct_data *data,int *QFAI,double *QFADy,double *QFADx,int *
 	data->N=QFAI[2];
 	data->maxy=QFAI[3];
 	data->maxNoTIME=QFAI[4];
-  /*dataLMN("LMNmaxdata.txt",&data->L,&data->M,&data->N,&data->maxy,&data->maxNoTIME);  */
   testsame(data->L*data->M*data->N,data->maxy);
 
   size=data->L*data->M*data->N; /*input from file*/ 
@@ -121,11 +96,6 @@ int inzstruct_data(struct_data *data,int *QFAI,double *QFADy,double *QFADx,int *
   data->NoORF=malloc(size*sizeof(double));    /*Cycle with data->L*/
   data->NoSUM=malloc(size*sizeof(double));    /*Cycle with data->L*/
 
-  /*if (data->y==NULL||data->x==NULL||data->NoORF==NULL||data->NoSUM==NULL||data->NoTIME==NULL) {
-    perror("malloc failed");
-    exit(EXIT_FAILURE);
-    }*/
-
  for (i=0;i<(data->L*data->M*data->N);i++){
 data->y[i]=QFADy[i];
 data->x[i]=QFADx[i];
@@ -133,10 +103,7 @@ data->x[i]=QFADx[i];
  for (i=0;i<(data->L);i++){
 data->NoORF[i]=QFADNoORF[i];
 }
-  /*datadouble("ydata.txt",data->y,data->L*data->M*data->N);
-  datadouble("xdata.txt",data->x,data->L*data->M*data->N);
-  dataint("NoORFdata.txt",data->NoORF,data->L);*/
-
+ 
   filldata(data);
   testsame(data->maxNoTIME,data->SHIFTlmn);
 
@@ -146,8 +113,6 @@ data->NoORF[i]=QFADNoORF[i];
  for (i=0;i<(data->SHIFTlmn);i++){
 data->NoTIME[i]=QFADNoTIME[i];
 }
-  /*dataint("NoTIMEdata.txt",data->NoTIME,data->SHIFTlmn);*/
-
 
   return 0;
 }
@@ -200,8 +165,6 @@ int fillpara(struct_para *D_para, struct_data *D,struct_priors *D_priors)
   double SUM=0,SUMa=0;
   /*initials*/
   /*K*/
-  D_para->A=0;
-  D_para->B=0;
 
  for (l=0;l<D->L;l++){
     for (m=0;m<D->NoORF[l];m++){
@@ -247,12 +210,6 @@ int fillpara(struct_para *D_para, struct_data *D,struct_priors *D_priors)
   D_para->sigma_tau_K=D_priors->eta_tau_K;
   D_para->tau_r_p=D_priors->tau_r_mu;
   D_para->sigma_tau_r=D_priors->eta_tau_r;
-
-  return 0;
-}
-
-int fillpriors(struct_priors *D_priors)
-{
 
   return 0;
 }
