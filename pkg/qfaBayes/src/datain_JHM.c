@@ -3,7 +3,7 @@
 
 /*TEST*/
 
-int testargc(int argc)
+int testargc_JHM(int argc)
 {
  	if (argc!=4) {
     		perror("argc failed");
@@ -12,7 +12,7 @@ int testargc(int argc)
 return 0;
 }
 
-int testsame(int a,int b)
+int testsame_JHM(int a,int b)
 {
  	if (a!=b) {
     		perror("data int failed");
@@ -228,7 +228,7 @@ for (c=0;c<2;c++){
 	mm=D->NoSUM[ll]+m;
 	if (D->y[c*D->SHIFTlmn+l*D->M*D->N + m*D->N + D->NoTIME[mm]-1]<=0){D_para->K_clm[mm]=D_priors->P_mu;}
 	else{     
-		D_para->K_clm[mm]=gsl_sf_log(D->y[c*D->SHIFTlmn+l*D->M*D->N + m*D->N + D->NoTIME[mm]-1]);
+		D_para->K_clm[mm]=log(D->y[c*D->SHIFTlmn+l*D->M*D->N + m*D->N + D->NoTIME[mm]-1]);
 		}
 	if (c==0){SUMa+=exp(D_para->K_clm[mm]);SUM+=D_para->K_clm[mm];}
 	  else{ SUMb+=exp(D_para->K_clm[mm]);}
@@ -237,7 +237,7 @@ for (c=0;c<2;c++){
       SUM=0;
       }
   }
- D_para->alpha_c[1]=gsl_sf_log((SUMb/(2*D->maxy-D->SHIFTlmn))/(SUMa/D->SHIFTlmn));
+ D_para->alpha_c[1]=log((SUMb/(2*D->maxy-D->SHIFTlmn))/(SUMa/D->SHIFTlmn));
  D_para->beta_c[1]=D_para->alpha_c[1];
  SUM=0;
  for (l=0;l<(D->L);l++){SUM+=D_para->K_o_l[l];}
