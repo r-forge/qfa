@@ -1,23 +1,22 @@
 #include "headers_IHM.h"
 #include "datain_IHM.h"
 
-
 /*TEST*/
 
-int testargc_IHM(int argc)
+int testargc(int argc)
 {
  	if (argc!=4) {
     		perror("argc failed");
-    		/*exit(EXIT_FAILURE);*/
+    		exit(EXIT_FAILURE);
   	}
 return 0;
 }
 
-int testsame_IHM(int a,int b)
+int testsame(int a,int b)
 {
  	if (a!=b) {
     		perror("data int failed");
-    		/*exit(EXIT_FAILURE);*/
+    		exit(EXIT_FAILURE);
   	}
 return 0;
 }
@@ -27,15 +26,15 @@ int datadouble_IHM(char filename[],char filename2[],struct_data_IHM *D,double *Q
 {
 	int i,t=0;
        	double *K_lm,*r_lm,P_a,P_b,size;
-
+	
 	size=D->MAXmn;
 	K_lm=malloc(size*sizeof(double)); 
 	r_lm=malloc(size*sizeof(double)); 
-
-	/*file=fopen(filename, "r");*/
-	t=-1;
 	
-		for (i=0;i<D->SHIFTmn;i++){ 
+	t=-1;
+
+
+		for (i=0;i<D->SHIFTmn;i++){
 			t+=1;
 			K_lm[i]=exp(QFADyA[t]); 
 		}
@@ -45,7 +44,7 @@ int datadouble_IHM(char filename[],char filename2[],struct_data_IHM *D,double *Q
 		P_a=exp(QFADyA[t]);  
 		for (i=0;i<D->SHIFTmn;i++){
 			t+=1;
-			r_lm[i]=exp(QFADyA[t]);   
+			r_lm[i]=exp(QFADyA[t]); 
 		}
 
         for (i=0;i<D->SHIFTmn;i++){
@@ -53,11 +52,8 @@ int datadouble_IHM(char filename[],char filename2[],struct_data_IHM *D,double *Q
         }
 
 	for (i=0;i<D->SHIFTmn;i++){
-		D->y[i]=(r_lm[i]/log(2*fmax(0,K_lm[i]-P_a)/fmax(0,K_lm[i]-2*P_a)))*(log(K_lm[i]/P_a)/log(2));
-		D->y[i]=D->y[i];
-	
+		D->y[i]=(r_lm[i]/log(2*gsl_max(0,K_lm[i]-P_a)/gsl_max(0,K_lm[i]-2*P_a)))*(log(K_lm[i]/P_a)/log(2));
 	}
-
 		t=-1;
 
 		for (i=D->SHIFTmn;i<D->MAXmn;i++){
@@ -80,24 +76,10 @@ int datadouble_IHM(char filename[],char filename2[],struct_data_IHM *D,double *Q
 
 	for (i=D->SHIFTmn;i<D->MAXmn;i++){
 		D->y[i]=(r_lm[i]/log(2*fmax(0,K_lm[i]-P_b)/fmax(0,K_lm[i]-2*P_b)))*(log(K_lm[i]/P_b)/log(2));
-		D->y[i]=(D->y[i]);
 	}
-
+D->y[0]=exp(QFADyA[42943]);
 return 0;
 }
-
-int dataint_IHM(char filename[],char filename2[], int datavec[] ,int length)
-{
-
-return 0;
-}
-
-int dataLMN_IHM(char filename[],char filename2[], int *datavecL)
-{
-
-return 0;
-}
-
 
 /*INZ*/
 
@@ -106,6 +88,7 @@ int inzstruct_MH_IHM(struct_MH_IHM *MH)
 	fillMH_IHM(MH);
 return 0;
 }
+
 
 int inzstruct_priors_IHM(struct_priors_IHM *D_priors,double *PRIORS)
 {
@@ -134,16 +117,11 @@ int inzstruct_priors_IHM(struct_priors_IHM *D_priors,double *PRIORS)
 	D_priors->eta_gamma=PRIORS[11];	
 
 	D_priors->psi_gamma=PRIORS[12];
-
-	D_priors->eta_upsilon=PRIORS[13];	
-
-	D_priors->psi_upsilon=PRIORS[14];
-
-	D_priors->upsilon_mu=PRIORS[15];			
+		
 	D_priors->df=3;
-	/*fillpriors(priors);*/
 return 0;
 }
+
 
 int inzstruct_data_IHM(struct_data_IHM *data,int *QFAIA,double *QFADyA,int *QFADNoORFA,int *QFAIB,double *QFADyB,int *QFADNoORFB)
 {
@@ -170,6 +148,8 @@ data->NoORF[i+data->L]=QFADNoORFB[i];
 return 0;
 }
 
+
+
 int inzstruct_para_IHM(struct_para_IHM *para,struct_data_IHM *data,struct_priors_IHM *priors)
 {
 	long size;
@@ -177,11 +157,10 @@ int inzstruct_para_IHM(struct_para_IHM *para,struct_data_IHM *data,struct_priors
 	para->delta_l=malloc(size*sizeof(double));
 	para->gamma_cl=malloc(size*sizeof(double));
 	para->Z_l=malloc(size*sizeof(double));
-	size=data->L*2;
+	size=data->L*2;/***/
 	para->nu_l=malloc(size*sizeof(double));
 	size=2;
 	para->alpha_c=malloc(size*sizeof(double));
-	para->upsilon_c=malloc(size*sizeof(double));
 	fillpara_IHM(para,data,priors);
 return 0;
 }
@@ -192,9 +171,7 @@ int fillMH_IHM(struct_MH_IHM *MH)
 {
 	MH->halpha_c=0.008;
 	MH->hsigma_gamma=0.5;
-	MH->hupsilon_c=0.5;
-	MH->hsigma_upsilon=0.5;
-	MH->hsigma_nu=0.5;
+     	MH->hsigma_nu=0.5;
 	MH->hsigma_Z=0.5;
 	MH->hnu_p=0.5;
 	MH->hgamma_cl=0.5;
@@ -235,16 +212,17 @@ int fillpara_IHM(struct_para_IHM *D_para, struct_data_IHM *D,struct_priors_IHM *
 	    mm=D->NoSUM[l]+m;
 	    SUM += D->y[mm];
 	  }
-	  /*  if ((SUM/D->NoORF[l])<1){
+	  if ((SUM/D->NoORF[l])<1){
 	    D_para->Z_l[l]=0;
 	  }
-	  else{*/
-	    D_para->Z_l[l]=log(SUM/D->NoORF[l]);
-	    /* }*/
+	   else{
+	    D_para->Z_l[l]=log(SUM/D->NoORF[l]);/***/
+	     }
+	    SUMa+=SUM/D->NoORF[l];
 	  SUM=0;
-	  SUMa+=D_para->Z_l[l];
 	}
-	D_para->Z_p=(SUMa/D->L);
+
+	D_para->Z_p=log(SUMa/D->L);
 
 	D_para->sigma_Z=D_priors->eta_Z;     
 
@@ -259,7 +237,8 @@ int fillpara_IHM(struct_para_IHM *D_para, struct_data_IHM *D,struct_priors_IHM *
 	for (l=0;l<D->L;l++)          {D_para->delta_l[l]=1;}/*!*/  
 
 	D_para->alpha_c[0]=0;/**/
-
+	
+	SUMa=SUMb=0;
 	for (l=0;l<D->L;l++){
 	  SUMa+=exp(D_para->Z_l[l]);
 	  ll=l+D->L;
@@ -271,23 +250,13 @@ int fillpara_IHM(struct_para_IHM *D_para, struct_data_IHM *D,struct_priors_IHM *
 	    SUMb+=0;
 	  }
 	  else{
-	    SUMb+=SUM/D->NoORF[ll];
+	    SUMb+=(SUM/D->NoORF[ll]);
 	  }
 	  SUM=0;
 	}
-
-	D_para->alpha_c[1]=log(SUMb/SUMa);	/**/
+	D_para->alpha_c[1]=log(SUMb/SUMa);
 	D_para->sigma_gamma=D_priors->eta_gamma;
-	D_para->upsilon_c[0]=0; /**/
-	D_para->upsilon_c[1]=0;	
-	D_para->sigma_upsilon=D_priors->eta_upsilon;
-
-return 0;
-}
-
-int fillpriors_IHM(struct_priors_IHM *D_priors)
-{
-
+	
 return 0;
 }
 

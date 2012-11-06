@@ -1,8 +1,13 @@
 #include <stdio.h>
 #include <math.h>
-#include <stdlib.h>     
+#include <gsl/gsl_randist.h>
+#include <stdlib.h>
+#include <gsl/gsl_rng.h>
+#include <gsl/gsl_math.h> 
+#include <gsl/gsl_sf_log.h>      
 #include <unistd.h>
 #include <time.h>
+#include <gsl/gsl_cdf.h>
 #include <R.h>
 #include <Rmath.h>
 
@@ -19,8 +24,7 @@ typedef struct struct_para_JHM {
     *delta_l,
     *gamma_cl,	        sigma_gamma,
     *omega_cl,            sigma_omega,
-    *upsilon_c,       sigma_upsilon,
- 
+     
     *K_clm,            *tau_K_cl,
     *r_clm,            *tau_r_cl,
 
@@ -32,8 +36,7 @@ typedef struct struct_para_JHM {
     r_p,
     nu_p,
     P,
-    *tau_K_p,*tau_r_p,*sigma_tau_K,*sigma_tau_r,
-    A,B;
+    *tau_K_p,*tau_r_p,*sigma_tau_K,*sigma_tau_r;
 } struct_para_JHM;
 
 
@@ -43,9 +46,7 @@ typedef struct struct_priors_JHM {
     beta_mu,                eta_beta,
     p,    
     eta_gamma,              psi_gamma,
-    eta_omega,              psi_omega,
-    eta_upsilon,	    psi_upsilon,	    
-    upsilon_mu,		   
+    eta_omega,              psi_omega,  
 
     sigma_K,                phi_K,
     sigma_r,                phi_r,
