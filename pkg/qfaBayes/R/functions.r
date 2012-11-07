@@ -76,7 +76,6 @@ XY<-funcARRAYTRANS_J(c(XY,XY_b),dim)
 XY
 }
 
-
 ### Creates and transposes an Array (Joint Model Specific) ###
 funcSCALING<-function(data,vec){
 lim<-max(data$Tile.Dimensions.Y)*max(data$Tile.Dimensions.X)*255
