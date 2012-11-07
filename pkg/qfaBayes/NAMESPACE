@@ -1,1 +1,1 @@
-useDynLib(qfaBayes)
+exportPattern("^[^\\.]")
