@@ -140,7 +140,7 @@ QFA.NoORFB=as.integer((aa)[[1]])
 aa<-read.table("NoTIMEdata_B2.txt",header=T)
 QFA.NoTIMEB=as.integer((aa)[[1]])
 #priors_JHM=read.table("priors.txt",header=T)
-load("priors_JHM")
+data("priors_JHM")
 PRIORS=as.double((priors_JHM)[[1]])
 PRIORS[19]=0##
 aa<-read.table("NoORFdata_A2.txt",header=T)
