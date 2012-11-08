@@ -31,7 +31,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 
 	SPOTARRAY=array("missing",dim=c(NLIB,NPLATE,NROW,NCOL))
 	# Fill the spot array object
-	for (x in 1:NPLATE) SPOTARRAY[libdict[[libs[x,"Library"]]],libs[x,"Plate"],libs[x,"Row"],libs[x,"Column"]]=libs[x,"ORF"]
+	for (x in 1:length(libs$ORF)) SPOTARRAY[libdict[[libs[x,"Library"]]],libs[x,"Plate"],libs[x,"Row"],libs[x,"Column"]]=libs[x,"ORF"]
 	getORF<-function(lib,plate,row,col) SPOTARRAY[libdict[[lib]],plate,row,col]
 
 	# Open the experimental description
@@ -73,6 +73,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	orf2gene$orf=toupper(orf2gene$orf)
 	# Add a "missing" row
 	orf2gene=rbind(orf2gene,c("missing","missing"))
+	orf2gene=rbind(orf2gene,c("MISSING","MISSING"))
 	# Create an ORF2Gene dictionary
 	orfdict=orf2gene$gene
 	names(orfdict)=orf2gene$orf
@@ -130,7 +131,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 		iman$MasterPlate.Number=sapply(iman$Barcode,barcPlate)
 		iman$Timeseries.order=as.numeric(sapply(iman$Image.Name,photoNum))
 		iman$Library.Name=sapply(iman$Barcode,barcLib)
-		iman$ORF=mapply(getORF, iman$Library, iman$MasterPlate.Number, iman$Row, iman$Col)
+		iman$ORF=mapply(getORF, iman$Library.Name, iman$MasterPlate.Number, iman$Row, iman$Col)
 		iman$Gene=sapply(toupper(iman$ORF),getGene)
 		iman$Background=rep(background,length(iman$Image.Name))
 
