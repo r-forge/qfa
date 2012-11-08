@@ -6,10 +6,6 @@ TreatB=27
 b<-a#query
 #a=read.delim("~/QFADatasets/SHM/URA3_Raw/data.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
 data("URA3_Raw_trim")#Control a 
-a$ORF<-as.character(a$ORF)#corrections
-a$ORF[a$ORF=="YML009c"]=rep("YML009C",length(a$ORF[a$ORF=="YML009c"]))#corrections
-a$ORF[a$ORF=="YMR169c"]=rep("YMR169C",length(a$ORF[a$ORF=="YMR169c"]))#corrections
-a$ORF[a$ORF=="YMR175w"]=rep("YMR175W",length(a$ORF[a$ORF=="YMR175w"]))#corrections
 
 TreatA=27
 
@@ -74,9 +70,9 @@ stop()
 }
 ####
 ORFuni<-unique(b$ORF)
-#a<-funcIDORDER(a)
+
 IDuni<-unique(a$ID)
-gene<-unlist(lapply(ORFuni,funcGENE,data=b))#?
+gene<-unlist(lapply(ORFuni,funcGENE,data=b))
 
 gene[gene=="0"]=ORFuni[gene=="0"]  #correction
 
@@ -86,12 +82,9 @@ NoORF_a<-unlist(lapply(ORFuni_a,funcNoORF,data=a))#no of repeats each orf
 NoTime_a<-c(0,unlist(lapply(IDuni,funcNoTime,data=a)))# 0+ no of time each repeat
 NoSum_a<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_a)))
 
-#b<-funcIDORDER(b)
 IDuni<-unique(b$ID)
-###
 
-#gene<-unlist(lapply(ORFuni,funcGENE,data=a))#?
-N<-length(ORFuni);M=Mb=length(IDuni)#?
+N<-length(ORFuni);M=Mb=length(IDuni)
 NoORF_b<-unlist(lapply(ORFuni,funcNoORF,data=b))#no of repeats each orf
 NoTime_b<-c(0,unlist(lapply(IDuni,funcNoTime,data=b)))# 0+ no of time each repeat
 NoSum_b<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_b)))
