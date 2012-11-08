@@ -147,7 +147,7 @@ data->NoORF[i+data->L]=QFADNoORFB[i];
 data->NoTIME[i]=QFADNoTIMEA[i];
 }
  for (i=0;i<(data->maxTIMEb);i++){
-data->NoTIME[i+data->maxTIMEa]=QFADNoTIMEA[i];
+data->NoTIME[i+data->maxTIMEa]=QFADNoTIMEB[i];
 }
 /**/
 	filldata_JHM(data);
@@ -250,7 +250,7 @@ for (c=0;c<2;c++){
 	for (c=0;c<2;c++){
 		for (l=0;l<D->L;l++){
 			ll=c*D->L+l;
-			for (m=0;m<D->NoORF[l];m++){
+			for (m=0;m<D->NoORF[ll];m++){
 				mm=D->NoSUM[ll]+m;
 				D_para->r_clm[mm]=D_priors->r_mu;   
 			} 
