@@ -32,8 +32,6 @@ if (nchar(Col[i])<2){Col[i]=paste(0,Col[i],sep="")}
 
 a$ID<-paste(a$Barcode,a$MasterPlate.Number,Row,Col,sep="")
 
-ORFuni=unique(a$ORF)
-
 a<-a[order(a$ORF,a$ID,a$Expt.Time), ]
 ORFuni=unique(a$ORF)########
 
@@ -56,21 +54,19 @@ if (nchar(Col[i])<2){Col[i]=paste(0,Col[i],sep="")}
 }
 
 b$ID<-paste(b$Barcode,b$MasterPlate.Number,Row,Col,sep="")
+b<-b[order(b$ORF,b$ID,b$Expt.Time), ]
 ORFuni_b<-unique(b$ORF)
+
 ####
 sum(rep(1,length(ORFuni))[ORFuni==ORFuni_b])/length(ORFuni)
 ####
-
-#####################################
-b<-b[order(b$ORF,b$ID,b$Expt.Time), ]
 ORFuni<-unique(b$ORF)
-
 #a<-funcIDORDER(a)
 IDuni<-unique(a$ID)
-gene<-unlist(lapply(ORFuni,funcGENE,data=a))#?
-if(sum(gene=="0")){
-gene[gene=="0"]=ORFuni[gene=="0"]
-}
+gene<-unlist(lapply(ORFuni,funcGENE,data=b))#?
+
+gene[gene=="0"]=ORFuni[gene=="0"]  #correction
+
 
 N<-length(ORFuni);M=Ma=length(IDuni)
 NoORF_a<-unlist(lapply(ORFuni,funcNoORF,data=a))#no of repeats each orf
