@@ -15,13 +15,13 @@ library(qfa)
 packroot=system.file(package = "qfa")
 setwd(packroot)
 
-#tempdir()
-#cdatfile=paste(system.file(package = "qfa"),"/","cdc13-1Query.dat",sep="")
-#qdatfile=paste(system.file(package = "qfa"),"/","URA3Control.dat",sep="")
-
 # Assign plate ids, ORFs and gene names to observations
 control=colonyzer.read(files=c("URA3Control.dat"),experiment="URA3ExptDescription.txt",ORF2gene="ORF2GENE.txt",libraries="LibraryDescription.txt",background="URA3D")
 query=colonyzer.read(files=c("cdc13-1Query.dat"),experiment="cdc13-1ExptDescription.txt",ORF2gene="ORF2GENE.txt",libraries="LibraryDescription.txt",background="cdc13-1")
+
+# Only use one of the 8 available replicates to save time.  Comment these lines out to do full analysis (takes about 30 mins)
+control=control[(control$Library.Name=="BooneSDLV3")&(control$RepQuad==1),]
+query=query[(query$Library.Name=="BooneSDLV3")&(query$RepQuad==1),]
 
 # Strip non-experimental edge cultures
 control=control[(control$Row!=1)&(control$Col!=1)&(control$Row!=16)&(control$Col!=24),]
