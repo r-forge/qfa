@@ -47,6 +47,8 @@ Documentation for specific functions can be obtained using the usual R mechanism
 \begin{verbatim}
 ?colonyzer.read
 \end{verbatim}
+There is a short demo script comparing QFA of cdc13-1 and ura3D at 27C to infer genes interacting with the telomere cap.  This can be loaded with:
+demo("telomereCap")
 
 \section{General overview}
 
@@ -101,7 +103,7 @@ MDP=\frac{log(\frac{K}{g_0})}{log(2)}
 \begin{equation}
 AUC=\int_{0}^{AUCLim} g(t,g_0,r,K,\nu),\mathrm{d}x - g_0 AUCLim 
 \end{equation}
-\item[$DT$]  Estimated time taken for the culture to reach twice its inoculum density.
+\item[$DT$]  Time required for culture to reach twice its current cell density.  Setting t=t0 recovers maximum doubling time (i.e. doubling time at inoculation, assuming no lag effect).
 \begin{equation}
 DT=\frac{\mathrm{log}\left( \frac{{2}^{\nu}\,{e}^{\nu\,r\,t}\,{\left( \frac{K}{G0}\right) }^{\nu}-{2}^{\nu}\,{e}^{\nu\,r\,t}}{{\left( {\left( {\left( \frac{K}{G0}\right) }^{\nu}+{e}^{\nu\,r\,t}-1\right) }^{\frac{1}{\nu}}\right) }^{\nu}-{2}^{\nu}\,{e}^{\nu\,r\,t}}\right) -\nu\,r\,t}{\nu\,r}
 \end{equation}
