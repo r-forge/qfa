@@ -1,7 +1,7 @@
 #a=read.delim("data.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
 data("URA3_Raw_trim")
 qfa.variables(a)
-TREAT=27
+Treat=27
 Screen<-unique(a$Screen.Name)
 MPlate<-(unique(a$MasterPlate.Number))
 filename=paste("SHM_demo","_",Treat,sep="")
@@ -61,7 +61,7 @@ save.image(paste(filename,".RData",sep=""))
 #a=read.delim("data.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
 data("CDC13-1_Raw_trim")
 qfa.variables(a)
-TREAT=27
+Treat=27
 Screen<-unique(a$Screen.Name)
 MPlate<-(unique(a$MasterPlate.Number))
 filename=paste("SHM_demo","_",Treat,sep="")
@@ -235,7 +235,8 @@ QFA.yB=as.double((aa)[[1]])
 aa<-read.table("NoORFdata_B.txt",header=T)
 QFA.NoORFB=as.integer((aa)[[1]])
 #priors_IHM=read.table("priors_IHM.txt",header=T)
-PRIORS=as.double((priors)IHM)[[1]])
+data("priors_IHM")
+PRIORS=as.double((priors_IHM)[[1]])
 aa<-read.table("NoORFdata_A.txt",header=T)
 bb<-read.table("NoORFdata_B.txt",header=T)
 if(!(nrow(aa)==nrow(bb))){stop()}
