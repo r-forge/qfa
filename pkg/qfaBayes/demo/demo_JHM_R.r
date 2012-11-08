@@ -6,6 +6,11 @@ TreatB=27
 b<-a#query
 #a=read.delim("~/QFADatasets/SHM/URA3_Raw/data.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
 data("URA3_Raw_trim")#Control a 
+a$ORF<-as.character(a$ORF)#corrections
+a$ORF[a$ORF=="YML009c"]=rep("YML009C",length(a$ORF[a$ORF=="YML009c"]))#corrections
+a$ORF[a$ORF=="YMR169c"]=rep("YMR169C",length(a$ORF[a$ORF=="YMR169c"]))#corrections
+a$ORF[a$ORF=="YMR175w"]=rep("YMR175W",length(a$ORF[a$ORF=="YMR175w"]))#corrections
+
 TreatA=27
 
 filename=paste("M_JHM_FULL","_",TreatA,"_",TreatB,sep="")
