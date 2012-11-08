@@ -1,0 +1,67 @@
+#########################################################################
+# Demonstration of the computational component of Quantitative Fitness Analysis.
+# Repeating a subset of the genetic epistasis analysis from Addinall et al. PLoS Genetics
+# http://dx.doi.org/10.1371/journal.pgen.1001362
+# Looking at gene deletions interacting with cdc13-1 at 27C
+# Using 8 replicates of a plate containing telomere specific deletions (plate 15)
+# combined with a neutral, wild-type deletion (control: ura3D) or a temperature sensitive, 
+# telomere capping mutation (query: cdc13-1).
+#########################################################################
+
+library(qfa)
+
+# Change current working directory to root of the qfa package so that we can read in the demo files
+# This step is NOT required for a normal workflow
+packroot=system.file(package = "qfa")
+setwd(packroot)
+
+#tempdir()
+#cdatfile=paste(system.file(package = "qfa"),"/","cdc13-1Query.dat",sep="")
+#qdatfile=paste(system.file(package = "qfa"),"/","URA3Control.dat",sep="")
+
+# Assign plate ids, ORFs and gene names to observations
+control=colonyzer.read(files=c("URA3Control.dat"),experiment="URA3ExptDescription.txt",ORF2gene="ORF2GENE.txt",libraries="LibraryDescription.txt",background="URA3D")
+query=colonyzer.read(files=c("cdc13-1Query.dat"),experiment="cdc13-1ExptDescription.txt",ORF2gene="ORF2GENE.txt",libraries="LibraryDescription.txt",background="cdc13-1")
+
+# Strip non-experimental edge cultures
+control=control[(control$Row!=1)&(control$Col!=1)&(control$Row!=16)&(control$Col!=24),]
+query=query[(query$Row!=1)&(query$Col!=1)&(query$Row!=16)&(query$Col!=24),]
+
+# Fit generalised logistic model to observed data
+control.fit<-qfa.fit(control,inocguess=1.4e-05,ORF2gene="ORF2GENE.txt",fixG=TRUE,detectThresh=0.001,AUCLim=4,STP=4)
+query.fit<-qfa.fit(query,inocguess=1.4e-05,ORF2gene="ORF2GENE.txt",fixG=TRUE,detectThresh=0.001,AUCLim=4,STP=4)
+
+# Construct QFA fitness measures
+control.fit=makeFitness(control.fit,AUCLim=4)
+query.fit=makeFitness(query.fit,AUCLim=4)
+
+# Choose a fitness measure to use for analysis
+control.fit$fit=control.fit$MDRMDP
+query.fit$fit=query.fit$MDRMDP
+
+# Change working directory to prepare for outputting some files
+setwd(tempdir())
+paste("Output files will be generated in this directory:",tempdir())
+
+# Produce pdfs of fitted curves & data
+qfa.plot("URA3_GrowthCurves.pdf",query.fit,query,maxg=0.25,maxt=7)
+qfa.plot("cdc13-1_GrowthCurves.pdf",control.fit,control,maxg=0.25,maxt=7)
+
+# Produce quality control diagnostics report (PDF)
+plateBoxplots(control.fit,"URA3_Quality.pdf")
+plateBoxplots(query.fit,"cdc13-1_Quality.pdf")
+creps=unique(control$Screen.Name)
+correlationReport(creps,control.fit,"URA3_Correlation.pdf")
+qreps=unique(query$Screen.Name)
+correlationReport(qreps,query.fit,"cdc13-1_Correlation.pdf")
+
+# Write summarised fitnesses to file
+qresults=fitnessReport("27","URA3_Fitnesses.txt",control.fit)
+cresults=fitnessReport("27","cdc13-1_Fitnesses.txt",control.fit)
+
+# Epistasis analysis
+epi<-qfa.epi(query.fit,control.fit,0.05,plot=FALSE,wctest=TRUE)
+pdf("FitnessPlotGIS.pdf")
+qfa.epiplot(epi$Results,0.05,xxlab="URA3D Fitness",yylab="cdc13-1 Fitness",mmain="Median fitness, MDR*MDP (Wilcoxon test for significance) at 27C",fmax=175)
+dev.off()
+report.epi(epi$Results,file="EpistasisReport.txt")
