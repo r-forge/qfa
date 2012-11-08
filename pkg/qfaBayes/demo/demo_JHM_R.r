@@ -34,6 +34,7 @@ a$ID<-paste(a$Barcode,a$MasterPlate.Number,Row,Col,sep="")
 
 a<-a[order(a$ORF,a$ID,a$Expt.Time), ]
 ORFuni=unique(a$ORF)########
+ORFuni_a<-unique(a$ORF)
 
 qfa.variables(b)
 Screen<-as.character(unique(b$Screen.Name))
@@ -58,7 +59,14 @@ b<-b[order(b$ORF,b$ID,b$Expt.Time), ]
 ORFuni_b<-unique(b$ORF)
 
 ####
-sum(rep(1,length(ORFuni))[ORFuni==ORFuni_b])/length(ORFuni)
+
+
+if(!(sum(rep(1,length(ORFuni))[ORFuni==ORFuni_b])/length(ORFuni)==1)){
+print("ORF names differ!")
+print(ORFuni[!(ORFuni_b==ORFuni)])
+print("ORF names differ!")
+stop()
+}
 ####
 ORFuni<-unique(b$ORF)
 #a<-funcIDORDER(a)
@@ -69,7 +77,7 @@ gene[gene=="0"]=ORFuni[gene=="0"]  #correction
 
 
 N<-length(ORFuni);M=Ma=length(IDuni)
-NoORF_a<-unlist(lapply(ORFuni,funcNoORF,data=a))#no of repeats each orf
+NoORF_a<-unlist(lapply(ORFuni_a,funcNoORF,data=a))#no of repeats each orf
 NoTime_a<-c(0,unlist(lapply(IDuni,funcNoTime,data=a)))# 0+ no of time each repeat
 NoSum_a<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_a)))
 
@@ -89,7 +97,7 @@ dimr<-max(NoORF_a,NoORF_b);dimc<-max(NoTime_a,NoTime_b)
 y<-funcXY_J(a$Growth,b$Growth,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
 x<-funcXY_J(a$Expt.Time,b$Expt.Time,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
 
-QFA.I<-list("NoORF"=cbind(NoORF_a,NoORF_b),"NoTime"=cbind(NoTime_a,NoTime_b)[-1,],"NoSum"=cbind(NoSum_a,NoSum_b),"N"=N,"Ma"=Ma,"Mb"=Mb,"gene"=gene,SHIFT=c(0,max(NoSum_a,NoSum_b))
+QFA.I<-list("NoORF"=cbind(NoORF_a,NoORF_b),"NoTime_a"=NoTime_a[-1],"NoTime_b"=NoTime_b[-1],"NoSum"=cbind(NoSum_a,NoSum_b),"N"=N,"Ma"=Ma,"Mb"=Mb,"gene"=gene,SHIFT=c(0,max(NoSum_a,NoSum_b))
 )
 QFA.D<-list(x=x,y=y)
 
