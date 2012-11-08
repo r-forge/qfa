@@ -3,7 +3,7 @@
 %\VignetteIndexEntry{qfa}
 \usepackage{url}
 \usepackage{hyperref}            
-\title{qfa - An R package for carrying out Quantitative Fitness Analysis}
+\title{qfa - An R package for Quantitative Fitness Analysis}
 \author{Conor Lawless}
 \begin{document}
 \setlength\parindent{0pt}
@@ -90,7 +90,7 @@ This function generates several fitnesses based on the generalised logistic mode
 \begin{description}
 \item[]$MDR$ Maximum Doubling Rate is the generalised logistic version of the $MDR$ fitness measure presented by \href{http://dx.doi.org/10.1371/journal.pgen.1001362}{Addinall et al. (2011)}.
 \begin{equation}
-MDR=\frac{r\nu}{log\left(1-\frac{2^\nu-1}{\left(2^\nu\right)*\left(\frac{g_0}{K}\right)^\nu-1}\right)}
+MDR=\frac{r\nu}{log\left(1-\frac{2^\nu-1}{\left(2^\nu\right) \left(\frac{g_0}{K}\right)^\nu-1}\right)}
 \end{equation}
 \item[]$MDP$ Maximum Doubling Potential is the generalised logistic version of the $MDP$ fitness measure presented by \href{http://dx.doi.org/10.1371/journal.pgen.1001362}{Addinall et al. (2011)}.
 \begin{equation}
@@ -101,9 +101,9 @@ MDP=\frac{log(\frac{K}{g_0})}{log(2)}
 \begin{equation}
 AUC=\int_{0}^{AUCLim} g(t,g_0,r,K,\nu),\mathrm{d}x - g_0 AUCLim 
 \end{equation}
-\item[$DT$]  Estimated time taken for the culture to reach twice its inoculum density.  THIS IS NOT CORRECT.
+\item[$DT$]  Estimated time taken for the culture to reach twice its inoculum density.
 \begin{equation}
-DT=\frac{1}{MDR}
+DT=\frac{\mathrm{log}\left( \frac{{2}^{\nu}\,{e}^{\nu\,r\,t}\,{\left( \frac{K}{G0}\right) }^{\nu}-{2}^{\nu}\,{e}^{\nu\,r\,t}}{{\left( {\left( {\left( \frac{K}{G0}\right) }^{\nu}+{e}^{\nu\,r\,t}-1\right) }^{\frac{1}{\nu}}\right) }^{\nu}-{2}^{\nu}\,{e}^{\nu\,r\,t}}\right) -\nu\,r\,t}{\nu\,r}
 \end{equation}
 
 \end{description}
