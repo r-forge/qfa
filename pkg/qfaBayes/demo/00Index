@@ -1,6 +1,6 @@
-demo_SHM		a
-demo_IHM		a
-demo_JHM		a
-demo_SHM_R		a
-demo_IHM_R		a
-demo_JHM_R		a
+redundant_SHM		redundant
+redundant_IHM		redundant
+redundant_JHM		redundant
+SHM_C		C code
+IHM_C		C code
+JHM_C		C code
