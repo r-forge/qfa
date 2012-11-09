@@ -83,6 +83,7 @@ ORFuni<-unique(b$ORF)
 IDuni<-unique(a$ID)
 gene<-unlist(lapply(ORFuni,funcGENE,data=a))
 if(sum(gene=="0")>0){#Data Correction
+gene<-as.character(gene)
 gene[gene=="0"]=ORFuni[gene=="0"]
 }
 
