@@ -69,11 +69,9 @@ print("ORF names differ!")
 stop()
 }
 
-if(max(a$Growth,b$Growth)>1)
-{
+if(max(a$Growth,b$Growth)>1){
 print("Data not scaled appropriately")
 stop()
-}
 }
 ####
 
