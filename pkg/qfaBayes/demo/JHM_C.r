@@ -68,7 +68,18 @@ print(ORFuni[!(ORFuni_b==ORFuni)])
 print("ORF names differ!")
 stop()
 }
+
+if(max(a$Growth,b$Growth)>1)
+{
+print("Data not scaled appropriately")
+stop()
+}
+}
 ####
+
+
+
+
 ORFuni<-unique(b$ORF)
 
 IDuni<-unique(a$ID)
