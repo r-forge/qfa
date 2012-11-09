@@ -114,6 +114,7 @@ int inzstruct_data_JHM(struct_data_JHM *data,int *QFAIA,double *QFADyA,double *Q
 		data->L=QFAIB[0];
 		data->M=QFAIB[1];
 		data->N=QFAIB[2];
+		testsame_JHM(QFAIA[3],QFAIB[3]);
 		data->maxy=QFAIA[3]+QFAIB[3];
 		data->maxTIMEb=QFAIB[4];
 
@@ -236,7 +237,7 @@ for (c=0;c<2;c++){
       SUM=0;
       }
   }
- D_para->alpha_c[1]=log((SUMb/(D->maxy-D->SHIFTlmn))/(SUMa/D->SHIFTlmn));
+ D_para->alpha_c[1]=gsl_sf_log((SUMb/(2*D->NoORF[2*D->L]-D->SHIFTlmn))/(SUMa/D->SHIFTlmn));
  D_para->beta_c[1]=D_para->alpha_c[1];
  SUM=0;
  for (l=0;l<(D->L);l++){SUM+=D_para->K_o_l[l];}
