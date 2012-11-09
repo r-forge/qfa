@@ -241,8 +241,7 @@ for (c=0;c<2;c++){
  D_para->beta_c[1]=D_para->alpha_c[1];
  SUM=0;
  for (l=0;l<(D->L);l++){SUM+=D_para->K_o_l[l];}
- D_para->K_p=SUM/D->L;
-				
+ D_para->K_p=SUM/D->L;		
 	for (l=0;l<(2*D->L);l++)          {D_para->tau_K_cl[l]=D_priors->tau_K_mu;}                  /*Precision*/
        
 	D_para->sigma_K_o=D_priors->eta_K_o;               /*Precision*/
