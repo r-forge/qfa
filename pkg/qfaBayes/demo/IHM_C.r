@@ -165,7 +165,13 @@ mat=data.frame(mat)
 names(mat)=tmp$HEADER
 mat
 }
-A<-main(1,2,1,1)
+
+#Change the following variables
+burn=1#Burn in period
+iters=1# sample iterations
+thin=1# thining for sample
+CAPL=1#maximum no. of ORF's
+A<-main(burn,iters,thin,CAPL)
 write.table(colMeans(A),"data_A.txt",col.names=FALSE,row.names=FALSE)
 #################################################
 #You may use standalone C code for SHM from here
@@ -216,7 +222,12 @@ names(mat)=tmp$HEADER
 mat
 }
 
-B<-main(1,2,1,1)
+#Change the following variables
+burn=1#Burn in period
+iters=1# sample iterations
+thin=1# thining for sample
+CAPL=1#maximum no. of ORF's
+B<-main(burn,iters,thin,CAPL)
 write.table(colMeans(B),"data_B.txt",col.names=FALSE,row.names=FALSE)
 #################################################
 #You may use standalone C code for SHM from here
@@ -262,7 +273,13 @@ mat=data.frame(mat)
 names(mat)=tmp$HEADER
 mat
 }
-C<-main_IHM(1,1,1)
+
+#Change the following variables
+burn=1#Burn in period
+iters=1# sample iterations
+thin=1# thining for sample
+C<-main_IHM(burn,iters,thin)
+
 
 
 

@@ -200,6 +200,13 @@ mat=data.frame(mat)
 names(mat)=tmp$HEADER
 mat
 }
-D<-main_JHM(3,1,2)
+
+#Change the following variables
+burn=1#Burn in period
+iters=1# sample iterations
+thin=1# thining for sample
+CAPL=1#maximum no. of ORF's
+D<-main_JHM(burn,iters,thin)
+
 
 

@@ -105,5 +105,11 @@ mat=data.frame(mat)
 names(mat)=tmp$HEADER
 mat
 }
-l<-main(1,2,1,1)
+
+#Change the following variables
+burn=1#Burn in period
+iters=1# sample iterations
+thin=1# thining for sample
+CAPL=1#maximum no. of ORF's
+l<-main(burn,iters,thin,CAPL)
 
