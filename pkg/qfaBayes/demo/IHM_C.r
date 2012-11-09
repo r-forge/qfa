@@ -29,7 +29,7 @@ IDuni<-unique(a$ID)
 ORFuni=unique(a$ORF)
 
 gene<-unlist(lapply(ORFuni,funcGENE,data=a))
-if(sum(gene=="0")){#Data Correction
+if(sum(gene=="0")>0){#Data Correction
 gene[gene=="0"]=ORFuni[gene=="0"]
 }
 N<-length(ORFuni);M<-length(IDuni)
@@ -89,7 +89,7 @@ IDuni<-unique(a$ID)
 ORFuni=unique(a$ORF)
 
 gene<-unlist(lapply(ORFuni,funcGENE,data=a))
-if(sum(gene=="0")){#Data Correction
+if(sum(gene=="0")>0){#Data Correction
 gene[gene=="0"]=ORFuni[gene=="0"]
 }
 N<-length(ORFuni);M<-length(IDuni)

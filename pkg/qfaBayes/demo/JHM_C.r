@@ -81,10 +81,10 @@ stop()
 ORFuni<-unique(b$ORF)
 
 IDuni<-unique(a$ID)
-gene<-unlist(lapply(ORFuni,funcGENE,data=b))
-
-gene[gene=="0"]=ORFuni[gene=="0"]  #correction
-
+gene<-unlist(lapply(ORFuni,funcGENE,data=a))
+if(sum(gene=="0")>0){#Data Correction
+gene[gene=="0"]=ORFuni[gene=="0"]
+}
 
 N<-length(ORFuni);M=Ma=length(IDuni)
 NoORF_a<-unlist(lapply(ORFuni_a,funcNoORF,data=a))#no of repeats each orf
