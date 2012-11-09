@@ -11,7 +11,8 @@
 library(qfa)
 
 # Change current working directory to root of the qfa package so that we can read in the demo files
-# This step is NOT required for a normal workflow
+# This block is NOT required for a normal workflow
+current=getwd()
 packroot=system.file(package = "qfa")
 setwd(packroot)
 
@@ -39,21 +40,14 @@ query.fit=makeFitness(query.fit,AUCLim=4)
 control.fit$fit=control.fit$MDRMDP
 query.fit$fit=query.fit$MDRMDP
 
-# Change working directory to prepare for outputting some files
-setwd(tempdir())
-paste("Output files will be generated in this directory:",tempdir())
+# Revert to original working directory to prepare for outputting some files
+# Also not necessary for a regular workflow
+setwd(current)
+paste("Output files will be generated in this directory:",current)
 
 # Produce pdfs of fitted curves & data
 qfa.plot("URA3_GrowthCurves.pdf",query.fit,query,maxg=0.25,maxt=7)
 qfa.plot("cdc13-1_GrowthCurves.pdf",control.fit,control,maxg=0.25,maxt=7)
-
-# Produce quality control diagnostics report (PDF)
-plateBoxplots(control.fit,"URA3_Quality.pdf")
-plateBoxplots(query.fit,"cdc13-1_Quality.pdf")
-creps=unique(control$Screen.Name)
-correlationReport(creps,control.fit,"URA3_Correlation.pdf")
-qreps=unique(query$Screen.Name)
-correlationReport(qreps,query.fit,"cdc13-1_Correlation.pdf")
 
 # Write summarised fitnesses to file
 qresults=fitnessReport("27","URA3_Fitnesses.txt",control.fit)
