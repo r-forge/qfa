@@ -311,7 +311,7 @@ if(n=="N"){stop()}
 }
 
 ###
-load("M_SHM_demo_a_27.RData")
+load("M_IHM_demo_a_27.RData")
 samp=C
 if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-samp}
 namesamp<-names(vecsamp)
