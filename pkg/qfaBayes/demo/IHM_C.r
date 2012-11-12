@@ -26,12 +26,20 @@ ORFuni=unique(a$ORF)
 a<-a[order(a$ORF,a$ID,a$Expt.Time), ]
 
 IDuni<-unique(a$ID)
-ORFuni=unique(a$ORF)
+ORFuni=ORFuni_a=unique(a$ORF)
 
 gene<-unlist(lapply(ORFuni,funcGENE,data=a))
+###
 if(sum(gene=="0")>0){#Data Correction
+gene<-as.character(gene)
 gene[gene=="0"]=ORFuni[gene=="0"]
 }
+if(max(a$Growth)>1){
+print("Data not scaled appropriately")
+stop()
+}
+###
+
 N<-length(ORFuni);M<-length(IDuni)
 NoORF_a<-unlist(lapply(ORFuni,funcNoORF,data=a))#no of repeats each orf
 NoTime_a<-c(0,unlist(lapply(IDuni,funcNoTime,data=a)))# 0+ no of
@@ -86,13 +94,27 @@ ORFuni=unique(a$ORF)
 a<-a[order(a$ORF,a$ID,a$Expt.Time), ]
 
 IDuni<-unique(a$ID)
-ORFuni=unique(a$ORF)
+ORFuni=ORFuni_b=unique(a$ORF)
 
 gene<-unlist(lapply(ORFuni,funcGENE,data=a))
+
+###
 if(sum(gene=="0")>0){#Data Correction
 gene<-as.character(gene)
 gene[gene=="0"]=ORFuni[gene=="0"]
 }
+if(!(sum(rep(1,length(ORFuni_a))[ORFuni_a==ORFuni_b])/length(ORFuni_a)==1)){
+print("ORF names differ!")
+print(ORFuni_a[!(ORFuni_b==ORFuni_a)])
+print("ORF names differ!")
+stop()
+}
+if(max(a$Growth)>1){
+print("Data not scaled appropriately")
+stop()
+}
+###
+
 N<-length(ORFuni);M<-length(IDuni)
 NoORF_a<-unlist(lapply(ORFuni,funcNoORF,data=a))#no of repeats each orf
 NoTime_a<-c(0,unlist(lapply(IDuni,funcNoTime,data=a)))# 0+ no of
@@ -281,7 +303,138 @@ iters=1# sample iterations
 thin=1# thining for sample
 C<-main_IHM(burn,iters,thin)
 
+stop()
+###
+load("M_SHM_FULL_27.RData")
+samp=C
+if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-samp}
+namesamp<-names(vecsamp)
+#write.table(samp,"backup.txt")
+#write.table(vecsamp,"backup2.txt")
+Z_l<-exp(vecsamp[1:(N)])
+sigma_Z<-exp(vecsamp[N+1])
+Z<-exp(vecsamp[N+2])
+nu_l<-exp(vecsamp[(N+3):(2*N+2)])
+sigma_nu<-exp(vecsamp[2*N+3])
+nu<-exp(vecsamp[(2*N+4)])
+A1<-exp(0)
+A2<-exp(vecsamp[2*N+5])
+delta<-vecsamp[(2*N+6):(3*N+5)]
+gamma<-vecsamp[(3*N+6):(4*N+5)]
+sigma_gamma<-exp(vecsamp[(4*N+6)])
+if(nrow(samp)>1) {delta_gamma<-colMeans(samp[,(2*N+6):(3*N+5)]*samp[,(3*N+6):(4*N+5)])} else {delta_gamma<-colMeans(samp[,(2*N+6):(3*N+5)]*(samp[,(3*N+6):(4*N+5)]))}
+delta_gamma=exp(delta_gamma)
 
+########strip 
+strip=TRUE
+if(strip==TRUE){
+strip_ORF<-read.delim("~/strip_list.txt",header=T,sep="\t")$orf
+Z_l<-Z_l[!ORFuni%in%strip_ORF]
+delta<-delta[!ORFuni%in%strip_ORF]
+delta_gamma<-delta_gamma[!ORFuni%in%strip_ORF]
+gene<-gene[!ORFuni%in%strip_ORF]
+ORFuni<-ORFuni[!ORFuni%in%strip_ORF]
+N<-length(ORFuni)}
+############
+
+sig<-sum(rep(1,N)[delta>0.5])
+order<-order(1-delta)
+vecorder<-order(1-delta)[1:sig]
+####PIT
+library(sn)
+vec=pst(exp(vecsamp[1:(QFA.I$N)]),df=3,location=exp(vecsamp[QFA.I$N+2]),scale=1/((sigma_Z)^0.5))
+vec=vec-pst(0,df=3,location=exp(vecsamp[QFA.I$N+2]),scale=1/((sigma_Z)^0.5))
+vec=vec/(1-pst(0,df=3,location=exp(vecsamp[QFA.I$N+2]),scale=1/((sigma_Z)^0.5)))
+
+#vec=pnorm(vecsamp[1:(N)],vecsamp[N+2],1/((sigma_Z)^0.5))
+pdf("IHM_PIT.pdf")
+hist(vec)
+dev.off()
+####
+
+#
+a<-read.table("file.txt")
+a<-matrix(a[,1],nrow=8)
+b<-read.table("file2.txt")
+b<-matrix(b[,1],nrow=8)
+pdf("plot3.pdf")
+plot(Z_l-colMeans(a))
+plot(A2*Z_l*delta_gamma-colMeans(b))
+dev.off()
+file="DEMO"#
+
+pdf(paste("IHM_plot_",file,".pdf",sep=""),useDingbats=F)
+
+limmin<-0
+limmax<-max(A2*Z_l*delta_gamma)
+limmaxx<-max(A1*Z_l)
+i=1:N
+plot(1,type="n",main=expression(paste("Treatment",Treat,degree,"C"," (delta=Posterior Expectations)")),ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),xlab="Control Fitness (=exp(Z_l))",ylab="Query Fitness (=exp(alpha+Z_l+delta_l*gamma_l))",col=8,pch=19,cex=0.5)
+lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=4)
+lines(A1*c(-1000,10000),A2*c(-1000,10000),col="grey",lwd=2)
+lines(c(Z_l[gene=="HIS3"],Z_l[gene=="HIS3"]),c(-1000,10000),lwd=2,col="lightblue")
+lines(c(-1000,10000),c(c(A2*Z_l*delta_gamma)[gene=="HIS3"],c(A2*Z_l*delta_gamma)[gene=="HIS3"]),lwd=2,col="lightblue")
+points(A1*Z_l[i], A2*(Z_l[i]*delta_gamma[i]),col=8,pch=19,cex=0.5)
+i=vecorder[log(delta_gamma)[vecorder]>0]
+points(A1*Z_l[i],A2*(Z_l[i]*delta_gamma[i]),col=2,pch=19,cex=0.5)
+i=vecorder[log(delta_gamma)[vecorder]<=0]  
+points(A1*Z_l[i],A2*(Z_l[i]*delta_gamma[i]),col=3,pch=19,cex=0.5)
+i=vecorder
+text(A1*Z_l[i],A2*(Z_l[i]*delta_gamma[i]),gene[i],pos=4,offset=0.1,cex=0.4)
+ plot(density((Z_l)))
+ plot(density(A2*(Z_l*delta_gamma)))
+dev.off()
+
+#
+gene[gene==0]=ORFuni[gene==0]
+setwd("~/")
+list<-read.table("Addinall_all.txt",header=T)
+list[,1]<-as.character(list[,1])
+list[,1][list[,1]=="YMR169c"]="YMR169C"
+list[,1][list[,1]=="YMR175w"]="YMR175W"
+list[,1][list[,1]=="YML009c"]="YML009C"
+list$qvalue[is.na(list$qvalue)]=1
+strip_ORF<-read.delim("strip_list.txt",header=T,sep="\t")$orf
+list<-list[!(list[,1]%in%strip_ORF),]
+list<-list[order(list[,1]),]
+list$gene<-as.character(list$gene)
+list[,5][is.na(list[,5])]=1
+list[,6][is.na(list[,6])]=1
+list$gene[is.na(list$gene)]<-list[,1][is.na(list$gene)]
+#list<-list[abs(list[,2])>0.5,]##########
+list2<-list
+list<-unique(as.character(list[list[,6]<0.05,1]))
+
+
+lORF<-ORFuni[vecorder]
+llORF<-lORF[lORF%in%list]
+llORF_not<-lORF[!(lORF%in%list)]
+lgene<-cbind(gene[ORFuni%in%llORF],as.numeric(delta[ORFuni%in%llORF]),as.numeric(delta_gamma[ORFuni%in%llORF]))
+lgene_not<-cbind(gene[ORFuni%in%llORF_not],as.numeric(delta[ORFuni%in%llORF_not]),as.numeric(delta_gamma[ORFuni%in%llORF_not]))
+
+
+list2<-list2[order(abs(list2[,4]),decreasing=T),]
+list2<-cbind(list2,1:nrow(list2))
+list2<-list2[order(list2[,1]),]
+ADD_position<-list2[,8]
+
+
+
+ORDER<-cbind(gene[vecorder],as.numeric(delta[vecorder]),as.numeric(delta_gamma[vecorder]),ADD_position[vecorder])
+write.table(file="IHM_interactions.txt",ORDER)
+
+ORDER[,4][order(abs(as.numeric(ORDER[,3])),decreasing=T)]
+
+l<-list[!(list%in%lORF)]
+l<-gene[ORFuni%in%l]
+write.table(l,"IHM_not_interactions.txt")
+
+write.table(cbind(gene[order],ORFuni[order],delta[order],delta_gamma[order],ADD_position[order]),"IHM_all.txt")
+
+save.image(file="IHM_4oct_8k_8k_8k.RData")
+#Percent interactors
+#
+length(llORF)/(length(unique(c(as.character(list),lORF))))
 
 
 
