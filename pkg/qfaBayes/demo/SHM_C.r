@@ -1,4 +1,4 @@
-#a=read.delim("CDC13-1_Raw.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
+#a=read.delim("URA3_Raw.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
 data("URA3_Raw_trim")
 
 qfa.variables(a)
@@ -22,18 +22,24 @@ if (nchar(Col[i])<2){Col[i]=paste(0,Col[i],sep="")}
 
 a$ID<-paste(a$Barcode,a$MasterPlate.Number,Row,Col,sep="")
 
-ORFuni=unique(a$ORF)
-
 a<-a[order(a$ORF,a$ID,a$Expt.Time), ]
 
 IDuni<-unique(a$ID)
 ORFuni=unique(a$ORF)
 
 gene<-unlist(lapply(ORFuni,funcGENE,data=a))
+###
 if(sum(gene=="0")>0){#Data Correction
 gene<-as.character(gene)
 gene[gene=="0"]=ORFuni[gene=="0"]
 }
+if(max(a$Growth)>1){
+print("Data not scaled appropriately")
+stop()
+}
+###
+###
+
 N<-length(ORFuni);M<-length(IDuni)
 NoORF_a<-unlist(lapply(ORFuni,funcNoORF,data=a))#no of repeats each orf
 NoTime_a<-c(0,unlist(lapply(IDuni,funcNoTime,data=a)))# 0+ no of
