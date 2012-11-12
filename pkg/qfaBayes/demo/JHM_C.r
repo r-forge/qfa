@@ -9,7 +9,7 @@ data("URA3_Raw_trim")#Control a
 
 TreatA=27
 
-filename=paste("M_JHM_FULL","_",TreatA,"_",TreatB,sep="")
+filename=paste("M_JHM_demo","_",TreatA,"_",TreatB,sep="")
 
 qfa.variables(a)
 
@@ -207,9 +207,17 @@ burn=1#Burn in period
 iters=1# sample iterations
 thin=1# thining for sample
 D<-main_JHM(burn,iters,thin)
-stop()
+
+plotYN=0
+while(plotYN < 1 ){
+  n<-readline("do you wish to plot? Y or N: ")
+if(n=="Y"){plotYN=1}
+if(n=="N"){stop()}
+}
+
+
 ################################
-load("M_JHM_FULL_27_27.RData")
+load("M_JHM_demo_27_27.RData")
 QFA.P<-read.table("priors.txt",header=T)
 QFA<-c(QFA.I,QFA.P,QFA.D)
 samp<-D
@@ -444,31 +452,18 @@ jj=jj+1
 delta<-delta_l
 
 
-
-
-pdf("JHM_PIT.pdf")
-hist(vec)
-library(sn)
-vec=pst(exp(K_o_l),df=3,location=exp(K_p),scale=1/(exp(sigma_K_o)^0.5))
-vec<-vec-pst(0,df=3,location=exp(K_p),scale=1/(exp(sigma_K_o)^0.5))
-vec<-vec/(1-pst(0,df=3,location=exp(K_p),scale=1/(exp(sigma_K_o)^0.5)))
-hist(vec)
-dev.off()
-
-
 ########strip 
-strip=TRUE
-if(strip==TRUE){
-
-strip_ORF<-read.delim("~/strip_list.txt",header=T,sep="\t")$orf
-K_o_l<-K_o_l[!ORFuni%in%strip_ORF]
-r_o_l<-r_o_l[!ORFuni%in%strip_ORF]
-delta<-delta[!ORFuni%in%strip_ORF]
-omegadelt<-omegadelt[!ORFuni%in%strip_ORF]
-gamdelt<-gamdelt[!ORFuni%in%strip_ORF]
-gene<-gene[!ORFuni%in%strip_ORF]
-ORFuni<-ORFuni[!ORFuni%in%strip_ORF]
-N<-length(ORFuni)}
+#strip=TRUE
+#if(strip==TRUE){
+#strip_ORF<-read.delim("~/strip_list.txt",header=T,sep="\t")$orf
+#K_o_l<-K_o_l[!ORFuni%in%strip_ORF]
+#r_o_l<-r_o_l[!ORFuni%in%strip_ORF]
+#delta<-delta[!ORFuni%in%strip_ORF]
+#omegadelt<-omegadelt[!ORFuni%in%strip_ORF]
+#gamdelt<-gamdelt[!ORFuni%in%strip_ORF]
+#gene<-gene[!ORFuni%in%strip_ORF]
+#ORFuni<-ORFuni[!ORFuni%in%strip_ORF]
+#N<-length(ORFuni)}
 ############
 
 A1<-1
@@ -490,30 +485,14 @@ vecMDRPMDR<-vecMDRa*vecMDPa
 vecMDRPMDR[vecK<2*PO]=0
 mu_a=(vecMDRPMDR)[1:N]
 mu_b=(vecMDRPMDR)[(1+N):(2*N)]
-#Mu=vecMDPa*vecMDRa
-
-#Mu_a<-Mu[1:sum(NoORF[,1])]
-#veca<-vecb<-matrix(NA,N,max(NoORF))
-#Mu_b<-Mu[(1+sum(NoORF[,1])):sum(NoORF)]
-#mu_a=mu_b=0
-#for (i in 1:N){
-#mu_a[i]<-mean(Mu_a[(1+NoSum[i,1]):NoSum[i+1,1]])
-#mu_b[i]<-mean(Mu_b[(1+NoSum[i,2]):NoSum[i+1,2]])
-#}
 
 limmin<-0
-#limmax<-max(na.omit(Mu))
 limmax<-max(na.omit(c(mu_b)))
 limmaxx<-max(na.omit(c(mu_a)))
 
-
-###
-
 Treat=TreatA=TreatB=27
 
-
-gene[gene==0]=ORFuni[gene==0]
-
+gene[gene==0]=ORFuni[gene==0]#correction
 
 file="DEMO"
 pdf(paste("JHM_plot_",file,".pdf",sep=""),useDingbats=F)
@@ -599,19 +578,8 @@ text(mu_a[i],(mu_b[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 #}
 dev.off()
 
-###PIT
-t=1
-vec=numeric(0)
-for (i in 1:N){
-for (j in 1:NoORF[i,1])
-{
-vec[t]=pnorm(K_clm[t],K_o_l[i],1/(exp(tau_K_cl[i])^0.5))
-t=t+1
-}
-}
-#
+stop()
 
-#
 gene[gene==0]=ORFuni[gene==0]
 setwd("~/")
 list<-read.table("Addinall_all.txt",header=T)

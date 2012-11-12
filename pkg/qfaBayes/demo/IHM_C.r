@@ -4,7 +4,7 @@ qfa.variables(a)
 Treat=27
 Screen<-unique(a$Screen.Name)
 MPlate<-(unique(a$MasterPlate.Number))
-filename=paste("SHM_demo","_",Treat,sep="")
+filename=paste("M_IHM_demo_a","_",Treat,sep="")
 
 a<-funcREMOVE(a,Screen,Treat,MPlate)
 a<-a[!a$Row==1,]
@@ -72,7 +72,7 @@ qfa.variables(a)
 Treat=27
 Screen<-unique(a$Screen.Name)
 MPlate<-(unique(a$MasterPlate.Number))
-filename=paste("SHM_demo","_",Treat,sep="")
+filename=paste("M_IHM_demo_b","_",Treat,sep="")
 
 a<-funcREMOVE(a,Screen,Treat,MPlate)
 a<-a[!a$Row==1,]
@@ -193,7 +193,7 @@ mat
 burn=1#Burn in period
 iters=1# sample iterations
 thin=1# thining for sample
-CAPL=1#maximum no. of ORF's
+CAPL=4294#maximum no. of ORF's
 A<-main(burn,iters,thin,CAPL)
 write.table(colMeans(A),"data_A.txt",col.names=FALSE,row.names=FALSE)
 #################################################
@@ -249,7 +249,7 @@ mat
 burn=1#Burn in period
 iters=1# sample iterations
 thin=1# thining for sample
-CAPL=1#maximum no. of ORF's
+CAPL=4294#maximum no. of ORF's
 B<-main(burn,iters,thin,CAPL)
 write.table(colMeans(B),"data_B.txt",col.names=FALSE,row.names=FALSE)
 #################################################
@@ -303,9 +303,15 @@ iters=1# sample iterations
 thin=1# thining for sample
 C<-main_IHM(burn,iters,thin)
 
-stop()
+plotYN=0
+while(plotYN < 1 ){
+  n<-readline("do you wish to plot? Y or N: ")
+if(n=="Y"){plotYN=1}
+if(n=="N"){stop()}
+}
+
 ###
-load("M_SHM_FULL_27.RData")
+load("M_SHM_demo_a_27.RData")
 samp=C
 if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-samp}
 namesamp<-names(vecsamp)
@@ -326,41 +332,21 @@ if(nrow(samp)>1) {delta_gamma<-colMeans(samp[,(2*N+6):(3*N+5)]*samp[,(3*N+6):(4*
 delta_gamma=exp(delta_gamma)
 
 ########strip 
-strip=TRUE
-if(strip==TRUE){
-strip_ORF<-read.delim("~/strip_list.txt",header=T,sep="\t")$orf
-Z_l<-Z_l[!ORFuni%in%strip_ORF]
-delta<-delta[!ORFuni%in%strip_ORF]
-delta_gamma<-delta_gamma[!ORFuni%in%strip_ORF]
-gene<-gene[!ORFuni%in%strip_ORF]
-ORFuni<-ORFuni[!ORFuni%in%strip_ORF]
-N<-length(ORFuni)}
+#strip=TRUE
+#if(strip==TRUE){
+#strip_ORF<-read.delim("~/strip_list.txt",header=T,sep="\t")$orf
+#Z_l<-Z_l[!ORFuni%in%strip_ORF]
+#delta<-delta[!ORFuni%in%strip_ORF]
+#delta_gamma<-delta_gamma[!ORFuni%in%strip_ORF]
+#gene<-gene[!ORFuni%in%strip_ORF]
+#ORFuni<-ORFuni[!ORFuni%in%strip_ORF]
+#N<-length(ORFuni)}
 ############
 
 sig<-sum(rep(1,N)[delta>0.5])
 order<-order(1-delta)
 vecorder<-order(1-delta)[1:sig]
-####PIT
-library(sn)
-vec=pst(exp(vecsamp[1:(QFA.I$N)]),df=3,location=exp(vecsamp[QFA.I$N+2]),scale=1/((sigma_Z)^0.5))
-vec=vec-pst(0,df=3,location=exp(vecsamp[QFA.I$N+2]),scale=1/((sigma_Z)^0.5))
-vec=vec/(1-pst(0,df=3,location=exp(vecsamp[QFA.I$N+2]),scale=1/((sigma_Z)^0.5)))
 
-#vec=pnorm(vecsamp[1:(N)],vecsamp[N+2],1/((sigma_Z)^0.5))
-pdf("IHM_PIT.pdf")
-hist(vec)
-dev.off()
-####
-
-#
-a<-read.table("file.txt")
-a<-matrix(a[,1],nrow=8)
-b<-read.table("file2.txt")
-b<-matrix(b[,1],nrow=8)
-pdf("plot3.pdf")
-plot(Z_l-colMeans(a))
-plot(A2*Z_l*delta_gamma-colMeans(b))
-dev.off()
 file="DEMO"#
 
 pdf(paste("IHM_plot_",file,".pdf",sep=""),useDingbats=F)
@@ -384,6 +370,9 @@ text(A1*Z_l[i],A2*(Z_l[i]*delta_gamma[i]),gene[i],pos=4,offset=0.1,cex=0.4)
  plot(density((Z_l)))
  plot(density(A2*(Z_l*delta_gamma)))
 dev.off()
+
+
+stop()
 
 #
 gene[gene==0]=ORFuni[gene==0]
