@@ -313,7 +313,7 @@ if(n=="N"){stop()}
 ###
 load("M_IHM_demo_a_27.RData")
 samp=C
-if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-samp}
+if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-as.numeric(samp)}
 namesamp<-names(vecsamp)
 #write.table(samp,"backup.txt")
 #write.table(vecsamp,"backup2.txt")
