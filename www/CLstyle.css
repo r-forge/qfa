@@ -1,65 +1,72 @@
-IMG {	border: 0;
+
+header,nav,footer,article {display: block;}
+nav {float:left; width:15%;}
+article {float:left; width:84%;}
+footer {clear:both;}
+
+
+img {	border: 0;
 	}
 
-BODY {background-color: white;
+body {background-color: white;
 	font-size: 12pt;
-	font-family: "arial";
+	font-family: 'Droid Sans', sans-serif;
 	}
 
-A {	text-decoration:none;
+a {	text-decoration:none;
 	}
 
-A:LINK {	color: black;
+a:link {	color: black;
 		font-weight: bold; 
 		text-decoration: none;
 		border-bottom:0px dashed
 	}
 
-A:VISITED {	color: black;
+a:visited {	color: black;
 		font-weight: bold; 
 		text-decoration: none;
 		border-bottom:0px dashed
 	}
 
-A:HOVER {	background: black;
+a:hover{background: black;
 		color: white;
 		font-weight: bold;
 	}
+	
 
-H1 {
+
+h1 {
 	margin-top: 0px; 
-	padding: 0px;
+	padding-bottom: 10px;
 	color: black;
-    margin-bottom: 0;
+    margin-bottom: 10px;
 	background-colour: white;
 	font-size: 28pt;
 	}
 
-H2 { 
+h2{ 
 	margin-top: 0px; 
-	padding: 0px;
 	color: black;
-    margin-bottom: 0px;
-	font-size: 20pt;
+	font-size: 22pt;
 	}
 
-H3 {
-	margin-top: 0px; 
-	padding: 0px;
-	color: black;
+h3 {
     margin-bottom: 0px;
-	font-size: 15pt;
+	padding-bottom: 10px;
+	color: black;
+	font-size: 18pt;
 	}
 
-H4 { 
+h4 { 
 	margin-top: 0px; 
-	padding: 0px;
+	margin-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
 	color: black;
-    margin-bottom: 0px;
-	font-size: 10pt;
+	font-size: 14pt;
 	}
 
-H5 { 
+h5 { 
 	margin-top: 0px; 
 	padding: 0px;
 	color: black;
@@ -68,7 +75,7 @@ H5 {
 	font-size: 8pt;
 	}
 
-HR {	border: 0px;
+hr{	border: 0px;
 	margin-bottom: 5px;
 	margin-top: 5px;
 	color: black;
@@ -77,32 +84,75 @@ HR {	border: 0px;
 	height: 7px;
 	}
 
-UL {  list-style-type: square;
-      list-style-position: outside;
+ul {  
+	margin-left: 0px;
+	padding-left: 5px;
+	list-style-type: square;
+    list-style-position: outside;
+	position: relative; 
+	left: 0px;
+	}
+	
+li {
+	font-size: 80%;
+	position: relative; 
+	left: 10px;
+}
+
+p { 	
+	font-size: 12pt;
 	}
 
-P { 	font-size: 12pt;
+pre, tt, code { 
+	font-size: 12pt;
 	}
+	
+code.indent{
+	position: relative; 
+	left: 20px;
+}
 
-PRE, TT, CODE { font-size: 12pt;
-	}
+table { background-color: #dddddd }
 
-TABLE { background-color: #dddddd }
-
-TD { 	font-size: 10pt;
+td { 	font-size: 10pt;
 	background-color: #dddddd ;
 	}
 
-TD.light { background-color: #eeeeee }
+td.light { background-color: #eeeeee }
 
-TD.darker { background-color: #cccccc }
+td.darker { background-color: #cccccc }
 
-TH { background-color: #bbbbbb }
+th { background-color: #bbbbbb }
 
-DIV.CBOX{
+div.cbox{
 	background-color:	rgb(237,237,237);
 	padding-left: 50pt;
 	}
+	
+#nav a {	
+	font-size: 10pt;
+	}
+
+#nav ul{
+	margin-top: 0px; 
+	margin-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+#nav h4{
+	margin-top: 0px; 
+	margin-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+
+#nav br{
+	margin-top: 0px; 
+	margin-bottom: 0px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
 
 
 
