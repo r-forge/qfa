@@ -4,7 +4,7 @@
 <meta charset=utf-8> 
 <title>qfa: the R toolbox for Quantitative Fitness Analysis of microbial cultures</title> 
 <meta name="desciption" content="Installing and using an R package for Quantitive Fitness Analysis (QFA) of arrayed microbial cultures growing on solid agar.">
-<link href='http://fonts.googleapis.com/css?family=Droid+Sans' rel='stylesheet' type='text/css'>
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="CLstyle.css">
 </head> 
  
@@ -31,14 +31,12 @@
 			<li><a href="#auxiliary">Auxiliary functions</a></li>
 		</ul></li>
 </ul>
-
-<br></br>
 <h4>Other software</h4>
 <ul>
 	<li><a href="http://research.ncl.ac.uk/colonyzer">Colonyzer</a></li>
 </ul>
 
-<br></br>
+
 <h4>References</h4>
 <ul>
 <li><a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a></li>
@@ -46,7 +44,6 @@
 <li><a href="http://dx.doi.org/10.1186/1471-2105-11-287">Lawless et al., 2010</a></li>
 </ul>
 
-<br></br>
 <h4>Authors</h4>
 <ul>
 <li><a href="http://www.staff.ncl.ac.uk/conor.lawless/">Conor Lawless</a></li>
@@ -57,41 +54,40 @@
 
 </nav>
 
-
 <article>
 <a name="install"><h2>Installing the package</h2></a>
 
-<p>The <a href="http://cran.r-project.org/">R</a> package is available for several operating systems from R-forge:</p>
+<p>The <a href="http://cran.r-project.org/">R</a> package is available for download for several operating systems from <a href="http://r-forge.r-project.org/projects/qfa">R-forge</a> at this address:
 
-<a href="http://r-forge.r-project.org/projects/qfa">http://r-forge.r-project.org/projects/qfa</a>
+<a href="http://r-forge.r-project.org/projects/qfa">http://r-forge.r-project.org/projects/qfa</a></p>
 
-<p>The easiest way to install the package is to execute the following command during an <a href="http://cran.r-project.org/">R</a> session:</p>
+<p>The easiest way to install the package is to execute the following command during an <a href="http://cran.r-project.org/">R</a> session:
 <code class="indent">install.packages("qfa", repos="http://R-Forge.R-project.org")</code>
-<p>Note that the latest version of <a href="http://cran.r-project.org/">R</a> is required for easy, automatic installation. Source code can be used to build the package for older versions of <a href="http://cran.r-project.org/">R</a> if required and can be checked out from <a href="http://r-forge.r-project.org/projects/qfa">R-forge</a> by SVN.</p>
+Note that the latest version of <a href="http://cran.r-project.org/">R</a> is required for easy, automatic installation. Source code can be used to build the package for older versions of <a href="http://cran.r-project.org/">R</a> if required and can be checked out from <a href="http://r-forge.r-project.org/projects/qfa">R-forge</a> by <a href="http://en.wikipedia.org/wiki/Apache_Subversion">subversion</a>.</p>
 
-<p>Once installed, the package can be loaded ready for use with:</p>
+<p>Once installed, the package can be loaded ready for use with:
 <code class="indent">library(qfa)</code>
-<p>Detailed documentation can be accessed <a href="docs/qfa-manual.pdf">here</a> or by executing:</p>
+Detailed documentation can be found in the package manual <a href="docs/qfa-manual.pdf">here</a> or by executing:
 <code class="indent">help(package="qfa")</code>
-<p>Documentation for specific functions can also be obtained using the usual R mechanisms.  For example, help on the function <code>colonyzer.read</code> can be obtained with:</p>
+Documentation for specific functions can also be obtained using the usual <a href="http://cran.r-project.org/">R</a> mechanisms.  For example, help on the function <code>colonyzer.read</code> can be obtained with:
 <code class="indent">?colonyzer.read</code></a>
-<p>A short document outlining QFA and the R package functions can be accessed <a href="docs/qfa.pdf">here</a> by:</p>
+A short document outlining QFA and the package functions can be accessed <a href="docs/qfa.pdf">here</a> by:
 <code class="indent">vignette("qfa")</code>
-<p>Finally, some code demonstrating analysis of a small subset of the data presented in <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> can be executed by:</p>
+Finally, some code demonstrating analysis of a small subset of the <a href="http://research.ncl.ac.uk/colonyzer/AddinallQFA/">data</a> presented in <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> can be executed by:
 <code class="indent">demo("telomereCap")</code>
-<br></br>
+</p>
 
 <hr></hr>
 
 <a name="qfa"><h2>Quantitative Fitness Analysis</h2></a>
 
-<p> During Quantitative Fitness Analysis (QFA) we generate cell density timecourse estimates by repeatedly photographing microbial cultures growing in regular arrays on solid agar plates.  First, we quantify cell density from timecourse photographs using the image analysis tool <a href="http://research.ncl.ac.uk/colonyzer">Colonyzer</a> (<a href="http://dx.doi.org/10.1186/1471-2105-11-287">Lawless et al., 2010</a>).  Next, we fit a logistic model to the cell density timecourse for each independently growing culture, using the inferred logistic model parameters to define a quantitative measure of culture fitness.  Comparisons between fitnesses can be extremely useful for deducing various aspects of the function of cultures.  This R package is for fitting logistic models to cell density timeseries, generating fitness estimates, quantifying (e.g. genetic) interactions, data quality control and data visualisation.</p>
+<p> During Quantitative Fitness Analysis (QFA) we generate cell density timecourse estimates by repeatedly photographing <a href="http://en.wikipedia.org/wiki/Microorganism">microbial</a> <a href="http://en.wikipedia.org/wiki/Microbiological_culture">cultures</a> growing in regular arrays on solid <a href="http://en.wikipedia.org/wiki/Agar_plate">agar plates</a>.  First, we quantify cell density from timecourse photographs using the image analysis tool <a href="http://research.ncl.ac.uk/colonyzer">Colonyzer</a> (<a href="http://dx.doi.org/10.1186/1471-2105-11-287">Lawless et al., 2010</a>).  Next, we fit a <a href="http://en.wikipedia.org/wiki/Generalised_logistic_function#Generalised_logistic_differential_equation">generalised logistic model</a> to the cell density timecourse for each independently growing culture, using the inferred model parameters to define a quantitative measure of culture <a href="http://en.wikipedia.org/wiki/Fitness_(biology)">fitness</a>.  Comparisons between fitnesses can be extremely useful for comparing the health of cultures and deducing the relative effect of their <a href="http://en.wikipedia.org/wiki/Genotype">genotypes</a> in a specific environment.  This package is for fitting logistic models to cell density timeseries, generating fitness estimates, quantifying (e.g. genetic) interactions, data quality control and data visualisation.</p>
 
 <a name="applications"><h3>Example Applications</h3></a>
 
-<p>By carrying out QFA on arrayed microbial cultures containing relevant gene mutations, we can use fitness estimates to infer the presence or absence of epistasis, and to quantify and rank genetic interaction strengths.  For example, during screens for deletions interacting with telomere capping mutations, <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> inferred genetic interaction strength as the deviation of observed double mutant fitnesses from predicted double mutant fitnesses given observed single deletion fitnesses and assuming a multiplicative model of epistasis.  They also calculate the statistical significance of deviations given noise in experimental observations.</p>
+<p>By carrying out QFA on arrayed microbial cultures containing relevant gene <a href="http://en.wikipedia.org/wiki/Mutation">mutations</a>, we can use fitness estimates to infer the presence or absence of <a href="http://en.wikipedia.org/wiki/Epistasis">epistasis</a>, and to quantify and rank genetic interaction strengths.  For example, during screens for gene deletions interacting with <a href="http://en.wikipedia.org/wiki/Telomere">telomere</a> capping mutations, <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> inferred genetic interaction strength as the deviation of observed double mutant fitnesses from predicted double mutant fitnesses given observed single deletion fitnesses and assuming a multiplicative model of epistasis.  They also calculate the statistical significance of deviations given noise in experimental observations.</p>
  
-<p>If arrayed cultures are grown at selected temperatures we can infer the temperature sensitivity of mutants by QFA. <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> demonstrated the use of QFA to identify gene deletions resulting in increased temperature sensitivity.  These results were verified by comparison with manually curated observations listed in the SGD database.  If cultures are subject to treatments (e.g. nutrition, or drug treatments) QFA can generate ranked lists of cultures which grow surprisingly well or badly given the treatment.</p>
+<p>If arrayed cultures are grown at selected temperatures we can infer the temperature sensitivity of mutants by QFA. <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> demonstrated the use of QFA to identify gene deletions resulting in increased temperature sensitivity.  These results were verified by comparison with <a href="http://www.yeastgenome.org/cgi-bin/phenotype/phenotype.fpl?rm=specific_tables&phenotype=heat%20sensitivity:%20increased">manually curated observations</a> listed in the <a href="http://www.yeastgenome.org/"><i>Saccharomyces</i> Genome Database (SGD)</a>.  If cultures are subject to treatments (e.g. nutrition, or drug treatments) QFA can generate ranked lists of cultures which grow surprisingly well or badly given the particular treatment.</p>
 
 <div STYLE="position:relative; float:left; HEIGHT:520px">
 <div STYLE="position:absolute; TOP:0px; LEFT:0px; WIDTH:500px">
@@ -107,17 +103,17 @@
 
 <a name="workflow"><h3>Workflow</h3></a>
 
-<p> This R package is a toolbox for carrying many of the the computational (i.e. mathematical & statistical) aspects of the QFA workflow.  Computational analysis is preceded by two experimental stages.</p>  
-<p>The first stage of QFA requires the generation of arrays of cultures of interest.  This can be carried out in a high-throughput fashion, using libraries of gene mutations (as was done in <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a>), however it can also be carried out in a lower-throughput fashion, with hand selected and hand inoculated cultures, growing on a single plate for example.  Once cultures are generated and inoculated onto agar, they must be repeatedly photographed.  There are custom, semi-automatic and fully-automatic technologies available to facilitate timecourse photography of such plates (e.g. S&P Robotics SPImager, BM3), however any lab should be able to capture such timecourses by fixing a consumer digital camera over a plate, and repeatedly capturing images to a computer hard-drive via USB cable.  It is important to capture the time at which the photographs were taken, and this is achieved most simply by embedding the current date and time into the captured image filenames.</p>  
+<p> This R package is a toolbox for carrying many of the the mathematical & statistical aspects of the QFA workflow.  Analysis is preceded by two stages, one experimental stage and one image analysis stage.</p>  
 
-<p>The second stage is the conversion of culture photographs into estimates of cell density.  This is usually achieved using the the image analysis tool <a href="http://research.ncl.ac.uk/colonyzer">Colonyzer</a> (<a href="http://dx.doi.org/10.1186/1471-2105-11-287">Lawless et al., 2010</a>.  However the output of any image analysis tool capable of generating culture size estimates for images of rectangular arrayed cultures could be reformatted and used in the QFA workflow.  <a href="http://research.ncl.ac.uk/colonyzer">Colonyzer</a> is a suite of particularly senstive image analysis algorithms, capable of detecting signal on spotted agar plates early in the growth curve.  It has been designed to eliminate lighting gradients in captured images, thereby allowing the capture of density estimates having no spatial bias without having to use expensive, carefully optimised lighting systems. </p>
+<p>The first stage of QFA requires the generation of arrays of cultures of interest.  This can be carried out in a high-throughput fashion, using libraries of gene mutations (as was done in <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a>), however it can also be carried out in a lower-throughput fashion, with hand selected and hand inoculated cultures, growing on a single plate for example.  Once cultures are generated, diluted and inoculated onto agar, they must be repeatedly photographed.  There are custom, semi-automatic and fully-automatic technologies available to facilitate timecourse photography of such plates (e.g. S&P Robotics <a href="http://www.sprobotics.com/spImager_Desc.html">SPImager</a>, or a custom-built <a href="http://nirfriedmanlab.blogspot.co.uk/2012/08/light-box.html">alternative</a>), however any lab should be able to capture such timecourses by fixing a consumer digital camera over a plate, and repeatedly capturing images to a computer hard-drive via USB cable.  It is important to record the time at which the photographs were captured, and this is achieved most simply by embedding the current date and time into the captured image filenames.</p>  
+
+<p>The second stage is image analysis to convert culture photographs into cell density estimates.  This is usually achieved using the the <a href="http://research.ncl.ac.uk/colonyzer">Colonyzer</a> software (<a href="http://dx.doi.org/10.1186/1471-2105-11-287">Lawless et al., 2010</a>).  However the output of any image analysis tool capable of generating culture size estimates from images of rectangular arrayed cultures could be reformatted and incorporated into the QFA workflow.  <a href="http://research.ncl.ac.uk/colonyzer">Colonyzer</a> is a suite of particularly sensitive image analysis algorithms, capable of detecting signal on spotted agar plates early in the growth curve.  It has been designed to eliminate lighting gradients in captured images, thereby minimising spatial bias in cell density estimates without having to use expensive, carefully optimised lighting systems. </p>
  
-<p>Given cell density estimates from <a href="http://research.ncl.ac.uk/colonyzer">Colonyzer</a> and an appropriate experimental description (e.g. describing the location of each culture, the treatments applied, and the time of inoculation for each plate), the qfa R package contains everything needed to generate quantitiative fitness estimates for all cultures, together with estimates of genetic interaction strengths (for appropriately designed experiments).</p>  
+<p>Given cell density estimates from <a href="http://research.ncl.ac.uk/colonyzer">Colonyzer</a> and an appropriate experimental description specifiying the genotype or ID of each culture on each plate, the treatments applied, and the time of inoculation for each plate, the qfa R package contains everything needed to generate growth curves and quantitiative fitness estimates for all cultures, together with estimates of genetic interaction strengths (for appropriately designed experiments).</p>  
 
 <a name="jove"><h3>Journal of Visualised Experiments QFA video</h3></a>
-<p>A short video describing the experimental and computational components of QFA.  There is also an open-access <a href="http://www.jove.com/pdf/4018">manuscript</a> describing the QFA protocol associated with this video.
+<p>A short video describing the experimental and computational components of QFA.  There is also an open-access <a href="http://www.jove.com/pdf/4018">manuscript</a> with a detailed description of the QFA protocol associated with this video.</p>
 <iframe height="515" border="0" scrolling="no" frameborder="0" marginwheight="0" marginwidth="0" src="http://www.jove.com/embed/player?id=4018&amp;t=1&amp;a=1&amp;chap=1&amp;s=1" width="815"><p><a title="A Quantitative Fitness Analysis Workflow" href="http://www.jove.com/video/4018/a-quantitative-fitness-analysis-workflow">A Quantitative Fitness Analysis Workflow</a></p></iframe>
-</p>
 
 <hr></hr> 
 
@@ -125,16 +121,16 @@
  
 <p>This R package consists of a set of functions, split into types below:</p>
 
-<a name="reading"><h4>Reading and formatting data</h4></a>
+<a name="reading"><h3>Reading and formatting data</h3></a>
 <p>These functions read in image analysis output (e.g. from <a href="http://research.ncl.ac.uk/colonyzer">Colonyzer</a>), associate these cell density estimates with culture type (e.g. genotype) & plate treatments and calculate time since inoculation for each observation.  All of these data are bound together into a data.frame object, with rows representing unique observations of individual cultures.</p>
 
-<a name="fitting"><h4>Fitting logistic model to growth curves</h4></a>
+<a name="fitting"><h3>Fitting logistic model to growth curves</h3></a>
 <p>These functions carry out parameter inference for a <a href="http://en.wikipedia.org/wiki/Generalised_logistic_function#Generalised_logistic_differential_equation">generalised logistic model</a> of the observed growth curves.  Inference is currently carried out by maximum likelihood (fast, only provides point estimates for parameter values), however we are currently developing a parallel package (qfaBayes) for Bayesian hierarchical inference which will provide distributed parameter estimates, making more efficient use of the available experimental observations.  Logistic model parameter values can be used to construct quantitative fitness definitions for subsequent analysis.</p>
 
-<a name="interaction"><h4>Inferring genetic interaction strengths</h4></a>
+<a name="interaction"><h3>Inferring genetic interaction strengths</h3></a>
 <p><a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> present statistical methods for inferring genetic interaction with telomere capping mutations.  The analysis was based on comparing observervations of double mutant fitnesses with predicted double mutant fitnesses given observed single deletion fitnesses and assuming a multiplicative model of genetic interaction.  Effectively, genome-wide observations are used to construct a linear predictor of query mutation fitness given control mutation fitness, and  any deviations from this prediction are evidence for genetic interaction.  Observations of multiple replicate cultures are typically made and these replicates can be summarised by mean or median fitness, and significance of deviations can correspondingly be estimated by Student's t-test or the Mann-Whitney test, corrected for multiple comparisons.  Analysis based on mean/t-test is generally prefrable to that using median/Mann-Whitney test, since the former has greater statistical power, however, in the case where it has not been possible to perform adequate quality control on the source data (e.g. there are occasional contaminants, or missing cultures, resulting in statistical outliers) the former may be preferable. 
 
-<a name="auxiliary"><h4>Auxiliary functions</h4></a>
+<a name="auxiliary"><h3>Auxiliary functions</h3></a>
 <p>Together with the functions for carrying out the raw analysis above, we provide several functions for visualising the data, the fit of the logistic model to the data and the visualisation of evidence for epistatic interaction.  These visualisation tools are important for understanding unexpected fitness patterns, tracking bugs and increasing user confidence in the validity of the sophisticated QFA workflows.</p>
 </article>
 
