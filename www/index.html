@@ -2,21 +2,25 @@
 <html lang=en> 
 <head>
 <meta charset=utf-8> 
-<title>qfa: the R toolbox for Quantitative Fitness Analysis of microbial cultures</title> 
+<title>qfa: tools for Quantitative Fitness Analysis of microbial cultures</title> 
 <meta name="desciption" content="Installing and using an R package for Quantitive Fitness Analysis (QFA) of arrayed microbial cultures growing on solid agar.">
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="CLstyle.css">
 </head> 
  
 <header>
-<h1>qfa: the R toolbox for Quantitative Fitness Analysis</h1> 
+<a href="http://www.flickr.com/photos/conchur/8187964744/" title="FourCulturesCropped by Conor Lawless, on Flickr">
+<img src="http://farm9.staticflickr.com/8489/8187964744_583f1264b2_m.jpg" width="180" alt="FourCulturesCropped" style="display: inline; float:left; margin-right: 5px; margin-bottom: 30px;">
+</a><h1>qfa: tools for Quantitative Fitness Analysis</h1> 
 <hr></hr>
 </header>
+
+
 
 <nav id="nav">
 <h4>Contents</h4>
 <ul>
-	<li><a href="#install">Installing package</a></li>
+	<li><a href="#install">Installation</a></li>
 	<li><a href="#qfa">QFA</a>
 		<ul>
 			<li><a href="#applications">Applications</a></li>
@@ -34,8 +38,8 @@
 <h4>Other software</h4>
 <ul>
 	<li><a href="http://research.ncl.ac.uk/colonyzer">Colonyzer</a></li>
+	<li><a href="http://bioinf1.ncl.ac.uk/qfa">QFAViz</a></li>
 </ul>
-
 
 <h4>References</h4>
 <ul>
@@ -55,9 +59,9 @@
 </nav>
 
 <article>
-<a name="install"><h2>Installing the package</h2></a>
+<a name="install"><h2>Installation</h2></a>
 
-<p>The <a href="http://cran.r-project.org/">R</a> package is available for download for several operating systems from <a href="http://r-forge.r-project.org/projects/qfa">R-forge</a> at this address:
+<p>This <a href="http://cran.r-project.org/">R</a> package is available for download for several operating systems from <a href="http://r-forge.r-project.org/projects/qfa">R-forge</a> at this address:
 
 <a href="http://r-forge.r-project.org/projects/qfa">http://r-forge.r-project.org/projects/qfa</a></p>
 
@@ -83,23 +87,19 @@ Finally, some code demonstrating analysis of a small subset of the <a href="http
 
 <p> During Quantitative Fitness Analysis (QFA) we generate cell density timecourse estimates by repeatedly photographing <a href="http://en.wikipedia.org/wiki/Microorganism">microbial</a> <a href="http://en.wikipedia.org/wiki/Microbiological_culture">cultures</a> growing in regular arrays on solid <a href="http://en.wikipedia.org/wiki/Agar_plate">agar plates</a>.  First, we quantify cell density from timecourse photographs using the image analysis tool <a href="http://research.ncl.ac.uk/colonyzer">Colonyzer</a> (<a href="http://dx.doi.org/10.1186/1471-2105-11-287">Lawless et al., 2010</a>).  Next, we fit a <a href="http://en.wikipedia.org/wiki/Generalised_logistic_function#Generalised_logistic_differential_equation">generalised logistic model</a> to the cell density timecourse for each independently growing culture, using the inferred model parameters to define a quantitative measure of culture <a href="http://en.wikipedia.org/wiki/Fitness_(biology)">fitness</a>.  Comparisons between fitnesses can be extremely useful for comparing the health of cultures and deducing the relative effect of their <a href="http://en.wikipedia.org/wiki/Genotype">genotypes</a> in a specific environment.  This package is for fitting logistic models to cell density timeseries, generating fitness estimates, quantifying (e.g. genetic) interactions, data quality control and data visualisation.</p>
 
+<a href="http://www.flickr.com/photos/conchur/5658435523/" title="15 independent spotted yeast cultures arranged in a rectangular array"><img src="http://farm6.staticflickr.com/5310/5658435523_c2e43729f1.jpg" width="550" alt="FiveByThree"></a>
+
+<p>The equipment for genome-wide QFA is expensive since QFA at this scale requires significant robotic assistance, however the <a href="http://research.ncl.ac.uk/bioHT/">high-throughput screening facility</a> at <a href="http://www.ncl.ac.uk/">Newcastle University</a> offers QFA as a service.</p>
+
 <a name="applications"><h3>Example Applications</h3></a>
 
 <p>By carrying out QFA on arrayed microbial cultures containing relevant gene <a href="http://en.wikipedia.org/wiki/Mutation">mutations</a>, we can use fitness estimates to infer the presence or absence of <a href="http://en.wikipedia.org/wiki/Epistasis">epistasis</a>, and to quantify and rank genetic interaction strengths.  For example, during screens for gene deletions interacting with <a href="http://en.wikipedia.org/wiki/Telomere">telomere</a> capping mutations, <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> inferred genetic interaction strength as the deviation of observed double mutant fitnesses from predicted double mutant fitnesses given observed single deletion fitnesses and assuming a multiplicative model of epistasis.  They also calculate the statistical significance of deviations given noise in experimental observations.</p>
- 
+
+<a href="TwoGrowthCurves.png"><img src="TwoGrowthCurves.png" width="550" title="Timeseries photographs and growth curves for two example spotted cultures."></a>
+
 <p>If arrayed cultures are grown at selected temperatures we can infer the temperature sensitivity of mutants by QFA. <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> demonstrated the use of QFA to identify gene deletions resulting in increased temperature sensitivity.  These results were verified by comparison with <a href="http://www.yeastgenome.org/cgi-bin/phenotype/phenotype.fpl?rm=specific_tables&phenotype=heat%20sensitivity:%20increased">manually curated observations</a> listed in the <a href="http://www.yeastgenome.org/"><i>Saccharomyces</i> Genome Database (SGD)</a>.  If cultures are subject to treatments (e.g. nutrition, or drug treatments) QFA can generate ranked lists of cultures which grow surprisingly well or badly given the particular treatment.</p>
 
-<div STYLE="position:relative; float:left; HEIGHT:520px">
-<div STYLE="position:absolute; TOP:0px; LEFT:0px; WIDTH:500px">
-	<a href="http://www.flickr.com/photos/conchur/5658435523/" title="15 independent spotted yeast cultures arranged in a rectangular array"><img src="http://farm6.staticflickr.com/5310/5658435523_c2e43729f1.jpg" width="400" alt="FiveByThree" style="float:left"></a>
-	<a href="GrowthCurves.svg"><img src="GrowthCurves.svg" type="image/svg+xml" width="400" title="Timeseries photographs and growth curves for two example spotted cultures." style="float:left"></a>
-</div>
-</br>
-<div STYLE="position:absolute; TOP:0px; LEFT:425px; WIDTH:500px">
-	<a href="FitnessPlot.png"><img src="FitnessPlot.png" height="550" title="A genome-wide screen for genes interacting with CDC13" style="float:left"></a>
-</div>
-</div>
-<br style="clear:both;" />
+<a href="FitnessPlot.png"><img src="FitnessPlot.png" width="550" title="A genome-wide screen for genes interacting with CDC13"></a>
 
 <a name="workflow"><h3>Workflow</h3></a>
 
