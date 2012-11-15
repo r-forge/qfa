@@ -1,20 +1,18 @@
 
 header,nav,footer,article {display: block;}
-nav {float:left; width:15%;}
-article {float:left; width:84%;}
+nav{background-color: white; float:left; width:180px; margin-right: 5px;}
+article {float:left; width:1000px;}
 footer {clear:both;}
 
-
 img {	border: 0;
+		background: white;
 	}
 
-body {background-color: yellow;
+body {background-color: white;
 	font-family: 'Open Sans', sans-serif;
 	font-size: 16pt;
 	font-weight: 300;
 	}
-	
-nav(background-color: green;}
 	
 p { 	
 	font-weight: 300;
@@ -23,10 +21,11 @@ p {
 a {	text-decoration:none;
 	}
 
+
+
 a:link {	color: black;
 		font-weight: 600; 
 		text-decoration: none;
-		border-bottom:0px dashed
 	}
 
 a:visited {	color: black;
@@ -42,11 +41,11 @@ a:hover{background: black;
 
 h1 {
 	margin-top: 0px; 
-	padding-bottom: 10px;
+	padding-bottom: 0px;
 	color: black;
     margin-bottom: 10px;
 	background-colour: white;
-	font-size: 38pt;
+	font-size: 50pt;
 	font-weight: 600;
 	font-style: none;
 	}
