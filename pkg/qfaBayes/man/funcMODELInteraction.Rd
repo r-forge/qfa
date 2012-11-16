@@ -9,8 +9,7 @@ Saves the Interaction hierarchical model to disk space for rjags to load
 \usage{
 funcMODELInteraction()
 }
-\arguments{
-}
+
 \value{
 "model1.bug" file is saved
 }

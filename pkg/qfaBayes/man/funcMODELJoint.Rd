@@ -10,8 +10,7 @@ Saves the Joint hierarchical model to disk space for rjags to load
 \usage{
 funcMODELJoint()
 }
-\arguments{
-}
+
 \value{
 "model1.bug" file is saved
 }
