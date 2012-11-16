@@ -10,8 +10,8 @@ Creates and transposes an Array.
 funcARRAYTRANS_J(data_vec,dim)
 }
 \arguments{
-  \item{data}{Growth or Time}
-  \item{dimc}{Dimensions of array}
+  \item{data_vec}{Growth or Time}
+  \item{dim}{Dimensions of array}
 }
 \value{
 Array

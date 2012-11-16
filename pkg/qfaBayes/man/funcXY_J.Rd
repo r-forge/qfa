@@ -11,9 +11,9 @@ funcXY_J(data,data_b,Ma,Mb,N,NoTime_vec,NoSum_vec,NoTime_vec_b,NoSum_vec_b,dimr,
 }
 \arguments{
   \item{data}{Growth or Time for control}
-  \item{data}{Growth or Time for query}
-  \item{M}{M max length of Growth or Time for control}
-  \item{M}{M max length of Growth or Time for query}
+  \item{data_b}{Growth or Time for query}
+  \item{Ma}{M max length of Growth or Time for control}
+  \item{Mb}{M max length of Growth or Time for query}
   \item{N}{Number of ORFs}
   \item{NoTime_vec}{NoTime for control}
   \item{NoSum_vec}{NoSum for control}
