@@ -1,6 +1,3 @@
-redundant_SHM		redundant
-redundant_IHM		redundant
-redundant_JHM		redundant
 SHM_C		C code
 IHM_C		C code
 JHM_C		C code

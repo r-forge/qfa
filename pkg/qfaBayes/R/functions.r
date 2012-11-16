@@ -22,7 +22,7 @@ funcNoORF<-function(x,data){
 length(unique((data$ID[data$ORF==x])))
 }
 
-### Gives number of time points for each repeat ###
+### Gives number of time points for a repeat ###
 funcNoTime<-function(x,data){
 length((data$ID[data$ID==x]))
 }
@@ -76,7 +76,7 @@ XY<-funcARRAYTRANS_J(c(XY,XY_b),dim)
 XY
 }
 
-### Creates and transposes an Array (Joint Model Specific) ###
+### Scales data by maximum theroetical value for IOD ###
 funcSCALING<-function(data,vec){
 lim<-max(data$Tile.Dimensions.Y)*max(data$Tile.Dimensions.X)*255
 vec<-vec/lim
@@ -232,13 +232,13 @@ omega_b=Priors$omega_b
 )
 }
 
-funcJagsTime<-function(iter,upd,jags){
+#funcJagsTime<-function(iter,upd,jags){
 #TimeC<-(iter+upd)*system.time(update(jags,900))[2]
 #print(paste("Time till completion",TimeC/(60*60*900),"(hours)",TimeC/(60*900),"(minutes)"))
-}
+#}
 
 ### Fit, update and sample from the rjags model ###
-funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P,inits,iter,upd,thin){
+#funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P,inits,iter,upd,thin){
 #jags <- jags.model('model1.bug',
 #                   data = list('x' = QFA.D$x,
 #                               'y' = QFA.D$y,
@@ -289,10 +289,10 @@ funcFITandUPDATE<-function(QFA.I,QFA.D,QFA.P,inits,iter,upd,thin){
 #             iter,thin=thin)
 #samp<-samp[[1]]
 #samp
-}
+#}
 
 ### Fit, update and sample from the rjags model (Joint Model Specific) ###
-funcFITandUPDATE_J<-function(QFA.I,QFA.D,QFA.P,iter,upd,thin){
+#funcFITandUPDATE_J<-function(QFA.I,QFA.D,QFA.P,iter,upd,thin){
 #jags <- jags.model('model1.bug',
 #                   data = list('x' = QFA.D$x,
 #                               'y' = QFA.D$y,'SHIFT'=QFA.I$SHIFT,'p'=QFA.P$p,'alpha_a'=QFA.P$alpha_a,'alpha_b'=QFA.P$alpha_b,'gam_b'=QFA.P#$gam_b,'omega_b'=QFA.P$omega_b,
@@ -304,67 +304,67 @@ funcFITandUPDATE_J<-function(QFA.I,QFA.D,QFA.P,iter,upd,thin){
 #samp<-coda.samples(jags,c('K','K_i','K_ij','PO','alph','bet','delt','gam','k_tau','r_tau','nu','nuc','omega','r','r_i','r_ij','tau','tau_m'),iter,thin=thin)
 #samp<-samp[[1]]
 #samp
-}
+#}
 
 ### Outputs posterior sample in a named list ###
-funcPosterior<-function(samp,N,M,iter,thin,upd){
-if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-samp}
-list(
-vecsamp=vecsamp,
-namesamp=names(vecsamp),
-K=vecsamp[1],
-K_i=vecsamp[2:(N+1)],
-K_i_tau=vecsamp[(N+2)],
-K_ij=vecsamp[(N+3):(M+N+2)],
-K_ij_tau=vecsamp[(M+N+3):(M+2*N+2)],
-PO=vecsamp[(M+2*N+3)],
-delta_tau=vecsamp[(M+2*N+4)],
-r=vecsamp[(M+2*N+5)],
-r_i=vecsamp[(M+2*N+6):(M+3*N+5)],
-r_i_tau=vecsamp[(M+3*N+6)],
-r_ij=vecsamp[(M+3*N+7):(2*M+3*N+6)],
-r_ij_tau=vecsamp[(2*M+3*N+7):(2*M+4*N+6)],
-tau=vecsamp[(2*M+4*N+7)],
-taui=vecsamp[(2*M+4*N+8):(2*M+5*N+7)],
+#funcPosterior<-function(samp,N,M,iter,thin,upd){
+#if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-samp}
+#list(
+#vecsamp=vecsamp,
+#namesamp=names(vecsamp),
+#K=vecsamp[1],
+#K_i=vecsamp[2:(N+1)],
+#K_i_tau=vecsamp[(N+2)],
+#K_ij=vecsamp[(N+3):(M+N+2)],
+#K_ij_tau=vecsamp[(M+N+3):(M+2*N+2)],
+#PO=vecsamp[(M+2*N+3)],
+#delta_tau=vecsamp[(M+2*N+4)],
+#r=vecsamp[(M+2*N+5)],
+#r_i=vecsamp[(M+2*N+6):(M+3*N+5)],
+#r_i_tau=vecsamp[(M+3*N+6)],
+#r_ij=vecsamp[(M+3*N+7):(2*M+3*N+6)],
+#r_ij_tau=vecsamp[(2*M+3*N+7):(2*M+4*N+6)],
+#tau=vecsamp[(2*M+4*N+7)],
+#taui=vecsamp[(2*M+4*N+8):(2*M+5*N+7)],
 
-samp=samp,
-iter=iter,
-thin=thin,
-burnandupd=(1000+upd)
-)
-}
+#samp=samp,
+#iter=iter,
+#thin=thin,
+#burnandupd=(1000+upd)
+#)
+#}
 
 ### Outputs posterior sample in a named list (Joint Model Specific) ###
-funcPosterior_J<-function(samp,N,M,iter,thin,upd){
-if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-samp}
-list(
-vecsamp=vecsamp,
-namesamp=names(vecsamp),
-K=vecsamp[1],
-K_i=vecsamp[2:(N+1)],
-K_ij=vecsamp[(N+2):(2*M+N+1)],
-PO=vecsamp[(2*M+N+2)],
-k_tau=vecsamp[(2*M+5*N+7):(2*M+6*N+6)],
-r=vecsamp[(2*M+8*N+10)],
-r_i=vecsamp[(2*M+8*N+11):(2*M+9*N+10)],
-r_ij=vecsamp[(2*M+9*N+11):(4*M+9*N+10)],
-r_tau=vecsamp[(4*M+9*N+11):(4*M+10*N+10)],
-taui=vecsamp[(4*M+10*N+11):(4*M+11*N+10)],
-tau=vecsamp[(4*M+12*N+11)],
-gam=vecsamp[(2*M+4*N+7):(2*M+5*N+6)],
-omega=vecsamp[(2*M+7*N+10):(2*M+8*N+9)],
-nu=vecsamp[(2*M+6*N+7)],
-nuc=vecsamp[(2*M+6*N+8):(2*M+6*N+9)],
-gamdelt=colMeans(samp[,(2*M+4*N+7):(2*M+5*N+6)]*samp[,(2*M+2*N+7):(2*M+3*N+6)]),
-omegadelt=colMeans(samp[,(2*M+7*N+10):(2*M+8*N+9)]*samp[,(2*M+2*N+7):(2*M+3*N+6)]),
-delta=vecsamp[(2*M+2*N+7):(2*M+3*N+6)],
-samp=samp,
-iter=iter,
-thin=thin,
-burnandupd=(1000+upd))
-}
+#funcPosterior_J<-function(samp,N,M,iter,thin,upd){
+#if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-samp}
+#list(
+#vecsamp=vecsamp,
+#namesamp=names(vecsamp),
+#K=vecsamp[1],
+#K_i=vecsamp[2:(N+1)],
+#K_ij=vecsamp[(N+2):(2*M+N+1)],
+#PO=vecsamp[(2*M+N+2)],
+#k_tau=vecsamp[(2*M+5*N+7):(2*M+6*N+6)],
+#r=vecsamp[(2*M+8*N+10)],
+#r_i=vecsamp[(2*M+8*N+11):(2*M+9*N+10)],
+#r_ij=vecsamp[(2*M+9*N+11):(4*M+9*N+10)],
+#r_tau=vecsamp[(4*M+9*N+11):(4*M+10*N+10)],
+#taui=vecsamp[(4*M+10*N+11):(4*M+11*N+10)],
+#tau=vecsamp[(4*M+12*N+11)],
+#gam=vecsamp[(2*M+4*N+7):(2*M+5*N+6)],
+#omega=vecsamp[(2*M+7*N+10):(2*M+8*N+9)],
+#nu=vecsamp[(2*M+6*N+7)],
+#nuc=vecsamp[(2*M+6*N+8):(2*M+6*N+9)],
+#gamdelt=colMeans(samp[,(2*M+4*N+7):(2*M+5*N+6)]*samp[,(2*M+2*N+7):(2*M+3*N+6)]),
+#omegadelt=colMeans(samp[,(2*M+7*N+10):(2*M+8*N+9)]*samp[,(2*M+2*N+7):(2*M+3*N+6)]),
+#delta=vecsamp[(2*M+2*N+7):(2*M+3*N+6)],
+#samp=samp,
+#iter=iter,
+#thin=thin,
+#burnandupd=(1000+upd))
+#}
 
-###  Gives experiment variables from ROD output###
+###  Gives experiment variables from Colonyzer output###
 qfa.variables<-function(data){
 Screen<-as.character(unique(data$Screen.Name))
 Treat<-as.character(unique(data$Treatment))
