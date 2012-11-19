@@ -78,8 +78,7 @@ names(mat)=tmp$HEADER
 mat
 }
 
-IHM_main <- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,
-QFA.IB,QFA.yB,QFA.NoORFB,PRIORS) {
+IHM_main <- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.NoORFB,PRIORS) {
 aa<-QFA.NoORFA
 bb<-QFA.NoORFB
 if(!(length(aa)==length(bb))){stop()}
@@ -107,4 +106,125 @@ mat
 
 
 
+JHM_postpro<-function(a,TreatA,Screen_a,MPlate_a,b,TreatB,Screen_b,MPlate_b)
+{
+a<-funcREMOVE(a,Screen_a,TreatA,MPlate_a)
+
+a<-a[!a$Row==1,]
+a<-a[!a$Row==16,]
+a<-a[!a$Col==1,]
+a<-a[!a$Col==24,]
+
+Row<-a$Row
+Col<-a$Col
+for (i in 1:nrow(a)){
+if (nchar(Row[i])<2){Row[i]=paste(0,Row[i],sep="")}
+if (nchar(Col[i])<2){Col[i]=paste(0,Col[i],sep="")}
+}
+
+a$ID<-paste(a$Barcode,a$MasterPlate.Number,Row,Col,sep="")
+
+a<-a[order(a$ORF,a$ID,a$Expt.Time), ]
+ORFuni=unique(a$ORF)########
+ORFuni_a<-unique(a$ORF)
+
+b<-funcREMOVE(b,Screen_b,TreatB,MPlate_b)
+b<-b[!b$Row==1,]
+b<-b[!b$Row==16,]
+b<-b[!b$Col==1,]
+b<-b[!b$Col==24,]
+
+Row<-b$Row
+Col<-b$Col
+for (i in 1:nrow(b)){
+if (nchar(Row[i])<2){Row[i]=paste(0,Row[i],sep="")}
+if (nchar(Col[i])<2){Col[i]=paste(0,Col[i],sep="")}
+}
+
+b$ID<-paste(b$Barcode,b$MasterPlate.Number,Row,Col,sep="")
+b<-b[order(b$ORF,b$ID,b$Expt.Time), ]
+ORFuni_b<-unique(b$ORF)
+
+ORFuni<-unique(b$ORF)
+
+IDuni<-unique(a$ID)
+gene<-unlist(lapply(ORFuni,funcGENE,data=a))
+
+N<-length(ORFuni);M=Ma=length(IDuni)
+NoORF_a<-unlist(lapply(ORFuni_a,funcNoORF,data=a))#no of repeats each orf
+NoTime_a<-c(0,unlist(lapply(IDuni,funcNoTime,data=a)))# 0+ no of time each repeat
+NoSum_a<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_a)))
+
+IDuni<-unique(b$ID)
+
+N<-length(ORFuni);M=Mb=length(IDuni)
+NoORF_b<-unlist(lapply(ORFuni,funcNoORF,data=b))#no of repeats each orf
+NoTime_b<-c(0,unlist(lapply(IDuni,funcNoTime,data=b)))# 0+ no of time each repeat
+NoSum_b<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_b)))
+
+dimr<-max(NoORF_a,NoORF_b);dimc<-max(NoTime_a,NoTime_b)
+
+y<-funcXY_J(a$Growth,b$Growth,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
+x<-funcXY_J(a$Expt.Time,b$Expt.Time,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
+
+QFA.I<-list("NoORF"=cbind(NoORF_a,NoORF_b),"NoTime_a"=NoTime_a[-1],"NoTime_b"=NoTime_b[-1],"NoSum"=cbind(NoSum_a,NoSum_b),"N"=N,"Ma"=Ma,"Mb"=Mb,"gene"=gene,SHIFT=c(0,max(NoSum_a,NoSum_b))
+)
+QFA.D<-list(x=x,y=y)
+
+x[is.na(x)]=-999
+y[is.na(y)]=-999
+xx_a<-aperm(x[,,,1],c(2,1,3))
+yy_a<-aperm(y[,,,1],c(2,1,3))
+
+xx_b<-aperm(x[,,,2],c(2,1,3))
+yy_b<-aperm(y[,,,2],c(2,1,3))
+
+list(QFA.IA=c(N,max(NoORF_a),max(NoTime_a),length(y)/2,length(NoTime_a[-1])),
+QFA.yA=c(yy_a),QFA.xA=c(xx_a), QFA.NoORFA=c(NoORF_a),QFA.NoTIMEA=c(NoTime_a)[-1],
+QFA.IB=c(N,max(NoORF_b),max(NoTime_b),length(y)/2,length(NoTime_b[-1])),
+QFA.yB=c(yy_b),QFA.xB=c(xx_b), QFA.NoORFB=c(NoORF_b),QFA.NoTIMEB=c(NoTime_b)[-1]
+)
+}
+
+JHM_main<- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS) {
+aa<-QFA.NoORFA
+bb<-QFA.NoORFB
+if(!(length(aa)==length(bb))){stop()}
+L=length(aa)
+LMa<-sum(aa)
+LMb<-sum(bb)
+NCOL=
+LMa+LMb+
+2*L+
+L+
+1+
+1+
+1+
+LMa+LMb+
+2*L+
+L+
+1+
+1+
+L+
+1+
+1+
+1+
+1+
+L+
+L+
+1+
+L+
+1+
+2*2+
+2*2
+tmp <- .C("main_JHM", as.integer(burn),as.integer(iters),as.integer(thin),OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
+QFAIA=QFA.IA,QFAy=QFA.yA,QFAxA=QFA.xA,QFANoORFA=QFA.NoORFA,QFANoTIMEA=QFA.NoTIMEA,
+QFAIB=QFA.IB,QFAy=QFA.yB,QFAxB=QFA.xB,QFANoORFB=QFA.NoORFB,QFANoTIMEB=QFA.NoTIMEB,
+PRIORS=PRIORS,PACKAGE="qfaBayes"
+)
+mat=matrix(c(tmp$OUT),nrow=iters,byrow=T)
+mat=data.frame(mat)
+names(mat)=tmp$HEADER
+mat
+}
 
