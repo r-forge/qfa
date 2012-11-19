@@ -1,9 +1,9 @@
 \name{SHM_postpro}
 \alias{SHM_postpro}
-\title{Gives experiment variables from Colonyzer output}
+\title{Proforms post processing for SHM}
 \description{
 For use with Colonyzer output.
-Gives experiment variables from Colonyzer output
+Proforms post processing for SHM.
 }
 \usage{
 SHM_postpro(a,Treat,Screen,MPlate)
