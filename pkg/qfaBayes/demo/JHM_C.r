@@ -57,35 +57,10 @@ b$ID<-paste(b$Barcode,b$MasterPlate.Number,Row,Col,sep="")
 b<-b[order(b$ORF,b$ID,b$Expt.Time), ]
 ORFuni_b<-unique(b$ORF)
 
-####
-
-
-if(!(sum(rep(1,length(ORFuni))[ORFuni==ORFuni_b])/length(ORFuni)==1)){
-print("ORF names differ!")
-print(ORFuni[!(ORFuni_b==ORFuni)])
-print("ORF names differ!")
-stop()
-}
-
-if(max(a$Growth,b$Growth)>1){
-print("Data not scaled appropriately")
-stop()
-}
-####
-
-
-
-
 ORFuni<-unique(b$ORF)
 
 IDuni<-unique(a$ID)
 gene<-unlist(lapply(ORFuni,funcGENE,data=a))
-###
-if(sum(gene=="0")>0){#Data Correction
-gene<-as.character(gene)
-gene[gene=="0"]=ORFuni[gene=="0"]
-}
-###
 
 N<-length(ORFuni);M=Ma=length(IDuni)
 NoORF_a<-unlist(lapply(ORFuni_a,funcNoORF,data=a))#no of repeats each orf
@@ -233,7 +208,7 @@ NoTime<-QFA$NoTime
 gene<-QFA$gene
 SHIFT<-QFA$SHIFT
 ###
-L=N #4294
+L=N#4294
 M=sum(NoORF)
 K_clm=tau_K_cl=K_o_l=sigma_K_o=K_p=P=r_clm=tau_r_cl=r_o_l=sigma_r_o=r_p=nu_l=sigma_nu=nu_p=alpha_c=beta_c=delta_l=gamma_cl=sigma_gamma=omega_cl=sigma_omega=upsilon_c=sigma_upsilon=0
 ####
@@ -449,21 +424,6 @@ jj=jj+1
 
 delta<-delta_l
 
-
-########strip 
-#strip=TRUE
-#if(strip==TRUE){
-#strip_ORF<-read.delim("~/strip_list.txt",header=T,sep="\t")$orf
-#K_o_l<-K_o_l[!ORFuni%in%strip_ORF]
-#r_o_l<-r_o_l[!ORFuni%in%strip_ORF]
-#delta<-delta[!ORFuni%in%strip_ORF]
-#omegadelt<-omegadelt[!ORFuni%in%strip_ORF]
-#gamdelt<-gamdelt[!ORFuni%in%strip_ORF]
-#gene<-gene[!ORFuni%in%strip_ORF]
-#ORFuni<-ORFuni[!ORFuni%in%strip_ORF]
-#N<-length(ORFuni)}
-############
-
 A1<-1
 A2<-exp(alpha_c)
 B1<-1
@@ -490,22 +450,15 @@ limmaxx<-max(na.omit(c(mu_a)))
 
 Treat=TreatA=TreatB=27
 
-gene[gene==0]=ORFuni[gene==0]#correction
-
 file="DEMO"
 pdf(paste("JHM_plot_",file,".pdf",sep=""),useDingbats=F)
 
 plot(1,type="n",ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),main="",xlab="",ylab="",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=4)
 
-#lines(lm(mu_b~0+mu_a),col="grey",lty=2)#############
-
-
-
 vecMDRa<-r_ij/log(2*(K_ij-PO)/(K_ij-2*PO)) #MDR
 vecMDPa<-log(K_ij/PO)/log(2) #MDP
 vecMDPa*vecMDRa
-#lines(c(-1000,1000),A2*c(-1000,1000),col="grey",lty=2)########
 
 i=1:L
 points(mu_a[i],mu_b[i],ylim=c(limmin,limmax),xlim=c(limmin,limmax),col=8,pch=19,cex=0.5)
@@ -515,16 +468,10 @@ i=vecorder[omegadelt[order][1:sig]<=0]  #######
 points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder
 text(mu_a[i],(mu_b[i]),gene[i],pos=4,offset=0.1,cex=0.4)
-#legend(1,limmax, c("1-1","simple Lin Reg"), cex=0.5,col=c("grey","grey","black"), lty=c(1,2,3,1))
-#if (sum((1:N)[gene=="HIS3"])==1){
-#legend(1,limmax, c("1-1","simple Lin Reg","HIS3 Fit"), cex=0.5,col=c("grey","grey","black"), lty=c(2,3,1))
-#}
-
 
 mu_a=exp(K_o_l)#####
 mu_b=A2*exp(K_o_l+gamdelt)#####
 limmin<-0
-#limmax<-max(na.omit(Mu))
 limmax<-max(na.omit(c(mu_b)))
 limmaxx<-max(na.omit(c(mu_a)))
 
@@ -539,15 +486,10 @@ i=vecorder[gamdelt[order][1:sig]<=0]  #######
 points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder
 text(mu_a[i],(mu_b[i]),gene[i],pos=4,offset=0.1,cex=0.4)
-#legend(1,limmax, c("1-1","simple Lin Reg"), cex=0.5,col=c("grey","grey","black"), lty=c(1,2,3,1))
-#if (sum((1:N)[gene=="HIS3"])==1){
-#legend(1,limmax, c("1-1","simple Lin Reg","HIS3 Fit"), cex=0.5,col=c("grey","grey","black"), lty=c(2,3,1))
-#}
 
 mu_a=exp(r_o_l)#####
 mu_b=B2*exp(r_o_l+omegadelt)#####
 limmin<-0
-#limmax<-max(na.omit(Mu))
 limmax<-max(na.omit(c(mu_b)))
 limmaxx<-max(na.omit(c(mu_a)))
 
@@ -562,15 +504,10 @@ i=vecorder[omegadelt[order][1:sig]<=0]  #######
 points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder
 text(mu_a[i],(mu_b[i]),gene[i],pos=4,offset=0.1,cex=0.4)
-#legend(1,limmax, c("1-1","simple Lin Reg"), cex=0.5,col=c("grey","grey","black"), lty=c(1,2,3,1))
-#if (sum((1:N)[gene=="HIS3"])==1){
-#legend(1,limmax, c("1-1","simple Lin Reg","HIS3 Fit"), cex=0.5,col=c("grey","grey","black"), lty=c(2,3,1))
-#}
 dev.off()
 
 stop()
 
-gene[gene==0]=ORFuni[gene==0]
 setwd("~/")
 list<-read.table("Addinall_all.txt",header=T)
 list[,1]<-as.character(list[,1])
@@ -585,7 +522,6 @@ list$gene<-as.character(list$gene)
 list[,5][is.na(list[,5])]=1
 list[,6][is.na(list[,6])]=1
 list$gene[is.na(list$gene)]<-list[,1][is.na(list$gene)]
-#list<-list[abs(list[,2])>0.5,]##########
 list2<-list
 list<-unique(as.character(list[list[,6]<0.05,1]))
 
@@ -616,7 +552,6 @@ FIT<-FIT-((r/log(2*((K-P)/(K-2*P))))*log(K/P)/log(2))
 #
 list2<-list2[order(abs(list2[,4]),decreasing=T),]
 list2<-cbind(list2,1:nrow(list2))
-#list2<-list2[order(list2[,1]),]
 ADD_position<-list2[,8]
 
 

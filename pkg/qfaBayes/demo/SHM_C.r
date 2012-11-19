@@ -28,17 +28,6 @@ IDuni<-unique(a$ID)
 ORFuni=unique(a$ORF)
 
 gene<-unlist(lapply(ORFuni,funcGENE,data=a))
-###
-if(sum(gene=="0")>0){#Data Correction
-gene<-as.character(gene)
-gene[gene=="0"]=ORFuni[gene=="0"]
-}
-if(max(a$Growth)>1){
-print("Data not scaled appropriately")
-stop()
-}
-###
-###
 
 N<-length(ORFuni);M<-length(IDuni)
 NoORF_a<-unlist(lapply(ORFuni,funcNoORF,data=a))#no of repeats each orf
