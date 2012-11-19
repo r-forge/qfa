@@ -182,7 +182,7 @@ yy_b<-aperm(y[,,,2],c(2,1,3))
 list(QFA.IA=c(N,max(NoORF_a),max(NoTime_a),length(y)/2,length(NoTime_a[-1])),
 QFA.yA=c(yy_a),QFA.xA=c(xx_a), QFA.NoORFA=c(NoORF_a),QFA.NoTIMEA=c(NoTime_a)[-1],
 QFA.IB=c(N,max(NoORF_b),max(NoTime_b),length(y)/2,length(NoTime_b[-1])),
-QFA.yB=c(yy_b),QFA.xB=c(xx_b), QFA.NoORFB=c(NoORF_b),QFA.NoTIMEB=c(NoTime_b)[-1]
+QFA.yB=c(yy_b),QFA.xB=c(xx_b), QFA.NoORFB=c(NoORF_b),QFA.NoTIMEB=c(NoTime_b)[-1],gene=gene
 )
 }
 

@@ -62,8 +62,6 @@ i=1:N
 plot(1,type="n",main=expression(paste("Treatment",Treat,degree,"C"," (delta=Posterior Expectations)")),ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),xlab="Control Fitness (=exp(Z_l))",ylab="Query Fitness (=exp(alpha+Z_l+delta_l*gamma_l))",col=8,pch=19,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=4)
 lines(A1*c(-1000,10000),A2*c(-1000,10000),col="grey",lwd=2)
-lines(c(Z_l[gene=="HIS3"],Z_l[gene=="HIS3"]),c(-1000,10000),lwd=2,col="lightblue")
-lines(c(-1000,10000),c(c(A2*Z_l*delta_gamma)[gene=="HIS3"],c(A2*Z_l*delta_gamma)[gene=="HIS3"]),lwd=2,col="lightblue")
 points(A1*Z_l[i], A2*(Z_l[i]*delta_gamma[i]),col=8,pch=19,cex=0.5)
 i=vecorder[log(delta_gamma)[vecorder]>0]
 points(A1*Z_l[i],A2*(Z_l[i]*delta_gamma[i]),col=2,pch=19,cex=0.5)

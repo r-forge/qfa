@@ -468,7 +468,7 @@ A1<-1
 A2<-exp(alpha_c)
 B1<-1
 B2<-exp(beta_c)
-sig<-sum(rep(1,N)[delta>0.5])
+sig<-sum(rep(1,L)[delta>0.5])
 order<-order(1-delta)
 vecorder<-order(1-delta)[1:sig]
 
@@ -481,8 +481,8 @@ vecMDRa<-r_ij/log(2*(K_ij-PO)/(K_ij-2*PO)) #MDR
 vecMDPa<-log(K_ij/PO)/log(2) #MDP
 vecMDRPMDR<-vecMDRa*vecMDPa
 vecMDRPMDR[vecK<2*PO]=0
-mu_a=(vecMDRPMDR)[1:N]
-mu_b=(vecMDRPMDR)[(1+N):(2*N)]
+mu_a=(vecMDRPMDR)[1:L]
+mu_b=(vecMDRPMDR)[(1+L):(2*L)]
 
 limmin<-0
 limmax<-max(na.omit(c(mu_b)))
@@ -507,10 +507,6 @@ vecMDPa<-log(K_ij/PO)/log(2) #MDP
 vecMDPa*vecMDRa
 #lines(c(-1000,1000),A2*c(-1000,1000),col="grey",lty=2)########
 
-
-
-lines(c(mu_a[gene=="HIS3"],mu_a[gene=="HIS3"]),c(-1000,1000),lwd=2,col="lightblue")
-lines(c(-1000,1000),c(mu_b[gene=="HIS3"],mu_b[gene=="HIS3"]),lwd=2,col="lightblue")
 i=1:N
 points(mu_a[i],mu_b[i],ylim=c(limmin,limmax),xlim=c(limmin,limmax),col=8,pch=19,cex=0.5)
 i=vecorder[omegadelt[order][1:sig]>0]#######
@@ -535,8 +531,6 @@ limmaxx<-max(na.omit(c(mu_a)))
 plot(1,type="n",ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),main="",xlab="",ylab="",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=4)
 lines(c(-1000,1000),A2*c(-1000,1000),col="grey",lty=2)########
-lines(c(mu_a[gene=="HIS3"],mu_a[gene=="HIS3"]),c(-1000,1000),lwd=2,col="lightblue")
-lines(c(-1000,1000),c(mu_b[gene=="HIS3"],mu_b[gene=="HIS3"]),lwd=2,col="lightblue")
 i=1:N
 points(mu_a[i],mu_b[i],ylim=c(limmin,limmax),xlim=c(limmin,limmax),col=8,pch=19,cex=0.5)
 i=vecorder[gamdelt[order][1:sig]>0]####
@@ -560,8 +554,6 @@ limmaxx<-max(na.omit(c(mu_a)))
 plot(1,type="n",ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),main="",xlab="",ylab="",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=4)
 lines(c(-1000,1000),B2*c(-1000,1000),col="grey",lty=2)#######
-lines(c(mu_a[gene=="HIS3"],mu_a[gene=="HIS3"]),c(-1000,1000),lwd=2,col="lightblue")
-lines(c(-1000,1000),c(mu_b[gene=="HIS3"],mu_b[gene=="HIS3"]),lwd=2,col="lightblue")
 i=1:N
 points(mu_a[i],mu_b[i],ylim=c(limmin,limmax),xlim=c(limmin,limmax),col=8,pch=19,cex=0.5)
 i=vecorder[omegadelt[order][1:sig]>0]#######
