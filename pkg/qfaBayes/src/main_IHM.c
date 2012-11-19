@@ -22,7 +22,6 @@
 
 	gibbsandMHloop_IHM(burn,1,data,para,priors,MH,0,OUT,HEADER);
 	gibbsandMHloop_IHM(iters,thin,data,para,priors,MH,1,OUT,HEADER);
-
   PutRNGstate();
 	return 0;
 }
