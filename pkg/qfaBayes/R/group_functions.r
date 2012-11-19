@@ -43,7 +43,7 @@ QFA.y=as.double(yy)
 QFA.NoORF=as.integer(NoORF_a)
 QFA.NoTIME=as.integer(c(NoTime_a)[-1])
 QFA.I=as.integer(c(N,max(NoORF_a),max(NoTime_a),length(y),length(NoTime_a[-1])))
-list(QFA.y=QFA.y,QFA.x=QFA.x,QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME)
+list(QFA.I=QFA.I,QFA.y=QFA.y,QFA.x=QFA.x,QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME)
 }
 
 SHM_main <- function(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS) {
@@ -69,8 +69,8 @@ L+
 1+
 1
 tmp <- .C("main", as.integer(burn),as.integer(iters),as.integer(thin),as.integer(CAPL),OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
-QFAI=QFA.I,QFAy=QFA.y,QFAx=QFA.x,QFANoORF=QFA.NoORF,QFANoTIME=QFA.NoTIME,
-PRIORS=PRIORS,PACKAGE="qfaBayes"
+QFAI=as.integer(QFA.I),QFAy=as.double(QFA.y),QFAx=as.double(QFA.x),QFANoORF=as.double(QFA.NoORF),QFANoTIME=as.double(QFA.NoTIME),
+PRIORS=as.double(PRIORS),PACKAGE="qfaBayes"
 )
 mat=matrix(c(tmp$OUT),nrow=iters,byrow=T)
 mat=data.frame(mat)
