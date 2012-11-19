@@ -507,7 +507,7 @@ vecMDPa<-log(K_ij/PO)/log(2) #MDP
 vecMDPa*vecMDRa
 #lines(c(-1000,1000),A2*c(-1000,1000),col="grey",lty=2)########
 
-i=1:N
+i=1:L
 points(mu_a[i],mu_b[i],ylim=c(limmin,limmax),xlim=c(limmin,limmax),col=8,pch=19,cex=0.5)
 i=vecorder[omegadelt[order][1:sig]>0]#######
 points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
@@ -531,7 +531,7 @@ limmaxx<-max(na.omit(c(mu_a)))
 plot(1,type="n",ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),main="",xlab="",ylab="",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=4)
 lines(c(-1000,1000),A2*c(-1000,1000),col="grey",lty=2)########
-i=1:N
+i=1:L
 points(mu_a[i],mu_b[i],ylim=c(limmin,limmax),xlim=c(limmin,limmax),col=8,pch=19,cex=0.5)
 i=vecorder[gamdelt[order][1:sig]>0]####
 points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
@@ -554,7 +554,7 @@ limmaxx<-max(na.omit(c(mu_a)))
 plot(1,type="n",ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),main="",xlab="",ylab="",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=4)
 lines(c(-1000,1000),B2*c(-1000,1000),col="grey",lty=2)#######
-i=1:N
+i=1:L
 points(mu_a[i],mu_b[i],ylim=c(limmin,limmax),xlim=c(limmin,limmax),col=8,pch=19,cex=0.5)
 i=vecorder[omegadelt[order][1:sig]>0]#######
 points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
