@@ -1,13 +1,11 @@
-
-
-#b=read.delim("~/QFADatasets/SHM/YKU70_Raw/data.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
-data("CDC13-1_Raw_trim")#Query b 
-TreatB=27
-b<-a#query
 #a=read.delim("~/QFADatasets/SHM/URA3_Raw/data.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
 data("URA3_Raw_trim")#Control a 
 
+#b=read.delim("~/QFADatasets/SHM/YKU70_Raw/data.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
+data("CDC13-1_Raw_trim")#Query b 
+
 TreatA=27
+TreatB=27
 
 filename=paste("M_JHM_demo","_",TreatA,"_",TreatB,sep="")
 

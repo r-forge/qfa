@@ -1,6 +1,6 @@
 \name{CDC13-1_Raw_trim}
 \docType{data}
-\alias{CDC13-1_Raw_trim}
+\alias{b}
 \title{CDC13-1_Raw_trim}
 \description{
 cdc13-1 Colonyzer data
