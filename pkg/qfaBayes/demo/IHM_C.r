@@ -29,16 +29,6 @@ IDuni<-unique(a$ID)
 ORFuni=ORFuni_a=unique(a$ORF)
 
 gene<-unlist(lapply(ORFuni,funcGENE,data=a))
-###
-if(sum(gene=="0")>0){#Data Correction
-gene<-as.character(gene)
-gene[gene=="0"]=ORFuni[gene=="0"]
-}
-if(max(a$Growth)>1){
-print("Data not scaled appropriately")
-stop()
-}
-###
 
 N<-length(ORFuni);M<-length(IDuni)
 NoORF_a<-unlist(lapply(ORFuni,funcNoORF,data=a))#no of repeats each orf
@@ -98,23 +88,6 @@ IDuni<-unique(a$ID)
 ORFuni=ORFuni_b=unique(a$ORF)
 
 gene<-unlist(lapply(ORFuni,funcGENE,data=a))
-
-###
-if(sum(gene=="0")>0){#Data Correction
-gene<-as.character(gene)
-gene[gene=="0"]=ORFuni[gene=="0"]
-}
-if(!(sum(rep(1,length(ORFuni_a))[ORFuni_a==ORFuni_b])/length(ORFuni_a)==1)){
-print("ORF names differ!")
-print(ORFuni_a[!(ORFuni_b==ORFuni_a)])
-print("ORF names differ!")
-stop()
-}
-if(max(a$Growth)>1){
-print("Data not scaled appropriately")
-stop()
-}
-###
 
 N<-length(ORFuni);M<-length(IDuni)
 NoORF_a<-unlist(lapply(ORFuni,funcNoORF,data=a))#no of repeats each orf
