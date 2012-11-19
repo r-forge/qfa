@@ -68,6 +68,7 @@ save.image(paste(filename,".RData",sep=""))
 #################################################
 #a=read.delim("data.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
 data("CDC13-1_Raw_trim")
+a<-b
 qfa.variables(a)
 Treat=27
 Screen<-unique(a$Screen.Name)
@@ -287,8 +288,8 @@ L+
 L+
 1
 tmp <- .C("main_IHM", as.integer(burn),as.integer(iters),as.integer(thin),OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
-QFAIA=QFA.IA,QFAy=QFA.yA,QFANoORFA=QFA.NoORFA,
-QFAIB=QFA.IB,QFAy=QFA.yB,QFANoORFB=QFA.NoORFB,
+QFAIA=QFA.IA,QFAyA=QFA.yA,QFANoORFA=QFA.NoORFA,
+QFAIB=QFA.IB,QFAyB=QFA.yB,QFANoORFB=QFA.NoORFB,
 PRIORS=PRIORS
 )
 mat=matrix((tmp$OUT),nrow=iters,byrow=T)
