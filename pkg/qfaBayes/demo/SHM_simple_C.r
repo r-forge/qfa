@@ -1,4 +1,4 @@
-data("URA3_Raw_trim")
+data("URA3_Raw_extratrim")
 data("priors_SHM")
 PRIORS=as.double((priors_SHM)[[1]])[1:18]
 qfa.variables(a)

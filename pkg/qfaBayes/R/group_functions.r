@@ -48,7 +48,7 @@ list(QFA.y=QFA.y,QFA.x=QFA.x,QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME)
 
 SHM_main <- function(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS) {
 L=min(CAPL,length(QFA.NoORF))
-LM<-sum(QFA.NoORF[1:L,])
+LM<-sum(QFA.NoORF[1:L])
 NCOL=
 LM+
 L+
