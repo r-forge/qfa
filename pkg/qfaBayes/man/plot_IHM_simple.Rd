@@ -1,5 +1,5 @@
 \name{plot_IHM_simple}
-\alias{plot_IHM_simplen}
+\alias{plot_IHM_simple}
 \title{plot IHM_simple_C output}
 \description{
 For use with IHM output.
