@@ -305,18 +305,6 @@ sigma_gamma<-exp(vecsamp[(4*N+6)])
 if(nrow(samp)>1) {delta_gamma<-colMeans(samp[,(2*N+6):(3*N+5)]*samp[,(3*N+6):(4*N+5)])} else {delta_gamma<-colMeans(samp[,(2*N+6):(3*N+5)]*(samp[,(3*N+6):(4*N+5)]))}
 delta_gamma=exp(delta_gamma)
 
-########strip 
-#strip=TRUE
-#if(strip==TRUE){
-#strip_ORF<-read.delim("~/strip_list.txt",header=T,sep="\t")$orf
-#Z_l<-Z_l[!ORFuni%in%strip_ORF]
-#delta<-delta[!ORFuni%in%strip_ORF]
-#delta_gamma<-delta_gamma[!ORFuni%in%strip_ORF]
-#gene<-gene[!ORFuni%in%strip_ORF]
-#ORFuni<-ORFuni[!ORFuni%in%strip_ORF]
-#N<-length(ORFuni)}
-############
-
 sig<-sum(rep(1,N)[delta>0.5])
 order<-order(1-delta)
 vecorder<-order(1-delta)[1:sig]
