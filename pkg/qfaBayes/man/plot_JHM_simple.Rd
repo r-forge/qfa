@@ -1,5 +1,5 @@
 \name{plot_JHM_simple}
-\alias{plot_JHM_simplen}
+\alias{plot_JHM_simple}
 \title{plot JHM_simple_C output}
 \description{
 For use with JHM output.
