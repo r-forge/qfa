@@ -83,100 +83,27 @@ vec<-vec/lim
 vec
 }
 
+###  Gives experiment variables from Colonyzer output###
+qfa.variables<-function(data){
+Screen<-as.character(unique(data$Screen.Name))
+Treat<-as.character(unique(data$Treatment))
+MPlate<-unique(data$MasterPlate.Number)
+list(Screen=Screen,Treat=Treat,MPlate=MPlate)
+}
+
+#############
+
 ### Saves hierarchical model to disk space for rjags to load ###
 funcMODELHierarchical<-function(){
-write("
-model {
-	for (i in 1:N){
-		for (j in 1:NoORF[i]){
-			for (l in 1:NoTime[(NoSum[i]+j)]){
-				y[j,l,i] ~ dnorm(y.hat[j,l,i], tau[i])
-                		y.hat[j,l,i] <- (K_ij[(NoSum[i]+j)]*PO*exp(r_ij[(NoSum[i]+j)]*x[j,l,i]))/(K_ij[(NoSum[i]+j)]+PO*(exp(r_ij[(NoSum[i]+j)]*x[j,l,i])-1))
-        		}
-        		K_ij[(NoSum[i]+j)] ~ dgamma((K_i[i]^2)*k_tau[i],K_i[i]*k_tau[i])
-        		r_ij[(NoSum[i]+j)] ~ dgamma((r_i[i]^2)*r_tau[i],r_i[i]*r_tau[i])
-		}
-		K_i[i] ~ dgamma((K^2)/alpha_i^2,K/alpha_i^2)
-		r_i[i] ~ dgamma((r^2)/gamma_i^2,r/gamma_i^2)
-		tau[i] ~ dgamma((tau_m^2)/delta^2,tau_m/delta^2)
-		k_tau[i] ~ dgamma((alpha_ij^2)/alpha_ij_sd^2,alpha_ij/alpha_ij_sd^2)
-                r_tau[i] ~ dgamma((gamma_ij^2)/gamma_ij_sd^2,gamma_ij/gamma_ij_sd^2)
-	}
-	PO ~ dunif(PO_s,beta)   
-	K ~ dgamma((K_s^2)/alpha^2,K_s/alpha^2)
-	r ~ dgamma((r_s^2)/gamma^2,r_s/gamma^2)
-	tau_m ~ dgamma((tau_s^2)/delta^2,tau_s/delta^2)}
-","model1.bug")
 }
 
 
 ### Saves joint model to disk space for rJags to load ###
 funcMODELJoint<-function(){
-write("
-model {
-for (i in 1:N){
-for (c in 1:2){
-	for (j in 1:NoORF[i,c]){
-		for (l in 1:NoTime[(NoSum[i,c]+j),c]){
-			y[j,l,i,c] ~ dnorm(y.hat[j,l,i,c], tau[i]*nuc[c])
-			y.hat[j,l,i,c] <- (K_ij[(SHIFT[c]+NoSum[i,c]+j)]*PO*exp(r_ij[(SHIFT[c]+NoSum[i,c]+j)]*x[j,l,i,c]))/(K_ij[(SHIFT[c]+NoSum[i,c]+j)]+PO*(exp(r_ij[(SHIFT[c]+NoSum[i,c]+j)]*x[j,l,i,c])-1))
-			}
-			K_ij[(SHIFT[c]+NoSum[i,c]+j)] ~ dgamma(((alph[c]*(K_i[i]+delt[i,c]*gam[i,c]))^2)*k_tau[i],(alph[c]*(K_i[i]+delt[i,c]*gam[i,c]))*k_tau[i])
-			r_ij[(SHIFT[c]+NoSum[i,c]+j)] ~ dgamma(((bet[c]*(r_i[i]+delt[i,c]*omega[i,c]))^2)*r_tau[i],(bet[c]*(r_i[i]+delt[i,c]*omega[i,c]))*r_tau[i])
-			}
-		}
-		gam[i,1]<-0
-		gam[i,2]~dnorm(0,gam_b)
-		omega[i,1]<-0
-		omega[i,2]~dnorm(0,omega_b)
-		delt[i,1]<-0
-		delt[i,2]~dbern(p)
-		K_i[i] ~ dgamma((K^2)/alpha_i^2,K/alpha_i^2)
-		r_i[i] ~ dgamma((r^2)/gamma_i^2,r/gamma_i^2)
-		tau[i] ~ dgamma((tau_m^2)/delta^2,tau_m/delta^2)
-		k_tau[i]~dgamma((alpha_ij^2)/alpha_ij_sd^2,alpha_ij/alpha_ij_sd^2)
- 		r_tau[i]~dgamma((gamma_ij^2)/gamma_ij_sd^2,gamma_ij/gamma_ij_sd^2)
-	}
-	alph[1]<-1
-	alph[2]~dgamma((alpha_a^2)/(alpha_b^2),(alpha_a)/(alpha_b^2))
-	bet[1]<-1
-	bet[2]~dgamma((alpha_a^2)/(alpha_b^2),(alpha_a)/(alpha_b^2))
-	nuc[1]~dgamma((nu^2)/(delta^2),(nu)/(delta^2))
-	nuc[2]~dgamma((nu^2)/(delta^2),(nu)/(delta^2))
-	nu~dgamma((tau_s^2)/(delta^2),(tau_s)/(delta^2))
-	PO ~ dunif(PO_s,beta)	
-      K ~ dgamma((K_s^2)/alpha^2,K_s/alpha^2)
-	r ~ dgamma((r_s^2)/gamma^2,r_s/gamma^2)
-	tau_m~dgamma((tau_s^2)/delta^2,tau_s/delta^2)
-}","model1.bug")
 }
 
 ### Saves interaction model to disk space for rJags to load ###
 funcMODELInteraction<-function(){
-write("
-model {
-	for (i in 1:N){
-		for (j in 1:2){
-			for (k in 1:NoORF[i,j]){
-				y[k,j,i]~ dnorm(alpha[j]*(mui[i]+delt[i,j]*gam[i,j]),nuj[j]*taui[i])
-			}
-		}
-		mui[i]~dnorm(mu,mu_b)
-		gam[i,1]<-0
-		gam[i,2]~dnorm(0,gam_b)
-		delt[i,1]<-0
-		delt[i,2]~dbern(p)
-		taui[i]~dgamma((tau^2)/(tau_b^2),(tau)/(tau_b^2))
-	}
-	mu~dnorm(mu_a,mu_b)
-	alpha[1]<-1
-	alpha[2]~dgamma((alpha_a^2)/(alpha_b^2),(alpha_a)/(alpha_b^2))
-	tau~dgamma((tau_a^2)/(tau_b^2),(tau_a)/(tau_b^2))
-	nuj[1]~dgamma((nu^2)/(tau_b^2),(nu)/(tau_b^2))
-	nuj[2]~dgamma((nu^2)/(tau_b^2),(nu)/(tau_b^2))
-	nu~dgamma((tau_a^2)/(tau_b^2),(tau_a)/(tau_b^2))
-}
-","model1.bug")
 }
 
 ### Load priors ###
@@ -364,10 +291,4 @@ omega_b=Priors$omega_b
 #burnandupd=(1000+upd))
 #}
 
-###  Gives experiment variables from Colonyzer output###
-qfa.variables<-function(data){
-Screen<-as.character(unique(data$Screen.Name))
-Treat<-as.character(unique(data$Treatment))
-MPlate<-unique(data$MasterPlate.Number)
-list(Screen=Screen,Treat=Treat,MPlate=MPlate)
-}
+
