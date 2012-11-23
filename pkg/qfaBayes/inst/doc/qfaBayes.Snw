@@ -84,5 +84,46 @@ It is expected that you will wish to create ouput with larger sample size, burn 
 The typical model computation time of the JHM alone is two weeks with burn-in of 800000, sample size of 5000 and thinning of 10.
 
 A more detailed workflow which is compatible with the standalone C code is given in demo \verb$JHM_C$.
+
+\section{SHM$\_$simple$\_$C Demo}
+To see how the \verb$SHM_simple_C$ demo works the following detailed explaination is provided and is to be used in conjunction with the R package manual.
+The \verb$SHM_simple_C$ demo runs the following commands: \\
+\\
+\verb$> data("URA3_Raw_extratrim_15")$\\
+\verb$> a<-a_15$\\
+\\
+The above commands load a trimmed ura3Del data set consisting of only of master plate 15 to the variable \verb$a_15$ and copys this to a variable "a".
+\\
+\\
+\verb$> data("priors_SHM")$\\
+\verb$> PRIORS=as.double((priors_SHM)[[1]])[1:18]$\\
+\\
+The above commands loads a broad set of prior values for the SHM to the variable \verb$priors_SHM$ and then copys this to variable PRIORS.
+\\
+\\
+\verb$> qfa.variables(a)$\\
+\\
+The above command lists the avalible options for the treatment, screen number and master plate.
+\\
+\\
+\verb@> Screen<-unique(a$Screen.Name)@\\
+\\
+The above command selects all screens for the following SHM analysis.
+\\
+\\
+\verb$> SHM<-SHM_postpro(a=a,Treat=27,Screen=Screen,MPlate=15)$\\
+\\
+The above command runs the post processing for the SHM, organising the Colonyser ouput in variable \verb$a$ for use with the SHM.
+The dataset will be trimmed to only include the data corresponding to the specified \verb$Treat$, \verb$Screen$ and \verb$MPlate$.
+\\
+\\
+\verb@> SHM_output<-SHM_main(burn=1,iters=1,thin=1,CAPL=50,@\\
+\verb@QFA.I=SHM$QFA.I,QFA.y=SHM$QFA.y,QFA.x=SHM$QFA.x,@\\
+\verb@QFA.NoORF=SHM$QFA.NoORF,QFA.NoTIME=SHM$QFA.NoTIME,PRIORS=PRIORS)@\\
+\\
+The above command runs the C code for the SHM in R. \verb$burn$, \verb$iters$ and \verb$thin$ which have all been set to 1 for the purpose of the demo.
+\verb$CAPL$ is the number of orfs for the SHM to proform the analysis on.
+The final output \verb$SHM_output$ will be a table of posterior samples, where each coloumn corresponds to a different model paramater; a table header is included to idendify each coloumn.
+
 \end{document}
 % eof
