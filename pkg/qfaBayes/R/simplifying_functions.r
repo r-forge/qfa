@@ -1,10 +1,9 @@
-ask_plot<-function(){
+ask_plot_simple<-function(){
 plotYN=0
 while(plotYN < 1 ){
   n<-readline("do you wish to plot? Y or N: ")
 if(n=="Y"){plotYN=1}
 if(n=="N"){stop()}
-}
 }
 }
 
