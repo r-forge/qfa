@@ -1,3 +1,12 @@
+ask_plot<-function(){
+plotYN=0
+while(plotYN < 1 ){
+  n<-readline("do you wish to plot? Y or N: ")
+if(n=="Y"){plotYN=1}
+if(n=="N"){stop()}
+}
+}
+}
 
 SHM_postpro<-function(a,Treat,Screen,MPlate)
 {
@@ -42,8 +51,9 @@ QFA.x=as.double(xx)
 QFA.y=as.double(yy)
 QFA.NoORF=as.integer(NoORF_a)
 QFA.NoTIME=as.integer(c(NoTime_a)[-1])
+QFA.NoSUM=NoSum_a
 QFA.I=as.integer(c(N,max(NoORF_a),max(NoTime_a),length(y),length(NoTime_a[-1])))
-list(QFA.I=QFA.I,QFA.y=QFA.y,QFA.x=QFA.x,QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME,gene=gene)
+list(QFA.y=QFA.y,QFA.x=QFA.x,QFA.I=QFA.I,QFA.y=QFA.y,QFA.x=QFA.x,QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME,QFA.NoSUM=NoSUM,gene=gene)
 }
 
 SHM_main <- function(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS) {
@@ -77,6 +87,151 @@ mat=data.frame(mat)
 names(mat)=tmp$HEADER
 mat
 }
+
+plot_SHM_simple(SHM_output,SHM){
+samp<-SHM_output
+y<-QFA.D$y
+x<-QFA.D$x
+N=L=SHM$QFA.I[1]   ###L=M=CAPL if CAPL is in use (not used in demo i.e. CAPL=L)###
+NoSum<-SHM$QFA.NoSUM
+NoORF<-SHM$QFA.NoORF
+NoTime<-SHM$QFA.NoTIME
+
+M=sum(NoORF[1:L])
+
+K_lm=tau_K_l=K_o_l=sigma_K_o=K_p=P_l=r_lm=tau_r_l=r_o_l=sigma_r_o=r_p=nu_l=nu_p=sigma_nu=0
+aa<-samp
+#K_lm[%i]
+t=1
+for (i in 1:M){
+j=i
+K_lm[t]=mean(samp[,j]);t=t+1
+j=j+1
+}
+
+t=1
+#tau_K_l[%i]
+j=M+1
+for (i in (2*M+3*N+8):(2*M+4*N+7)){
+tau_K_l[t]=mean(samp[,j]);t=t+1
+j=j+1
+}
+
+t=1
+#"K_o_l[%i] 
+j=M+N+1
+for (i in (M+1):(M+N)){
+K_o_l[t]=mean(samp[,j]);t=t+1
+j=j+1
+}
+
+t=1
+#sigma_K_o ");
+i=2*M+3*N+5
+j=M+2*N+1
+sigma_K_o=mean(samp[,j])
+
+t=1
+#K_p ");
+i=M+1+N
+j=M+2*N+2
+K_p=mean(samp[,j])
+
+t=1
+#"P_l ");
+i=(M+N+2)
+j=M+2*N+3
+P_l=mean(samp[,j])
+
+t=1
+#r_lm[%i] 
+j=M+2*N+4
+for (i in (M+2*N+4):(2*M+2*N+3)){
+r_lm[t]=mean(samp[,j]);t=t+1
+j=j+1
+}
+
+t=1
+#tau_r_l[%i] ",l);
+j=2*M+2*N+4
+for (i in (2*M+4*N+8):(2*M+5*N+7)){
+tau_r_l[t]=mean(samp[,j]);t=t+1
+j=j+1
+}
+
+t=1
+#r_o_l[%i] ",l);
+j=2*M+3*N+4
+for (i in (2*M+2*N+4):(2*M+3*N+3)){
+r_o_l[t]=mean(samp[,j]);t=t+1
+j=j+1
+}
+
+t=1
+#sigma_r_o ");
+i=2*M+3*N+7
+j=2*M+4*N+4
+sigma_r_o=mean(samp[,j]);
+
+t=1
+#r_p ");
+i=2*M+3*N+4
+j=2*M+4*N+5
+r_p=mean(samp[,j]);
+
+t=1
+#"nu_l[%i] ",l);
+j=2*M+4*N+6
+for (i in (M+N+3):(M+2*N+2)){
+nu_l[t]=mean(samp[,j]);t=t+1
+j=j+1
+}
+
+t=1
+#sigma_nu ");
+i=2*M+3*N+6
+j=2*M+5*N+6
+sigma_nu=mean(samp[,j]);
+
+t=1
+#nu_p ");
+i=M+2*N+3
+j=2*M+5*N+7
+nu_p=mean(samp[,j]);
+
+###
+K<-exp(K_p)
+K_i<-exp(K_o_l)
+K_ij<-exp(K_lm)
+P<-exp(P_l)
+r<-exp(r_p)
+r_i<-exp(r_o_l)
+r_ij<-exp(r_lm)
+taui<-exp(nu_l)
+tau<-exp(nu_p)
+K_i_tau<-exp(sigma_K_o)
+r_i_tau<-exp(sigma_r_o)
+K_ij_tau<-exp(tau_K_l)
+r_ij_tau<-exp(tau_r_l)
+
+for (i in 1:N)
+{
+ylimmax=max(y[,,i][!is.na(y[,,i])])
+xlimmax=max(x[,,i][!is.na(y[,,i])])
+plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,xlimmax),ylim=c(0,ylimmax))
+for (j in 1:NoORF[i])
+{
+points(x[j,,i],y[j,,i])
+KK=K_ij[(j+NoSum[i])]
+rr=r_ij[(j+NoSum[i])]
+curve((KK*P*exp(rr*x))/(KK+P*(exp(rr*x)-1)), 0, xlimmax,add=TRUE) 
+}
+K=exp(K_o_l[i])
+r=exp(r_o_l[i])
+curve((K*P*exp(r*x))/(K+P*(exp(r*x)-1)),lwd=3,col="red",add=T)
+}
+}
+
 
 IHM_main <- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.NoORFB,PRIORS) {
 aa<-QFA.NoORFA
@@ -219,10 +374,11 @@ yy_a<-aperm(y[,,,1],c(2,1,3))
 xx_b<-aperm(x[,,,2],c(2,1,3))
 yy_b<-aperm(y[,,,2],c(2,1,3))
 
-list(QFA.IA=c(N,max(NoORF_a),max(NoTime_a),length(y)/2,length(NoTime_a[-1])),
-QFA.yA=c(yy_a),QFA.xA=c(xx_a), QFA.NoORFA=c(NoORF_a),QFA.NoTIMEA=c(NoTime_a)[-1],
+list(QFA.y=y,QFA.x=x,QFA.IA=c(N,max(NoORF_a),max(NoTime_a),length(y)/2,length(NoTime_a[-1])),
+QFA.yA=c(yy_a),QFA.xA=c(xx_a), QFA.NoORFA=c(NoORF_a),QFA.NoTIMEA=c(NoTime_a)[-1],QFA.NoSUMA=c(NoSum_ab),
 QFA.IB=c(N,max(NoORF_b),max(NoTime_b),length(y)/2,length(NoTime_b[-1])),
-QFA.yB=c(yy_b),QFA.xB=c(xx_b), QFA.NoORFB=c(NoORF_b),QFA.NoTIMEB=c(NoTime_b)[-1],gene=gene
+QFA.yB=c(yy_b),QFA.xB=c(xx_b), QFA.NoORFB=c(NoORF_b),QFA.NoTIMEB=c(NoTime_b)[-1],QFA.NoSUMB=c(NoSum_b),
+gene=gene
 )
 }
 

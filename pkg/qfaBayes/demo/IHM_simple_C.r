@@ -21,13 +21,7 @@ SHM_b$QFA.yB=colMeans(SHM_output_b)
 
 IHM_output=IHM_main(burn=1,iters=1,thin=1,QFA.IA=SHM_a$QFA.I,QFA.yA=SHM_a$QFA.yA,QFA.NoORFA=SHM_a$QFA.NoORF,QFA.IB=SHM_b$QFA.I,QFA.yB=SHM_b$QFA.yB,QFA.NoORFB=SHM_b$QFA.NoORF,PRIORS)
 
-plotYN=0
-while(plotYN < 1 ){
-  n<-readline("do you wish to plot? Y or N: ")
-if(n=="Y"){plotYN=1}
-if(n=="N"){stop()}
-}
-
+ask_plot()
 filename="DEMO"
 pdf(paste("IHM_plot_",filename,".pdf",sep=""),useDingbats=F)
 plot_IHM_simple(IHM_output,SHM_a)
