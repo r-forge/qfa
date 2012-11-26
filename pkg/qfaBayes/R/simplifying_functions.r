@@ -52,7 +52,7 @@ QFA.NoORF=as.integer(NoORF_a)
 QFA.NoTIME=as.integer(c(NoTime_a)[-1])
 QFA.NoSUM=NoSum_a
 QFA.I=as.integer(c(N,max(NoORF_a),max(NoTime_a),length(y),length(NoTime_a[-1])))
-list(QFA.y=QFA.y,QFA.x=QFA.x,QFA.I=QFA.I,QFA.y=QFA.y,QFA.x=QFA.x,QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME,QFA.NoSUM=QFA.NoSUM,gene=gene)
+list(y=QFA.D$y,x=QFA.D$x,QFA.I=QFA.I,QFA.y=QFA.y,QFA.x=QFA.x,QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME,QFA.NoSUM=QFA.NoSUM,gene=gene)
 }
 
 SHM_main <- function(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS) {
@@ -89,8 +89,8 @@ mat
 
 plot_SHM_simple<-function(SHM_output,SHM){
 samp<-SHM_output
-y<-QFA.D$y
-x<-QFA.D$x
+y<-SHM$y
+x<-SHM$x
 N=L=SHM$QFA.I[1]   ###L=M=CAPL if CAPL is in use (not used in demo i.e. CAPL=L)###
 NoSum<-SHM$QFA.NoSUM
 NoORF<-SHM$QFA.NoORF
@@ -374,7 +374,7 @@ yy_a<-aperm(y[,,,1],c(2,1,3))
 xx_b<-aperm(x[,,,2],c(2,1,3))
 yy_b<-aperm(y[,,,2],c(2,1,3))
 
-list(QFA.y=y,QFA.x=x,QFA.IA=c(N,max(NoORF_a),max(NoTime_a),length(y)/2,length(NoTime_a[-1])),
+list(y=QFA.D$y,x=QFA.D$x,QFA.IA=c(N,max(NoORF_a),max(NoTime_a),length(y)/2,length(NoTime_a[-1])),
 QFA.yA=c(yy_a),QFA.xA=c(xx_a), QFA.NoORFA=c(NoORF_a),QFA.NoTIMEA=c(NoTime_a)[-1],QFA.NoSUMA=c(NoSum_a),
 QFA.IB=c(N,max(NoORF_b),max(NoTime_b),length(y)/2,length(NoTime_b[-1])),
 QFA.yB=c(yy_b),QFA.xB=c(xx_b), QFA.NoORFB=c(NoORF_b),QFA.NoTIMEB=c(NoTime_b)[-1],QFA.NoSUMB=c(NoSum_b),
