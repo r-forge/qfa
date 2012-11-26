@@ -1,3 +1,4 @@
+setwd(tempdir())
 #a=read.delim("URA3_Raw.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
 data("URA3_Raw_trim")
 

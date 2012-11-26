@@ -1,3 +1,4 @@
+setwd(tempdir())
 #a=read.delim("~/QFADatasets/SHM/URA3_Raw/data.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
 data("URA3_Raw_trim")#Control a 
 
