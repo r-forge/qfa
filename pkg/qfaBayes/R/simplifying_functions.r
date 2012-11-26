@@ -87,7 +87,7 @@ names(mat)=tmp$HEADER
 mat
 }
 
-plot_SHM_simple(SHM_output,SHM){
+plot_SHM_simple<-function(SHM_output,SHM){
 samp<-SHM_output
 y<-QFA.D$y
 x<-QFA.D$x
