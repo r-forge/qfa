@@ -89,10 +89,6 @@ A more detailed workflow which is compatible with the standalone C code is given
 To see how the \verb$SHM_simple_C$ demo works the following detailed explaination is provided and is to be used in conjunction with the R package manual.
 The \verb$SHM_simple_C$ demo runs the following commands: \\
 \\
-\verb$> setwd(tempdir())$\\
-\\
-The above command sets they working directory to a location for temporary files.
-\\
 \verb$> data("URA3_Raw_extratrim_15")$\\
 \verb$> a<-a_15$\\
 \\
