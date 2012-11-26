@@ -123,7 +123,17 @@ The dataset will be trimmed to only include the data corresponding to the specif
 \\
 The above command runs the C code for the SHM in R. \verb$burn$, \verb$iters$ and \verb$thin$ which have all been set to 1 for the purpose of the demo.
 \verb$CAPL$ is the number of orfs for the SHM to proform the analysis on.
-The final output \verb$SHM_output$ will be a table of posterior samples, where each coloumn corresponds to a different model paramater; a table header is included to idendify each coloumn.
-
+The output \verb$SHM_output$ will be a table of posterior samples, where each coloumn corresponds to a different model paramater; a table header is included to idendify each coloumn.
+\\
+\verb@> ask_plot_simple()@\\
+\\
+The above command will ask the user if they would like an example of some plots created form the posterior sample.
+\\
+\verb@> filename="DEMO"@\\
+\verb@> pdf(paste("SHM_plot_",filename,".pdf",sep=""),useDingbats=F)@\\
+\verb@> plot_SHM_simple(SHM_output,SHM)@\\
+\verb@> dev.off()@\\
+\\
+The above commands save fitness plots for each ORF to a pdf file, where black is for the repeat fitted curves and red for orf level fitted curves.
 \end{document}
 % eof
