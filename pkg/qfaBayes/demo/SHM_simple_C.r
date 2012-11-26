@@ -1,3 +1,4 @@
+setwd(tempdir())
 data("URA3_Raw_extratrim_15")
 a<-a_15
 
