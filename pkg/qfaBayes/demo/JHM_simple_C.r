@@ -1,4 +1,3 @@
-setwd(tempdir())
 data("URA3_Raw_extratrim_15")#Control a 
 a<-a_15
 data("CDC13-1_Raw_extratrim_15")#Query b 
