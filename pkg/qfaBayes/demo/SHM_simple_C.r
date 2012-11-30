@@ -12,6 +12,6 @@ SHM_output<-SHM_main(burn=1,iters=1,thin=1,CAPL=50,QFA.I=SHM$QFA.I,QFA.y=SHM$QFA
 
 ask_plot_simple()
 filename="DEMO"
-pdf(paste("SHM_plot_",filename,".pdf",sep=""),useDingbats=F)
+#pdf(paste("SHM_plot_",filename,".pdf",sep=""),useDingbats=F)
 plot_SHM_simple(SHM_output,SHM)
-dev.off()
+#dev.off()

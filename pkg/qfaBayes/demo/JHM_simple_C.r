@@ -22,7 +22,7 @@ JHM_output<-JHM_main(burn=1,iters=1,thin=1,QFA.IA=JHM$QFA.IA,QFA.yA=JHM$QFA.yA,Q
 
 ask_plot_simple()
 filename="DEMO"
-pdf(paste("JHM_plot_",filename,".pdf",sep=""),useDingbats=F)
+#pdf(paste("JHM_plot_",filename,".pdf",sep=""),useDingbats=F)
 plot_JHM_simple(JHM_output,JHM)
-dev.off()
+#dev.off()
 

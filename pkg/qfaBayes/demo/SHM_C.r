@@ -121,7 +121,7 @@ if(n=="N"){stop()}
 ####################
 
 filename="DEMO"
-pdf(paste("SHM_plot_",filename,".pdf",sep=""),useDingbats=F)
+#pdf(paste("SHM_plot_",filename,".pdf",sep=""),useDingbats=F)
 
 load("M_SHM_FULL_27.RData")
 
@@ -268,6 +268,6 @@ K=exp(K_o_l[i])
 r=exp(r_o_l[i])
 curve((K*P*exp(r*x))/(K+P*(exp(r*x)-1)),lwd=3,col="red",add=T)
 }
-dev.off()
+#dev.off()
 
 

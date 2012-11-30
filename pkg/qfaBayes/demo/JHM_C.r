@@ -452,7 +452,7 @@ limmaxx<-max(na.omit(c(mu_a)))
 Treat=TreatA=TreatB=27
 
 file="DEMO"
-pdf(paste("JHM_plot_",file,".pdf",sep=""),useDingbats=F)
+#pdf(paste("JHM_plot_",file,".pdf",sep=""),useDingbats=F)
 
 plot(1,type="n",ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),main="",xlab="",ylab="",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=4)
@@ -505,7 +505,7 @@ i=vecorder[omegadelt[order][1:sig]<=0]  #######
 points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder
 text(mu_a[i],(mu_b[i]),gene[i],pos=4,offset=0.1,cex=0.4)
-dev.off()
+#dev.off()
 
 stop()
 

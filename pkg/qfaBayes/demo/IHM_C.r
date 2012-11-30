@@ -312,7 +312,7 @@ vecorder<-order(1-delta)[1:sig]
 
 file="DEMO"#
 
-pdf(paste("IHM_plot_",file,".pdf",sep=""),useDingbats=F)
+#pdf(paste("IHM_plot_",file,".pdf",sep=""),useDingbats=F)
 
 limmin<-0
 limmax<-max(A2*Z_l*delta_gamma)
@@ -330,7 +330,7 @@ i=vecorder
 text(A1*Z_l[i],A2*(Z_l[i]*delta_gamma[i]),gene[i],pos=4,offset=0.1,cex=0.4)
  plot(density((Z_l)))
  plot(density(A2*(Z_l*delta_gamma)))
-dev.off()
+#dev.off()
 
 
 stop()
