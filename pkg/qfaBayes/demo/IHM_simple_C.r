@@ -23,6 +23,6 @@ IHM_output=IHM_main(burn=1,iters=1,thin=1,QFA.IA=SHM_a$QFA.I,QFA.yA=SHM_a$QFA.yA
 
 ask_plot_simple()
 filename="DEMO"
-pdf(paste("IHM_plot_",filename,".pdf",sep=""),useDingbats=F)
+#pdf(paste("IHM_plot_",filename,".pdf",sep=""),useDingbats=F)
 plot_IHM_simple(IHM_output,SHM_a)
-dev.off()
+#dev.off()
