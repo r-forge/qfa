@@ -129,11 +129,8 @@ The output \verb$SHM_output$ will be a table of posterior samples, where each co
 \\
 The above command will ask the user if they would like an example of some plots created form the posterior sample.
 \\
-\verb@> filename="DEMO"@\\
-\verb@> pdf(paste("SHM_plot_",filename,".pdf",sep=""),useDingbats=F)@\\
 \verb@> plot_SHM_simple(SHM_output,SHM)@\\
-\verb@> dev.off()@\\
 \\
-The above commands save fitness plots for each ORF to a pdf file, where black is for the repeat fitted curves and red for orf level fitted curves.
+The above commands outputs fitted logistic growth curve plots for each ORF, where black is for the repeat fitted curves and red for orf level fitted curves.
 \end{document}
 % eof
