@@ -1,7 +1,7 @@
 require(sp)
 
 # Plotting function
-epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot",ymin=0,ymax=0,xmin=0,xmax=0){
+epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot",ymin=0,ymax=0,xmin=0,xmax=0,ecol="green",scol="red"){
 	enhancers<-gethits(results,qthresh,type="E")
 	suppressors<-gethits(results,qthresh,type="S")
 	others<-results[(!results$ORF%in%enhancers$ORF)&(!results$ORF%in%suppressors$ORF),]
@@ -23,11 +23,11 @@ epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Contro
 	#text(others$ControlFitnessSummary,others$QueryFitnessSummary,others$Gene,col="grey",pos=4,offset=0.1,cex=0.4)
 	# Add suppressors & enhancers
 	if(length(enhancers$ORF)>0){
-		points(enhancers$ControlFitnessSummary,enhancers$QueryFitnessSummary,col='green',pch=19,cex=0.5)
+		points(enhancers$ControlFitnessSummary,enhancers$QueryFitnessSummary,col=ecol,pch=19,cex=0.5)
 		#text(enhancers$ControlFitnessSummary,enhancers$QueryFitnessSummary,enhancers$Gene,col=1,pos=4,offset=0.1,cex=0.4)
 	}
 	if(length(suppressors$ORF)>0){
-		points(suppressors$ControlFitnessSummary,suppressors$QueryFitnessSummary,col='red',pch=19,cex=0.5)
+		points(suppressors$ControlFitnessSummary,suppressors$QueryFitnessSummary,col=scol,pch=19,cex=0.5)
 		#text(suppressors$ControlFitnessSummary,suppressors$QueryFitnessSummary,suppressors$Gene,col=1,pos=4,offset=0.1,cex=0.4)
 	}
 }
@@ -39,7 +39,7 @@ targFun=function(x,y,dat){
 
 makePlot=function(datno,...){
 	if(compno>0){
-		compnm=paste(Benschopp$X..Complex.name[compno],"\t",Benschopp$comments[compno])
+		compnm=paste(COMPLEXES$X..Complex.name[compno],"\t",COMPLEXES$comments[compno])
 	}else{
 		compnm=""
 	}
@@ -54,7 +54,7 @@ makePlot=function(datno,...){
 	dat=datlist[[datno]]$res
 	epiplot(dat,0.05,mmain=maintitle,xxlab=xlab,yylab=ylab,ymin=fymin[datno],ymax=fymax[datno],xmin=fxmin[datno],xmax=fxmax[datno],...)
 	if(compno>0){
-		lst=Benschopp$CompList[compno][[1]]
+		lst=COMPLEXES$CompList[compno][[1]]
 		dcomp=dat[dat$ORF%in%lst,]
 		if(length(dcomp$ORF)>0){
 			points(dcomp$ControlFitnessSummary,dcomp$QueryFitnessSummary,col="purple",pch=16,cex=1)
@@ -90,7 +90,7 @@ mouse=function(buttons,x,y){
 				fxmax[datno]<<-zoomBR[1]
 				fymin[datno]<<-zoomBR[2]
 				fymax[datno]<<-zoomTL[2]
-				makePlot(datno)
+				makePlot(datno,ecol=Ecol,scol=Scol)
 				# Reset zooming parameters
 				zooming<<-FALSE
 				zoomTL<<-c(-99,-99)
@@ -108,12 +108,12 @@ mouse=function(buttons,x,y){
 					pnew=posits[targ]
 					posits[targ]<<-(pnew%%4)+1
 				}
-				makePlot(datno)
+				makePlot(datno,ecol=Ecol,scol=Scol)
 				if(length(selx)>0) drawSel(selx,sely)
 			}else{
 				selx<<-c(selx,xf)
 				sely<<-c(sely,yf)
-				makePlot(datno)
+				makePlot(datno,ecol=Ecol,scol=Scol)
 				drawSel(selx,sely)
 			}
 		}
@@ -122,7 +122,7 @@ mouse=function(buttons,x,y){
 		# Delete the last gene which was highlighted
 		targs<<-targs[-length(targs)]
 		posits<<-posits[-length(posits)]
-		makePlot(datno)
+		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(2%in%buttons) {
 		# Open gene webpage on SGD
@@ -139,13 +139,13 @@ keybd=function(key){
 		# Clear highlighted/selected points
 		targs<<-c()
 		posits<<-c()
-		makePlot(datno)
+		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(key=="d"){
 		# Unhighlight the last gene which was highlighted
 		targs<<-targs[-length(targs)]
 		posits<<-posits[-length(posits)]
-		makePlot(datno)
+		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(key=="w"){
 		targ<<-targs[length(targs)]
@@ -156,24 +156,24 @@ keybd=function(key){
 		datno<<-(datno%%length(datlist))+1
 		dat<<-datlist[[datno]]$res
 		targs<<-match(orftargs,dat$ORF)
-		makePlot(datno)
+		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(key=="Left") {
 		orftargs=dat$ORF[targs]
 		datno<<-((datno-2)%%length(datlist))+1
 		dat<<-datlist[[datno]]$res
 		targs<<-match(orftargs,dat$ORF)
-		makePlot(datno)
+		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(key=="Up") {
 		compno<<-compno+1
-		if(compno>length(Benschopp$CompList)) compno<<-1
-		makePlot(datno)
+		if(compno>length(COMPLEXES$CompList)) compno<<-1
+		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(key=="Down") {
 		compno<<-compno-1
-		if(compno<=0) compno<<-length(Benschopp$CompList)
-		makePlot(datno)
+		if(compno<=0) compno<<-length(COMPLEXES$CompList)
+		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(key=="z") {
 		if(sel==0){
@@ -185,7 +185,7 @@ keybd=function(key){
 			# Close polygon
 			selx<<-c(selx,selx[1])
 			sely<<-c(sely,sely[1])
-			makePlot(datno)
+			makePlot(datno,ecol=Ecol,scol=Scol)
 			drawSel(selx,sely)
 			sel<<-0
 		}
@@ -197,13 +197,20 @@ keybd=function(key){
 		posits<<-c(posits,rep(1,length(tsel)))
 		selx<<-c()
 		sely<<-c()
-		makePlot(datno)
+		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(key=="p") {
 		pdf(sprintf("QFAVisualisation%04d.pdf",plotno))
-			makePlot(datno)
+			makePlot(datno,ecol=Ecol,scol=Scol)
 			plotno<<-plotno+1
 		dev.off()
+	}
+	if(key=="t") {
+		ENH=Ecol
+		SUP=Scol
+		Scol<<-ENH
+		Ecol<<-SUP
+		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(key=="r") {
 	# Zoom mode (click on TL and BR)
@@ -217,7 +224,7 @@ keybd=function(key){
 		newdf=data.frame(X..Complex.name=newcomp[["Label"]],Source="R VisTool",Complex.members..systematic.name.=paste(newcomp[["ORFs"]],collapse="; "),
 		Complex.members..standard.gene.name.=paste(newcomp[["Genes"]],collapse="; "),known.in.GO="",known.in.lit.="",comments="",pubmed="",stringsAsFactors=FALSE)
 		newdf$CompList<-strsplit(newdf$Complex.members..systematic.name,"; ")
-		Benschopp<<-rbind(newdf,Benschopp)
+		COMPLEXES<<-rbind(newdf,COMPLEXES)
 	}
 	return(NULL)
 }
@@ -241,29 +248,38 @@ getResults<-function(filename){
 	)
 }
 
-visTool<-function(){
+visToolDemo<-function(){
 	# Read in functionally related complex
 	# Largely from Benschopp Mol Cell 2010
 	# Can add some complexes manually
 	#compfile=system.file("/FunctionalComplexes.txt", package = "qfa")
 	compfile=paste(system.file(package = "qfa"),"/FunctionalComplexes.txt",sep="")
 	Benschopp<<-read.delim(compfile,stringsAsFactors=FALSE,sep="\t")
-	Benschopp$CompList<<-strsplit(Benschopp$Complex.members..systematic.name,"; ")
+	Benschopp$CompList=strsplit(Benschopp$Complex.members..systematic.name,"; ")
 	
 	orfile=paste(system.file(package = "qfa"),"/ORF2GENE.txt",sep="")
 	ORFGENE=read.delim(orfile,stringsAsFactors=FALSE,sep="\t",header=FALSE)
 	colnames(ORFGENE)=c("ORF","Gene")
-	ORFGENE<<-ORFGENE[!duplicated(ORFGENE$ORF),]
+	ORFGENE=ORFGENE[!duplicated(ORFGENE$ORF),]
 
 	# Read in GIS files
-	datlist<<-list()
-	filenames<<-c(
+	flist=c(
 	"CDC13-1_20GIS.txt","CDC13-1_27GIS.txt","CDC13-1_36GIS.txt",
 	"YKU70_23GIS.txt","YKU70_30GIS.txt","YKU70_37GIS.txt","YKU70_37.5GIS.txt")
-	for (f in 1:length(filenames)){
-		#sysfile=system.file(paste("/",filenames[f],sep=""), package = "qfa")
-		sysfile=paste(system.file(package = "qfa"),"/",filenames[f],sep="")
-		report=getResults(sysfile)
+	filenames=c()
+	for (f in flist){
+		sysfile=paste(system.file(package = "qfa"),"/",f,sep="")
+		filenames=c(filenames,sysfile)
+	}
+	visTool(Benschopp,ORFGENE,filenames)
+}
+
+visTool<-function(complexes,orfs,GISfiles){
+	COMPLEXES<<-complexes
+	ORFGENE<<-orfs
+	datlist<<-list()
+	for (f in 1:length(GISfiles)){	
+		report=getResults(GISfiles[f])
 		report$datname="Mean Fitnesses (MDR * MDP), t-test"
 		datlist[[f]]<<-report
 	}
@@ -284,6 +300,10 @@ visTool<-function(){
 	sel<<-0
 	selx<<-c()
 	sely<<-c()
+	
+	# Toggling between colour of suppressors and enhancers
+	Ecol<<-"green"
+	Scol<<-"red"
 
 	print("Windows mouse")
 	print("~~~~~~~~~~~~~~~")
@@ -303,6 +323,7 @@ visTool<-function(){
 	print("c: clear selection") 
 	print("w: open last gene highlighted in SGD")
 	print("d: unhighlight last gene highlighted")
+	print("t: toggle colours indicating positive and negative interaction")
 	print("r: begin zoom (now click on top left and bottom right of new zoomed plot)")
 	print("p: print current plot to QFAVisualisation.pdf")
 	print("q: quit")
@@ -321,7 +342,7 @@ visTool<-function(){
 	sysinf=Sys.info()
 	#if( sysinf["sysname"]=="Mac") x11()
 	#if( sysinf["sysname"]=="Linux") Cairo()
-		makePlot(datno)
+		makePlot(datno,ecol=Ecol,scol=Scol)
 		getGraphicsEvent(prompt="L click: Highlight/Rotate, R click: SGD, M click: Remove, Left/Right: Change plot, z: select tool, s: add selection, c: clear, q: quit", onMouseDown=mouse, onKeybd=keybd)
 		print(dat$Gene[targs])
 	#if( sysinf["sysname"]%in%c("Linux","Mac")) dev.off()
