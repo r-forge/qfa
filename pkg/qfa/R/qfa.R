@@ -247,6 +247,7 @@ orffit<-function(orf,fitframe){
 
 # Linear regression genetic ind. model fit
 lm.epi<-function(doubles,controls,modcheck){
+	#indmod<-lm(doubles~controls)
 	indmod<-lm(doubles~0+controls)
 	m<-as.numeric(indmod$coefficients)
 	# Check if linear regression OK
@@ -415,7 +416,7 @@ loapproxfun=function(t,g,span=0.2){
 }
 
 ### Function that does the optimization for one colony ###
-colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,AUCLim=5,STP=10,modelFit=TRUE,...){
+colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,modelFit=TRUE,...){
 	# Get row & column to restrict data
 	row<-position[1]; col<-position[2]
 	do<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
