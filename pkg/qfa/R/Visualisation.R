@@ -274,10 +274,10 @@ visToolDemo<-function(){
 	visTool(Benschopp,ORFGENE,filenames)
 }
 
-visTool<-function(complexes,orfs,GISfiles){
+visTool<-function(complexes,orf2gene,GISfiles){
 	# Function for generating interactive plot
 	COMPLEXES<<-complexes
-	ORFGENE<<-orfs
+	ORFGENE<<-orf2gene
 	datlist<<-list()
 	for (f in 1:length(GISfiles)){	
 		report=getResults(GISfiles[f])
