@@ -39,7 +39,7 @@ targFun=function(x,y,dat){
 
 makePlot=function(datno,...){
 	if(compno>0){
-		compnm=paste(COMPLEXES$X..Complex.name[compno],"\t",COMPLEXES$comments[compno])
+		compnm=paste(GROUPS$GroupName[compno],"\t",GROUPS$GroupID[compno])
 	}else{
 		compnm=""
 	}
@@ -54,7 +54,7 @@ makePlot=function(datno,...){
 	dat=datlist[[datno]]$res
 	epiplot(dat,0.05,mmain=maintitle,xxlab=xlab,yylab=ylab,ymin=fymin[datno],ymax=fymax[datno],xmin=fxmin[datno],xmax=fxmax[datno],...)
 	if(compno>0){
-		lst=COMPLEXES$CompList[compno][[1]]
+		lst=GROUPS$GroupORFs[compno][[1]]
 		dcomp=dat[dat$ORF%in%lst,]
 		if(length(dcomp$ORF)>0){
 			points(dcomp$ControlFitnessSummary,dcomp$QueryFitnessSummary,col="purple",pch=16,cex=1)
@@ -167,12 +167,12 @@ keybd=function(key){
 	}
 	if(key=="Up") {
 		compno<<-compno+1
-		if(compno>length(COMPLEXES$CompList)) compno<<-1
+		if(compno>length(GROUPS$GroupORFs)) compno<<-1
 		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(key=="Down") {
 		compno<<-compno-1
-		if(compno<=0) compno<<-length(COMPLEXES$CompList)
+		if(compno<=0) compno<<-length(GROUPS$GroupORFs)
 		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(key=="z") {
@@ -220,11 +220,9 @@ keybd=function(key){
 	}
 	if(key=="u") {
 	# Get user input for a new list of genes
-		newcomp=getText(ORFGENE)
-		newdf=data.frame(X..Complex.name=newcomp[["Label"]],Source="R VisTool",Complex.members..systematic.name.=paste(newcomp[["ORFs"]],collapse="; "),
-		Complex.members..standard.gene.name.=paste(newcomp[["Genes"]],collapse="; "),known.in.GO="",known.in.lit.="",comments="",pubmed="",stringsAsFactors=FALSE)
-		newdf$CompList<-strsplit(newdf$Complex.members..systematic.name,"; ")
-		COMPLEXES<<-rbind(newdf,COMPLEXES)
+		newgrp=getText(ORFGENE)
+		newdf=data.frame(GroupName=newgrp[["Label"]],GroupID="R VisTool",GroupORFs=newgrp[["ORFs"]])
+		GROUPS<<-rbind(newgrp,GROUPS)
 	}
 	return(NULL)
 }
@@ -248,14 +246,27 @@ getResults<-function(filename){
 	)
 }
 
-visToolDemo<-function(){
-	# Read in functionally related complex
+buildBenschop<-function(){
+	# Read in functionally related complexes
 	# Largely from Benschopp Mol Cell 2010
 	# Can add some complexes manually
 	#compfile=system.file("/FunctionalComplexes.txt", package = "qfa")
 	compfile=paste(system.file(package = "qfa"),"/FunctionalComplexes.txt",sep="")
-	Benschopp<<-read.delim(compfile,stringsAsFactors=FALSE,sep="\t")
+	Benschopp=read.delim(compfile,stringsAsFactors=FALSE,sep="\t")
 	Benschopp$CompList=strsplit(Benschopp$Complex.members..systematic.name,"; ")
+	res=data.frame(GroupName=Benschopp$X..Complex.name,GroupID="")
+	res$GroupORFs=Benschopp$CompList
+	return(res)
+}
+
+buildGO<-function(){
+	load(file=paste(system.file(package = "qfa"),"/GOAnnotation.Rda",sep=""))
+	#load(file="D:\\GOAnnotation.Rda")
+	return(tooldf)
+}
+
+visToolDemo<-function(groupFun=buildBenschop){
+	groups=groupFun()
 	
 	orfile=paste(system.file(package = "qfa"),"/ORF2GENE.txt",sep="")
 	ORFGENE=read.delim(orfile,stringsAsFactors=FALSE,sep="\t",header=FALSE)
@@ -271,12 +282,12 @@ visToolDemo<-function(){
 		sysfile=paste(system.file(package = "qfa"),"/",f,sep="")
 		filenames=c(filenames,sysfile)
 	}
-	visTool(Benschopp,ORFGENE,filenames)
+	visTool(groups,ORFGENE,filenames)
 }
 
-visTool<-function(complexes,orf2gene,GISfiles){
+visTool<-function(groups,orf2gene,GISfiles){
 	# Function for generating interactive plot
-	COMPLEXES<<-complexes
+	GROUPS<<-groups
 	ORFGENE<<-orf2gene
 	datlist<<-list()
 	for (f in 1:length(GISfiles)){	
@@ -308,17 +319,17 @@ visTool<-function(complexes,orf2gene,GISfiles){
 
 	print("Windows mouse")
 	print("~~~~~~~~~~~~~~~")
-	print("L click: Highlight gene/Rotate text position")
-	print("R click: SGD (or press 'w' on keyboard)")
-	print("M click: Remove last gene (or press 'm' on keyboard)")
+	print("Left click: Highlight gene/Rotate text position")
+	print("Right click: SGD (or press 'w' on keyboard)")
+	print("Middle click: Remove last gene (or press 'd' on keyboard)")
 	print("Mac mouse")
 	print("~~~~~~~~~~~~~~~")
 	print("Click: Highlight gene/Rotate text position")
 	print("Keyboard")
 	print("~~~~~~~~~~~~~~~")
 	print("Left/Right arrow: change plot")
-	print("Up/Down arrow: change functional complex highlighted")
-	print("u: add new genes to list of functional complexes")
+	print("Up/Down arrow: change group highlighted")
+	print("u: add new group of genes to list of groups")
 	print("z: select tool (toggle on and off)") 
 	print("s: add selection") 
 	print("c: clear selection") 
