@@ -221,8 +221,9 @@ keybd=function(key){
 	if(key=="u") {
 	# Get user input for a new list of genes
 		newgrp=getText(ORFGENE)
-		newdf=data.frame(GroupName=newgrp[["Label"]],GroupID="R VisTool",GroupORFs=newgrp[["ORFs"]])
-		GROUPS<<-rbind(newgrp,GROUPS)
+		newdf=data.frame(GroupName=newgrp[["Label"]],GroupID="R VisTool")
+		newdf$GroupORFs=list(newgrp[["ORFs"]])
+		GROUPS<<-rbind(newdf,GROUPS)
 	}
 	return(NULL)
 }
@@ -254,14 +255,13 @@ buildBenschop<-function(){
 	compfile=paste(system.file(package = "qfa"),"/FunctionalComplexes.txt",sep="")
 	Benschopp=read.delim(compfile,stringsAsFactors=FALSE,sep="\t")
 	Benschopp$CompList=strsplit(Benschopp$Complex.members..systematic.name,"; ")
-	res=data.frame(GroupName=Benschopp$X..Complex.name,GroupID="")
+	res=data.frame(GroupName=Benschopp$X..Complex.name,GroupID="Manual or Benschop Mol. Cell 2010")
 	res$GroupORFs=Benschopp$CompList
 	return(res)
 }
 
 buildGO<-function(){
 	load(file=paste(system.file(package = "qfa"),"/GOAnnotation.Rda",sep=""))
-	#load(file="D:\\GOAnnotation.Rda")
 	return(tooldf)
 }
 
@@ -353,12 +353,14 @@ visTool<-function(groups,orf2gene,GISfiles){
 	# Check if running under windows, if not, force X11
 	# Note that event handling doesn't work under Linux :(
 	sysinf=Sys.info()
-	if( sysinf["sysname"]=="Mac") x11()
+	#if( sysinf["sysname"]!="Windows") x11()
 	#if( sysinf["sysname"]=="Linux") Cairo()
-		makePlot(datno,ecol=Ecol,scol=Scol)
-		getGraphicsEvent(prompt="L click: Highlight/Rotate, R click: SGD, M click: Remove, Left/Right: Change plot, z: select tool, s: add selection, c: clear, q: quit", onMouseDown=mouse, onKeybd=keybd)
-		print(dat$Gene[targs])
-	if( sysinf["sysname"]=="Mac") dev.off()
+	x11()
+	makePlot(datno,ecol=Ecol,scol=Scol)
+	getGraphicsEvent(prompt="L click: Highlight/Rotate, R click: SGD, M click: Remove, Left/Right: Change plot, z: select tool, s: add selection, c: clear, q: quit", onMouseDown=mouse, onKeybd=keybd)
+	print(dat$Gene[targs])
+	#if( sysinf["sysname"]!="Windows") dev.off()
+	dev.off()
 }
 
 getText=function(ORFGENE){
@@ -368,11 +370,18 @@ getText=function(ORFGENE){
 	usergenes=toupper(usergenes)
 	cat("Please input a label for your list of genes (no spaces) & press enter:")
 	lab=scan(what=character(),nlines=1,n=1)
-	x[["Genes"]]=usergenes
 	orfs=c()
+	genes=c()
 	for(gene in usergenes){
-		if(gene%in%ORFGENE$Gene) orfs=c(orfs,ORFGENE$ORF[ORFGENE$Gene==gene])
+		if(gene%in%ORFGENE$Gene){
+			orfs=c(orfs,ORFGENE$ORF[ORFGENE$Gene==gene])
+			genes=c(genes,gene)
+		} else if (gene%in%ORFGENE$ORF) {
+			orfs=c(orfs,gene)
+			genes=c(genes,ORFGENE$Gene[ORFGENE$ORF==gene])			
+		}
 	}
+	x[["Genes"]]=genes
 	x[["ORFs"]]=orfs
 	x[["Label"]]=lab
 	print(x)
