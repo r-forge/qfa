@@ -423,7 +423,7 @@ colony.fit<-function(position,bcdata,inocguess,xybounds,globalOpt=FALSE,detectTh
 	len1=length(do$Growth)
 	# Generate numerical AUC
 	if(len1>1){
-			loapproxfree=loapproxfun(as.numeric(do$Expt.Time),as.numeric(do$Growth))
+			loapproxfree=loapproxfun(as.numeric(do$Expt.Time),as.numeric(do$Growth),span=0.5)
 			loapprox=function(x) pmax(0,loapproxfree(x))
 			nAUC=as.numeric(integrate(loapprox,0,AUCLim)$value)
 			nSTP=as.numeric(loapprox(STP))
