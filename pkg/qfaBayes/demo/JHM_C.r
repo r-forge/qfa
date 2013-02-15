@@ -211,7 +211,7 @@ SHIFT<-QFA$SHIFT
 ###
 L=N#4294
 M=sum(NoORF)
-K_clm=tau_K_cl=K_o_l=sigma_K_o=K_p=P=r_clm=tau_r_cl=r_o_l=sigma_r_o=r_p=nu_l=sigma_nu=nu_p=alpha_c=beta_c=delta_l=gamma_cl=sigma_gamma=omega_cl=sigma_omega=upsilon_c=sigma_upsilon=0
+K_clm=tau_K_cl=K_o_l=sigma_K_o=K_p=P=r_clm=tau_r_cl=r_o_l=sigma_r_o=r_p=nu_cl=sigma_nu=nu_p=alpha_c=beta_c=delta_l=gamma_cl=sigma_gamma=omega_cl=sigma_omega=upsilon_c=sigma_upsilon=0
 ####
 t=1
 #K_clm
@@ -298,41 +298,41 @@ r_p=mean(samp[,j])
 
 
 t=1
-#nu_l
+#nu_cl
 j=2*M+6*L+6
-for (i in (M+5*L+7):(M+6*L+6))
+for (i in (M+5*L+7):(M+7*L+6))
 {
-nu_l[t]=mean(samp[,j]);t=t+1
+nu_cl[t]=mean(samp[,j]);t=t+1
 j=j+1
 }
 
 t=1
 #sigma_nu
 i=2*M+9*L+11
-j=2*M+7*L+6
+j=2*M+8*L+6
 sigma_nu=mean(samp[,j])
 
 t=1
 #nu_p
 i=M+6*L+7
-j=2*M+7*L+7
+j=2*M+8*L+7
 nu_p=mean(samp[,j])
 
 t=1
 #alpha_c
 i=M+L+4
-j=2*M+7*L+8
+j=2*M+8*L+8
 alpha_c=mean(samp[,j])
 
 t=1
 #beta_c
 i=M+L+6
-j=2*M+7*L+9
+j=2*M+8*L+9
 beta_c=mean(samp[,j])
 
 t=1
 #delta_l
-j=2*M+7*L+10
+j=2*M+8*L+10
 for (i in (M+2*L+7):(M+3*L+6))
 {
 delta_l[t]=mean(samp[,j]);t=t+1
@@ -341,7 +341,7 @@ j=j+1
 
 t=1
 #gamma_cl
-j=2*M+8*L+10
+j=2*M+9*L+10
 for (i in (M+4*L+7):(M+5*L+6))
 {
 gamma_cl[t]=mean(samp[,j]);t=t+1
@@ -351,12 +351,12 @@ j=j+1
 t=1
 #sigma_gamma
 i=2*M+9*L+10
-j=2*M+9*L+10
+j=2*M+10*L+10
 sigma_gamma=mean(samp[,j])
 
 t=1
 #omega_cl
-j=2*M+9*L+11
+j=2*M+10*L+11
 for (i in (M+7*L+8):(M+8*L+7))
 {
 omega_cl[t]=mean(samp[,j]);t=t+1
@@ -366,22 +366,8 @@ j=j+1
 t=1
 #sigma_omega
 i=2*M+9*L+12
-j=2*M+10*L+11
+j=2*M+11*L+11
 sigma_omega=mean(samp[,j])
-
-#upsilon_c
-i=2*M+13*L+16
-j=2*M+10*L+12
-upsilon_c=mean(samp[,j])
-
-
-t=1
-#sigma_upsilon
-i=2*M+9*L+14
-j=2*M+10*L+13
-sigma_upsilon=mean(samp[,j])
-
-
 
 K<-exp(K_p)
 K_i<-exp(K_o_l)
@@ -391,7 +377,7 @@ r<-exp(r_p)
 r_i<-exp(r_o_l)
 r_ij<-exp(r_clm)
 
-taui<-exp(nu_l)
+taui<-exp(nu_cl)
 tau<-exp(nu_p)
 gam<-gamma_cl
 omega<-omega_cl
@@ -399,7 +385,7 @@ nuc<-exp(upsilon_c)
 
 gamdelt=0
 j=2*M+7*L+10
-jj=2*M+8*L+10
+jj=2*M+9*L+10
 ii=M+4*L+7
 t=1
 for (i in (M+2*L+7):(M+3*L+6))
@@ -412,7 +398,7 @@ jj=jj+1
 
 omegadelt=0
 j=2*M+7*L+10
-jj=2*M+9*L+11
+jj=2*M+10*L+11
 ii=M+7*L+8
 t=1
 for (i in (M+2*L+7):(M+3*L+6))
