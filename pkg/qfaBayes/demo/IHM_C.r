@@ -295,15 +295,15 @@ namesamp<-names(vecsamp)
 Z_l<-exp(vecsamp[1:(N)])
 sigma_Z<-exp(vecsamp[N+1])
 Z<-exp(vecsamp[N+2])
-nu_l<-exp(vecsamp[(N+3):(2*N+2)])
-sigma_nu<-exp(vecsamp[2*N+3])
-nu<-exp(vecsamp[(2*N+4)])
+nu_cl<-exp(vecsamp[(N+3):(3*N+2)])
+sigma_nu<-exp(vecsamp[3*N+3])
+nu<-exp(vecsamp[(3*N+4)])
 A1<-exp(0)
-A2<-exp(vecsamp[2*N+5])
-delta<-vecsamp[(2*N+6):(3*N+5)]
-gamma<-vecsamp[(3*N+6):(4*N+5)]
-sigma_gamma<-exp(vecsamp[(4*N+6)])
-if(nrow(samp)>1) {delta_gamma<-colMeans(samp[,(2*N+6):(3*N+5)]*samp[,(3*N+6):(4*N+5)])} else {delta_gamma<-colMeans(samp[,(2*N+6):(3*N+5)]*(samp[,(3*N+6):(4*N+5)]))}
+A2<-exp(vecsamp[3*N+5])
+delta<-vecsamp[(3*N+6):(4*N+5)]
+gamma<-vecsamp[(4*N+6):(5*N+5)]
+sigma_gamma<-exp(vecsamp[(5*N+6)])
+if(nrow(samp)>1) {delta_gamma<-colMeans(samp[,(3*N+6):(4*N+5)]*samp[,(4*N+6):(5*N+5)])} else {delta_gamma<-colMeans(samp[,(3*N+6):(4*N+5)]*(samp[,(4*N+6):(5*N+5)]))}
 delta_gamma=exp(delta_gamma)
 
 sig<-sum(rep(1,N)[delta>0.5])
