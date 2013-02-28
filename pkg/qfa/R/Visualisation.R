@@ -39,7 +39,7 @@ targFun=function(x,y,dat){
 
 makePlot=function(datno,...){
 	if(compno>0){
-		compnm=paste(GROUPS$GroupName[compno],"\t",GROUPS$GroupID[compno])
+		compnm=paste(compno,GROUPS$GroupName[compno],"\t",GROUPS$GroupID[compno])
 	}else{
 		compnm=""
 	}
@@ -200,7 +200,9 @@ keybd=function(key){
 		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(key=="p") {
-		pdf(sprintf("QFAVisualisation%04d.pdf",plotno))
+		pdfname=sprintf("QFAVisualisation%04d.pdf",plotno)
+		cat("Printing plot to file:",file.path(getwd(),pdfname),"\n")
+		pdf(pdfname)
 			makePlot(datno,ecol=Ecol,scol=Scol)
 			plotno<<-plotno+1
 		dev.off()
@@ -255,7 +257,7 @@ buildBenschop<-function(){
 	compfile=paste(system.file(package = "qfa"),"/FunctionalComplexes.txt",sep="")
 	Benschopp=read.delim(compfile,stringsAsFactors=FALSE,sep="\t")
 	Benschopp$CompList=strsplit(Benschopp$Complex.members..systematic.name,"; ")
-	res=data.frame(GroupName=Benschopp$X..Complex.name,GroupID="Manual or Benschop Mol. Cell 2010")
+	res=data.frame(GroupName=Benschopp$X..Complex.name,GroupID="Func.")
 	res$GroupORFs=Benschopp$CompList
 	return(res)
 }
@@ -317,28 +319,28 @@ visTool<-function(groups,orf2gene,GISfiles){
 	Ecol<<-"green"
 	Scol<<-"red"
 
-	print("Windows mouse")
-	print("~~~~~~~~~~~~~~~")
-	print("Left click: Highlight gene/Rotate text position")
-	print("Right click: SGD (or press 'w' on keyboard)")
-	print("Middle click: Remove last gene (or press 'd' on keyboard)")
-	print("Mac mouse")
-	print("~~~~~~~~~~~~~~~")
-	print("Click: Highlight gene/Rotate text position")
-	print("Keyboard")
-	print("~~~~~~~~~~~~~~~")
-	print("Left/Right arrow: change plot")
-	print("Up/Down arrow: change group highlighted")
-	print("u: add new group of genes to list of groups")
-	print("z: select tool (toggle on and off)") 
-	print("s: add selection") 
-	print("c: clear selection") 
-	print("w: open last gene highlighted in SGD")
-	print("d: unhighlight last gene highlighted")
-	print("t: toggle colours indicating positive and negative interaction")
-	print("r: begin zoom (now click on top left and bottom right of new zoomed plot)")
-	print("p: print current plot to QFAVisualisation.pdf")
-	print("q: quit")
+	cat("Windows mouse\n")
+	cat("~~~~~~~~~~~~~~~\n")
+	cat("Left click: Highlight gene/Rotate text position\n")
+	cat("Right click: SGD (or press 'w' on keyboard)\n")
+	cat("Middle click: Remove last gene (or press 'd' on keyboard)\n\n")
+	cat("Mac mouse\n")
+	cat("~~~~~~~~~~~~~~~\n")
+	cat("Click: Highlight gene/Rotate text position\n\n")
+	cat("Keyboard\n")
+	cat("~~~~~~~~~~~~~~~\n")
+	cat("Left/Right arrow: change plot\n")
+	cat("Up/Down arrow: change group highlighted\n")
+	cat("u: add new group of genes to list of groups\n")
+	cat("z: select tool (toggle on and off)\n") 
+	cat("s: add selection\n") 
+	cat("c: clear selection\n") 
+	cat("w: open last gene highlighted in SGD\n")
+	cat("d: unhighlight last gene highlighted\n")
+	cat("t: toggle colours indicating positive and negative interaction\n")
+	cat("r: begin zoom (now click on top left and bottom right of new zoomed plot)\n")
+	cat("p: print current plot to QFAVisualisation.pdf\n")
+	cat("q: quit\n")
 
 	datno<<-1
 	plotno<<-1
