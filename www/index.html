@@ -20,6 +20,7 @@
 <nav id="nav">
 <h4>Contents</h4>
 <ul>
+	<li><a href="#intro">Introduction</a></li>
 	<li><a href="#install">Installation</a></li>
 	<li><a href="#qfa">QFA</a>
 		<ul>
@@ -59,13 +60,20 @@
 </nav>
 
 <article>
-<a name="install"><h2>Installation</h2></a>
+<a name="intro"><h2>Introduction</h2></a>
+<p>This page describes how to install and use an <a href="http://cran.r-project.org/">R</a> package for carrying out quantitative fitness analysis (<a href="#qfa">QFA</a>) of the growth of microbial cultures arrayed on a solid agar surface.  A more detailed description of QFA and the motivation for carrying out these experiments and subsequent analysis can be found <a href="#qfa">below</a>, but first we include some installation instructions.</p>
+
+<p>Simple installation instructions for users only interested in using the data visualisation tools in the package can be found <a href="visTool">here</a>.</p>
+
+<hr></hr>
+
+<a name="install"><h2>QFA package installation</h2></a>
 
 <p>This <a href="http://cran.r-project.org/">R</a> package is available for download for several operating systems from <a href="http://r-forge.r-project.org/projects/qfa">R-forge</a> at this address:
 
 <a href="http://r-forge.r-project.org/projects/qfa">http://r-forge.r-project.org/projects/qfa</a></p>
 
-<p>The easiest way to install the package is to execute the following command during an <a href="http://cran.r-project.org/">R</a> session:
+<p>The easiest way to install the package is to execute the following command during an <a href="http://cran.r-project.org/">R</a> session (i.e. install R, start the program and type the following line, followed by enter):
 <code class="indent">install.packages("qfa", repos="http://R-Forge.R-project.org")</code>
 Note that the latest version of <a href="http://cran.r-project.org/">R</a> is required for easy, automatic installation. Source code can be used to build the package for older versions of <a href="http://cran.r-project.org/">R</a> if required and can be checked out from <a href="http://r-forge.r-project.org/projects/qfa">R-forge</a> by <a href="http://en.wikipedia.org/wiki/Apache_Subversion">subversion</a>.</p>
 
@@ -102,6 +110,7 @@ Finally, some code demonstrating analysis of a small subset of the <a href="http
 <p>The supplementary data <a href="">website</a> for <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> contains large, genome-wide datasets suitable for analysis with this package.</p>  
 
 <a href="FitnessPlot.png"><img src="FitnessPlot.png" width="550" title="A genome-wide screen for genes interacting with CDC13"></a>
+<p style="font-size: 75%;"><b><i>cdc13-1</i></a> Fitness Plot</b> Scatterplot comparing the output of two QFA experiments: fitnesses of strains from the yeast deletion collection (x-axis) and fitnesses of the same strains combined with a second, background mutation (<i>cdc13-1</i>).  Dashed line is the line of equal fitness.  Blue line represents expected double mutant fitness, given single mutant fitness assuming the multiplicative model of genetic independence.  Points highlighted in red and green are statistically significant suppressors and enhancers of the <i>cdc13-1</i> phenotype respectively.</p>
 
 <a name="workflow"><h3>Workflow</h3></a>
 
