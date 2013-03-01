@@ -207,6 +207,14 @@ keybd=function(key){
 			plotno<<-plotno+1
 		dev.off()
 	}
+	if(key=="n") {
+		pngname=sprintf("QFAVisualisation%04d.png",plotno)
+		cat("Printing plot to file:",file.path(getwd(),pngname),"\n")
+		png(pngname,width=480*2,height=480*2,pointsize=12*2)
+			makePlot(datno,ecol=Ecol,scol=Scol)
+			plotno<<-plotno+1
+		dev.off()
+	}
 	if(key=="t") {
 		ENH=Ecol
 		SUP=Scol
@@ -270,20 +278,13 @@ buildGO<-function(){
 visToolDemo<-function(groupFun=buildBenschop){
 	groups=groupFun()
 	
-	orfile=paste(system.file(package = "qfa"),"/ORF2GENE.txt",sep="")
+	orfile=file.path(system.file(package = "qfa"),"ORF2GENE.txt")
 	ORFGENE=read.delim(orfile,stringsAsFactors=FALSE,sep="\t",header=FALSE)
 	colnames(ORFGENE)=c("ORF","Gene")
 	ORFGENE=ORFGENE[!duplicated(ORFGENE$ORF),]
 
 	# Read in GIS files
-	flist=c(
-	"CDC13-1_20GIS.txt","CDC13-1_27GIS.txt","CDC13-1_36GIS.txt",
-	"YKU70_23GIS.txt","YKU70_30GIS.txt","YKU70_37GIS.txt","YKU70_37.5GIS.txt")
-	filenames=c()
-	for (f in flist){
-		sysfile=paste(system.file(package = "qfa"),"/",f,sep="")
-		filenames=c(filenames,sysfile)
-	}
+	filenames=list.files(system.file(package = "qfa"),pattern="*GIS.txt",full.names=TRUE)
 	visTool(groups,ORFGENE,filenames)
 }
 
@@ -360,7 +361,18 @@ visTool<-function(groups,orf2gene,GISfiles){
 	x11()
 	makePlot(datno,ecol=Ecol,scol=Scol)
 	getGraphicsEvent(prompt="L click: Highlight/Rotate, R click: SGD, M click: Remove, Left/Right: Change plot, z: select tool, s: add selection, c: clear, q: quit", onMouseDown=mouse, onKeybd=keybd)
-	print(dat$Gene[targs])
+	cat("~~~~~~~~~~~~~~~\n")
+	cat("\n")
+	cat("List of genes currently selected:\n")
+	cat(dat$Gene[targs])
+	cat("\n")
+	cat("~~~~~~~~~~~~~~~\n")
+	cat("\n")
+	cat("Systematic names for genes currently selected:\n")
+	cat(dat$ORF[targs])
+	cat("\n")
+	cat("\n")
+	cat("\n")
 	#if( sysinf["sysname"]!="Windows") dev.off()
 	dev.off()
 }
@@ -389,7 +401,3 @@ getText=function(ORFGENE){
 	print(x)
 	return(x)
 }
-
-
-
-

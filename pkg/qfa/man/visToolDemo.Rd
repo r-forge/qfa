@@ -5,14 +5,17 @@
 Creates an interactive, searchable version of a selection of fitness plots from Addinall et al. 2011 PLoS Genetics (http://dx.doi.org/10.1371/journal.pgen.1001362).
 }
 \usage{
-visToolDemo()
+visToolDemo(groupFun=buildBenschop)
 }
 \arguments{
+\item{groupFun}{Specify the name of a function to build a data frame containing related groups of genes to be highlighted together.  Current options are buildBenschop (default) and buildGO.  buildBenschop allows highlighting of functionally related genes from Benschop et al. (2010): http://dx.doi.org/10.1016/j.molcel.2010.06.002.  buildGO allows highlighting of functionally related genes from the Gene Ontology database: http://www.geneontology.org/}
 }
 \value{
 Returns an interactive plot for comparing control and query fitnesses and visualising interaction strengths for data presented in Addinall et al. 2011 PLoS Genetics (http://dx.doi.org/10.1371/journal.pgen.1001362).
 
-Instructions for use:
+More detailed description and instructions can be found here: http://qfa.r-forge.r-project.org/visTool
+
+Interaction controls:
 
 Windows mouse
 ~~~~~~~~~~~~~~~

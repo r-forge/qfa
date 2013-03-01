@@ -5,10 +5,10 @@
 Creates an interactive, searchable version of a selection of fitness plots
 }
 \usage{
-visTool(complexes,orf2gene,GISfiles)
+visTool(groups,orf2gene,GISfiles)
 }
 \arguments{
-  \item{complexes}{Data frame describing the names and members of functionally related complexes.  Largely taken from Benschopp et al. 2010 (http://dx.doi.org/10.1016/j.molcel.2010.06.002).  Contains at least three columns: "X..Complex.Name", "CompList" and "comments" describing the name of a protein complex, the systematic gene names (Y numbers) for members of the complex and any comments.}
+  \item{groups}{Data frame describing the names and members of groups of genes to be highlighted together.  Contains three columns: "GroupName", "GroupID" and "GroupORFs" describing a label for the group of genes, an ID specifying the source of the group (e.g. manually added or taken from Benschop et al. (2010)) and a list of the systematic gene names (Y numbers) for members of the group.}
   \item{orf2gene}{Data frame decribing a one-to-one relationship between standard gene names and systematic gene names.  Contains two columns: "ORF" and "Gene".  This association is used to convert between standard and systematic gene names during searching.  Note that only one standard gene name is associated with each systematic name, and so, during any search for standard gene names, if you happen to choose a version which is not included in this list, your target gene will not be found.}
   \item{GISfiles}{A list of objects output from the qfa package function report.epi, each of which compares the fitnesses of a library of strains grown as part of a control experiment and as part of a query experiment.}
 }
