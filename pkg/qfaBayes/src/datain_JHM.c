@@ -140,6 +140,12 @@ data->y[i+data->SHIFTlmn]=QFADyB[i];
 data->x[i+data->SHIFTlmn]=QFADxB[i];
 }
 
+	for (i=0;i<data->maxy;i++){
+          if(data->y[i]<0){ data->y[i]=0;}
+	  if(data->x[i]<0){ data->x[i]=0;}
+        }
+
+
  for (i=0;i<(data->L);i++){
 data->NoORF[i]=QFADNoORFA[i];
 data->NoORF[i+data->L]=QFADNoORFB[i];
