@@ -2,8 +2,8 @@
 <html lang=en> 
 <head>
 <meta charset=utf-8> 
-<title>Using the QFA data visualisation tool</title> 
-<meta name="desciption" content="QFA data visualisation tool">
+<title>qfaR visualisation tool</title> 
+<meta name="desciption" content="qfaR visualisation tool">
 <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
 <link rel="stylesheet" type="text/css" href="../CLstyle.css">
 </head> 
@@ -13,7 +13,7 @@
 <header>
 <a href="http://www.flickr.com/photos/conchur/8187964744/" title="FourCulturesCropped by Conor Lawless, on Flickr">
 <img src="http://farm9.staticflickr.com/8489/8187964744_583f1264b2_m.jpg" width="180" alt="FourCulturesCropped" style="display: inline; float:left; margin-right: 5px; margin-bottom: 30px;"></a>
-<h1>QFA data visualisation tool</h1> 
+<h1>qfaR visualisation tool</h1> 
 <hr></hr>
 </header>
 
@@ -26,18 +26,27 @@
 	<li><a href="#windows">Installation for Windows</a></li>
 	<li><a href="#instruct">Loading the tool</a></li>
 	<li><a href="#interact">Interacting with plots</a></li>
-
 </ul>
 </nav>
 
 <article>
+<p>This page is for users interested in the interactive data visualisation tools which form a part of the QFA R package.  A more general introduction to the QFA R package can be found <a href="../">here</a>.  Currently, interactive R plots are only available under OSX and Windows.  A web-based visualisation tool is under development <a href="http://bioinf1.ncl.ac.uk/qfa">here</a>.  </p>
+
+<p>You can <a href="javascript:window.print()">print</a> this document to have a physical copy to hand while using the qfaR visualisation tool.</p>
+
 <a name="intro"><h2>Introduction</h2></a>
-<p>This page is intended for users who are only interested in using the interactive data visualisation tools within the QFA R package.  A more general introduction to the QFA R package can be found <a href="../">here</a>.</p>
 
-<p>QFA experiments are often used to compare the fitnesses of independent microbial strains under two different conditions, or in two different genetic backgrounds in order to search for evidence for drug interactions or genetic interactions for example.  When carried out on a genome-wide scale, such comparisons become difficult to visualise, due to the sheer number of strains examined.  For example, the static plot below compares the fitness of about 4,000 different single deletion yeast mutants either with or without a second, background mutation (<i>cdc13-1</i>).  Although several interesting gene deletions and groups of gene deletions have been highlighted on this plot, evidence for the strength (or existence) of several thousand other genetic interactions remains obscured.  This is simply because simultaneously labelling so many datapoints on such a plot, so that the labels are all legible, is not practical.  The visualisation tool in our QFA package provides the user with a means to interact with this kind of plot and to query it in real time, speeding up expert visual analysis and interpretation of the underlying data.</p>
+<p>QFA experiments are often used to compare the fitnesses of independent microbial strains under two different environmental conditions (e.g. query and control conditions), or in two different genetic backgrounds, to search for evidence for drug interactions or genetic interactions for example.  Such comparisons can become difficult to visualise by static scatterplot due to the sheer number of strains examined, simply because simultaneous labelling of ~4,000 genes on a single plot is not practical.  For example, in <a href="http://www.plosgenetics.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pgen.1001362.g002&representation=PNG_M">Figure 2</a> from <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> the labels for many genes in interesting locations are obscured.</p>
 
-<a href="../FitnessPlot.png"><img src="../FitnessPlot.png" width="550" title="A genome-wide screen for genes interacting with CDC13"></a>
-<p style="font-size: 75%;"><b><i>cdc13-1</i></a> Fitness Plot</b> Scatterplot comparing the output of two QFA experiments: fitnesses of strains from the yeast deletion collection (x-axis) and fitnesses of the same strains combined with a second, background mutation (<i>cdc13-1</i>).  Dashed line is the line of equal fitness.  Blue line represents expected double mutant fitness, given single mutant fitness assuming the multiplicative model of genetic independence.  Points highlighted in red and green are statistically significant suppressors and enhancers of the <i>cdc13-1</i> fitness defect respectively.</p>
+<p>The qfaR visualisation tool provides a means to interact with such scatterplots, to make rapid, visual comparisons between different pairs of QFA experiments and to query plots in real time, aiding analysis and interpretation of the underlying data.  qfaR visualisation can be applied to any paired sets of control and query fitnesses, including SGA screen data, or liquid growth fitnesses.</p>
+
+<a href="QFAVisualisation0001.png"><img src="QFAVisualisation0001.png" width=320></a>
+<a href="QFAVisualisation0002.png"><img src="QFAVisualisation0002.png" width=320></a>
+<a href="QFAVisualisation0003.png"><img src="QFAVisualisation0003.png" width=320></a>
+
+<p style="font-size: 75%;"><b>Three qfaR Fitness Plots</b> Scatterplots of data from <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> printed using the qfaR visualisation tool.  The same four functionally related genes are highlighted in purple on each plot and names printed.  Genes highlighted in green significantly enhance the background mutation phenotype indicated in the y-axis label.  Similarly, genes highlighted in red suppress the phenotype.  Blue horizontal and vertical lines intersect at the point corresponding to <i>his3&Delta;</i> (a wild-type surrogate).  Solid grey line is predicted double-mutant fitness, given single deletion fitness and assuming a multiplicative model of genetic independence.  Dashed grey line is the line of equal fitness.  Click on panels to zoom.</p>
+
+<p>Screen pairs are indicated with shorthand labels on the x and y axis.  For example, the label 'CDC13-1 20' represents an experiment combining the yeast deletion collection with a background <i>cdc13-1</i> mutation, grown at 20&deg;C.  Similarly, the label 'URA3 20' represents an experiment combining the yeast deletion collection with a neutral, background <i>ura3&Delta;</i> mutation, grown at 20&deg;C.  For each QFA pair, the plot title indicates the fitness definition used (e.g. <i>MDR*MDP</i> or <i>MDR</i>), the statistic used to summarise replicate fitness observations (e.g. mean or median) and the statistical test used to identify enhancers and suppressors (e.g. Student's t-test or the Wilcoxon test).</p>
 
 <hr></hr>
 
@@ -45,17 +54,18 @@
 
 <p>You will require administrator rights on your machine to install <a href="http://cran.r-project.org/bin/macosx/">R</a> and the qfa package.
 
-<ol><li>Make sure you have the latest version of R installed on your computer.  If not, <a href="http://cran.r-project.org/bin/macosx/">download</a> the latest .pkg file to your hard drive and click to install as usual.</li>
-<li>Install the qfa package containing the visualisation tool and the <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> QFA datasets:<ul>
-	<li>Start the R application
-	<li>Paste the following line of code after the command line prompt (followed by Enter):</ul>
+<ol><li>Make sure you have the latest version of R installed on your computer.  If not, <a href="http://cran.r-project.org/bin/macosx/">download</a> the latest installation file (.pkg file) to your hard drive and install.</li>
+	<li>Install the qfa package containing the visualisation tool and the <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> QFA datasets:<ol type="a">
+		<li>Start the R application</li>
+		<li>Paste the following line of code after the command line prompt (followed by Enter):</li>
+	</ol>
 <code>
 install.packages("qfa", repos="http://R-Forge.R-project.org")
 </code>
 </ol>
 Note that, depending on the version of your operating system, you might be prompted to install the <a href="http://xquartz.macosforge.org">X11</a> software for Mac at a later stage.  X11 is necessary for the visualisation tool to work, so please install it if promoted.  This may require restarting your machine.</p>
 
-<p>Now, installation is complete.  You do not have to go through these steps again to use the tool.</p>
+<p>Installation should be complete.  You do not have to go through these steps again to use the tool.</p>
 
 <hr></hr>
 
@@ -63,29 +73,31 @@ Note that, depending on the version of your operating system, you might be promp
 
 <p>You will require administrator rights on your PC to install <a href="http://cran.r-project.org/bin/windows/base/">R</a> and the qfa package.
 
-<ol><li>Make sure you have the latest version of R installed on your computer.  If not, <a href="http://cran.r-project.org/bin/windows/base/">download</a> the latest .exe file to your hard drive and double-click to install as usual.</li>
-<li>Install the qfa package containing the visualisation tool and the <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> QFA datasets:<ul>
-	<li>Start the R application (e.g. Start->All Programs->R->R x64 2.15.2)
-	<li>Paste the following line of code after the command line prompt (followed by Enter):</ul>
+<ol><li>Make sure you have the latest version of R installed on your computer.  If not, <a href="http://cran.r-project.org/bin/windows/base/">download</a> the latest .exe file to your hard drive and install.</li>
+<li>Install the qfa package containing the visualisation tool and the <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> QFA datasets:<ol type="a">
+	<li>Start the R application (e.g. Start->All Programs->R->R x64 2.15.2)</li>
+	<li>Paste the following line of code after the command line prompt (followed by Enter):</li>
+</ol></li>
 <code>
 install.packages("qfa", repos="http://R-Forge.R-project.org")
 </code>
 </ol>
-Now, installation is complete.  You do not have to go through these steps again to use the tool.</p>
+
+<p>Installation should be complete.  You do not have to go through these steps again to use the tool.</p>
 
 <hr></hr>
-<a name="instruct"><h2>Loading the tool (OSX or Windows)</h2></a>
+<a name="instruct"><h2>Starting the tool (OSX or Windows)</h2></a>
 
-<p>To run the visualisation tool, start the R application and type the following two commands (pressing enter after each) at the command prompt: </p>
+<p>To start the visualisation tool, first start the R application.  Once R is running, type the following two commands (pressing enter after each) at the command prompt: </p>
 
 <code>
 library(qfa)</br>
-visToolDemo()
+visToolDemo(buildBenschop)
 </code>
 
-<p>A second plotting window should appear alongside the text console, and brief instructions for using the keyboard and mouse should be printed to the console (copied below).  Note that you will need to click on the console window to put it into focus before typing in Gene names etc. if prompted.</p>
+<p>A plotting window should appear alongside the text console, and instructions for using the keyboard and mouse to interact with the data should be printed to the console (copied below).  Note that you will need to click on the console window to put it into focus before typing in Gene names etc., if prompted.  Similarly, you may have to click on the plotting window to put it into focus before attempting to use any keyboard plotting commands.</p>
 
-<p>If you would like to use the version of the tool with GO terms highlighted instead of the complexes from <a href="http://dx.doi.org/10.1016/j.molcel.2010.06.002">Benschop et al. (2010)</a>, quit the visualisation tool (by pressing 'q' on the keyboard, preferably not by clicking on the 'x' button) and type the following command (followed by enter):</p>
+<p>The command above allows highlighting of groups of genes built based on a list of consensus functionally related complexes from <a href="http://dx.doi.org/10.1016/j.molcel.2010.06.002">Benschop et al. (2010)</a>.  If you would like to use a version of the tool with GO terms highlighted instead, quit the visualisation tool (preferablty by pressing 'q' on the keyboard, rather than clicking on the 'x' button) and type the following command in the text console (followed by enter):</p>
 <code>
 visToolDemo(buildGO)
 </code>
@@ -95,9 +107,7 @@ visToolDemo(buildGO)
 
 <a name="interact"><h2>Interacting with plots</h2></a>
 
-<p>The visualisation tool generates scatter plots comparing strain fitness summaries in paired QFA screens.  Screens are indicated with shorthand tags on the x and y axis.  For example, the tag 'CDC13-1 20' represents an experiment combining the yeast deletion collection with a background <i>cdc13-1</i> mutation, grown at 20&deg;C.  Similarly, the tag 'URA3 20' represents an experiment combining the yeast deletion collection with a neutral, background <i>ura3&Delta;</i> mutation, grown at 20&deg;C.  For each QFA pair, the fitness definition (e.g. <i>MDR*MDP</i> or <i>MDR</i>) used, fitness summary (e.g. Mean or Median) used and statistical test used to identify enhancers and suppressors (e.g. Student's t-test or the Wilcoxon test) are indicated in the title of the plot.</p>
-
-<p>Users can interact with plots in several ways, using the keyboard and mouse.  The full set of controls are described below.  Briefly, clicking on points highlights them and prints the relevant gene names (corresponding to the relevant deletion from the yeast deletion collection, for example).  Right-clicking on a point (or pressing the 'w' key) opens the <a href="http://www.yeastgenome.org/">Saccharomyces Genome Database</a> web-page for that gene.  The user can browse through different pairs of QFA experiments, while keeping the same genes highlighted, by pressing the left and right arrow keys.  The user can browse different functionally related groups of genes, by using the up and down arrow keys, highlighting groups of genes taken from an article by <a href="http://dx.doi.org/10.1016/j.molcel.2010.06.002">Benschop et al. (2010), or from the <a href="http://www.geneontology.org/">gene ontology</a> database.</a>.  Users can search for groups of their favourite genes by pressing 'u' and following instructions in the R console to manually add to the pre-loaded list of functional groups.  Finally, users can output plots to publication quality PDF figures after highlighting genes of interest by pressing 'p'.</p>
+<p>Users can interact with plots in several ways, using the keyboard and mouse.  The full set of controls are described below.  Briefly, clicking on points highlights them and prints the relevant gene names (corresponding to the relevant deletion from the yeast deletion collection, for example).  Right-clicking on a point (or pressing the 'w' key) opens the <a href="http://www.yeastgenome.org/">Saccharomyces Genome Database</a> web-page for that gene.  The user can browse through different pairs of QFA experiments, while keeping the same genes highlighted, by pressing the left and right arrow keys.  The user can browse different functionally related groups of genes, by using the up and down arrow keys, highlighting groups of genes taken from an article by <a href="http://dx.doi.org/10.1016/j.molcel.2010.06.002">Benschop et al. (2010)</a>, or from the <a href="http://www.geneontology.org/">gene ontology</a> database.  Users can search for groups of their favourite genes by pressing 'u' and following instructions in the R console to manually add to the pre-loaded list of functional groups.  Finally, users can output plots to publication quality PDF figures after highlighting genes of interest by pressing 'p'.</p>
 
 <h3>Windows mouse</h3>
 <ul>
