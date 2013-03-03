@@ -65,6 +65,15 @@ install.packages("qfa", repos="http://R-Forge.R-project.org")
 </ol>
 Note that, depending on the version of your operating system, you might be prompted to install the <a href="http://xquartz.macosforge.org">X11</a> software for Mac at a later stage.  X11 is necessary for the visualisation tool to work, so please install it if promoted.  This may require restarting your machine.</p>
 
+<h4>Older versions of R</h4>
+<p>In the event that the latest version of R currently available to you is not compatible with the binary package hosted on R-forge, you can still install the qfa package manually by following these steps:
+<ol>
+<li>Download the OSX source code for the package (.tgz file) from <a href="http://r-forge.r-project.org/R/?group_id=880">this</a> page to your hard drive.</li>
+<li>Start the R application on your machine and go Packages & Data -> Package Installer</li>
+<li>Select 'Local Source Package' from list</li>
+<li>Hit the Install button and then navigate to where you've saved the file, press OK to install it</li>
+</ol> 
+
 <p>Installation should be complete.  You do not have to go through these steps again to use the tool.</p>
 
 <hr></hr>
@@ -107,7 +116,7 @@ visToolDemo(buildGO)
 
 <a name="interact"><h2>Interacting with plots</h2></a>
 
-<p>Users can interact with plots in several ways, using the keyboard and mouse.  The full set of controls are described below.  Briefly, clicking on points highlights them and prints the relevant gene names (corresponding to the relevant deletion from the yeast deletion collection, for example).  Right-clicking on a point (or pressing the 'w' key) opens the <a href="http://www.yeastgenome.org/">Saccharomyces Genome Database</a> web-page for that gene.  The user can browse through different pairs of QFA experiments, while keeping the same genes highlighted, by pressing the left and right arrow keys.  The user can browse different functionally related groups of genes, by using the up and down arrow keys, highlighting groups of genes taken from an article by <a href="http://dx.doi.org/10.1016/j.molcel.2010.06.002">Benschop et al. (2010)</a>, or from the <a href="http://www.geneontology.org/">gene ontology</a> database.  Users can search for groups of their favourite genes by pressing 'u' and following instructions in the R console to manually add to the pre-loaded list of functional groups.  Finally, users can output plots to publication quality PDF figures after highlighting genes of interest by pressing 'p'.</p>
+<p>Users can interact with plots in several ways, using the keyboard and mouse.  The full set of controls are described below.  Briefly, clicking on points highlights them and prints the relevant gene names (corresponding to the relevant deletion from the yeast deletion collection, for example).  Right-clicking on a point (or pressing the 'w' key) opens the <a href="http://www.yeastgenome.org/">Saccharomyces Genome Database</a> web-page for that gene.  The user can browse through different pairs of QFA experiments, while keeping the same genes highlighted, by pressing the left and right arrow keys.  The user can browse different functionally related groups of genes, by using the up and down arrow keys, highlighting groups of genes based on a list presented in an article by <a href="http://dx.doi.org/10.1016/j.molcel.2010.06.002">Benschop et al. (2010)</a>, or an alternative list from the <a href="http://www.geneontology.org/">gene ontology</a> database.  Users can search for groups of their favourite genes by pressing 'u' and following instructions in the R console to manually add to the pre-loaded list of functional groups.  Finally, users can output plots to publication quality PDF figures after highlighting genes of interest by pressing 'p'.</p>
 
 <h3>Windows mouse</h3>
 <ul>
