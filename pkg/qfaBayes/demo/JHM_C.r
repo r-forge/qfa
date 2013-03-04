@@ -384,7 +384,7 @@ omega<-omega_cl
 nuc<-exp(upsilon_c)
 
 gamdelt=0
-j=2*M+7*L+10
+j=2*M+8*L+10
 jj=2*M+9*L+10
 ii=M+4*L+7
 t=1
@@ -397,7 +397,7 @@ jj=jj+1
 }
 
 omegadelt=0
-j=2*M+7*L+10
+j=2*M+8*L+10
 jj=2*M+10*L+11
 ii=M+7*L+8
 t=1
