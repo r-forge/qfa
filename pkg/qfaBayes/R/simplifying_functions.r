@@ -603,7 +603,7 @@ omega<-omega_cl
 nuc<-exp(upsilon_c)
 
 gamdelt=0
-j=2*M+7*L+10
+j=2*M+8*L+10
 jj=2*M+9*L+10
 ii=M+4*L+7
 t=1
@@ -616,7 +616,7 @@ jj=jj+1
 }
 
 omegadelt=0
-j=2*M+7*L+10
+j=2*M+8*L+10
 jj=2*M+10*L+11
 ii=M+7*L+8
 t=1
@@ -641,7 +641,7 @@ vecorder<-order(1-delta)[1:sig]
 K_ij=vecK=c(exp(K_o_l),A2*exp(K_o_l+gamdelt))
 r_ij=c(exp(r_o_l),B2*exp(r_o_l+omegadelt))
 
-K_ij[K_ij<2*PO]=PO+0.001
+K_ij[K_ij<2*PO]=2*PO+0.001
 
 vecMDRa<-r_ij/log(2*(K_ij-PO)/(K_ij-2*PO)) #MDR
 vecMDPa<-log(K_ij/PO)/log(2) #MDP
