@@ -54,7 +54,7 @@ makePlot=function(datno,...){
 	dat=datlist[[datno]]$res
 	epiplot(dat,0.05,mmain=maintitle,xxlab=xlab,yylab=ylab,ymin=fymin[datno],ymax=fymax[datno],xmin=fxmin[datno],xmax=fxmax[datno],...)
 	if(compno>0){
-		lst=GROUPS$GroupORFs[compno][[1]]
+		lst=strsplit(GROUPS$GroupORFs[compno][[1]]," ")
 		dcomp=dat[dat$ORF%in%lst,]
 		if(length(dcomp$ORF)>0){
 			points(dcomp$ControlFitnessSummary,dcomp$QueryFitnessSummary,col="purple",pch=16,cex=1)
@@ -232,7 +232,7 @@ keybd=function(key){
 	# Get user input for a new list of genes
 		newgrp=getText(ORFGENE)
 		newdf=data.frame(GroupName=newgrp[["Label"]],GroupID="R VisTool")
-		newdf$GroupORFs=list(newgrp[["ORFs"]])
+		newdf$GroupORFs=paste(newgrp[["ORFs"]],sep=" ")
 		GROUPS<<-rbind(newdf,GROUPS)
 	}
 	return(NULL)
@@ -264,7 +264,7 @@ buildBenschop<-function(){
 	#compfile=system.file("/FunctionalComplexes.txt", package = "qfa")
 	compfile=paste(system.file(package = "qfa"),"/FunctionalComplexes.txt",sep="")
 	Benschopp=read.delim(compfile,stringsAsFactors=FALSE,sep="\t")
-	Benschopp$CompList=strsplit(Benschopp$Complex.members..systematic.name,"; ")
+	Benschopp$CompList=gsub(";"," ",gsub("\\s","",Benschopp$Complex.members..systematic.name))
 	res=data.frame(GroupName=Benschopp$X..Complex.name,GroupID="Func.")
 	res$GroupORFs=Benschopp$CompList
 	return(res)
