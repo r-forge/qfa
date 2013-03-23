@@ -54,7 +54,7 @@ makePlot=function(datno,...){
 	dat=datlist[[datno]]$res
 	epiplot(dat,0.05,mmain=maintitle,xxlab=xlab,yylab=ylab,ymin=fymin[datno],ymax=fymax[datno],xmin=fxmin[datno],xmax=fxmax[datno],...)
 	if(compno>0){
-		lst=strsplit(GROUPS$GroupORFs[compno][[1]]," ")
+		lst=strsplit(GROUPS$GroupORFs[compno]," ")[[1]]
 		dcomp=dat[dat$ORF%in%lst,]
 		if(length(dcomp$ORF)>0){
 			points(dcomp$ControlFitnessSummary,dcomp$QueryFitnessSummary,col="purple",pch=16,cex=1)
@@ -257,7 +257,7 @@ getResults<-function(filename){
 	)
 }
 
-buildBenschop<-function(){
+benschopFromSource<-function(){
 	# Read in functionally related complexes
 	# Largely from Benschopp Mol Cell 2010
 	# Can add some complexes manually
@@ -270,9 +270,15 @@ buildBenschop<-function(){
 	return(res)
 }
 
+buildBenschop<-function(){
+	Benschop=read.delim(file.path(system.file(package = "qfa"),"Benschop.txt"),sep="\t",header=TRUE,stringsAsFactors=FALSE)
+	return(Benschop)
+}
+
 buildGO<-function(){
-	load(file=paste(system.file(package = "qfa"),"/GOAnnotation.Rda",sep=""))
-	return(tooldf)
+	#load(file=file.path(system.file(package = "qfa"),"GOAnnotation.Rda"))
+	GO=read.delim(file.path(system.file(package = "qfa"),"GOAnnotation.txt"),sep="\t",header=TRUE,stringsAsFactors=FALSE)
+	return(GO)
 }
 
 visToolDemo<-function(groupFun=buildBenschop){
