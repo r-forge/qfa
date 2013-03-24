@@ -116,7 +116,7 @@ visToolDemo(buildGO)
 
 <a name="interact"><h2>Interacting with plots</h2></a>
 
-<p>Users can interact with plots in several ways, using the keyboard and mouse.  The full set of controls are described below.  Briefly, clicking on points highlights them and prints the relevant gene names (corresponding to the relevant deletion from the yeast deletion collection, for example).  Right-clicking on a point (or pressing the 'w' key) opens the <a href="http://www.yeastgenome.org/">Saccharomyces Genome Database</a> web-page for that gene.  The user can browse through different pairs of QFA experiments, while keeping the same genes highlighted, by pressing the left and right arrow keys.  The user can browse different functionally related groups of genes, by using the up and down arrow keys, highlighting groups of genes based on a list presented in an article by <a href="http://dx.doi.org/10.1016/j.molcel.2010.06.002">Benschop et al. (2010)</a>, or an alternative list from the <a href="http://www.geneontology.org/">gene ontology</a> database.  Users can search for groups of their favourite genes by pressing 'u' and following instructions in the R console to manually add to the pre-loaded list of functional groups.  Finally, users can output plots to publication quality PDF figures after highlighting genes of interest by pressing 'p'.</p>
+<p>Users can interact with plots in several ways, using the keyboard and mouse.  The full set of controls are described below.  Briefly, clicking on points highlights them and prints the relevant gene names (corresponding to the relevant deletion from the yeast deletion collection, for example).  Right-clicking on a point (or pressing the 'w' key) opens the <a href="http://www.yeastgenome.org/">Saccharomyces Genome Database</a> web-page for that gene.  The user can browse through different pairs of QFA experiments, while keeping the same genes highlighted, by pressing the left and right arrow keys.  The user can browse different functionally related groups of genes, by using the up and down arrow keys, highlighting groups of genes based on a list presented in an article by <a href="http://dx.doi.org/10.1016/j.molcel.2010.06.002">Benschop et al. (2010)</a>, or an alternative list from the <a href="http://www.geneontology.org/">gene ontology</a> database.  The user can also examine different views of the same data, toggling between QFA fitness plots (as presented in <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a>) and query/control fitness ratio plots, with genes ranked by standard gene name, by pressing 'l'.  Users can search for groups of their favourite genes by pressing 'u' and following instructions in the R console to manually add to the pre-loaded list of functional groups.  Finally, users can output plots to publication quality PDF figures after highlighting genes of interest by pressing 'p'.</p>
 
 <h3>Windows mouse</h3>
 <ul>
@@ -130,18 +130,19 @@ visToolDemo(buildGO)
 </ul>
 <h3>Keyboard</h3>
 <ul>
-<li><b>Left/Right arrow:</b> change plot</li>
-<li><b>Up/Down arrow:</b> Change group highlighted</li>
-<li><b>u:</b> Add new group of genes to list of groups</li>
-<li><b>z:</b> Toggle select tool on/off.  Select genes by drawing a polygon on plot.</li>
-<li><b>s:</b> Highlight genes encircled using select tool ('z')</li>
-<li><b>c:</b> Clear highlighting from selected genes</li>
-<li><b>w:</b> Open SGD web-page for last gene highlighted</li>
-<li><b>d:</b> Remove highlighting from last gene highlighted</li>
-<li><b>t:</b> Toggle colours (red/green) indicating positive and negative interaction</li>
-<li><b>r:</b> Enter zoom mode.  Click on top left and bottom right of area to inspect</li>
-<li><b>p:</b> Print current plot as vector graphic to QFAVisualisation.pdf</li>
-<li><b>q:</b> Quit tool and print gene names currently selected to console window</li>
+<li><b>Left/Right arrow:</b> Switch to next/previous fitness plot (comparison between different pair of experiments).</li>
+<li><b>Up/Down arrow:</b> Change group of genes currently highlighted (in purple).</li>
+<li><b>u:</b> Add new group of genes to list of highlightable groups.</li>
+<li><b>z:</b> Toggle select tool on/off. Select genes for highlighting by drawing a polygon on plot.  Press 's' to add selection when finished.</li>
+<li><b>s:</b> Highlight genes encircled using select tool ('z').</li>
+<li><b>c:</b> Clear highlighting from currently selected genes.</li>
+<li><b>w:</b> Open SGD web-page for last gene highlighted.</li>
+<li><b>d:</b> Remove highlighting from last gene highlighted.</li>
+<li><b>t:</b> Toggle colours (red/green) indicating positive and negative interaction.</li>
+<li><b>l:</b> Toggle plot style between fitness plot and ratio plot.</li>
+<li><b>r:</b> Enter zoom mode.  Click on top left and bottom right of area to inspect.</li>
+<li><b>p:</b> Save current plot as vector graphic to QFAVisualisation.pdf</li>
+<li><b>q:</b> Quit tool and print gene names currently selected to console window.</li>
 </ul>
 </article>
 
