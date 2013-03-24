@@ -32,9 +32,14 @@ epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Contro
 	}
 }
 
-targFun=function(x,y,dat){
-	d=(x-dat$ControlFitnessSummary)^2+(y-dat$QueryFitnessSummary)^2
-	return(which.min(d))
+targFun=function(x,y,datobj){
+	if(ratioPlot){
+		d=((x-datobj$index)/max(datobj$index))^2+(y-datobj$ratio)^2
+	}else{
+		d=(x-datobj$ControlFitnessSummary)^2+(y-datobj$QueryFitnessSummary)^2
+	}
+	best=which.min(d)
+	return(best)
 }
 
 makePlot=function(datno,...){
@@ -51,7 +56,9 @@ makePlot=function(datno,...){
 		xlab=paste(datlist[[datno]]$cBack,datlist[[datno]]$cTreat)
 		ylab=paste(datlist[[datno]]$qBack,datlist[[datno]]$qTreat)	
 	}
-	dat=datlist[[datno]]$res
+	orftargs=dat$ORF[targs]
+	dat<<-datlist[[datno]]$res
+	targs<<-match(orftargs,dat$ORF)
 	epiplot(dat,0.05,mmain=maintitle,xxlab=xlab,yylab=ylab,ymin=fymin[datno],ymax=fymax[datno],xmin=fxmin[datno],xmax=fxmax[datno],...)
 	if(compno>0){
 		lst=strsplit(GROUPS$GroupORFs[compno]," ")[[1]]
@@ -64,6 +71,40 @@ makePlot=function(datno,...){
 	if(length(targs)>0){
 		points(dat$ControlFitnessSummary[targs],dat$QueryFitnessSummary[targs],col="blue",pch=16,cex=0.2)
 		text(dat$ControlFitnessSummary[targs],dat$QueryFitnessSummary[targs],dat$Gene[targs],pos=posits,cex=0.75)
+	}
+}
+
+ratPlot=function(datno,qthresh=0.05,ecol="green",scol="red"){
+	if(compno>0){
+		compnm=paste(compno,GROUPS$GroupName[compno],"\t",GROUPS$GroupID[compno])
+	}else{
+		compnm=""
+	}
+	maintitle=paste(datlist[[datno]]$datname,compnm,sep="\n")
+	if((nchar(datlist[[datno]]$cMed)<10)&(nchar(datlist[[datno]]$qMed)<10)){
+		xlab=paste(datlist[[datno]]$cBack,datlist[[datno]]$cTreat,datlist[[datno]]$cMed)
+		ylab=paste(datlist[[datno]]$qBack,datlist[[datno]]$qTreat,datlist[[datno]]$qMed)
+	}else{
+		xlab=paste(datlist[[datno]]$cBack,datlist[[datno]]$cTreat)
+		ylab=paste(datlist[[datno]]$qBack,datlist[[datno]]$qTreat)	
+	}
+	axislab=paste("Fit ",ylab,"/Fit ",xlab,sep="") 
+	
+	orftargs=dat$ORF[targs]
+	dat<<-datlist[[datno]]$res
+	targs<<-match(orftargs,dat$ORF)
+	plot(dat$index,dat$ratio,xlab="Gene index (alphabetical order)",log="y",ylab=axislab,main=maintitle,col="grey",cex=0.5,pch=19)
+	if(compno>0){
+		lst=strsplit(GROUPS$GroupORFs[compno]," ")[[1]]
+		dcomp=dat[dat$ORF%in%lst,]
+		if(length(dcomp$ORF)>0){
+			points(dcomp$index,dcomp$ratio,col="purple",pch=16,cex=1)
+			text(dcomp$index,dcomp$ratio,dcomp$Gene,pos=1,cex=0.75)
+		}	
+	}
+	if(length(targs)>0){
+		points(dat$index[targs],dat$ratio[targs],col="blue",pch=16,cex=0.2)
+		text(dat$index[targs],dat$ratio[targs],dat$Gene[targs],pos=posits,cex=0.75)
 	}
 }
 
@@ -90,7 +131,11 @@ mouse=function(buttons,x,y){
 				fxmax[datno]<<-zoomBR[1]
 				fymin[datno]<<-zoomBR[2]
 				fymax[datno]<<-zoomTL[2]
-				makePlot(datno,ecol=Ecol,scol=Scol)
+				if(ratioPlot){
+					ratPlot(datno,ecol=Ecol,scol=Scol)
+				}else{
+					makePlot(datno,ecol=Ecol,scol=Scol)
+				}
 				# Reset zooming parameters
 				zooming<<-FALSE
 				zoomTL<<-c(-99,-99)
@@ -108,12 +153,20 @@ mouse=function(buttons,x,y){
 					pnew=posits[targ]
 					posits[targ]<<-(pnew%%4)+1
 				}
-				makePlot(datno,ecol=Ecol,scol=Scol)
+				if(ratioPlot){
+					ratPlot(datno,ecol=Ecol,scol=Scol)
+				}else{
+					makePlot(datno,ecol=Ecol,scol=Scol)
+				}
 				if(length(selx)>0) drawSel(selx,sely)
 			}else{
 				selx<<-c(selx,xf)
 				sely<<-c(sely,yf)
-				makePlot(datno,ecol=Ecol,scol=Scol)
+				if(ratioPlot){
+					ratPlot(datno,ecol=Ecol,scol=Scol)
+				}else{
+					makePlot(datno,ecol=Ecol,scol=Scol)
+				}
 				drawSel(selx,sely)
 			}
 		}
@@ -122,7 +175,11 @@ mouse=function(buttons,x,y){
 		# Delete the last gene which was highlighted
 		targs<<-targs[-length(targs)]
 		posits<<-posits[-length(posits)]
-		makePlot(datno,ecol=Ecol,scol=Scol)
+		if(ratioPlot){
+			ratPlot(datno,ecol=Ecol,scol=Scol)
+		}else{
+			makePlot(datno,ecol=Ecol,scol=Scol)
+		}
 	}
 	if(2%in%buttons) {
 		# Open gene webpage on SGD
@@ -139,41 +196,65 @@ keybd=function(key){
 		# Clear highlighted/selected points
 		targs<<-c()
 		posits<<-c()
-		makePlot(datno,ecol=Ecol,scol=Scol)
+		if(ratioPlot){
+			ratPlot(datno,ecol=Ecol,scol=Scol)
+		}else{
+			makePlot(datno,ecol=Ecol,scol=Scol)
+		}
 	}
 	if(key=="d"){
 		# Unhighlight the last gene which was highlighted
 		targs<<-targs[-length(targs)]
 		posits<<-posits[-length(posits)]
-		makePlot(datno,ecol=Ecol,scol=Scol)
+		if(ratioPlot){
+			ratPlot(datno,ecol=Ecol,scol=Scol)
+		}else{
+			makePlot(datno,ecol=Ecol,scol=Scol)
+		}
 	}
 	if(key=="w"){
 		targ<<-targs[length(targs)]
 		browseURL(paste("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus=",dat$ORF[targ],sep=""))
 	}
 	if(key=="Right") {
-		orftargs=dat$ORF[targs]
 		datno<<-(datno%%length(datlist))+1
+		if(ratioPlot){
+			ratPlot(datno,ecol=Ecol,scol=Scol)
+		}else{
+			makePlot(datno,ecol=Ecol,scol=Scol)
+		}
+		orftargs=dat$ORF[targs]
 		dat<<-datlist[[datno]]$res
 		targs<<-match(orftargs,dat$ORF)
-		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(key=="Left") {
-		orftargs=dat$ORF[targs]
 		datno<<-((datno-2)%%length(datlist))+1
+		if(ratioPlot){
+			ratPlot(datno,ecol=Ecol,scol=Scol)
+		}else{
+			makePlot(datno,ecol=Ecol,scol=Scol)
+		}
+		orftargs=dat$ORF[targs]
 		dat<<-datlist[[datno]]$res
 		targs<<-match(orftargs,dat$ORF)
-		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	if(key=="Up") {
 		compno<<-compno+1
 		if(compno>length(GROUPS$GroupORFs)) compno<<-1
-		makePlot(datno,ecol=Ecol,scol=Scol)
+		if(ratioPlot){
+			ratPlot(datno,ecol=Ecol,scol=Scol)
+		}else{
+			makePlot(datno,ecol=Ecol,scol=Scol)
+		}
 	}
 	if(key=="Down") {
 		compno<<-compno-1
 		if(compno<=0) compno<<-length(GROUPS$GroupORFs)
-		makePlot(datno,ecol=Ecol,scol=Scol)
+		if(ratioPlot){
+			ratPlot(datno,ecol=Ecol,scol=Scol)
+		}else{
+			makePlot(datno,ecol=Ecol,scol=Scol)
+		}
 	}
 	if(key=="z") {
 		if(sel==0){
@@ -185,25 +266,41 @@ keybd=function(key){
 			# Close polygon
 			selx<<-c(selx,selx[1])
 			sely<<-c(sely,sely[1])
-			makePlot(datno,ecol=Ecol,scol=Scol)
+			if(ratioPlot){
+				ratPlot(datno,ecol=Ecol,scol=Scol)
+			}else{
+				makePlot(datno,ecol=Ecol,scol=Scol)
+			}
 			drawSel(selx,sely)
 			sel<<-0
 		}
 	}
 	if((key=="s")&(length(selx)>0)){
-		ind=point.in.polygon(dat$ControlFitnessSummary,dat$QueryFitnessSummary,selx,sely)
+		if(ratioPlot){
+			ind=point.in.polygon(dat$index,dat$ratio,selx,sely)
+		}else{
+			ind=point.in.polygon(dat$ControlFitnessSummary,dat$QueryFitnessSummary,selx,sely)
+		}
 		tsel=which(ind==1)
 		targs<<-c(targs,tsel)
 		posits<<-c(posits,rep(1,length(tsel)))
 		selx<<-c()
 		sely<<-c()
-		makePlot(datno,ecol=Ecol,scol=Scol)
+		if(ratioPlot){
+			ratPlot(datno,ecol=Ecol,scol=Scol)
+		}else{
+			makePlot(datno,ecol=Ecol,scol=Scol)
+		}
 	}
 	if(key=="p") {
 		pdfname=sprintf("QFAVisualisation%04d.pdf",plotno)
 		cat("Printing plot to file:",file.path(getwd(),pdfname),"\n")
 		pdf(pdfname)
-			makePlot(datno,ecol=Ecol,scol=Scol)
+			if(ratioPlot){
+				ratPlot(datno,ecol=Ecol,scol=Scol)
+			}else{
+				makePlot(datno,ecol=Ecol,scol=Scol)
+			}
 			plotno<<-plotno+1
 		dev.off()
 	}
@@ -211,8 +308,12 @@ keybd=function(key){
 		pngname=sprintf("QFAVisualisation%04d.png",plotno)
 		cat("Printing plot to file:",file.path(getwd(),pngname),"\n")
 		png(pngname,width=480*2,height=480*2,pointsize=12*2)
+		if(ratioPlot){
+			ratPlot(datno,ecol=Ecol,scol=Scol)
+		}else{
 			makePlot(datno,ecol=Ecol,scol=Scol)
-			plotno<<-plotno+1
+		}
+		plotno<<-plotno+1
 		dev.off()
 	}
 	if(key=="t") {
@@ -220,7 +321,11 @@ keybd=function(key){
 		SUP=Scol
 		Scol<<-ENH
 		Ecol<<-SUP
-		makePlot(datno,ecol=Ecol,scol=Scol)
+		if(ratioPlot){
+			ratPlot(datno,ecol=Ecol,scol=Scol)
+		}else{
+			makePlot(datno,ecol=Ecol,scol=Scol)
+		}
 	}
 	if(key=="r") {
 	# Zoom mode (click on TL and BR)
@@ -234,6 +339,15 @@ keybd=function(key){
 		newdf=data.frame(GroupName=newgrp[["Label"]],GroupID="R VisTool")
 		newdf$GroupORFs=paste(newgrp[["ORFs"]],sep=" ")
 		GROUPS<<-rbind(newdf,GROUPS)
+	}
+	if(key=="l") {
+	# Log ratio plot
+	ratioPlot<<-!ratioPlot
+	if(ratioPlot){
+		ratPlot(datno,ecol=Ecol,scol=Scol)
+	}else{
+		makePlot(datno,ecol=Ecol,scol=Scol)
+	}
 	}
 	return(NULL)
 }
@@ -301,6 +415,8 @@ visTool<-function(groups,orf2gene,GISfiles){
 	datlist<<-list()
 	for (f in 1:length(GISfiles)){	
 		report=getResults(GISfiles[f])
+		report$res$ratio=pmax(0.005,report$res$QueryFitnessSummary/report$res$ControlFitnessSummary)
+		report$res$index=rank(as.character(report$res$Gene))
 		report$datname="Mean Fitnesses (MDR * MDP), t-test"
 		datlist[[f]]<<-report
 	}
@@ -329,25 +445,26 @@ visTool<-function(groups,orf2gene,GISfiles){
 	cat("Windows mouse\n")
 	cat("~~~~~~~~~~~~~~~\n")
 	cat("Left click: Highlight gene/Rotate text position\n")
-	cat("Right click: SGD (or press 'w' on keyboard)\n")
-	cat("Middle click: Remove last gene (or press 'd' on keyboard)\n\n")
+	cat("Right click: Open SGD page for gene (alternatively, press 'w' on keyboard)\n")
+	cat("Middle click: Remove last gene (alternatively, press 'd' on keyboard)\n\n")
 	cat("Mac mouse\n")
 	cat("~~~~~~~~~~~~~~~\n")
 	cat("Click: Highlight gene/Rotate text position\n\n")
 	cat("Keyboard\n")
 	cat("~~~~~~~~~~~~~~~\n")
-	cat("Left/Right arrow: change plot\n")
-	cat("Up/Down arrow: change group highlighted\n")
-	cat("u: add new group of genes to list of groups\n")
-	cat("z: select tool (toggle on and off)\n") 
-	cat("s: add selection\n") 
-	cat("c: clear selection\n") 
-	cat("w: open last gene highlighted in SGD\n")
-	cat("d: unhighlight last gene highlighted\n")
-	cat("t: toggle colours indicating positive and negative interaction\n")
-	cat("r: begin zoom (now click on top left and bottom right of new zoomed plot)\n")
-	cat("p: print current plot to QFAVisualisation.pdf\n")
-	cat("q: quit\n")
+	cat("Left/Right arrow: Switch to next/previous fitness plot (comparison between different pair of experiments).\n")
+	cat("Up/Down arrow: Change group of genes currently highlighted (in purple).\n")
+	cat("u: Add new group of genes to list of highlightable groups.\n")
+	cat("z: Toggle select tool on/off. Select genes for highlighting by drawing a polygon on plot.  Press 's' to add selection when finished.\n") 
+	cat("s: Highlight genes encircled using select tool ('z').\n") 
+	cat("c: Clear highlighting from currently selected genes.\n") 
+	cat("w: Open SGD web-page for last gene highlighted.\n")
+	cat("d: Remove highlighting from last gene highlighted.\n")
+	cat("t: Toggle colours (red/green) indicating positive and negative interaction.\n")
+	cat("l: Toggle plot style between fitness plot and ratio plot.\n")
+	cat("r: Enter zoom mode.  Click on top left and bottom right of area to inspect.\n")
+	cat("p: Save current plot as vector graphic to QFAVisualisation.pdf\n")
+	cat("q: Quit tool and print gene names currently selected to console window.\n")
 
 	datno<<-1
 	plotno<<-1
@@ -356,6 +473,7 @@ visTool<-function(groups,orf2gene,GISfiles){
 	zooming<<-FALSE
 	zoomTL<<-c(-99,-99)
 	zoomBR<<-c(-99,-99)
+	ratioPlot<<-FALSE
 
 	dat<<-datlist[[datno]]$res
 
@@ -365,7 +483,12 @@ visTool<-function(groups,orf2gene,GISfiles){
 	#if( sysinf["sysname"]!="Windows") x11()
 	#if( sysinf["sysname"]=="Linux") Cairo()
 	x11()
-	makePlot(datno,ecol=Ecol,scol=Scol)
+	if(ratioPlot){
+		ratPlot(datno,ecol=Ecol,scol=Scol)
+	}else{
+		makePlot(datno,ecol=Ecol,scol=Scol)
+	}
+
 	getGraphicsEvent(prompt="L click: Highlight/Rotate, R click: SGD, M click: Remove, Left/Right: Change plot, z: select tool, s: add selection, c: clear, q: quit", onMouseDown=mouse, onKeybd=keybd)
 	cat("~~~~~~~~~~~~~~~\n")
 	cat("\n")
