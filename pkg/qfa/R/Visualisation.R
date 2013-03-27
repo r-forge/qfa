@@ -337,7 +337,7 @@ keybd=function(key){
 	# Get user input for a new list of genes
 		newgrp=getText(ORFGENE)
 		newdf=data.frame(GroupName=newgrp[["Label"]],GroupID="R VisTool")
-		newdf$GroupORFs=paste(newgrp[["ORFs"]],sep=" ")
+		newdf$GroupORFs=paste(newgrp[["ORFs"]],collapse=" ")
 		GROUPS<<-rbind(newdf,GROUPS)
 	}
 	if(key=="l") {
