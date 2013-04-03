@@ -72,6 +72,7 @@ makePlot=function(datno,...){
 		points(dat$ControlFitnessSummary[targs],dat$QueryFitnessSummary[targs],col="blue",pch=16,cex=0.2)
 		text(dat$ControlFitnessSummary[targs],dat$QueryFitnessSummary[targs],dat$Gene[targs],pos=posits,cex=0.75)
 	}
+	bringToTop()
 }
 
 ratPlot=function(datno,qthresh=0.05,ecol="green",scol="red"){
@@ -335,10 +336,17 @@ keybd=function(key){
 	}
 	if(key=="u") {
 	# Get user input for a new list of genes
+		bringToTop(which=-1)
 		newgrp=getText(ORFGENE)
 		newdf=data.frame(GroupName=newgrp[["Label"]],GroupID="R VisTool")
 		newdf$GroupORFs=paste(newgrp[["ORFs"]],collapse=" ")
 		GROUPS<<-rbind(newdf,GROUPS)
+		compno<<-1
+		if(ratioPlot){
+			ratPlot(datno,ecol=Ecol,scol=Scol)
+		}else{
+			makePlot(datno,ecol=Ecol,scol=Scol)
+		}
 	}
 	if(key=="l") {
 	# Log ratio plot
@@ -508,10 +516,10 @@ visTool<-function(groups,orf2gene,GISfiles){
 
 getText=function(ORFGENE){
 	x=list()
-	cat("Input a list of gene names, separated by spaces & press enter:")
+	cat("Input a list of gene names, separated by spaces & press enter:\n")
 	usergenes=scan(what=character(),nlines=1)
 	usergenes=toupper(usergenes)
-	cat("Please input a label for your list of genes (no spaces) & press enter:")
+	cat("Please input a label for your list of genes (no spaces) & press enter:\n")
 	lab=scan(what=character(),nlines=1,n=1)
 	orfs=c()
 	genes=c()
