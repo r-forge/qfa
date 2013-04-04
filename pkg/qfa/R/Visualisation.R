@@ -72,7 +72,7 @@ makePlot=function(datno,...){
 		points(dat$ControlFitnessSummary[targs],dat$QueryFitnessSummary[targs],col="blue",pch=16,cex=0.2)
 		text(dat$ControlFitnessSummary[targs],dat$QueryFitnessSummary[targs],dat$Gene[targs],pos=posits,cex=0.75)
 	}
-	bringToTop()
+	if (Sys.info()['sysname']=="Windows") bringToTop()
 }
 
 ratPlot=function(datno,qthresh=0.05,ecol="green",scol="red"){
@@ -336,7 +336,7 @@ keybd=function(key){
 	}
 	if(key=="u") {
 	# Get user input for a new list of genes
-		bringToTop(which=-1)
+		if (Sys.info()['sysname']=="Windows") bringToTop(which=-1)
 		newgrp=getText(ORFGENE)
 		newdf=data.frame(GroupName=newgrp[["Label"]],GroupID="R VisTool")
 		newdf$GroupORFs=paste(newgrp[["ORFs"]],collapse=" ")
