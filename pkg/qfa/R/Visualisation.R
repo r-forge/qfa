@@ -42,7 +42,7 @@ targFun=function(x,y,datobj){
 	return(best)
 }
 
-makePlot=function(datno,...){
+makePlot=function(datno,focusPlot=TRUE,...){
 	if(compno>0){
 		compnm=paste(compno,GROUPS$GroupName[compno],"\t",GROUPS$GroupID[compno])
 	}else{
@@ -72,10 +72,10 @@ makePlot=function(datno,...){
 		points(dat$ControlFitnessSummary[targs],dat$QueryFitnessSummary[targs],col="blue",pch=16,cex=0.2)
 		text(dat$ControlFitnessSummary[targs],dat$QueryFitnessSummary[targs],dat$Gene[targs],pos=posits,cex=0.75)
 	}
-	if (Sys.info()['sysname']=="Windows") bringToTop()
+	if ((Sys.info()['sysname']=="Windows")&focusPlot) bringToTop()
 }
 
-ratPlot=function(datno,qthresh=0.05,ecol="green",scol="red"){
+ratPlot=function(datno,focusPlot=TRUE,qthresh=0.05,ecol="green",scol="red"){
 	if(compno>0){
 		compnm=paste(compno,GROUPS$GroupName[compno],"\t",GROUPS$GroupID[compno])
 	}else{
@@ -107,6 +107,7 @@ ratPlot=function(datno,qthresh=0.05,ecol="green",scol="red"){
 		points(dat$index[targs],dat$ratio[targs],col="blue",pch=16,cex=0.2)
 		text(dat$index[targs],dat$ratio[targs],dat$Gene[targs],pos=posits,cex=0.75)
 	}
+	if ((Sys.info()['sysname']=="Windows")&focusPlot) bringToTop()
 }
 
 drawSel=function(selx,sely){
@@ -294,28 +295,43 @@ keybd=function(key){
 		}
 	}
 	if(key=="p") {
-		pdfname=sprintf("QFAVisualisation%04d.pdf",plotno)
-		cat("Printing plot to file:",file.path(getwd(),pdfname),"\n")
-		pdf(pdfname)
+		psname=sprintf("QFAVisualisation%04d.ps",plotno)
+		cat("Printing plot to file:",file.path(getwd(),psname),"\n")
+		cairo_ps(psname)
 			if(ratioPlot){
-				ratPlot(datno,ecol=Ecol,scol=Scol)
+				ratPlot(datno,ecol=Ecol,scol=Scol,focusPlot=FALSE)
 			}else{
-				makePlot(datno,ecol=Ecol,scol=Scol)
+				makePlot(datno,ecol=Ecol,scol=Scol,focusPlot=FALSE)
 			}
-			plotno<<-plotno+1
 		dev.off()
+		plotno<<-plotno+1
+		if ((Sys.info()['sysname']=="Windows")) bringToTop()
 	}
 	if(key=="n") {
 		pngname=sprintf("QFAVisualisation%04d.png",plotno)
 		cat("Printing plot to file:",file.path(getwd(),pngname),"\n")
 		png(pngname,width=480*2,height=480*2,pointsize=12*2)
 		if(ratioPlot){
-			ratPlot(datno,ecol=Ecol,scol=Scol)
+			ratPlot(datno,ecol=Ecol,scol=Scol,focusPlot=FALSE)
 		}else{
-			makePlot(datno,ecol=Ecol,scol=Scol)
+			makePlot(datno,ecol=Ecol,scol=Scol,focusPlot=FALSE)
 		}
-		plotno<<-plotno+1
 		dev.off()
+		plotno<<-plotno+1
+		if ((Sys.info()['sysname']=="Windows")) bringToTop()
+	}
+	if(key=="m") {
+		pdfname=sprintf("QFAVisualisation%04d.pdf",plotno)
+		cat("Printing plot to file:",file.path(getwd(),pdfname),"\n")
+		pdf(pdfname)
+			if(ratioPlot){
+				ratPlot(datno,ecol=Ecol,scol=Scol,focusPlot=FALSE)
+			}else{
+				makePlot(datno,ecol=Ecol,scol=Scol,focusPlot=FALSE)
+			}
+		dev.off()
+		plotno<<-plotno+1
+		if ((Sys.info()['sysname']=="Windows")) bringToTop()
 	}
 	if(key=="t") {
 		ENH=Ecol
