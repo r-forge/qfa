@@ -195,6 +195,7 @@ load("M_JHM_demo_27_27.RData")
 QFA.P<-read.table("priors.txt",header=T)
 QFA<-c(QFA.I,QFA.P,QFA.D)
 samp<-D
+
 iter<-QFA$iter
 thin<-QFA$thin
 
@@ -502,7 +503,7 @@ list[,1][list[,1]=="YMR169c"]="YMR169C"
 list[,1][list[,1]=="YMR175w"]="YMR175W"
 list[,1][list[,1]=="YML009c"]="YML009C"
 list$qvalue[is.na(list$qvalue)]=1
-strip_ORF<-read.delim("strip_list.txt",header=T,sep="\t")$orf
+strip_ORF<-as.character(read.delim("strip_list.txt",header=T,sep="\t")$orf)
 list<-list[!(list[,1]%in%strip_ORF),]
 list<-list[order(list[,1]),]
 list$gene<-as.character(list$gene)
