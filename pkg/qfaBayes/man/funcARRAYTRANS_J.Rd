@@ -1,10 +1,10 @@
 \name{funcARRAYTRANS_J}
 \alias{funcARRAYTRANS_J}
-\title{Creates and transposes an Array (JHM)}
+\title{Creates and transposes an array (JHM)}
 \description{
 For JHM.
 For use with Colonyzer output.
-Creates and transposes an Array.
+Creates and transposes an array.
 }
 \usage{
 funcARRAYTRANS_J(data_vec,dim)
