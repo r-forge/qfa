@@ -1,9 +1,9 @@
 \name{funcARRAYTRANS}
 \alias{funcARRAYTRANS}
-\title{Creates and transposes an Array}
+\title{Creates and transposes an array}
 \description{
 For use with Colonyzer output.
-Creates and transposes an Array
+Creates and transposes an array
 }
 \usage{
 funcARRAYTRANS(data_vec,dim)
