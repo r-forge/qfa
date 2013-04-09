@@ -487,7 +487,7 @@ visTool<-function(groups,orf2gene,GISfiles){
 	cat("t: Toggle colours (red/green) indicating positive and negative interaction.\n")
 	cat("l: Toggle plot style between fitness plot and ratio plot.\n")
 	cat("r: Enter zoom mode.  Click on top left and bottom right of area to inspect.\n")
-	cat("p: Save current plot as vector graphic to QFAVisualisation.pdf\n")
+	cat("p: Save current plot as vector graphic to QFAVisualisation.ps.  Other filetypes can also be generated - 'n': .png and 'm': .pdf\n")
 	cat("q: Quit tool and print gene names currently selected to console window.\n")
 
 	datno<<-1
