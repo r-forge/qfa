@@ -26,7 +26,7 @@ normalisePlates=function(d,column){
 			d[(d$Barcode==b)&(d$Treatment==trt),column]=datlst
 		}		
 	}
-	return(as.real(d[,column]))
+	return(as.numeric(d[,column]))
 }
 
 ####### Convert data datetime to time from start in days ########
@@ -278,21 +278,21 @@ pgis<-function(orf,m,cFs,dFs,wilcoxon=TRUE){
 		if (wilcoxon){
 			# Returns p-value for significance of difference, and estimate of difference between medians
 			ctest<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)
-			p<-as.real(ctest$p.value)
-			diff<-as.real(ctest$estimate)
+			p<-as.numeric(ctest$p.value)
+			diff<-as.numeric(ctest$estimate)
 			return(c(p,diff))
 		}else{
 			# t-test fails if only one element in either list, do one sample test
 			if((ldFS<=1)|(lcFS<=1)){
 				ctest<-t.test(dFs[[orf]]-m*cFs[[orf]])
-				p<-as.real(ctest$p.value)
-				diff<-as.real(ctest$estimate)
+				p<-as.numeric(ctest$p.value)
+				diff<-as.numeric(ctest$estimate)
 				return(c(p,diff))
 			}else{
 				# Returns p-value for significance of difference, and the difference between the means
 				ctest<-t.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)
-				p<-as.real(ctest$p.value)
-				diff<-as.real(ctest$estimate)
+				p<-as.numeric(ctest$p.value)
+				diff<-as.numeric(ctest$estimate)
 				diff<-diff[1]-diff[2]
 				return(c(p,diff))
 			}
