@@ -4,4 +4,5 @@ JHM_simple_C	C code simple (MPlate 15 Only)
 SHM_C		C code
 IHM_C		C code
 JHM_C		C code
-
+REIM_lmer	Random Effects Interaction Model
+LMIM		Linear Interaction Model
