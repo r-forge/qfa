@@ -50,7 +50,7 @@ qfa.plot("URA3_GrowthCurves.pdf",query.fit,query,maxg=0.25,maxt=7)
 qfa.plot("cdc13-1_GrowthCurves.pdf",control.fit,control,maxg=0.25,maxt=7)
 
 # Write summarised fitnesses to file
-qresults=fitnessReport("27","URA3_Fitnesses.txt",control.fit)
+qresults=fitnessReport("27","URA3_Fitnesses.txt",query.fit)
 cresults=fitnessReport("27","cdc13-1_Fitnesses.txt",control.fit)
 
 # Epistasis analysis
