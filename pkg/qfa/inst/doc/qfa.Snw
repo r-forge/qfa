@@ -47,9 +47,13 @@ Documentation for specific functions can be obtained using the usual R mechanism
 \begin{verbatim}
 ?colonyzer.read
 \end{verbatim}
-There is a short demo script comparing QFA of \textit{cdc13-1} and \textit{ura3$\Delta$} at $27\,^{\circ}\mathrm{C}$ to infer genes interacting with the telomere cap.  Note that the curve-fitting functions can throw up many error messages which can be ignored.  These occur when attempting to fit the model to missing cultures.  This demo only contains data from the yeast deletion collection describing one plate out of a possible 15.  This demo also only uses one replicate plate out of a possible eight for each screen in order to save time.  To repeat the analysis with all available replicates, uncomment the appropriate lines in the demo script.  Note that the full analysis takes approximately 30 mins.  The demo can be loaded with:
+There is a short demo script comparing QFA of \textit{cdc13-1} and \textit{ura3$\Delta$} at $27\,^{\circ}\mathrm{C}$ to infer genes interacting with the telomere cap.  Note that the curve-fitting functions can throw up many error messages which can be ignored.  These occur when attempting to fit the model to missing cultures.  This demo only contains data from the yeast deletion collection describing one plate out of a possible 15.  This demo also only uses one replicate plate out of a possible eight for each screen in order to save analysis time.  To repeat the analysis with all available replicates, uncomment the appropriate lines in the demo script.  Note that the full analysis takes approximately 30 mins.  The demo can be loaded with:
 \begin{verbatim}
 demo("telomereCap")
+\end{verbatim}
+To help you build your own QFA script, you can use the contents of the demo script as a starting point.  To see the contents of the demo script, use the following function from the qfa package:
+\begin{verbatim}
+showDemo("telomereCap")
 \end{verbatim}
 
 \section{General overview}

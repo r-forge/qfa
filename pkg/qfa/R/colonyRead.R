@@ -4,7 +4,7 @@
 # It is *extremely* fast and flexible compared to using ROD itself however...
 ####
 
-colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF2gene="",libraries="LibraryDescriptions.csv",background=""){
+colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF2gene="",libraries="LibraryDescriptions.csv",screenID=""){
 	# Are we reading all files in a folder?
 	if (length(strsplit(path,".")[[1]])>1){pathT=TRUE}else{pathT=FALSE}
 	# If no Colonyzer files specified, use all .dat in working directory
@@ -66,7 +66,25 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	libs=expt$Library
 	names(libs)=expt$Barcode
 	barcLib<-function(barc) libs[[barc]]
-
+	
+	if("Client"%in%colnames(expt)){
+		clients=expt$Client
+		names(clients)=expt$Barcode
+		barcClient<-function(barc) clients[[barc]]
+	}
+	
+	if("ExptDate"%in%colnames(expt)){
+		exptdate=expt$ExptDate
+		names(exptdate)=expt$Barcode
+		barcExptDate<-function(barc) exptdate[[barc]]
+	}
+	
+	if("User"%in%colnames(expt)){	
+		users=expt$User
+		names(users)=expt$Barcode
+		barcClient<-function(barc) users[[barc]]
+	}
+		
 	# Open the ORF2GENE file
 	orf2gene=read.delim(ORF2gene,sep="\t",header=FALSE,stringsAsFactors=FALSE)
 	colnames(orf2gene)=c("orf","gene")
@@ -133,7 +151,10 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 		iman$Library.Name=sapply(iman$Barcode,barcLib)
 		iman$ORF=mapply(getORF, iman$Library.Name, iman$MasterPlate.Number, iman$Row, iman$Col)
 		iman$Gene=sapply(toupper(iman$ORF),getGene)
-		iman$Background=rep(background,length(iman$Image.Name))
+		iman$ScreenID=rep(screenID,length(iman$Image.Name))
+		if("Client"%in%colnames(expt)){iman$Client=sapply(iman$Barcode,barcClient)}
+		if("ExptDate"%in%colnames(expt)){iman$ExptDate=sapply(iman$Barcode,barcExptDate)}
+		if("User"%in%colnames(expt)){iman$User=sapply(iman$Barcode,barcUser)}
 
 		fmt="%Y-%m-%d_%H-%M-%S"
 		t0<-as.POSIXlt(as.character(iman$Inoc.Time),format=fmt)
