@@ -139,8 +139,17 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	results<-data.frame(ORF=orfs,Gene=genes,P=p,Q=q,GIS=gis,
 	QueryFitnessSummary=dFms,ControlFitnessSummary=cFms,QuerySE=dSe,ControlSE=cSe,
 	TestType=rep(testType,nObs),SummaryType=rep(sumType,nObs),
-	cTreat=rep(control$Treatment[1],nObs),cMed=rep(control$Medium[1],nObs),cBack=rep(control$Background[1],nObs),
-	qTreat=rep(double$Treatment[1],nObs),qMed=rep(double$Medium[1],nObs),qBack=rep(double$Background[1],nObs))
+	cTreat=rep(control$Treatment[1],nObs),cMed=rep(control$Medium[1],nObs),cScrID=rep(control$ScreenID[1],nObs),
+	qTreat=rep(double$Treatment[1],nObs),qMed=rep(double$Medium[1],nObs),qScrID=rep(double$ScreenID[1],nObs),
+	qGen=rep(double$Screen.Name[1],nObs),cGen=rep(control$Screen.Name[1],nObs),
+	cLib=rep(paste(unique(control$Library.Name),sep="_"),nObs),qLib=rep(paste(unique(double$Library.Name),sep="_"),nObs))
+	if("Client"%in%colnames(control)) results$cClient=rep(control$Client[1],nObs)
+	if("Client"%in%colnames(double)) results$qClient=rep(double$Client[1],nObs)
+	if("ExptDate"%in%colnames(control)) results$cDate=rep(control$ExptDate[1],nObs)
+	if("ExptDate"%in%colnames(double)) results$qDate=rep(double$ExptDate[1],nObs)
+	if("User"%in%colnames(control)) results$cUser=rep(control$User[1],nObs)
+	if("User"%in%colnames(double)) results$qUser=rep(double$User[1],nObs)
+	
 	results$Type<-apply(results,1,typemake,m)
 	results<-results[order(results$GIS,results$Q,results$Type),]
 	# Get rid of duplicate entries in results
@@ -152,35 +161,6 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	Enhancers=gethits(results,qthresh,type="E",GISthresh=GISthresh),
 	Suppressors=gethits(results,qthresh,type="S",GISthresh=GISthresh))
 	return(final)
-}
-
-report.epi<-function(results,filename){
-	packs = data.frame(installed.packages(),stringsAsFactors=FALSE)
-	vno=packs$Version[packs$Package=="qfa"]
-
-	QFAversion=paste("R package version:",vno)
-	sumType=paste("Summary type:",results$SummaryType[1])
-	testType=paste("Test type:",results$TestType[1])
-	cTreat=paste("Control treatment:",results$cTreat[1])
-	cMed=paste("Control medium:",results$cMed[1])
-	cBack=paste("Control background:",results$cBack[1])
-	qTreat=paste("Query treatment:",results$qTreat[1])
-	qMed=paste("Query medium:",results$qMed[1])
-	qBack=paste("Query background:",results$qBack[1])
-	spacer="#########################################################"
-	header=c(QFAversion,sumType,testType,cTreat,cMed,cBack,qTreat,qMed,qBack,spacer)
-	write.table(header,filename,sep="\t",quote=FALSE,row.names=FALSE,col.names=FALSE)
-	results$SummaryType=NULL
-	results$testType=NULL
-	results$cTreat=NULL
-	results$cMed=NULL
-	results$cBack=NULL
-	results$qTreat=NULL
-	results$qMed=NULL
-	results$qBack=NULL
-	write.table(results,"tmp.txt",sep="\t",quote=FALSE,row.names=FALSE)
-	file.append(filename,"tmp.txt")
-	file.remove("tmp.txt")	
 }
 
 ############### Epistasis Functions ##################
@@ -363,7 +343,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		# Bind Data frame of barcode results to overall results
 		# s=bcfit[,4]
 		results<-rbind(results,data.frame(Barcode=info[,1],Row=rows,Col=cols,
-		Background=info[,9],Treatment=info[,2],Medium=info[,3],ORF=info[,4],
+		ScreenID=info[,9],Treatment=info[,2],Medium=info[,3],ORF=info[,4],
 		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],nSTP=bcfit[,8],d0=bcfit[,9],Screen.Name=info[,5],
 		Library.Name=info[,6],MasterPlate.Number=info[,7],Timeseries.order=info[,8],
 		Inoc.Time=inoctime,TileX=info[,10],TileY=info[,11],XOffset=info[,12],YOffset=info[,13],
@@ -668,13 +648,16 @@ colony.info<-function(position,bcdata){
 	cvec=c(as.character(d$Barcode),
 	as.character(d$Treatments),as.character(d$Medium),as.character(d$ORF),
 	as.character(d$Screen.Name),as.character(d$Library.Name),as.character(d$MasterPlate.Number),
-	as.character(d$Timeseries.order),as.character(d$Background),as.numeric(d$Tile.Dimensions.X),as.numeric(d$Tile.Dimensions.Y),
+	as.character(d$Timeseries.order),as.character(d$ScreenID),as.numeric(d$Tile.Dimensions.X),as.numeric(d$Tile.Dimensions.Y),
 	as.numeric(d$X.Offset),as.numeric(d$Y.Offset),as.numeric(d$Threshold),as.numeric(d$Edge.length),as.numeric(d$Edge.Pixels),as.numeric(d$RepQuad))
+	if("Client"%in%colnames(d)){cvec$Client=as.character(d$Client)}
+	if("ExptDate"%in%colnames(d)){cvec$ExptDate=as.character(d$ExptDate)}
+	if("User"%in%colnames(d)){cvec$User=as.character(d$User)}	
 	return(cvec)
 }
 
 ##### Make PDFs #####
-qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.plates=c(),treatments=c(),screen.names=c(),backgrounds=c(),maxg=0,maxt=0,logify=FALSE){
+qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.plates=c(),treatments=c(),screen.names=c(),screenIDs=c(),maxg=0,maxt=0,logify=FALSE){
 	# Sort the data to be plotted sensibly, allowing easy comparison between repeats
 	results=results[order(results$MasterPlate.Number,results$Treatment,results$Screen.Name),]
 	# Get character vectors of requested barcodes, treatements,etc.; all if none specified
@@ -687,9 +670,9 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 	if (length(screen.names)==0){screen.names<-unique(results$Screen.Name)} 
 	results<-results[results$Screen.Name%in%screen.names,]
 	d<-d[d$Screen.Name%in%screen.names,]
-	if (length(backgrounds)==0){backgrounds<-unique(results$Background)} 
-	results<-results[results$Background%in%backgrounds,]
-	d<-d[d$Background%in%backgrounds,]
+	if (length(screenIDs)==0){screenIDs<-unique(results$ScreenID)} 
+	results<-results[results$ScreenID%in%screenIDs,]
+	d<-d[d$ScreenID%in%screenIDs,]
 	if (length(barcodes)==0){barcodes<-unique(results$Barcode)}
 	results<-results[results$Barcode%in%barcodes,]
 	d<-d[d$Barcode%in%barcodes,]

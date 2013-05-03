@@ -1,3 +1,8 @@
+showDemo<-function(demoname="telomereCap"){
+	# Function to just display text in demo
+	file.show(system.file("demo", paste(demoname,".R",sep=""), package = "qfa"))
+}
+	
 fitnessReport<-function(treatment,outputfile,dataframe){
 	# Summarises mean and median fitnesses for all orfs in an .fit object
 	print(outputfile)
@@ -15,10 +20,65 @@ fitnessReport<-function(treatment,outputfile,dataframe){
 	orflst=names(medRes)
 	genelst=as.character(fitdf$Gene[match(orflst,as.character(fitdf$ORF))])
 
-	results=data.frame(Gene=genelst,ORF=orflst,MedianFit=medRes,MeanFit=meanRes,VarianceFit=varRes,NumRepeats=numRes,SEFit=seRes,Treatment=rep(treatment,length(orflst)))
+	results=data.frame(Gene=genelst,ORF=orflst,MedianFit=medRes,MeanFit=meanRes,VarianceFit=varRes,NumRepeats=numRes,SEFit=seRes)
 
-	write.table(results,file=outputfile,sep="\t",quote=FALSE,row.names=FALSE)
+	packs = data.frame(installed.packages(),stringsAsFactors=FALSE)
+	vno=packs$Version[packs$Package=="qfa"]
+	QFAversion=paste("R package version:",vno)
+	rTreat=paste("Treatment:",unique(fitdf$Treatment))
+	rMed=paste("Medium:",unique(fitdf$Medium))
+	rScrID=paste("Screen ID:",unique(fitdf$ScreenID))
+	rGen=paste("Screen name:",unique(fitdf$Screen.Name))
+	rLib=paste("Libraries:",unique(fitdf$Library.Name))
+	rClient=paste("Client:",unique(fitdf$Client))
+	rUser=paste("User:",unique(fitdf$User))
+	rDate=paste("Date:",unique(fitdf$ExptDate))
+	spacer="#########################################################"
+	header=c(QFAversion,
+	rTreat,rMed,rScrID,rGen,rLib,rClient,rUser,rDate,
+	spacer)
+	write.table(header,outputfile,sep="\t",quote=FALSE,row.names=FALSE,col.names=FALSE)
+	write.table(results,"tmp.txt",sep="\t",quote=FALSE,row.names=FALSE)
+	file.append(outputfile,"tmp.txt")
+	file.remove("tmp.txt")	
 	return(results)
+}
+
+report.epi<-function(results,filename){
+	packs = data.frame(installed.packages(),stringsAsFactors=FALSE)
+	vno=packs$Version[packs$Package=="qfa"]
+
+	QFAversion=paste("R package version:",vno)
+	sumType=paste("Summary type:",unique(results$SummaryType))
+	testType=paste("Test type:",unique(results$TestType))
+	cTreat=paste("Control treatment:",unique(results$cTreat))
+	cMed=paste("Control medium:",unique(results$cMed))
+	cScrID=paste("Control screen ID:",unique(results$cScrID))
+	cGen=paste("Control screen name:",unique(results$cGen))
+	cLib=paste("Control libraries:",unique(results$cLib))
+	cClient=paste("Control client:",unique(results$cClient))
+	cUser=paste("Control user:",unique(results$cUser))
+	cDate=paste("Control date:",unique(results$cDate))
+	qTreat=paste("Query treatment:",unique(results$qTreat))
+	qMed=paste("Query medium:",unique(results$qMed))
+	qScrID=paste("Query screen ID:",unique(results$qScrID))
+	qGen=paste("Query screen name:",unique(results$qGen))
+	qLib=paste("Query libraries:",unique(results$qLib))
+	qClient=paste("Query client:",unique(results$qClient))
+	qUser=paste("Query user:",unique(results$qUser))
+	qDate=paste("Query date:",unique(results$qDate))
+	spacer="#########################################################"
+	header=c(QFAversion,sumType,testType,
+	cTreat,cMed,cScrID,cGen,cLib,cClient,cUser,cDate,
+	qTreat,qMed,qScrID,qGen,qLib,qClient,qUser,qDate,
+	spacer)
+	write.table(header,filename,sep="\t",quote=FALSE,row.names=FALSE,col.names=FALSE)
+	results$SummaryType=results$testType=NULL
+	results$cTreat=results$cMed=results$cScrID=results$cGen=results$cLib=results$cClient=results$cUser=results$cDate=NULL
+	results$qTreat=results$qMed=results$qScrID=results$qGen=results$qLib=results$qClient=results$qUser=results$qDate=NULL
+	write.table(results,"tmp.txt",sep="\t",quote=FALSE,row.names=FALSE)
+	file.append(filename,"tmp.txt")
+	file.remove("tmp.txt")	
 }
 
 correlationReport<-function(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185){
