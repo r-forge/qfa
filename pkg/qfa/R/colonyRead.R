@@ -82,7 +82,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	if("User"%in%colnames(expt)){	
 		users=expt$User
 		names(users)=expt$Barcode
-		barcClient<-function(barc) users[[barc]]
+		barcUser<-function(barc) users[[barc]]
 	}
 		
 	# Open the ORF2GENE file
