@@ -657,7 +657,7 @@ colony.info<-function(position,bcdata){
 }
 
 ##### Make PDFs #####
-qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.plates=c(),treatments=c(),screen.names=c(),screenIDs=c(),maxg=0,maxt=0,logify=FALSE){
+qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.plates=c(),treatments=c(),screen.names=c(),screenIDs=c(),maxg=0,maxt=0,logify=FALSE,densityCol="Growth",curves=TRUE,ylabel="Cell density (AU)",ptype="p"){
 	# Sort the data to be plotted sensibly, allowing easy comparison between repeats
 	results=results[order(results$MasterPlate.Number,results$Treatment,results$Screen.Name),]
 	# Get character vectors of requested barcodes, treatements,etc.; all if none specified
@@ -707,47 +707,53 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 		op<-par(mfrow=c(nrow,ncol),oma=c(13,15,22,1),
 		mar=marge,mgp=c(3,1,0),cex=cexfctr)
 		## Plot for each row of results for that bcode ##
-		z<-apply(rbc,1,rowplot,dbc,inoctime,maxg,fmt,maxt,logify)
+		z<-apply(rbc,1,rowplot,dbc,inoctime,maxg,fmt,maxt,logify,densityCol=densityCol,curves=curves,ptype=ptype)
 		# Title for the plate
 		maintit<-paste(rbc$Barcode[1],"Treatment:",rbc$Treatment[1],
 		"Medium:",rbc$Medium[1],"Plate:",rbc$MasterPlate.Number[1],sep=" ")
 		#cextit<-1008/length(strsplit(maintit,split="")[[1]])
 		cextit<-500/nchar(maintit)
 		title(main=maintit,xlab="Time since inoculation (days)",line=7,
-		ylab="Cell Density (AU)",cex.main=cextit,cex.lab=8,outer=TRUE)
+		ylab=ylabel,cex.main=cextit,cex.lab=8,outer=TRUE)
 		  par(op)} #bcode
 	dev.off()
 }
 
 #### Plot a colony's timecourse from a row of the results #####	
-rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify){
+rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify,densityCol="Growth",curves=TRUE,ptype="p"){
 	row<-as.numeric(resrow['Row']); col<-as.numeric(resrow['Col'])
 	if ('Gene'%in%names(resrow)){gene<-resrow['Gene']} else {gene<-resrow['ORF']}
 	# Get data for that colony
 	dcol<-dbc[(dbc$Row==row)&(dbc$Col==col),]
-	growth<-sapply(dcol$Growth,nozero)
+	growth<-sapply(dcol[[densityCol]],nozero)
 	tim<-dcol$Expt.Time
 	# Draw the curves and data
-	logdraw(row,col,resrow,tim,growth,gene,maxg,maxt=maxt,logify=logify)
+	logdraw(row,col,resrow,tim,growth,gene,maxg,maxt=maxt,logify=logify,densityCol=densityCol,curves=curves,ptype=ptype)
 }
 
 ### Converts row no. to position vector ###	
 index2pos<-function(index,dbc) c(dbc[index,'Row'],dbc[index,'Col'])
 
 ### Do individual timecourse plot given parameters & data ###
-logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0,logify=FALSE){
-	# Get logistic parameters, gene name and position
-	K<-as.numeric(resrow['K']); r<-as.numeric(resrow['r']); g<-as.numeric(resrow['g']); v<-as.numeric(resrow['v']);
-	MDR<-as.numeric(resrow['MDR']); MDP<-as.numeric(resrow['MDP']); AUC<-as.numeric(resrow['AUC']); DT<-as.numeric(resrow['DT']);
+logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0,logify=FALSE,densityCol="Growth",curves=TRUE,ptype="p"){
 	if(logify) {ylog="y"}else{ylog=""}
-	# Add logistic curve
-	if(maxt==0) maxt=ceiling(max(tim))
-	curve(Glogist(K,r,g,v,x),n=31,xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg),log=ylog,xlab="",ylab="",main=gene,frame.plot=0,cex.main=3*scaleT,cex.axis=1*scaleT,lwd=2.5)
+	plot(NULL,type="n",xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg),log=ylog,xlab="",ylab="",main=gene,frame.plot=0,cex.main=3*scaleT,cex.axis=1*scaleT)
+	if(curves){
+		# Get logistic parameters, gene name and position
+		K<-as.numeric(resrow['K']); r<-as.numeric(resrow['r']); g<-as.numeric(resrow['g']); v<-as.numeric(resrow['v']);
+		MDR<-as.numeric(resrow['MDR']); MDP<-as.numeric(resrow['MDP']); AUC<-as.numeric(resrow['AUC']); DT<-as.numeric(resrow['DT']);
+		if(logify) {ylog="y"}else{ylog=""}
+		# Add logistic curve
+		if(maxt==0) maxt=ceiling(max(tim))
+		curve(Glogist(K,r,g,v,x),n=31,lwd=2.5,add=TRUE,from=0,to=maxt,xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg))
+	}
 	# Add data points
-	points(tim,growth,col="red",cex=2*scaleT,pch=4,lwd=2)
-	# Add legend
-	legt1<-paste(c("K=","r=","g=","v=","MDR=","MDP=","AUC=","DT="),c(signif(K,3),signif(r,3),signif(g,3),signif(v,3),signif(MDR,3),signif(MDP,3),signif(AUC,3),signif(DT,3)),sep="")
-	if(logify){legend("bottomright",legt1,box.lty=0,cex=scaleT)}else{legend("topleft",legt1,box.lty=0,cex=scaleT)}
+	points(tim,growth,col="red",cex=2*scaleT,pch=4,lwd=2,type=ptype,xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg))
+	if(curves){
+		# Add legend
+		legt1<-paste(c("K=","r=","g=","v=","MDR=","MDP=","AUC=","DT="),c(signif(K,3),signif(r,3),signif(g,3),signif(v,3),signif(MDR,3),signif(MDP,3),signif(AUC,3),signif(DT,3)),sep="")
+		if(logify){legend("bottomright",legt1,box.lty=0,cex=scaleT)}else{legend("topleft",legt1,box.lty=0,cex=scaleT)}
+	}
 	legend("topright",sprintf("R%02dC%02d",row,col),box.lty=0,cex=0.5*scaleT)
 }
 
