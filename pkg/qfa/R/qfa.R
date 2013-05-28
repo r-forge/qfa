@@ -342,12 +342,12 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		cols<-sapply(positions,rcget,"col")
 		# Bind Data frame of barcode results to overall results
 		# s=bcfit[,4]
-		results<-rbind(results,data.frame(Barcode=info[,1],Row=rows,Col=cols,
-		ScreenID=info[,9],Treatment=info[,2],Medium=info[,3],ORF=info[,4],
-		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],nSTP=bcfit[,8],d0=bcfit[,9],Screen.Name=info[,5],
-		Library.Name=info[,6],MasterPlate.Number=info[,7],Timeseries.order=info[,8],
-		Inoc.Time=inoctime,TileX=info[,10],TileY=info[,11],XOffset=info[,12],YOffset=info[,13],
-		Threshold=info[,14],EdgeLength=info[,15],EdgePixels=info[,16],RepQuad=info[,17]))
+		results<-rbind(results,data.frame(Barcode=as.character(info[,1]),Row=rows,Col=cols,
+		ScreenID=as.character(info[,9]),Treatment=as.character(info[,2]),Medium=as.character(info[,3]),ORF=as.character(info[,4]),
+		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],nSTP=bcfit[,8],d0=bcfit[,9],Screen.Name=as.character(info[,5]),
+		Library.Name=as.character(info[,6]),MasterPlate.Number=as.numeric(info[,7]),Timeseries.order=as.numeric(info[,8]),
+		Inoc.Time=inoctime,TileX=as.numeric(info[,10]),TileY=as.numeric(info[,11]),XOffset=as.numeric(info[,12]),YOffset=as.numeric(info[,13]),
+		Threshold=as.numeric(info[,14]),EdgeLength=as.numeric(info[,15]),EdgePixels=as.numeric(info[,16]),RepQuad=as.numeric(info[,17])))
 	} #bcode
 	if (ORF2gene!=FALSE){results$Gene<-sapply(as.character(results$ORF),orf2g,gdict)}
 	return(results)
