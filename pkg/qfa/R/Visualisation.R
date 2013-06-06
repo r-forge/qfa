@@ -379,6 +379,11 @@ keybd=function(key){
 	ind<<-indPoss[indNo%%length(indPoss)+1]
 	if(ratioPlot){ratPlot(datno,ecol=Ecol,scol=Scol)}
 	}
+	if(key=="b") {
+	# Print data to console
+	cat("*************\n")
+	print(datlist[[datno]]$rept$V1)
+	}
 	return(NULL)
 }
 
@@ -392,7 +397,7 @@ NAtoBlank=function(x){
 
 getResults<-function(filename){
 	res=read.delim(filename,skip=20,header=TRUE,stringsAsFactors=FALSE)
-	hdr=read.delim(filename,nrows=20,header=FALSE,stringsAsFactors=FALSE)
+	hdr=read.delim(filename,nrows=19,header=FALSE,stringsAsFactors=FALSE)
 	qfaVersion=NAtoBlank(strsplit(hdr[1,1],": ")[[1]][2])
 	summType=NAtoBlank(strsplit(hdr[2,1],": ")[[1]][2])
 	testType=NAtoBlank(strsplit(hdr[3,1],": ")[[1]][2])
@@ -417,7 +422,7 @@ getResults<-function(filename){
 	list(res=res,qfaVersion=qfaVersion,summType=summType,testType=testType,
 	cTreat=cTreat,cMed=cMed,cScrID=cScrID,cScrNm=cScrNm,cLibs=cLibs,cCli=cCli,cUse=cUse,cDate=cDate,
 	qTreat=qTreat,qMed=qMed,qScrID=qScrID,qScrNm=qScrNm,qLibs=qLibs,qCli=qCli,qUse=qUse,qDate=qDate,
-	fMax=fMax)
+	fMax=fMax,rept=hdr)
 	)
 }
 
@@ -519,8 +524,10 @@ visTool<-function(groups,orf2gene,GISfiles){
 	cat("d: Remove highlighting from last gene highlighted.\n")
 	cat("t: Toggle colours (red/green) indicating positive and negative interaction.\n")
 	cat("l: Toggle plot style between fitness plot and log ratio plot.\n")
+	cat("i: Toggle between log ratio plot styles.\n")
 	cat("r: Enter zoom mode.  Click on top left and bottom right of area to inspect.\n")
 	cat("p: Save current plot as vector graphic to QFAVisualisation.ps.  Other filetypes can also be generated - 'n': .png and 'm': .pdf\n")
+	cat("b: Print experimental metadata report to console window\n")
 	cat("q: Quit tool and print gene names currently selected to console window.\n")
 
 	datno<<-1
