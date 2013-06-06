@@ -142,7 +142,7 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	cTreat=rep(control$Treatment[1],nObs),cMed=rep(control$Medium[1],nObs),cScrID=rep(control$ScreenID[1],nObs),
 	qTreat=rep(double$Treatment[1],nObs),qMed=rep(double$Medium[1],nObs),qScrID=rep(double$ScreenID[1],nObs),
 	qGen=rep(double$Screen.Name[1],nObs),cGen=rep(control$Screen.Name[1],nObs),
-	cLib=rep(paste(unique(control$Library.Name),sep="_"),nObs),qLib=rep(paste(unique(double$Library.Name),sep="_"),nObs))
+	cLib=rep(paste(unique(control$Library.Name),collapse="_"),nObs),qLib=rep(paste(unique(double$Library.Name),collapse="_"),nObs))
 	if("Client"%in%colnames(control)) results$cClient=rep(control$Client[1],nObs)
 	if("Client"%in%colnames(double)) results$qClient=rep(double$Client[1],nObs)
 	if("ExptDate"%in%colnames(control)) results$cDate=rep(control$ExptDate[1],nObs)
