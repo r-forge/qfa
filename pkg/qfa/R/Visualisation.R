@@ -34,7 +34,7 @@ epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Contro
 
 targFun=function(x,y,datobj){
 	if(ratioPlot){
-		d=((x-datobj$index)/max(datobj$index))^2+(y-datobj$ratio)^2
+		d=((x-datobj[[ind]])/max(datobj[[ind]]))^2+(y-datobj$ratio)^2
 	}else{
 		d=(x-datobj$ControlFitnessSummary)^2+(y-datobj$QueryFitnessSummary)^2
 	}
@@ -49,12 +49,12 @@ makePlot=function(datno,focusPlot=TRUE,...){
 		compnm=""
 	}
 	maintitle=paste(datlist[[datno]]$datname,compnm,sep="\n")
-	if((nchar(datlist[[datno]]$cMed)<10)&(nchar(datlist[[datno]]$qMed)<10)){
-		xlab=paste(datlist[[datno]]$cBack,datlist[[datno]]$cTreat,datlist[[datno]]$cMed)
-		ylab=paste(datlist[[datno]]$qBack,datlist[[datno]]$qTreat,datlist[[datno]]$qMed)
+	if((nchar(datlist[[datno]]$cMed)<22)&(nchar(datlist[[datno]]$qMed)<22)){
+		xlab=paste(datlist[[datno]]$cScrID,datlist[[datno]]$cCli,datlist[[datno]]$cScrNm,datlist[[datno]]$cLibs,datlist[[datno]]$cUse,datlist[[datno]]$cDate,datlist[[datno]]$cTreat,datlist[[datno]]$cMed)
+		ylab=paste(datlist[[datno]]$qScrID,datlist[[datno]]$qCli,datlist[[datno]]$qScrNm,datlist[[datno]]$qLibs,datlist[[datno]]$qUse,datlist[[datno]]$qDate,datlist[[datno]]$qTreat,datlist[[datno]]$qMed)
 	}else{
-		xlab=paste(datlist[[datno]]$cBack,datlist[[datno]]$cTreat)
-		ylab=paste(datlist[[datno]]$qBack,datlist[[datno]]$qTreat)	
+		xlab=paste(datlist[[datno]]$cScrID,datlist[[datno]]$cCli,datlist[[datno]]$cScrNm,datlist[[datno]]$cLibs,datlist[[datno]]$cUse,datlist[[datno]]$cDate)
+		ylab=paste(datlist[[datno]]$qScrID,datlist[[datno]]$qCli,datlist[[datno]]$qScrNm,datlist[[datno]]$qLibs,datlist[[datno]]$qUse,datlist[[datno]]$qDate)
 	}
 	orftargs=dat$ORF[targs]
 	dat<<-datlist[[datno]]$res
@@ -82,30 +82,30 @@ ratPlot=function(datno,focusPlot=TRUE,qthresh=0.05,ecol="green",scol="red"){
 		compnm=""
 	}
 	maintitle=paste(datlist[[datno]]$datname,compnm,sep="\n")
-	if((nchar(datlist[[datno]]$cMed)<10)&(nchar(datlist[[datno]]$qMed)<10)){
-		xlab=paste(datlist[[datno]]$cBack,datlist[[datno]]$cTreat,datlist[[datno]]$cMed)
-		ylab=paste(datlist[[datno]]$qBack,datlist[[datno]]$qTreat,datlist[[datno]]$qMed)
-	}else{
-		xlab=paste(datlist[[datno]]$cBack,datlist[[datno]]$cTreat)
-		ylab=paste(datlist[[datno]]$qBack,datlist[[datno]]$qTreat)	
-	}
+	xlab=paste(datlist[[datno]]$cScrID)
+	ylab=paste(datlist[[datno]]$qScrID)
 	axislab=paste("Fit ",ylab,"/Fit ",xlab,sep="") 
 	
 	orftargs=dat$ORF[targs]
+	if(ind=="gindex") ratlab="Ranked by gene name (alphabetical order)"
+	if(ind=="oindex") ratlab="Ranked by Y-number (chromosome coordinate)"
+	if(ind=="cindex") ratlab="Ranked by control fitness"
+	if(ind=="qindex") ratlab="Ranked by query fitness"
+	if(ind=="rindex") ratlab="Ranked by query/control fitness ratio"
 	dat<<-datlist[[datno]]$res
 	targs<<-match(orftargs,dat$ORF)
-	plot(dat$index,dat$ratio,xlab="Gene index (alphabetical order)",log="y",ylab=axislab,main=maintitle,col="grey",cex=0.5,pch=19)
+	plot(dat[[ind]],dat$ratio,xlab=ratlab,log="y",ylab=axislab,main=maintitle,col="grey",cex=0.5,pch=19)
 	if(compno>0){
 		lst=strsplit(GROUPS$GroupORFs[compno]," ")[[1]]
 		dcomp=dat[dat$ORF%in%lst,]
 		if(length(dcomp$ORF)>0){
-			points(dcomp$index,dcomp$ratio,col="purple",pch=16,cex=1)
-			text(dcomp$index,dcomp$ratio,dcomp$Gene,pos=1,cex=0.75)
+			points(dcomp[[ind]],dcomp$ratio,col="purple",pch=16,cex=1)
+			text(dcomp[[ind]],dcomp$ratio,dcomp$Gene,pos=1,cex=0.75)
 		}	
 	}
 	if(length(targs)>0){
-		points(dat$index[targs],dat$ratio[targs],col="blue",pch=16,cex=0.2)
-		text(dat$index[targs],dat$ratio[targs],dat$Gene[targs],pos=posits,cex=0.75)
+		points(dat[[ind]][targs],dat$ratio[targs],col="blue",pch=16,cex=0.2)
+		text(dat[[ind]][targs],dat$ratio[targs],dat$Gene[targs],pos=posits,cex=0.75)
 	}
 	if ((Sys.info()['sysname']=="Windows")&focusPlot) bringToTop()
 }
@@ -279,7 +279,7 @@ keybd=function(key){
 	}
 	if((key=="s")&(length(selx)>0)){
 		if(ratioPlot){
-			ind=point.in.polygon(dat$index,dat$ratio,selx,sely)
+			ind=point.in.polygon(dat[[ind]],dat$ratio,selx,sely)
 		}else{
 			ind=point.in.polygon(dat$ControlFitnessSummary,dat$QueryFitnessSummary,selx,sely)
 		}
@@ -373,25 +373,51 @@ keybd=function(key){
 		makePlot(datno,ecol=Ecol,scol=Scol)
 	}
 	}
+	if(key=="i") {
+	# Change index for ratio plot
+	indNo<<-indNo+1
+	ind<<-indPoss[indNo%%length(indPoss)+1]
+	if(ratioPlot){ratPlot(datno,ecol=Ecol,scol=Scol)}
+	}
 	return(NULL)
 }
 
+NAtoBlank=function(x){
+	if(is.na(x)){
+		return("")
+	}else{
+		return(x)
+	}
+}
+
 getResults<-function(filename){
-	res=read.delim(filename,skip=10,header=TRUE,stringsAsFactors=FALSE)
-	hdr=read.delim(filename,nrows=10,header=FALSE,stringsAsFactors=FALSE)
-	qfaVersion=strsplit(hdr[1,1],": ")[[1]][2]
-	summType=strsplit(hdr[2,1],": ")[[1]][2]
-	testType=strsplit(hdr[3,1],": ")[[1]][2]
-	cTreat=strsplit(hdr[4,1],": ")[[1]][2]
-	cMed=strsplit(hdr[5,1],": ")[[1]][2]
-	cBack=strsplit(hdr[6,1],": ")[[1]][2]
-	qTreat=strsplit(hdr[7,1],": ")[[1]][2]
-	qMed=strsplit(hdr[8,1],": ")[[1]][2]
-	qBack=strsplit(hdr[9,1],": ")[[1]][2]
+	res=read.delim(filename,skip=20,header=TRUE,stringsAsFactors=FALSE)
+	hdr=read.delim(filename,nrows=20,header=FALSE,stringsAsFactors=FALSE)
+	qfaVersion=NAtoBlank(strsplit(hdr[1,1],": ")[[1]][2])
+	summType=NAtoBlank(strsplit(hdr[2,1],": ")[[1]][2])
+	testType=NAtoBlank(strsplit(hdr[3,1],": ")[[1]][2])
+	cTreat=NAtoBlank(strsplit(hdr[4,1],": ")[[1]][2])
+	cMed=NAtoBlank(strsplit(hdr[5,1],": ")[[1]][2])
+	cScrID=NAtoBlank(strsplit(hdr[6,1],": ")[[1]][2])
+	cScrNm=NAtoBlank(strsplit(hdr[7,1],": ")[[1]][2])
+	cLibs=NAtoBlank(strsplit(hdr[8,1],": ")[[1]][2])
+	cCli=NAtoBlank(strsplit(hdr[9,1],": ")[[1]][2])
+	cUse=NAtoBlank(strsplit(hdr[10,1],": ")[[1]][2])
+	cDate=NAtoBlank(strsplit(hdr[11,1],": ")[[1]][2])
+	qTreat=NAtoBlank(strsplit(hdr[12,1],": ")[[1]][2])
+	qMed=NAtoBlank(strsplit(hdr[13,1],": ")[[1]][2])
+	qScrID=NAtoBlank(strsplit(hdr[14,1],": ")[[1]][2])
+	qScrNm=NAtoBlank(strsplit(hdr[15,1],": ")[[1]][2])
+	qLibs=NAtoBlank(strsplit(hdr[16,1],": ")[[1]][2])
+	qCli=NAtoBlank(strsplit(hdr[17,1],": ")[[1]][2])
+	qUse=NAtoBlank(strsplit(hdr[18,1],": ")[[1]][2])
+	qDate=NAtoBlank(strsplit(hdr[19,1],": ")[[1]][2])
 	fMax=max(c(res$QueryFitnessSummary,res$ControlFitnessSummary))
 	return(
-	list(res=res,qfaVersion=qfaVersion,summType=summType,testType=testType,cTreat=cTreat,
-	cMed=cMed,cBack=cBack,qTreat=qTreat,qMed=qMed,qBack=qBack,fMax=fMax)
+	list(res=res,qfaVersion=qfaVersion,summType=summType,testType=testType,
+	cTreat=cTreat,cMed=cMed,cScrID=cScrID,cScrNm=cScrNm,cLibs=cLibs,cCli=cCli,cUse=cUse,cDate=cDate,
+	qTreat=qTreat,qMed=qMed,qScrID=qScrID,qScrNm=qScrNm,qLibs=qLibs,qCli=qCli,qUse=qUse,qDate=qDate,
+	fMax=fMax)
 	)
 }
 
@@ -440,7 +466,11 @@ visTool<-function(groups,orf2gene,GISfiles){
 	for (f in 1:length(GISfiles)){	
 		report=getResults(GISfiles[f])
 		report$res$ratio=pmax(0.005,report$res$QueryFitnessSummary/report$res$ControlFitnessSummary)
-		report$res$index=rank(as.character(report$res$Gene))
+		report$res$gindex=rank(as.character(report$res$Gene))
+		report$res$oindex=rank(as.character(report$res$ORF))
+		report$res$cindex=rank(report$res$ControlFitnessSummary)
+		report$res$qindex=rank(report$res$QueryFitnessSummary)
+		report$res$rindex=rank(report$res$QueryFitnessSummary/report$res$ControlFitnessSummary)
 		report$datname="Mean Fitnesses (MDR * MDP), t-test"
 		datlist[[f]]<<-report
 	}
@@ -461,6 +491,9 @@ visTool<-function(groups,orf2gene,GISfiles){
 	sel<<-0
 	selx<<-c()
 	sely<<-c()
+	indPoss<<-c("gindex","oindex","rindex","cindex","qindex")
+	indNo<<-0
+	ind<<-indPoss[indNo%%length(indPoss)+1]
 	
 	# Toggling between colour of suppressors and enhancers
 	Ecol<<-"green"
@@ -485,7 +518,7 @@ visTool<-function(groups,orf2gene,GISfiles){
 	cat("w: Open SGD web-page for last gene highlighted.\n")
 	cat("d: Remove highlighting from last gene highlighted.\n")
 	cat("t: Toggle colours (red/green) indicating positive and negative interaction.\n")
-	cat("l: Toggle plot style between fitness plot and ratio plot.\n")
+	cat("l: Toggle plot style between fitness plot and log ratio plot.\n")
 	cat("r: Enter zoom mode.  Click on top left and bottom right of area to inspect.\n")
 	cat("p: Save current plot as vector graphic to QFAVisualisation.ps.  Other filetypes can also be generated - 'n': .png and 'm': .pdf\n")
 	cat("q: Quit tool and print gene names currently selected to console window.\n")
