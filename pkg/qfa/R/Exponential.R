@@ -29,8 +29,6 @@ lin.fit<-function(tim,growth,inocguess=1,xybounds=1,inits=list(),logTransform=FA
 	y=log(y)
 	s=slopeFun(x,y,1)
 	Kest=max(growth)
-	ctim<<-tim
-	cgrow<<-growth
 
 	slopecutoff=0
 	ldenscutoff=detectThresh
