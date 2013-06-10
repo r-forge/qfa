@@ -7,7 +7,7 @@ Colonyzer is an open source image analysis tool for quantifying cell densities o
 }
 \usage{
 colonyzer.read(path=".",files=c(),experiment="ExptDescription.txt",
-ORF2gene="",libraries="LibraryDescriptions.csv",background="")
+ORF2gene="",libraries="LibraryDescriptions.csv",screenID="")
 }
 \arguments{
   \item{path}{The path to the folder containing the Colonyzer .dat files to be read: working directory by default.}
@@ -55,7 +55,7 @@ ORF2gene="",libraries="LibraryDescriptions.csv",background="")
   \item Notes - Optional strain notes (e.g. is strain especially sick or missing?)
   }
   }
-  \item{background}{Experiment identifier (e.g. query mutation)}
+  \item{screenID}{Unique experiment identifier (e.g. QFA00001)}
 }
 \value{
 An R data.frame where each row corresponds to a single observation on a single colony, with the value of the growth measurement in 'Growth', and the date and time of the measurement in 'Date.Time'. Other information about the observation is stored in the other columns.  Several columns returned are direct copies of Colonyzer output and mapped as follows:
