@@ -322,7 +322,7 @@ keybd=function(key){
 		if ((Sys.info()['sysname']=="Windows")) bringToTop()
 	}
 	if(key=="m") {
-		pdfname=sprintf("QFAVisualisation%04d.pdf",plotno)
+		pdfname=sprintf("QFAVisualisation%04d.pdf",globs$plotno)
 		cat("Printing plot to file:",file.path(getwd(),pdfname),"\n")
 		pdf(pdfname)
 			if(globs$ratioPlot){
