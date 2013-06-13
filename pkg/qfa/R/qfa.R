@@ -1,5 +1,3 @@
-require(DEoptim)
-
 #### Define Phenotype for fitness ####
 #mdr<-function(K,r,g,v) sapply((r*v)/(log((K^v-g^v)/(K^v-(2^v)*(g^v)))+log(2)*v),na2zero)
 mdr<-function(K,r,g,v) sapply((r*v)/log(1-(2^v-1)/((2^v)*(g/K)^v-1)),na2zero)
@@ -745,6 +743,7 @@ logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0
 		if(logify) {ylog="y"}else{ylog=""}
 		# Add logistic curve
 		if(maxt==0) maxt=ceiling(max(tim))
+		x=0
 		curve(Glogist(K,r,g,v,x),n=31,lwd=2.5,add=TRUE,from=0,to=maxt,xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg))
 	}
 	# Add data points
