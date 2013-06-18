@@ -1,7 +1,7 @@
 R package version: 0.0-5
 Summary type: mean
 Test type: t-test
-Control treatment: 37
+Control treatment: 20
 Control medium: SD
 Control screen ID: URA3
 Control screen name: cSGA
