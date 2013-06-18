@@ -15,6 +15,4 @@ rod.write(iman,outf)
 \value{
 Doesn't return anything, but rather writes a tab delimited text file (ROD style format) to hard-drive.
 }
-\examples{
-}
 \keyword{qfa}

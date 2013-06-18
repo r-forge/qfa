@@ -12,6 +12,4 @@ mdp(K,r,g,v)}
   \item{g}{Inoculum denisty (AU).  Same units as (normalised) cell density observed in growth curve.}
   \item{v}{Shape parameter.  Recover logistic model with v = 0.}
 }
-\examples{
-}
 \keyword{mdp}

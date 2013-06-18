@@ -12,6 +12,4 @@ makeFitness(results,AUCLim,dtmax)
   \item{AUCLim}{AUC is calculated by integrating the generalised logistic function between t=0 and t=AUCLim.  The default value is 5 days.}
   \item{dtmax}{Although doubling time is an attractive and popular growth phenotype, it is not well defined for dead cultures, which appear regularly in high-throughput screens (doubling time goes to infinity as growth rate goes to zero).  To get around this numerical difficulty, this function sets all calculated doubling times above dtmax equal to dtmax.  Default value is 25 hours.}
 }
-\examples{
-}
 \keyword{makeFitness}

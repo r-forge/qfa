@@ -13,6 +13,4 @@ showDemo(demoname = "telomereCap")
 \value{
 Opens a new window displaying the source code for the demo
 }
-\examples{
-}
 \keyword{qfa}

@@ -10,6 +10,4 @@ report.epi(results,filename)}
   \item{results}{Dataframe describing genetic interactions (output from epi.fit) to be summarised in a text file.}
   \item{filename}{Path to file.}
 }
-\examples{
-}
 \keyword{report.epi}

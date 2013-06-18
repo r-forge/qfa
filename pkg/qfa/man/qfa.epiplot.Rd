@@ -19,6 +19,4 @@ If FALSE, this is estimated from results using linear regression.}
   \item{mmain}{Plot label}
   \item{fmax}{Maximum fitness range for both x-axis (control axis) and y-axis (query axis).  If 0, axis ranges are automatically chosen to include all data points.}
 }
-\examples{
-}
 \keyword{qfa}

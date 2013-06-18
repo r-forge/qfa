@@ -384,7 +384,7 @@ makeVisTool=function(){
 
 	visTool<-function(groups,orf2gene,GISfiles){
 		# Function for generating interactive plot
-		globs$GROUPS=groups
+		globs$GROUPS=groups()
 		globs$ORFGENE=orf2gene
 		globs$datlist=list()
 		

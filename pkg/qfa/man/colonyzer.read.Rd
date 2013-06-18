@@ -102,6 +102,4 @@ Extra columns are automatically added as follows.  Some of this information is d
 
 Finally, as well as returning the object above, this function prints a small report to screen, summarising the data returned.  This includes number of unique barcodes read, number of photos read, number of genotypes in experiment, number of unique culture observations made, a list of treatments applied, a list of media used, a list of unique screen names (e.g. replicates carried out), the plate dimensions (e.g. 1536, 384 or 96 format) and a list of unique inoculation dates.
 }
-\examples{
-}
 \keyword{qfa}

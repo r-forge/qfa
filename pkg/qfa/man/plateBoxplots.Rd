@@ -15,6 +15,4 @@ plateBoxplots(dataframe,outputfile,fitmax=185)
 }
 \value{
 Generates a multi-page .pdf report demonstrating within-plate culture variance for all plates, media, treatments and replicates in a QFA experiment.}
-\examples{
-}
 \keyword{qfa}

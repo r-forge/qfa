@@ -13,6 +13,4 @@ pgis(orf,m,cFs,dFs,wilcoxon)}
   \item{dFs}{List of available replicate observations of query (or double mutant) strain fitnesses, labelled by ORF.}
   \item{wilcoxon}{Boolean specifying whether to use the Mann-Whitney, non-parameteric test for significance of difference between control and query strains (TRUE) or the parametric t-test (FALSE).  Default is TRUE.}
 }
-\examples{
-}
 \keyword{pgis}
