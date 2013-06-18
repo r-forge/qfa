@@ -19,6 +19,4 @@ correlationReport(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185)
 }
 \value{
 Generates a multi-page .pdf report demonstrating two-way between-replicate correlation for all possible pairs of plates and for all media, treatments and replicates in a QFA experiment.}
-\examples{
-}
 \keyword{qfa}

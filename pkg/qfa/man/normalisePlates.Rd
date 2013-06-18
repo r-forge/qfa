@@ -12,7 +12,4 @@ normalisePlates(d,column)}
   \item{d}{Dataframe (output from qfa.fit) for normalisation.}
   \item{column}{String name of column to normalise (typically the fitness measure of interest).  See qfa.fit and makeFitness help files for descriptions of available culture fitness measures.}
 }
-\examples{
-
-}
 \keyword{normalisePlates}

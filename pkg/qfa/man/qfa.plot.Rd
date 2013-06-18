@@ -27,6 +27,4 @@ ylabel="Cell density (AU)",ptype="p")}
   \item{ylabel}{String for y-axis label on growth curve plots.}
   \item{ptype}{Plot type for data: "p": points, "l": lines, "b": both}
 }
-\examples{
-}
 \keyword{qfa}

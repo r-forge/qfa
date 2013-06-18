@@ -42,6 +42,4 @@ Returns an R list containing three data frames: Results, Enhancers and Suppresso
 	\item Type - Type of genetic interaction observed (suppressor, enhancer, positive, negative).  This is assigned for strains with abs(GIS)>GISthresh and by comparing q-value with qthresh.
 }
 }
-\examples{
-}
 \keyword{qfa}

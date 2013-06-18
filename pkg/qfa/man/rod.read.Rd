@@ -22,6 +22,4 @@ treatments=c(),barcodes=c(),master.plates=c(),screen.names=c(),ORF2gene = "")
 \value{
 An R data.frame where each row corresponds to a single observation on a single colony, with the value of the growth measurement in 'Growth', and the date and time of the measurement in 'Date.Time'. Other information about the observation is stored in the other columns.
 }
-\examples{
-}
 \keyword{qfa}

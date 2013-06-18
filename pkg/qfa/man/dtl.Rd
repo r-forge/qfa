@@ -13,6 +13,4 @@ dtl(K,r,g,v,t)}
   \item{v}{Shape parameter.  Recover logistic model with v = 0.}
   \item{t}{Time since inoculation (d).}
 }
-\examples{
-}
 \keyword{dtl}

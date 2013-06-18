@@ -12,6 +12,4 @@ logist(K,r,g,t)}
   \item{g}{Inoculum denisty (AU).  Same units as (normalised) cell density observed in growth curve.}
   \item{t}{Time since inoculation (d).}
 }
-\examples{
-}
 \keyword{logist}

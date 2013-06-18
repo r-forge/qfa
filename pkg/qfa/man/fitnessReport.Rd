@@ -4,8 +4,6 @@
 \description{
 Summarises mean and median fitnesses for all orfs in qfa.fit object, and writes them to file with an appropriate header.
 }
-\usage{
-}
 \arguments{
   \item{treatment}{Fitnesses are filtered by this value in the qfa.fit treatment column before summaries are generated.}
   \item{outputfile}{Output file name.}
@@ -13,7 +11,5 @@ Summarises mean and median fitnesses for all orfs in qfa.fit object, and writes 
 }
 \value{
 Writes summary fitnesses to file with header containing some metadata.
-}
-\examples{
 }
 \keyword{qfa}

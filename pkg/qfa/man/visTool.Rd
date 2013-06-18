@@ -7,8 +7,6 @@ Function closure which generates a function which can be run to initiate a Dynam
 \usage{
 makeVisTool()
 }
-\arguments{
-}
 \value{
 
 Returns a function for generating an interactive plot to compare control and query fitnesses and visualise interaction strengths.  The function returned takes the following arguments:

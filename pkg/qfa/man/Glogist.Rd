@@ -13,6 +13,4 @@ Glogist(K,r,g,v,t)}
   \item{v}{Shape parameter.  Recover logistic model with v = 1.}
   \item{t}{Time since inoculation (d).}
 }
-\examples{
-}
 \keyword{Glogist}
