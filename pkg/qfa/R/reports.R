@@ -45,6 +45,8 @@ fitnessReport<-function(treatment,outputfile,dataframe){
 }
 
 report.epi<-function(results,filename){
+	# Eliminate spurious precision to make smaller files
+	results[,3:9]=signif(results[,3:9],4)
 	packs = data.frame(installed.packages(),stringsAsFactors=FALSE)
 	vno=packs$Version[packs$Package=="qfa"]
 
