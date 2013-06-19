@@ -42,12 +42,13 @@ makeVisTool=function(){
 			compnm=""
 		}
 		maintitle=paste(globs$datlist[[datno]]$datname,compnm,sep="\n")
+		# In case of overly-long medium description, remove medium from axis labels
 		if((nchar(globs$datlist[[datno]]$cMed)<22)&(nchar(globs$datlist[[datno]]$qMed)<22)){
 			xlab=paste(globs$datlist[[datno]]$cScrID,globs$datlist[[datno]]$cCli,globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cLibs,globs$datlist[[datno]]$cUse,globs$datlist[[datno]]$cDate,globs$datlist[[datno]]$cTreat,globs$datlist[[datno]]$cMed)
 			ylab=paste(globs$datlist[[datno]]$qScrID,globs$datlist[[datno]]$qCli,globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qLibs,globs$datlist[[datno]]$qUse,globs$datlist[[datno]]$qDate,globs$datlist[[datno]]$qTreat,globs$datlist[[datno]]$qMed)
 		}else{
-			xlab=paste(globs$datlist[[datno]]$cScrID,globs$datlist[[datno]]$cCli,globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cLibs,globs$datlist[[datno]]$cUse,globs$datlist[[datno]]$cDate)
-			ylab=paste(globs$datlist[[datno]]$qScrID,globs$datlist[[datno]]$qCli,globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qLibs,globs$datlist[[datno]]$qUse,globs$datlist[[datno]]$qDate)
+			xlab=paste(globs$datlist[[datno]]$cScrID,globs$datlist[[datno]]$cCli,globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cLibs,globs$datlist[[datno]]$cUse,globs$datlist[[datno]]$cDate,globs$datlist[[datno]]$cTreat)
+			ylab=paste(globs$datlist[[datno]]$qScrID,globs$datlist[[datno]]$qCli,globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qLibs,globs$datlist[[datno]]$qUse,globs$datlist[[datno]]$qDate,globs$datlist[[datno]]$qTreat)
 		}
 		globs$orftargs=globs$dat$ORF[globs$targs]
 		globs$dat=globs$datlist[[datno]]$res
