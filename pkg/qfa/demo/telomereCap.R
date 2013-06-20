@@ -13,12 +13,12 @@ library(qfa)
 # Change current working directory to root of the qfa package so that we can read in the demo files
 # This block is NOT required for a normal workflow
 current=getwd()
-packroot=system.file(package = "qfa")
+packroot=file.path(system.file(package = "qfa"),"extdata")
 setwd(packroot)
 
 # Assign plate ids, ORFs and gene names to observations
-control=colonyzer.read(files=c("URA3Control.dat"),experiment="URA3ExptDescription.txt",ORF2gene="ORF2GENE.txt",libraries="LibraryDescription.txt",background="URA3D")
-query=colonyzer.read(files=c("cdc13-1Query.dat"),experiment="cdc13-1ExptDescription.txt",ORF2gene="ORF2GENE.txt",libraries="LibraryDescription.txt",background="cdc13-1")
+control=colonyzer.read(files=c("URA3Control.dat.gz"),experiment="URA3ExptDescription.txt",ORF2gene="ORF2GENE.txt.gz",libraries="LibraryDescription.txt.gz",screenID="URA3D")
+query=colonyzer.read(files=c("cdc13-1Query.dat.gz"),experiment="cdc13-1ExptDescription.txt",ORF2gene="ORF2GENE.txt.gz",libraries="LibraryDescription.txt.gz",screenID="cdc13-1")
 
 # Only use one of the 8 available replicates to save time.  Comment these lines out to do full analysis (takes about 30 mins)
 control=control[(control$Library.Name=="BooneSDLV3")&(control$RepQuad==1),]
@@ -29,8 +29,8 @@ control=control[(control$Row!=1)&(control$Col!=1)&(control$Row!=16)&(control$Col
 query=query[(query$Row!=1)&(query$Col!=1)&(query$Row!=16)&(query$Col!=24),]
 
 # Fit generalised logistic model to observed data
-control.fit<-qfa.fit(control,inocguess=1.4e-05,ORF2gene="ORF2GENE.txt",fixG=TRUE,detectThresh=0.001,AUCLim=4,STP=4)
-query.fit<-qfa.fit(query,inocguess=1.4e-05,ORF2gene="ORF2GENE.txt",fixG=TRUE,detectThresh=0.001,AUCLim=4,STP=4)
+control.fit<-qfa.fit(control,inocguess=1.4e-05,ORF2gene="ORF2GENE.txt.gz",fixG=TRUE,detectThresh=0.001,AUCLim=4,STP=4)
+query.fit<-qfa.fit(query,inocguess=1.4e-05,ORF2gene="ORF2GENE.txt.gz",fixG=TRUE,detectThresh=0.001,AUCLim=4,STP=4)
 
 # Construct QFA fitness measures
 control.fit=makeFitness(control.fit,AUCLim=4)

@@ -501,8 +501,7 @@ benschopFromSource<-function(){
 	# Read in functionally related complexes
 	# Largely from Benschopp Mol Cell 2010
 	# Can add some complexes manually
-	#compfile=system.file("/FunctionalComplexes.txt", package = "qfa")
-	compfile=paste(system.file(package = "qfa"),"/FunctionalComplexes.txt",sep="")
+	compfile=file.path(system.file(package = "qfa"),"extdata","FunctionalComplexes.txt",sep="")
 	Benschopp=read.delim(compfile,stringsAsFactors=FALSE,sep="\t")
 	Benschopp$CompList=gsub(";"," ",gsub("\\s","",Benschopp$Complex.members..systematic.name))
 	res=data.frame(GroupName=Benschopp$X..Complex.name,GroupID="Func.")
@@ -511,18 +510,18 @@ benschopFromSource<-function(){
 }
 
 buildBenschop<-function(){
-	Benschop=read.delim(file.path(system.file(package = "qfa"),"Benschop.txt"),sep="\t",header=TRUE,stringsAsFactors=FALSE)
+	Benschop=read.delim(file.path(system.file(package = "qfa"),"extdata","Benschop.txt"),sep="\t",header=TRUE,stringsAsFactors=FALSE)
 	return(Benschop)
 }
 
 visToolDemo<-function(groupFun=buildBenschop){
-	orfile=file.path(system.file(package = "qfa"),"ORF2GENE.txt")
+	orfile=file.path(file.path(system.file(package = "qfa"),"extdata","ORF2GENE.txt.gz"))
 	ORFGENE=read.delim(orfile,stringsAsFactors=FALSE,sep="\t",header=FALSE)
 	colnames(ORFGENE)=c("ORF","Gene")
 	ORFGENE=ORFGENE[!duplicated(ORFGENE$ORF),]
 
 	# Read in GIS files
-	filenames=list.files(system.file(package = "qfa"),pattern="*GIS.txt",full.names=TRUE)
+	filenames=list.files(file.path(system.file(package = "qfa"),"extdata"),pattern="*GIS.txt.gz",full.names=TRUE)
 	visTool=makeVisTool()
 	visTool(groupFun,ORFGENE,filenames)
 }
@@ -567,8 +566,7 @@ getResults<-function(filename){
 }
 
 buildGO<-function(){
-	#load(file=file.path(system.file(package = "qfa"),"GOAnnotation.Rda"))
-	GO=read.delim(file.path(system.file(package = "qfa"),"GOAnnotation.txt"),sep="\t",header=TRUE,stringsAsFactors=FALSE)
+	GO=read.delim(file.path(system.file(package = "qfa"),"extdata","GOAnnotation.txt.gz"),sep="\t",header=TRUE,stringsAsFactors=FALSE)
 	return(GO)
 }
 
