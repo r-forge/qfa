@@ -54,27 +54,18 @@
 
 <p>You will require administrator rights on your machine to install <a href="http://cran.r-project.org/bin/macosx/">R</a>.
 
-<ol><li>Make sure you have the latest version of R installed on your computer.  If not, <a href="http://cran.r-project.org/bin/macosx/">download</a> the latest installation file (.pkg file) to your hard drive and install.</li>
+<ol><li>Make sure you have the latest version of R installed on your computer (or at least a version >= 3.0.1).  If not, <a href="http://cran.r-project.org/bin/macosx/">download</a> the latest installation file (.pkg file) to your hard drive and install.</li>
 	<li>Install the qfa package containing the visualisation tool and the <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> QFA datasets:<ol type="a">
 		<li>Start the R application</li>
 		<li>Paste the following line of code after the command line prompt (followed by Enter):</li>
 	</ol>
 <code>
-install.packages("qfa", repos="http://R-Forge.R-project.org")
+install.packages("qfa")
 </code>
 </ol>
 Note that, depending on the version of your operating system, you might be prompted to install the <a href="http://xquartz.macosforge.org">X11</a> software for Mac at a later stage.  X11 is necessary for the visualisation tool to work, so please install it if promoted.  This may require restarting your machine.</p>
 
-<h4>Older versions of R</h4>
-<p>In the event that the latest version of R currently available to you is not compatible with the binary package hosted on R-forge, you can still install the qfa package manually by following these steps:
-<ol>
-<li>Download the OSX source code for the package (.tgz file) from <a href="http://r-forge.r-project.org/R/?group_id=880">this</a> page to your hard drive.</li>
-<li>Start the R application on your machine and go Packages & Data -> Package Installer</li>
-<li>Select 'Local Source Package' from list.  <b>Note</b>: you probably want to select the "Install at system-wide level" option here, but you may be prompted for an administrator password.</li>
-<li>Hit the Install button and then navigate to where you've saved the file, press OK to install it</li>
-</ol> 
-
-<p>Installation should be complete.  You do not have to go through these steps again to use the tool.  To update an existing installation to the latest version, simply repeat step 2 (or repeat the "Older versions of R" steps if R-forge installation does not work for you).</p>
+<p>Installation should be complete.  You do not have to go through these steps again to use the tool.  To update an existing installation to the latest version, simply repeat step 2.</p>
 
 <hr></hr>
 
@@ -84,11 +75,11 @@ Note that, depending on the version of your operating system, you might be promp
 
 <ol><li>Make sure you have the latest version of R installed on your computer.  If not, <a href="http://cran.r-project.org/bin/windows/base/">download</a> the latest .exe file to your hard drive and install.</li>
 <li>Install the qfa package containing the visualisation tool and the <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> QFA datasets:<ol type="a">
-	<li>Start the R application (e.g. Start->All Programs->R->R x64 2.15.2)</li>
+	<li>Start the R application (e.g. Start->All Programs->R->R x64 3.0.1)</li>
 	<li>Paste the following line of code after the command line prompt (followed by Enter):</li>
 </ol></li>
 <code>
-install.packages("qfa", repos="http://R-Forge.R-project.org")
+install.packages("qfa")
 </code>
 </ol>
 
