@@ -12,16 +12,18 @@ logist<-function(K,r,g,t) (K*g*exp(r*t))/(K+g*(exp(r*t)-1))
 # Generalised logistic growth model #
 Glogist<-function(K,r,g,v,t) K/(1+(-1+(K/g)^v)*exp(-r*v*t))^(1/v)
 
-####### Normalise a column in a data frame
-normalisePlates=function(d,column){
-	d$Treatment=as.character(d$Treatment); d[,column]=as.numeric(d[,column]); d$Barcode=as.character(d$Barcode)
-	for(trt in sort(unique(d$Treatment))){
-		med=median(d[d$Treatment==trt,column])
-		for (b in unique(d$Barcode[d$Treatment==trt])){
-			datlst=as.numeric(d[(d$Barcode==b)&(d$Treatment==trt),column])
+####### Normalise a column in a data frame by plate, grouping by the groupcol column (e.g. Treatment, Medium, or some combination)...
+####### This function eradicates any plate effect within the group specified by groupcol
+normalisePlates=function(d,column,groupcol="Treatment"){
+	d[,groupcol]=as.character(d[,groupcol]); d[,column]=as.numeric(d[,column]); d$Barcode=as.character(d$Barcode)
+	for(grouplabel in sort(unique(d[,groupcol]))){
+		print(paste("Normalising plates by group",grouplabel))
+		med=median(d[d[,groupcol]==grouplabel,column])
+		for (b in unique(d$Barcode[d[,groupcol]==grouplabel])){
+			datlst=as.numeric(d[(d$Barcode==b)&(d[,groupcol]==grouplabel),column])
 			p.med=median(datlst)
 			if(p.med>=1) datlst=datlst*med/p.med # Avoid division by zero median fitness...
-			d[(d$Barcode==b)&(d$Treatment==trt),column]=datlst
+			d[(d$Barcode==b)&(d[,groupcol]==grouplabel),column]=datlst
 		}		
 	}
 	return(as.numeric(d[,column]))
