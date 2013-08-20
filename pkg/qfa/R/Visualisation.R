@@ -378,7 +378,7 @@ makeVisTool=function(){
 		if(key=="b") {
 		# Print data to console
 		cat("*************\n")
-		print(globs$datlist[[globs$datno]]$rept$V1)
+		print(globs$datlist[[globs$datno]]$rept)
 		}
 		return(NULL)
 	}
@@ -397,7 +397,7 @@ makeVisTool=function(){
 			report$res$cindex=rank(report$res$ControlFitnessSummary)
 			report$res$qindex=rank(report$res$QueryFitnessSummary)
 			report$res$rindex=rank(report$res$QueryFitnessSummary/report$res$ControlFitnessSummary)
-			report$datname="Mean Fitnesses (MDR * MDP), t-test"
+			report$datname=paste("Plot",paste(f,":",sep=""),report$summType,"fitness",paste("(",report$testType,")",sep=""))
 			globs$datlist[[f]]=report
 		}
 
@@ -536,26 +536,26 @@ NAtoBlank=function(x){
 
 getResults<-function(filename){
 	res=read.delim(filename,skip=20,header=TRUE,stringsAsFactors=FALSE)
-	hdr=read.delim(filename,nrows=19,header=FALSE,stringsAsFactors=FALSE)
-	qfaVersion=NAtoBlank(strsplit(hdr[1,1],": ")[[1]][2])
-	summType=NAtoBlank(strsplit(hdr[2,1],": ")[[1]][2])
-	testType=NAtoBlank(strsplit(hdr[3,1],": ")[[1]][2])
-	cTreat=NAtoBlank(strsplit(hdr[4,1],": ")[[1]][2])
-	cMed=NAtoBlank(strsplit(hdr[5,1],": ")[[1]][2])
-	cScrID=NAtoBlank(strsplit(hdr[6,1],": ")[[1]][2])
-	cScrNm=NAtoBlank(strsplit(hdr[7,1],": ")[[1]][2])
-	cLibs=NAtoBlank(strsplit(hdr[8,1],": ")[[1]][2])
-	cCli=NAtoBlank(strsplit(hdr[9,1],": ")[[1]][2])
-	cUse=NAtoBlank(strsplit(hdr[10,1],": ")[[1]][2])
-	cDate=NAtoBlank(strsplit(hdr[11,1],": ")[[1]][2])
-	qTreat=NAtoBlank(strsplit(hdr[12,1],": ")[[1]][2])
-	qMed=NAtoBlank(strsplit(hdr[13,1],": ")[[1]][2])
-	qScrID=NAtoBlank(strsplit(hdr[14,1],": ")[[1]][2])
-	qScrNm=NAtoBlank(strsplit(hdr[15,1],": ")[[1]][2])
-	qLibs=NAtoBlank(strsplit(hdr[16,1],": ")[[1]][2])
-	qCli=NAtoBlank(strsplit(hdr[17,1],": ")[[1]][2])
-	qUse=NAtoBlank(strsplit(hdr[18,1],": ")[[1]][2])
-	qDate=NAtoBlank(strsplit(hdr[19,1],": ")[[1]][2])
+	hdr=read.delim(filename,nrows=19,header=FALSE,stringsAsFactors=FALSE)$V1
+	qfaVersion=NAtoBlank(strsplit(hdr[1],": ")[[1]][2])
+	summType=NAtoBlank(strsplit(hdr[2],": ")[[1]][2])
+	testType=NAtoBlank(strsplit(hdr[3],": ")[[1]][2])
+	cTreat=NAtoBlank(strsplit(hdr[4],": ")[[1]][2])
+	cMed=NAtoBlank(strsplit(hdr[5],": ")[[1]][2])
+	cScrID=NAtoBlank(strsplit(hdr[6],": ")[[1]][2])
+	cScrNm=NAtoBlank(strsplit(hdr[7],": ")[[1]][2])
+	cLibs=NAtoBlank(strsplit(hdr[8],": ")[[1]][2])
+	cCli=NAtoBlank(strsplit(hdr[9],": ")[[1]][2])
+	cUse=NAtoBlank(strsplit(hdr[10],": ")[[1]][2])
+	cDate=NAtoBlank(strsplit(hdr[11],": ")[[1]][2])
+	qTreat=NAtoBlank(strsplit(hdr[12],": ")[[1]][2])
+	qMed=NAtoBlank(strsplit(hdr[13],": ")[[1]][2])
+	qScrID=NAtoBlank(strsplit(hdr[14],": ")[[1]][2])
+	qScrNm=NAtoBlank(strsplit(hdr[15],": ")[[1]][2])
+	qLibs=NAtoBlank(strsplit(hdr[16],": ")[[1]][2])
+	qCli=NAtoBlank(strsplit(hdr[17],": ")[[1]][2])
+	qUse=NAtoBlank(strsplit(hdr[18],": ")[[1]][2])
+	qDate=NAtoBlank(strsplit(hdr[19],": ")[[1]][2])
 	fMax=max(c(res$QueryFitnessSummary,res$ControlFitnessSummary))
 	return(
 	list(res=res,qfaVersion=qfaVersion,summType=summType,testType=testType,
