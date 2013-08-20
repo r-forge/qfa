@@ -103,9 +103,12 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	if(wctest){cFms<-sapply(cFstats,median)}else{cFms<-sapply(cFstats,mean)}
 	names(cFms)<-orfs
 	if(wctest){dFms<-sapply(dFstats,median)}else{dFms<-sapply(dFstats,mean)}
+	names(dFms)<-orfs
 	cSe<-sapply(dFstats,sterr)
 	dSe<-sapply(cFstats,sterr)
-	names(dFms)<-orfs
+	cCount<-sapply(dFstats,length)
+	dCount<-sapply(cFstats,length)
+
 	### Fit genetic independence model ###
 	m<-lm.epi(dFms,cFms,modcheck)
 	print(paste("Ratio of background mutant fitness to wildtype fitness =",round(m,4)))
@@ -137,7 +140,7 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	nObs=length(p)
 	if(wctest) {testType="wilcoxon"; sumType="median"}else{testType="t-test"; sumType="mean"}
 	results<-data.frame(ORF=orfs,Gene=genes,P=p,Q=q,GIS=gis,
-	QueryFitnessSummary=dFms,ControlFitnessSummary=cFms,QuerySE=dSe,ControlSE=cSe,
+	QueryFitnessSummary=dFms,ControlFitnessSummary=cFms,QuerySE=dSe,ControlSE=cSe,QueryCount=dCount,ControlCount=cCount,
 	TestType=rep(testType,nObs),SummaryType=rep(sumType,nObs),
 	cTreat=rep(control$Treatment[1],nObs),cMed=rep(control$Medium[1],nObs),cScrID=rep(control$ScreenID[1],nObs),
 	qTreat=rep(double$Treatment[1],nObs),qMed=rep(double$Medium[1],nObs),qScrID=rep(double$ScreenID[1],nObs),
