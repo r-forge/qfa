@@ -44,11 +44,11 @@ makeVisTool=function(){
 		maintitle=paste(globs$datlist[[datno]]$datname,compnm,sep="\n")
 		# In case of overly-long medium description, remove medium from axis labels
 		if((nchar(globs$datlist[[datno]]$cMed)<22)&(nchar(globs$datlist[[datno]]$qMed)<22)){
-			xlab=paste(globs$datlist[[datno]]$cScrID,globs$datlist[[datno]]$cCli,globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cLibs,globs$datlist[[datno]]$cUse,globs$datlist[[datno]]$cDate,globs$datlist[[datno]]$cTreat,globs$datlist[[datno]]$cMed)
-			ylab=paste(globs$datlist[[datno]]$qScrID,globs$datlist[[datno]]$qCli,globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qLibs,globs$datlist[[datno]]$qUse,globs$datlist[[datno]]$qDate,globs$datlist[[datno]]$qTreat,globs$datlist[[datno]]$qMed)
+			xlab=paste(globs$datlist[[datno]]$cScrID,globs$datlist[[datno]]$cCli,globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cLibs,globs$datlist[[datno]]$cUse,globs$datlist[[datno]]$cDate,globs$datlist[[datno]]$cTreat,globs$datlist[[datno]]$cMed,globs$datlist[[datno]]$cRep)
+			ylab=paste(globs$datlist[[datno]]$qScrID,globs$datlist[[datno]]$qCli,globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qLibs,globs$datlist[[datno]]$qUse,globs$datlist[[datno]]$qDate,globs$datlist[[datno]]$qTreat,globs$datlist[[datno]]$qMed,globs$datlist[[datno]]$qRep)
 		}else{
-			xlab=paste(globs$datlist[[datno]]$cScrID,globs$datlist[[datno]]$cCli,globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cLibs,globs$datlist[[datno]]$cUse,globs$datlist[[datno]]$cDate,globs$datlist[[datno]]$cTreat)
-			ylab=paste(globs$datlist[[datno]]$qScrID,globs$datlist[[datno]]$qCli,globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qLibs,globs$datlist[[datno]]$qUse,globs$datlist[[datno]]$qDate,globs$datlist[[datno]]$qTreat)
+			xlab=paste(globs$datlist[[datno]]$cScrID,globs$datlist[[datno]]$cCli,globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cLibs,globs$datlist[[datno]]$cUse,globs$datlist[[datno]]$cDate,globs$datlist[[datno]]$cTreat,globs$datlist[[datno]]$cRep)
+			ylab=paste(globs$datlist[[datno]]$qScrID,globs$datlist[[datno]]$qCli,globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qLibs,globs$datlist[[datno]]$qUse,globs$datlist[[datno]]$qDate,globs$datlist[[datno]]$qTreat,globs$datlist[[datno]]$qRep)
 		}
 		globs$orftargs=globs$dat$ORF[globs$targs]
 		globs$dat=globs$datlist[[datno]]$res
@@ -377,8 +377,13 @@ makeVisTool=function(){
 		}
 		if(key=="b") {
 		# Print data to console
-		cat("*************\n")
-		print(globs$datlist[[globs$datno]]$rept)
+		cat("\nExperimental metadata: plot",globs$datno,"\n~~~~~~~~~~~~~~~\n")
+		# Split report string and patch in replicate numbers for Query and Control
+		rept=globs$datlist[[globs$datno]]$rept
+		fcont=grep("Control",tt)
+		findx=tail(fcont,1)
+		rept2=c(rept[1:findx],paste("Control replicate number:",globs$datlist[[globs$datno]]$ControlCount),rept[(findx+1):length(rept)],paste("Query replicate number:",globs$datlist[[globs$datno]]$ControlCount))
+		cat(rept2,sep="\n")
 		}
 		return(NULL)
 	}
@@ -557,11 +562,13 @@ getResults<-function(filename){
 	qUse=NAtoBlank(strsplit(hdr[18],": ")[[1]][2])
 	qDate=NAtoBlank(strsplit(hdr[19],": ")[[1]][2])
 	fMax=max(c(res$QueryFitnessSummary,res$ControlFitnessSummary))
+	qRep=getMode(res$ControlCount)
+	cRep=getMode(res$QueryCount)
 	return(
 	list(res=res,qfaVersion=qfaVersion,summType=summType,testType=testType,
 	cTreat=cTreat,cMed=cMed,cScrID=cScrID,cScrNm=cScrNm,cLibs=cLibs,cCli=cCli,cUse=cUse,cDate=cDate,
 	qTreat=qTreat,qMed=qMed,qScrID=qScrID,qScrNm=qScrNm,qLibs=qLibs,qCli=qCli,qUse=qUse,qDate=qDate,
-	fMax=fMax,rept=hdr)
+	fMax=fMax,rept=hdr,qRep=qRep,cRep=cRep)
 	)
 }
 
