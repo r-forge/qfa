@@ -48,8 +48,10 @@ report.epi<-function(results,filename){
 	# Eliminate spurious precision to make smaller files
 	results[,3:9]=signif(results[,3:9],4)
 	# Automatically extract qfa package version number
-	packs = data.frame(installed.packages(),stringsAsFactors=FALSE)
-	vno=packs$Version[packs$Package=="qfa"]
+	#packs = data.frame(installed.packages(),stringsAsFactors=FALSE)
+	#vno=packs$Version[packs$Package=="qfa"]
+	sinfo=sessionInfo()
+	vno=sinfo$otherPkgs$qfa$Version[1]
 
 	QFAversion=paste("R package version:",vno)
 	sumType=paste("Summary type:",paste(unique(results$SummaryType),collapse=" "))
