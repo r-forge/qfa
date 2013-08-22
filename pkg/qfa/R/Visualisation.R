@@ -184,7 +184,10 @@ makeVisTool=function(){
 			globs$xf=grconvertX(x,from="ndc",to="user")
 			globs$yf=grconvertY(y,from="ndc",to="user")
 			candidate=targFun(globs$xf,globs$yf,globs$dat)
-			browseURL(paste("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus=",globs$dat$ORF[candidate],sep=""))
+			directurl="http://www.this-page-intentionally-left-blank.org/"
+			if(!is.na(pmatch("Y",globs$dat$ORF[candidate]))) directurl=paste("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus=",globs$dat$ORF[candidate],sep="")
+			if(!is.na(pmatch("SP",globs$dat$ORF[candidate]))) directurl=paste("http://www.pombase.org/spombe/result/",globs$dat$ORF[candidate],sep="")
+			browseURL(directurl)
 		}
 	}
 
@@ -380,7 +383,7 @@ makeVisTool=function(){
 		cat("\nExperimental metadata: plot",globs$datno,"\n~~~~~~~~~~~~~~~\n")
 		# Split report string and patch in replicate numbers for Query and Control
 		rept=globs$datlist[[globs$datno]]$rept
-		fcont=grep("Control",tt)
+		fcont=grep("Control",rept)
 		findx=tail(fcont,1)
 		rept2=c(rept[1:findx],paste("Control replicate number:",globs$datlist[[globs$datno]]$ControlCount),rept[(findx+1):length(rept)],paste("Query replicate number:",globs$datlist[[globs$datno]]$ControlCount))
 		cat(rept2,sep="\n")
@@ -393,6 +396,8 @@ makeVisTool=function(){
 		globs$GROUPS=groups()
 		globs$ORFGENE=orf2gene
 		globs$datlist=list()
+		clients=c()
+		dates=c()
 		
 		for (f in 1:length(GISfiles)){	
 			report=getResults(GISfiles[f])
@@ -404,7 +409,12 @@ makeVisTool=function(){
 			report$res$rindex=rank(report$res$QueryFitnessSummary/report$res$ControlFitnessSummary)
 			report$datname=paste("Plot",paste(f,":",sep=""),report$summType,"fitness",paste("(",report$testType,")",sep=""))
 			globs$datlist[[f]]=report
+			clients=c(clients,report$Client)
+			dates=c(dates,report$Date)
 		}
+		
+		# Order by client and then date
+		#if (!orderByFilename)
 
 		globs$fxmax=c();globs$fymax=c()
 		globs$fxmin=c();globs$fymin=c()
@@ -415,8 +425,6 @@ makeVisTool=function(){
 			globs$fxmin=c(0,globs$fxmin)
 			globs$fymin=c(0,globs$fymin)
 		}
-		
-		print(globs$fxmit)
 			
 		globs$n=0
 		globs$targs=c()
@@ -475,7 +483,7 @@ makeVisTool=function(){
 		#if( sysinf["sysname"]!="Windows") x11()
 		#if( sysinf["sysname"]=="Linux") Cairo()
 		x11()
-		print(globs$datno)
+
 		if(globs$ratioPlot){
 			ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
 		}else{
@@ -587,12 +595,16 @@ getText=function(ORFGENE){
 	orfs=c()
 	genes=c()
 	for(gene in usergenes){
-		if(gene%in%ORFGENE$Gene){
-			orfs=c(orfs,ORFGENE$ORF[ORFGENE$Gene==gene])
-			genes=c(genes,gene)
-		} else if (gene%in%ORFGENE$ORF) {
+		if (gene%in%ORFGENE$ORF) {
 			orfs=c(orfs,gene)
 			genes=c(genes,ORFGENE$Gene[ORFGENE$ORF==gene])			
+		} else {
+			if(gene%in%ORFGENE$Gene){
+				# Standard gene names are ambiguous
+				# In this scenario, they do not unambiguously specify species (e.g. RIF1 in cerevisiae and pombe)
+				orfs=c(orfs,ORFGENE$ORF[ORFGENE$Gene==gene])
+				genes=c(genes,gene)
+			}
 		}
 	}
 	x[["Genes"]]=genes
