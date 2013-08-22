@@ -47,6 +47,7 @@
 \alias{typemake}
 \alias{varposget}
 \alias{globs} 
+\alias{getMode}
 
 \title{Internal qfa Functions} 
 \description{ 

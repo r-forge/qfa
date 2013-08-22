@@ -760,4 +760,9 @@ logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0
 	}
 	legend("topright",sprintf("R%02dC%02d",row,col),box.lty=0,cex=0.5*scaleT)
 }
+### Get the mode of a vector (why isn't there such a function in base?)
+getMode <- function(x) {
+  ux = unique(x)
+  return(ux[which.max(tabulate(match(x, ux)))])
+}
 

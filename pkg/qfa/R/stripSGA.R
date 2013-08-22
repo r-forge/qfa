@@ -1,4 +1,3 @@
-
 getDeadLocations<-function(SGAFile,SGAExpt,CutoffFrac=0.0025){
 
 	# Read in the SGA Colonyzer file
@@ -8,7 +7,7 @@ getDeadLocations<-function(SGAFile,SGAExpt,CutoffFrac=0.0025){
 	sga$BARCODE=substr(sga$FILENAME,1,11)
 	sga$DATETIME=substr(sga$FILENAME,13,31)
 
-      # Read in the SGA Experimental desciption file
+    # Read in the SGA Experimental desciption file
 	expt=read.delim(SGAExpt,sep="\t",header=TRUE,stringsAsFactors=FALSE)
 	# Using row.names speeds up indexing..?
 	row.names(expt)=expt$Barcode
@@ -32,12 +31,6 @@ getDeadLocations<-function(SGAFile,SGAExpt,CutoffFrac=0.0025){
 	sgadead=sga[sga$TRIMMED<minfit,]
 	return(sgadead)
 }
-
-#SGAFile="CDC13-1EXO1/IMAGELOGS/SGAFinal.dat"
-#SGAExpt="CDC13-1EXO1/AUXILIARY/SGAExptDescription.txt"
-
+#SGAFile='CDC13-1EXO1/IMAGELOGS/SGAFinal.dat'
+#SGAExpt='CDC13-1EXO1/AUXILIARY/SGAExptDescription.txt'
 #strip=getDeadLocations(SGAFile,SGAExpt)
-
-
-
-
