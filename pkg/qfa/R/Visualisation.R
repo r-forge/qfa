@@ -37,7 +37,7 @@ makeVisTool=function(){
 
 	makePlot=function(datno,focusPlot=TRUE,...){
 		if(globs$compno>0){
-			compnm=paste(globs$compno,globs$GROUPS$GroupName[globs$compno],"\t",globs$GROUPS$GroupID[globs$compno])
+			compnm=paste("Group",paste(globs$compno,":",sep=""),globs$GROUPS$GroupName[globs$compno],"\t",globs$GROUPS$GroupID[globs$compno])
 		}else{
 			compnm=""
 		}
