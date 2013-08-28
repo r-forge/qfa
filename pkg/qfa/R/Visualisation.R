@@ -456,7 +456,7 @@ makeVisTool=function(){
 		globs$Ecol="green"
 		globs$Scol="red"
 
-		cat("Windows mouse\n")
+		cat("\nWindows mouse\n")
 		cat("~~~~~~~~~~~~~~~\n")
 		cat("Left click: Highlight gene/Rotate text position\n")
 		cat("Right click: Open SGD page for gene (alternatively, press 'w' on keyboard)\n")
@@ -577,6 +577,7 @@ getResults<-function(filename){
 	cCli=NAtoBlank(strsplit(hdr[9],": ")[[1]][2])
 	cUse=NAtoBlank(strsplit(hdr[10],": ")[[1]][2])
 	cDate=NAtoBlank(strsplit(hdr[11],": ")[[1]][2])
+	cDate=gsub("'","",cDate)
 	qTreat=NAtoBlank(strsplit(hdr[12],": ")[[1]][2])
 	qMed=NAtoBlank(strsplit(hdr[13],": ")[[1]][2])
 	qScrID=NAtoBlank(strsplit(hdr[14],": ")[[1]][2])
@@ -585,6 +586,7 @@ getResults<-function(filename){
 	qCli=NAtoBlank(strsplit(hdr[17],": ")[[1]][2])
 	qUse=NAtoBlank(strsplit(hdr[18],": ")[[1]][2])
 	qDate=NAtoBlank(strsplit(hdr[19],": ")[[1]][2])
+	qDate=gsub("'","",qDate)
 	fMax=max(c(res$QueryFitnessSummary,res$ControlFitnessSummary))
 	qRep=getMode(res$ControlCount)
 	cRep=getMode(res$QueryCount)
