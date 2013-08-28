@@ -215,7 +215,11 @@ makeVisTool=function(){
 		}
 		if(key=="w"){
 			globs$targ=globs$targs[length(globs$targs)]
-			browseURL(paste("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus=",globs$dat$ORF[globs$targ],sep=""))
+			#browseURL(paste("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus=",globs$dat$ORF[globs$targ],sep=""))
+			directurl="http://www.this-page-intentionally-left-blank.org/"
+			if(!is.na(pmatch("Y",globs$dat$ORF[globs$targ]))) directurl=paste("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus=",globs$dat$ORF[globs$targ],sep="")
+			if(!is.na(pmatch("SP",globs$dat$ORF[globs$targ]))) directurl=paste("http://www.pombase.org/spombe/result/",globs$dat$ORF[globs$targ],sep="")
+			browseURL(directurl)
 		}
 		if(key=="Right") {
 			globs$datno<<-(globs$datno%%length(globs$datlist))+1
@@ -407,14 +411,26 @@ makeVisTool=function(){
 			report$res$cindex=rank(report$res$ControlFitnessSummary)
 			report$res$qindex=rank(report$res$QueryFitnessSummary)
 			report$res$rindex=rank(report$res$QueryFitnessSummary/report$res$ControlFitnessSummary)
-			report$datname=paste("Plot",paste(f,":",sep=""),report$summType,"fitness",paste("(",report$testType,")",sep=""))
+			#report$datname=paste("Plot",paste(f,":",sep=""),report$summType,"fitness",paste("(",report$testType,")",sep=""))
 			globs$datlist[[f]]=report
-			clients=c(clients,report$Client)
-			dates=c(dates,report$Date)
+			clients=c(clients,report$qCli)
+			dates=c(dates,report$qDate)
 		}
 		
-		# Order by client and then date
-		#if (!orderByFilename)
+		# Re-order plots by query client and then by query date
+		# Takes 22s for 138 datasets...
+		dlist=unlist(globs$datlist)
+		dlist=dlist[order(clients,dates)]
+		dlist=as.list(dlist)
+		neworder=order(clients,dates)
+		newDatList=list()
+		for (i in 1:length(neworder)){
+			newDatList[[i]]=globs$datlist[[neworder[i]]]
+			newDatList[[i]]$datname=paste("Plot",paste(i,":",sep=""),newDatList[[i]]$summType,"fitness",paste("(",newDatList[[i]]$testType,")",sep=""))
+		}
+		globs$datlist=newDatList
+		
+		reportExpts(globs)
 
 		globs$fxmax=c();globs$fymax=c()
 		globs$fxmin=c();globs$fymin=c()
@@ -621,4 +637,18 @@ drawSel=function(selx,sely){
 		points(selx,sely,col="black",lty=2,type="l")
 	}
 }	
+
+reportExpts=function(globs){
+	for (datno in 1:length(globs$datlist)){
+		# Print data to console
+		cat("\nExperimental metadata: plot",datno,"\n~~~~~~~~~~~~~~~\n")
+		# Split report string and patch in replicate numbers for Query and Control
+		rept=globs$datlist[[datno]]$rept
+		fcont=grep("Control",rept)
+		findx=tail(fcont,1)
+		rept2=c(rept[1:findx],paste("Control replicate number:",globs$datlist[[datno]]$ControlCount),rept[(findx+1):length(rept)],paste("Query replicate number:",globs$datlist[[datno]]$ControlCount))
+		cat(rept2,sep="\n")
+	}
+
+}
 
