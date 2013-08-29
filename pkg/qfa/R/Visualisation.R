@@ -395,7 +395,7 @@ makeVisTool=function(){
 		return(NULL)
 	}
 
-	visTool<-function(groups,orf2gene,GISfiles){
+	visTool<-function(groups,orf2gene,GISfiles,metaRep=""){
 		# Function for generating interactive plot
 		globs$GROUPS=groups()
 		globs$ORFGENE=orf2gene
@@ -430,7 +430,7 @@ makeVisTool=function(){
 		}
 		globs$datlist=newDatList
 		
-		reportExpts(globs)
+		reportExpts(globs,fname=metaRep)
 
 		globs$fxmax=c();globs$fymax=c()
 		globs$fxmin=c();globs$fymin=c()
@@ -539,7 +539,10 @@ benschopFromSource<-function(){
 }
 
 buildBenschop<-function(){
-	Benschop=read.delim(file.path(system.file(package = "qfa"),"extdata","Benschop.txt"),sep="\t",header=TRUE,stringsAsFactors=FALSE)
+	fname=file.path(system.file(package = "qfa"),"extdata","Benschop.txt")
+	cat("\nGroups of functionally related complexes are specified in this file which you can edit with any text editor:\n")
+	cat(paste(fname,"\n"))
+	Benschop=read.delim(fname,sep="\t",header=TRUE,stringsAsFactors=FALSE)
 	return(Benschop)
 }
 
@@ -552,7 +555,7 @@ visToolDemo<-function(groupFun=buildBenschop){
 	# Read in GIS files
 	filenames=list.files(file.path(system.file(package = "qfa"),"extdata"),pattern="*GIS.txt.gz",full.names=TRUE)
 	visTool=makeVisTool()
-	visTool(groupFun,ORFGENE,filenames)
+	visTool(groupFun,ORFGENE,filenames,"MetaReport.txt")
 }
 
 NAtoBlank=function(x){
@@ -599,7 +602,9 @@ getResults<-function(filename){
 }
 
 buildGO<-function(){
-	GO=read.delim(file.path(system.file(package = "qfa"),"extdata","GOAnnotation.txt.gz"),sep="\t",header=TRUE,stringsAsFactors=FALSE)
+	# Note we do not recommend that users edit this particular set of functionally related genes
+	fname=file.path(system.file(package = "qfa"),"extdata","GOAnnotation.txt.gz")
+	GO=read.delim(fname,sep="\t",header=TRUE,stringsAsFactors=FALSE)
 	return(GO)
 }
 
@@ -640,7 +645,12 @@ drawSel=function(selx,sely){
 	}
 }	
 
-reportExpts=function(globs){
+reportExpts=function(globs,fname=""){
+	if(fname!="") {
+		cat("\nPlot metadata summaries will be written to file:\n")
+		cat(file.path(getwd(),fname),"\n")
+		sink(fname)
+	}
 	for (datno in 1:length(globs$datlist)){
 		# Print data to console
 		cat("\nExperimental metadata: plot",datno,"\n~~~~~~~~~~~~~~~\n")
@@ -649,8 +659,17 @@ reportExpts=function(globs){
 		fcont=grep("Control",rept)
 		findx=tail(fcont,1)
 		rept2=c(rept[1:findx],paste("Control replicate number:",globs$datlist[[datno]]$ControlCount),rept[(findx+1):length(rept)],paste("Query replicate number:",globs$datlist[[datno]]$ControlCount))
-		cat(rept2,sep="\n")
+		strt=4
+		r2=rept2[strt:length(rept2)]
+		fin=length(r2)
+		reptCont=r2[1:(fin/2)]
+		reptCont=gsub("Control ","",reptCont)
+		reptQuer=r2[((fin/2)+1):fin]
+		reptQuer=gsub("Query ","",reptQuer)
+		df=data.frame(Control=reptCont,Query=reptQuer)
+		print(df,row.names=FALSE)
+		#cat(rept2,sep="\n")
 	}
-
+	if(fname!="") sink()
 }
 
