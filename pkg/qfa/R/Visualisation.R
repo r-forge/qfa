@@ -672,4 +672,3 @@ reportExpts=function(globs,fname=""){
 	}
 	if(fname!="") sink()
 }
-

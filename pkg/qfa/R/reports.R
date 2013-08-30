@@ -3,10 +3,10 @@ showDemo<-function(demoname="telomereCap"){
 	file.show(system.file("demo", paste(demoname,".R",sep=""), package = "qfa"))
 }
 	
-fitnessReport<-function(treatment,outputfile,dataframe){
+fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment"){
 	# Summarises mean and median fitnesses for all orfs in an .fit object
 	print(outputfile)
-	fitdf=dataframe[dataframe$Treatment==treatment,]
+	fitdf=dataframe[dataframe[[groupcol]]==grp,]
 
 	orflst=unique(as.character(fitdf$ORF))
 	orflst=sort(orflst)
@@ -23,7 +23,11 @@ fitnessReport<-function(treatment,outputfile,dataframe){
 	results=data.frame(Gene=genelst,ORF=orflst,MedianFit=medRes,MeanFit=meanRes,VarianceFit=varRes,NumRepeats=numRes,SEFit=seRes)
 
 	packs = data.frame(installed.packages(),stringsAsFactors=FALSE)
-	vno=packs$Version[packs$Package=="qfa"]
+	# Automatically extract qfa package version number
+	#packs = data.frame(installed.packages(),stringsAsFactors=FALSE)
+	#vno=packs$Version[packs$Package=="qfa"]
+	sinfo=sessionInfo()
+	vno=sinfo$otherPkgs$qfa$Version[1]
 	QFAversion=paste("R package version:",vno)
 	rTreat=paste("Treatment:",paste(unique(fitdf$Treatment),collapse=" "))
 	rMed=paste("Medium:",paste(unique(fitdf$Medium),collapse=" "))
@@ -142,22 +146,22 @@ correlationReport<-function(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185){
 	  dev.off()
 }
 
-plateBoxplots<-function(dataframe,outputfile,fitmax=185){
+plateBoxplots<-function(dataframe,outputfile,fitmax=185,groupcol="Treatment"){
 # Generates plate by plate boxplots of culture fitnesses
 # Useful for identifying plates with medium problems
-trts=unique(dataframe$Treatment)
+grps=unique(dataframe[[groupcol]])
 scrns=unique(dataframe$Screen.Name)
-trts=trts[order(trts)]
+grps=grps[order(grps)]
 scrns=scrns[order(scrns)]
 pdf(outputfile)
-for (trt in trts){
+for (grp in grps){
 	for (scr in scrns){
-		dt=dataframe[(dataframe$Screen.Name==scr)&(dataframe$Treatment==trt),]
+		dt=dataframe[(dataframe$Screen.Name==scr)&(dataframe[[groupcol]]==grp),]
 		dt=dt[order(as.numeric(as.character(dt$MasterPlate.Number))),]
 		plateNums=unique(as.numeric(as.character(dt$MasterPlate.Number)))
 		plateNums=as.character(plateNums)
 		dt$MasterPlate.Number<-factor(dt$MasterPlate.Number,levels=plateNums)
-		boxplot(dt$fit~dt$MasterPlate.Number,notch=TRUE,xlab="Plate Number",ylab="Fitness",col=rainbow(23),main=paste(trt,scr),ylim=c(0,fitmax),cex.axis=0.5)
+		boxplot(dt$fit~dt$MasterPlate.Number,notch=TRUE,xlab="Plate Number",ylab="Fitness",col=rainbow(23),main=paste(grp,scr),ylim=c(0,fitmax),cex.axis=0.5)
 }
 }
 dev.off()
