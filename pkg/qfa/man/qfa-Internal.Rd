@@ -48,6 +48,7 @@
 \alias{varposget}
 \alias{globs} 
 \alias{getMode}
+\alias{reportExpts}
 
 \title{Internal qfa Functions} 
 \description{ 
