@@ -41,7 +41,8 @@ makeVisTool=function(){
 		}else{
 			compnm=""
 		}
-		maintitle=paste(globs$datlist[[datno]]$datname,compnm,sep="\n")
+		plotdesc=paste(globs$datlist[[datno]]$datname,globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cTreat,":",globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qTreat)
+		maintitle=paste(plotdesc,compnm,sep="\n")
 		# In case of overly-long medium description, remove medium from axis labels
 		if((nchar(globs$datlist[[datno]]$cMed)<22)&(nchar(globs$datlist[[datno]]$qMed)<22)){
 			xlab=paste(globs$datlist[[datno]]$cScrID,globs$datlist[[datno]]$cCli,globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cLibs,globs$datlist[[datno]]$cUse,globs$datlist[[datno]]$cDate,globs$datlist[[datno]]$cTreat,globs$datlist[[datno]]$cMed,globs$datlist[[datno]]$cRep)
@@ -540,7 +541,7 @@ benschopFromSource<-function(){
 
 buildBenschop<-function(){
 	fname=file.path(system.file(package = "qfa"),"extdata","Benschop.txt")
-	cat("\nGroups of functionally related complexes are specified in this file which you can edit with any text editor:\n")
+	cat("\nGroups of functionally related complexes are specified in this file which you can edit with any text editor:\n~~~~~~~~~~~~~~~\n")
 	cat(paste(fname,"\n"))
 	Benschop=read.delim(fname,sep="\t",header=TRUE,stringsAsFactors=FALSE)
 	return(Benschop)
@@ -604,6 +605,8 @@ getResults<-function(filename){
 buildGO<-function(){
 	# Note we do not recommend that users edit this particular set of functionally related genes
 	fname=file.path(system.file(package = "qfa"),"extdata","GOAnnotation.txt.gz")
+	cat("\nGrouping of genes by GO terms specified in this text file (note: must be uncompressed before viewing with text editor)\n~~~~~~~~~~~~~~~\n")
+	cat(paste(fname,"\n"))
 	GO=read.delim(fname,sep="\t",header=TRUE,stringsAsFactors=FALSE)
 	return(GO)
 }
@@ -647,11 +650,13 @@ drawSel=function(selx,sely){
 
 reportExpts=function(globs,fname=""){
 	if(fname!="") {
-		cat("\nPlot metadata summaries will be written to file:\n")
+		cat("\nDetailed plot metadata will be written to file:\n~~~~~~~~~~~~~~~\n")
 		cat(file.path(getwd(),fname),"\n")
 		sink(fname)
 	}
+	metaSumm=data.frame(PlotNo=numeric(),Control=character(),Query=character(),stringsAsFactors=FALSE)
 	for (datno in 1:length(globs$datlist)){
+		metaSumm[datno,]=c(datno,paste(globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cTreat),paste(globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qTreat))
 		# Print data to console
 		cat("\nExperimental metadata: plot",datno,"\n~~~~~~~~~~~~~~~\n")
 		# Split report string and patch in replicate numbers for Query and Control
@@ -671,4 +676,14 @@ reportExpts=function(globs,fname=""){
 		#cat(rept2,sep="\n")
 	}
 	if(fname!="") sink()
+	cat("\nExperimental metadata summary:\n~~~~~~~~~~~~~~~\n")
+	flist=strsplit(fname,"\\.")[[1]]
+	froot=head(flist,1)
+	fext=tail(flist,1)
+	froot2=paste(froot,"Summary",sep="")
+	fname2=paste(froot2,fext,sep=".")
+	print(metaSumm,row.names=FALSE)
+	cat("\nExperimental metadata summary written to file:\n~~~~~~~~~~~~~~~\n")
+	cat(fname2,"\n")
+	write.table(metaSumm,file=fname2,sep="\t",row.names=FALSE,quote=FALSE)
 }
