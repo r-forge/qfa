@@ -9,7 +9,6 @@
 \alias{colony.info} 
 \alias{data.fit} 
 \alias{de.fit} 
-\alias{dens} 
 \alias{drawSel} 
 \alias{epiplot}
 \alias{getResults}

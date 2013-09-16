@@ -499,7 +499,8 @@ makeVisTool=function(){
 		sysinf=Sys.info()
 		#if( sysinf["sysname"]!="Windows") x11()
 		#if( sysinf["sysname"]=="Linux") Cairo()
-		x11()
+		#x11()
+		dev.new()
 
 		if(globs$ratioPlot){
 			ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
