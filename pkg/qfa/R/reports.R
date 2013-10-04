@@ -4,6 +4,8 @@ showDemo<-function(demoname="telomereCap"){
 }
 	
 fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment"){
+	# Eliminate spurious precision to make smaller files
+	results[,3:9]=signif(results[,3:9],6)
 	# Summarises mean and median fitnesses for all orfs in an .fit object
 	print(outputfile)
 	fitdf=dataframe[dataframe[[groupcol]]==grp,]
@@ -50,7 +52,7 @@ fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment"){
 
 report.epi<-function(results,filename){
 	# Eliminate spurious precision to make smaller files
-	results[,3:9]=signif(results[,3:9],4)
+	results[,3:9]=signif(results[,3:9],6)
 	# Automatically extract qfa package version number
 	#packs = data.frame(installed.packages(),stringsAsFactors=FALSE)
 	#vno=packs$Version[packs$Package=="qfa"]
@@ -91,59 +93,58 @@ report.epi<-function(results,filename){
 }
 
 correlationReport<-function(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185){
-        # Tests the correlation of all possible repeats of the same plate/treatment
-        # Useful tool for searching for incorrect plate orientation, or misplaced/mislabelled plates
-        # Can also give clues about plates with incorrect medium
-        
-        # This might fail for various reasons
-        # But probably not a critical part of any workflow, so wrap in "try"
-        try({
-        # Generate correlation plot for every possible 2-way comparison
-        poss=combn(scrnms,2)
-        trts=unique(as.character(dataframe$Treatment))
-        plates=unique(as.numeric(as.character(dataframe$MasterPlate.Number)))
-	  plates=plates[order(plates)]
-	  pnum=length(plates)
-        # Adjust aw, ah to get all plates on one page (e.g. 4*4 gives 16 panels, good for 15 plate lib)
-        pdummy=aw*ah-pnum
-	  pdf(outputfile)
-        corrs=c()
-        op<-par(mfrow=c(aw,ah),cex.main=0.8,mar=c(1,1,1,1),mgp=c(0,0,0))
+	# Tests the correlation of all possible repeats of the same plate/treatment
+	# Useful tool for searching for incorrect plate orientation, or misplaced/mislabelled plates
+	# Can also give clues about plates with incorrect medium
 
-        for(t in trts){
-        for(comb in 1:length(poss[1,])){
-        for(p in plates){
-                rep1=poss[1,comb]; rep2=poss[2,comb]
-                r1=dataframe[(as.character(dataframe$Treatment)==t)&(as.character(dataframe$Screen.Name)==rep1)&(as.numeric(as.character(dataframe$MasterPlate.Number))==p),]
-                r2=dataframe[(as.character(dataframe$Treatment)==t)&(as.character(dataframe$Screen.Name)==rep2)&(as.numeric(as.character(dataframe$MasterPlate.Number))==p),]
-                r1=r1[order(r1$Screen.Name,r1$MasterPlate.Number,r1$Gene),]
-                r2=r2[order(r2$Screen.Name,r2$MasterPlate.Number,r2$Gene),]
-                
-		    if((length(r1$fit)==length(r2$fit))&(length(r1$fit)>0)){
-                cols=rainbow(max(as.numeric(dataframe$MasterPlate.Number),na.rm=TRUE))
-                correlate=cor(r1$fit,r2$fit)
-                corrs=rbind(corrs,c(rep1,rep2,t,p,correlate))
-                ptitle=paste("Trt:",t,"Plate:",p,"Corr:",formatC(correlate,4))
-                #print(paste(rep1,rep2,ptitle))
-                plot(NULL,xlim=c(0,fitmax),ylim=c(0,fitmax),xlab=rep1,ylab=rep2,main=ptitle,axes=FALSE)
-                abline(0,1,lwd=3,col="grey")
-                #text(r1$fit,r2$fit,r1$Gene,col="black",pos=4,offset=0.1,cex=0.4)
-                points(r1$fit,r2$fit,col=cols[r1$MasterPlate.Number],pch=16,cex=0.4)
-                #print(c(sum(r1$Gene==r2$Gene),length(r1$Gene)))
-		    }else{plot(NULL,xlim=c(0,fitmax),ylim=c(0,fitmax),xlab=rep1,ylab=rep2,main=paste("Trt:",t,"Plate:",p),axes=FALSE)}
-        }
-        if(pdummy>0) for(p in 1:pdummy) plot(NULL,xlim=c(0,fitmax),ylim=c(0,fitmax),xlab="",ylab="",main="",axes=FALSE)
-        }
-        }
-        par(op)
+	# This might fail for various reasons
+	# But probably not a critical part of any workflow, so wrap in "try"
+	try({
+		dataframe=dataframe[dataframe$Screen.Name%in%scrnms,]
+		# Generate correlation plot for every possible 2-way comparison
+		dataframe$TrtMed=paste(dataframe$Treatment,dataframe$Medium)
+		trts=unique(as.character(dataframe$TrtMed))
+		plates=unique(as.numeric(as.character(dataframe$MasterPlate.Number)))
+		plates=plates[order(plates)]
+		pnum=length(plates)
+		pdf(outputfile)
+		corrs=c()
+		op<-par(mfrow=c(aw,ah),cex.main=0.8,mar=c(1,1,1,1),mgp=c(0,0,0))
 
-        corrs=as.data.frame(corrs,stringsAsFactors=FALSE)
-        colnames(corrs)=c("rep1","rep2","trt","p","correlate")
-        corrs$p=as.numeric(corrs$p)
-        corrs$correlate=as.numeric(corrs$correlate)
-        hist(corrs$correlate,xlim=c(0,1),xlab="Correlation Coefficient",ylab="Frequency",main=outputfile)
-        })
-	  dev.off()
+		for(t in trts){
+			for(p in plates){
+				reps=dataframe[(as.character(dataframe$TrtMed)==t)&(as.numeric(as.character(dataframe$MasterPlate.Number))==p),]
+				reps=reps[order(reps$Screen.Name,reps$MasterPlate.Number,reps$Gene),]
+				barcs=unique(reps$Barcode)
+				for (bpair in data.frame(combn(barcs,2),stringsAsFactors=FALSE)){
+					r1=reps[reps$Barcode==bpair[1],]
+					r2=reps[reps$Barcode==bpair[2],]
+
+					if((length(r1$fit)==length(r2$fit))&(length(r1$fit)>0)){
+						cols=rainbow(max(as.numeric(dataframe$MasterPlate.Number),na.rm=TRUE))
+						correlate=cor(r1$fit,r2$fit)
+						corrs=rbind(corrs,c(bpair[1],bpair[2],t,p,correlate))
+						ptitle=paste("Plate:",p,"Corr:",formatC(correlate,4))
+						plot(NULL,xlim=c(0,fitmax),ylim=c(0,fitmax),xlab=bpair[1],ylab=bpair[2],main=ptitle,axes=FALSE,cex.main=1.2)
+						abline(0,1,lwd=3,col="grey")
+						#text(r1$fit,r2$fit,r1$Gene,col="black",pos=4,offset=0.1,cex=0.4)
+						points(r1$fit,r2$fit,col=cols[r1$MasterPlate.Number],pch=16,cex=0.4)
+						#print(c(sum(r1$Gene==r2$Gene),length(r1$Gene)))
+					}else{
+						plot(NULL,xlim=c(0,fitmax),ylim=c(0,fitmax),xlab=bpair[1],ylab=bpair[2],main=paste("Trt:",t,"Plate:",p),axes=FALSE)
+					}
+				}
+			}
+		}
+		par(op)
+
+		corrs=as.data.frame(corrs,stringsAsFactors=FALSE)
+		colnames(corrs)=c("rep1","rep2","trt","p","correlate")
+		corrs$p=as.numeric(corrs$p)
+		corrs$correlate=as.numeric(corrs$correlate)
+		hist(corrs$correlate,xlim=c(0,1),xlab="Correlation Coefficient",ylab="Frequency",main=outputfile)
+	})
+	dev.off()
 }
 
 plateBoxplots<-function(dataframe,outputfile,fitmax=185,groupcol="Treatment"){
@@ -166,4 +167,3 @@ for (grp in grps){
 }
 dev.off()
 }
-
