@@ -126,7 +126,7 @@ correlationReport<-function(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185){
 						corrs=rbind(corrs,c(bpair[1],bpair[2],t,p,correlate))
 						ptitle=paste("Plate:",p,"Corr:",formatC(correlate,4))
 						plot(NULL,xlim=c(0,fitmax),ylim=c(0,fitmax),xlab=bpair[1],ylab=bpair[2],main=ptitle,axes=FALSE,cex.main=1.2)
-						abline(0,1,lwd=3,col="grey")
+						#abline(0,1,lwd=3,col="grey")
 						#text(r1$fit,r2$fit,r1$Gene,col="black",pos=4,offset=0.1,cex=0.4)
 						points(r1$fit,r2$fit,col=cols[r1$MasterPlate.Number],pch=16,cex=0.4)
 						#print(c(sum(r1$Gene==r2$Gene),length(r1$Gene)))
