@@ -5,7 +5,7 @@ showDemo<-function(demoname="telomereCap"){
 	
 fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment"){
 	# Eliminate spurious precision to make smaller files
-	results[,3:9]=signif(results[,3:9],6)
+	#results[,3:9]=signif(results[,3:9],6)
 	# Summarises mean and median fitnesses for all orfs in an .fit object
 	print(outputfile)
 	fitdf=dataframe[dataframe[[groupcol]]==grp,]
