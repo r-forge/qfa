@@ -104,10 +104,10 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	names(cFms)<-orfs
 	if(wctest){dFms<-sapply(dFstats,median)}else{dFms<-sapply(dFstats,mean)}
 	names(dFms)<-orfs
-	cSe<-sapply(dFstats,sterr)
-	dSe<-sapply(cFstats,sterr)
-	cCount<-sapply(dFstats,length)
-	dCount<-sapply(cFstats,length)
+	cSe<-sapply(cFstats,sterr)
+	dSe<-sapply(dFstats,sterr)
+	cCount<-sapply(cFstats,length)
+	dCount<-sapply(dFstats,length)
 
 	### Fit genetic independence model ###
 	m<-lm.epi(dFms,cFms,modcheck)
