@@ -28,7 +28,7 @@
 			<li><a href="#linux">Linux</a></li>
 			<li><a href="#other">Other</a></li>
 		</ul></li>
-	<li><a href="#loading">Loading</a></li>
+	<li><a href="#loading">Loading & using</a></li>
 	<li><a href="#functions">Functions overview</a>
 		<ul>
 			<li><a href="#reading">Reading data</a></li>
@@ -61,11 +61,11 @@
 
 </nav>
 
-<article>
+<article id="main">
 <a name="intro"><h2>Introduction</h2></a>
 <p>This page describes how to install and use an <a href="http://cran.r-project.org/">R</a> package for carrying out quantitative fitness analysis (<a href="http://research.ncl.ac.uk/qfa">QFA</a>) of the growth of microbial cultures arrayed on a solid agar surface.  A more detailed description of QFA and the motivation for carrying out these experiments and subsequent analysis can be found on the <a href="http://research.ncl.ac.uk/qfa">QFA website</a>.</p>
 
-<p>Short installation instructions for users interested in using the data visualisation tools in the package can be found on the <a href="visTool">visualisation tool webpages</a>.</p>
+<p>Instructions for users specifically interested in using the data visualisation tools in the package can be found on the <a href="visTool">visualisation tool webpages</a>.</p>
 
 <hr></hr>
 
@@ -93,26 +93,32 @@ install.packages("qfa", repos="http://R-Forge.R-project.org")
 
 <a name="osx"><h3>Installation for OSX</h3></a>
 
-<p>You will require administrator rights on your machine to install <a href="http://cran.r-project.org/bin/macosx/">R</a>.
+<p>You will require administrator rights on your machine to install <a href="http://cran.r-project.org/bin/macosx/">R</a> & the QFA package.
 
 <ol>
 	<li>Make sure you have the latest version of R installed on your computer (or at least a version >= 3.0.1).  If not, <a href="http://cran.r-project.org/bin/macosx/">download</a> the latest R installation file (.pkg file) to your hard drive and install.</li>
 	<li>Install the qfa package containing the visualisation tool and the <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> QFA datasets:
 	<ol type="a">
-		<li>Download the latest version of the <a href="OSX/qfa_0.0-13.tar.gz">installer package</a></li>
+		<li>Save the latest version of the <a href="OSX/qfa_0.0-13.tar.gz">installer package</a> to your hard-drive, noting its location</li>
 		<li>Start the R application</li>
 		<li>Navigate to Packages & Data -> Package Installer</li>
-		<li>Choose Local Source Package in the menu for Package Repository</li>
+		<li>Choose "Local Source Package" in the menu for Package Repository</li>
 		<li>Select "Install at System Level"</li>
-		<li>Click the "Install" button</li>
-		<li>Navigate to the installer package downloaded in step a), click ok</li>
-		<li>Close the Packages & Data windows</li>
+		<li>Click the "Install" button, supplying an admininstrator username and password if required</li>
+		<li>Navigate to the installer package downloaded to hard-drive in step a), click ok</li>
+		<li>Check if there are any queries in the main R window.  For example, if the current user is not an administrator you may be prompted with the following message:<pre>
+Warning in install.packages(file.choose(), "/Library/Frameworks/R.framework/Resources/library/",  :
+  'lib = "/Library/Frameworks/R.framework/Resources/library/"' is not writable
+> 
+Would you like to use a personal library instead?  (y/n) 	
+		</pre>  In this case, you should move the cursor to the end of the last line, type "y" and press enter.</li>
+		<li>Close the "R Package Installer" window</li>
 </ol>
 </ol>
 
-Note that, depending on the version of your operating system, you might be prompted to install the <a href="http://xquartz.macosforge.org">X11</a> software for Mac at a later stage.  X11 is necessary for the visualisation tool to work, so please install it if prompted.  This may require restarting your machine.</p>
+Note that the first time that you install the QFA package, depending on the version of your operating system, you might be prompted to install the <a href="http://xquartz.macosforge.org">X11</a> software for OSX.  X11 is necessary for generating interactive plots, so please install it if prompted.  This may require restarting your machine.</p>
 
-<p>Installation should be complete.  You do not have to go through these steps again to use the tool.</p>
+<p>Installation should be complete.  You do not have to go through these steps again to use the tool (and in particular you should not have to install X11 again).  To update an existing installation to the latest version, simply repeat step 2.</p>
 
 <a name="linux"><h3>Installation for Linux</h3></a>
 
@@ -138,11 +144,11 @@ install.packages("qfa", repos="http://R-Forge.R-project.org")
 
 <p>Package source code can be checked out from the <a href="http://r-forge.r-project.org/scm/?group_id=880">SVN repository</a> at the <a href="http://r-forge.r-project.org/projects/qfa">R-forge</a> website: <a href="http://r-forge.r-project.org/projects/qfa">http://r-forge.r-project.org/projects/qfa</a></p>
 
-<p>Binary packages for MS Windows and OSX can be found on the same page.</p>
+<p>Binary packages for MS Windows and Linux (but not OSX) can be found on the same page.</p>
 
 <hr></hr>
 
-<a name="loading"><h2>Loading the QFA package</h2></a>
+<a name="loading"><h2>Loading & using the QFA package</h2></a>
 
 <p>Once installed, the package must be loaded, to make it ready for use, with:
 <code class="indent">library(qfa)</code>
@@ -152,8 +158,10 @@ Documentation for specific functions can also be obtained using the usual <a hre
 <code class="indent">?colonyzer.read</code></a>
 A short document outlining QFA and the package functions can be accessed <a href="docs/qfa.pdf">online</a> or by executing:
 <code class="indent">vignette("qfa")</code>
-Finally, some code demonstrating analysis of a small subset of the <a href="http://research.ncl.ac.uk/colonyzer/AddinallQFA/">data</a> presented in <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> can be executed by:
+Some example code demonstrating analysis of a small subset of the <a href="http://research.ncl.ac.uk/colonyzer/AddinallQFA/">data</a> presented in <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> can be executed by:
 <code class="indent">demo("telomereCap")</code>
+Finally, we can launch a demo of the interactive <a href="visTool">visualisation tool</a> to browse fitnesses and compare between experiments:
+<code class="indent">visToolDemo()</code>
 </p>
 
 <hr></hr> 
@@ -174,7 +182,7 @@ Finally, some code demonstrating analysis of a small subset of the <a href="http
 <a name="auxiliary"><h3>Auxiliary functions</h3></a>
 <p>Together with the functions for carrying out the raw analysis above, we provide several functions for visualising the data, the fit of the logistic model to the data and the visualisation of evidence for epistatic interaction.  These visualisation tools are important for understanding unexpected fitness patterns, tracking bugs and increasing user confidence in the validity of the sophisticated QFA workflows.</p>
 
-<p>One such function, the qfaR visualisation tool, generates interactive scatterplots for browsing genome-wide fitness comparisons.  Extensive documentation for this tool can be found <a href="visTool">on a dedicated website</a>.</p>
+<p>One such function, the qfaR visualisation tool, generates interactive scatterplots for browsing genome-wide fitness comparisons.  To use this tool, please see the documentation which can be found on the <a href="visTool">visualisation tool website</a>.</p>
 </article>
 
 </body> 

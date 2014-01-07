@@ -5,7 +5,8 @@ article {float:left; width:1000px;}
 footer {clear:both;}
 
 img {	border: 0;
-		background: white;
+	background: white;
+	max-width: 100%;
 	}
 
 body {background-color: white;
@@ -137,6 +138,20 @@ div.cbox{
 	background-color:	rgb(237,237,237);
 	padding-left: 50pt;
 	}
+
+#main{
+	float: left;
+	margin-left: 15%
+}
+
+
+
+#nav {
+	position: fixed;
+	float: left;
+	width: 14%;
+	min-height: 100%;
+}
 	
 	
 #nav ul{
