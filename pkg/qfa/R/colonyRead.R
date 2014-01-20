@@ -97,93 +97,87 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	names(orfdict)=orf2gene$orf
 	getGene<-function(orf) orfdict[[orf]]
 
-	bigd<-data.frame()
-	for (f in fs){
-		# Read in the image analysis output
-		iman=read.delim(f,header=FALSE,sep="\t",stringsAsFactors=FALSE)
-		# Colonyzer columns
-		#colnames(iman)=c("FILENAME","ROW","COLUMN","TOPLEFTX","TOPLEFTY","WHITEAREA","TRIMMED","THRESHOLD","INTENSITY","EDGEPIXELS","COLR","COLG","COLB","BKR","BKG","BKB","EDGELEN","XDIM","YDIM")
-		# ROD-like columns
-		colnames(iman)=c("Image.Name","Row","Col","X.Offset","Y.Offset","Area","Trimmed","Threshold","Intensity","Edge.Pixels","Colony.Color.R","Colony.Color.G","Colony.Color.B","Background.Color.R","Background.Color.G","Background.Color.B","Edge.length","Tile.Dimensions.X","Tile.Dimensions.Y")
+	# Read in the image analysis output
+	iman=do.call(rbind, lapply(fs, read.delim,header=FALSE,sep="\t",stringsAsFactors=FALSE))
+	# Colonyzer columns
+	#colnames(iman)=c("FILENAME","ROW","COLUMN","TOPLEFTX","TOPLEFTY","WHITEAREA","TRIMMED","THRESHOLD","INTENSITY","EDGEPIXELS","COLR","COLG","COLB","BKR","BKG","BKB","EDGELEN","XDIM","YDIM")
+	# ROD-like columns
+	colnames(iman)=c("Image.Name","Row","Col","X.Offset","Y.Offset","Area","Trimmed","Threshold","Intensity","Edge.Pixels","Colony.Color.R","Colony.Color.G","Colony.Color.B","Background.Color.R","Background.Color.G","Background.Color.B","Edge.length","Tile.Dimensions.X","Tile.Dimensions.Y")
 
-		# Create extra columns
-		iman$Growth=iman$Trimmed/(255*iman$Tile.Dimensions.X*iman$Tile.Dimensions.Y)
-		if(nchar(iman$Image.Name[1])==31){
-			iman$Barcode=substr(iman$Image.Name,1,11)
-			iman$Date.Time=substr(iman$Image.Name,13,31)
-		}else{
-			iman$Barcode=substr(iman$Image.Name,1,15)
-			iman$Date.Time=substr(iman$Image.Name,17,35)
-		}
-
-		# Dump any images which are not in the experimental description file
-		iman=iman[iman$Barcode%in%expt$Barcode,]
-		smalliman=iman[(iman$Row==1)&(iman$Col==1),]
-
-		# Create a dictionary for filename->photo number
-		getPhotoNum<-function(filename){
-			# Get plate name from filename
-			if(nchar(iman$Image.Name[1])==31){
-				platename=substr(filename,1,11)
-			}else{
-				platename=substr(filename,1,15)
-			}
-			# Filter iman data frame by filename
-			#tmp=na.omit(smalliman[(smalliman$Barcode==platename),])
-			tmp=smalliman[(smalliman$Barcode==platename),]
-			tmp=tmp[order(tmp$Image.Name),]
-			tmp$PhotoNum=1:length(tmp$Image.Name)
-			return(as.numeric(tmp$PhotoNum[tmp$Image.Name==filename]))
-		}
-
-		fnames=unique(iman$Image.Name)
-		pnum=sapply(fnames,getPhotoNum)
-		names(pnum)=fnames
-		photoNum<-function(fname) as.numeric(pnum[[fname]])
-
-		iman$Inoc.Time=sapply(iman$Barcode,barcStart)
-		iman$Treatments=sapply(iman$Barcode,barcTreat)
-		iman$Medium=sapply(iman$Barcode,barcMed)
-		iman$Screen.Name=sapply(iman$Barcode,barcScreen)
-		iman$RepQuad=sapply(iman$Barcode,barcQuad)
-		iman$MasterPlate.Number=sapply(iman$Barcode,barcPlate)
-		iman$Timeseries.order=as.numeric(sapply(iman$Image.Name,photoNum))
-		iman$Library.Name=sapply(iman$Barcode,barcLib)
-		iman$ORF=mapply(getORF, iman$Library.Name, iman$MasterPlate.Number, iman$Row, iman$Col)
-		iman$Gene=sapply(toupper(iman$ORF),getGene)
-		iman$ScreenID=rep(screenID,length(iman$Image.Name))
-		if("Client"%in%colnames(expt)){iman$Client=sapply(iman$Barcode,barcClient)}
-		if("ExptDate"%in%colnames(expt)){iman$ExptDate=sapply(iman$Barcode,barcExptDate)}
-		if("User"%in%colnames(expt)){iman$User=sapply(iman$Barcode,barcUser)}
-
-		fmt="%Y-%m-%d_%H-%M-%S"
-		t0<-as.POSIXlt(as.character(iman$Inoc.Time),format=fmt)
-		t1<-as.POSIXlt(as.character(iman$Date.Time),format=fmt)
-		iman$Expt.Time=as.numeric(difftime(t1,t0,units="days"))	
-
-		# Bind to existing data
-		bigd=rbind(bigd,iman)
+	# Create extra columns
+	iman$Growth=iman$Trimmed/(255*iman$Tile.Dimensions.X*iman$Tile.Dimensions.Y)
+	if(nchar(iman$Image.Name[1])==31){
+		iman$Barcode=substr(iman$Image.Name,1,11)
+		iman$Date.Time=substr(iman$Image.Name,13,31)
+	}else{
+		iman$Barcode=substr(iman$Image.Name,1,15)
+		iman$Date.Time=substr(iman$Image.Name,17,35)
 	}
 
+	# Dump any images which are not in the experimental description file
+	iman=iman[iman$Barcode%in%expt$Barcode,]
+	smalliman=iman[(iman$Row==1)&(iman$Col==1),]
+
+	# Create a dictionary for filename->photo number
+	getPhotoNum<-function(filename){
+		# Get plate name from filename
+		if(nchar(iman$Image.Name[1])==31){
+			platename=substr(filename,1,11)
+		}else{
+			platename=substr(filename,1,15)
+		}
+		# Filter iman data frame by filename
+		#tmp=na.omit(smalliman[(smalliman$Barcode==platename),])
+		tmp=smalliman[(smalliman$Barcode==platename),]
+		tmp=tmp[order(tmp$Image.Name),]
+		tmp$PhotoNum=1:length(tmp$Image.Name)
+		return(as.numeric(tmp$PhotoNum[tmp$Image.Name==filename]))
+	}
+
+	fnames=unique(iman$Image.Name)
+	pnum=sapply(fnames,getPhotoNum)
+	names(pnum)=fnames
+	photoNum<-function(fname) as.numeric(pnum[[fname]])
+
+	iman$Inoc.Time=sapply(iman$Barcode,barcStart)
+	iman$Treatments=sapply(iman$Barcode,barcTreat)
+	iman$Medium=sapply(iman$Barcode,barcMed)
+	iman$Screen.Name=sapply(iman$Barcode,barcScreen)
+	iman$RepQuad=sapply(iman$Barcode,barcQuad)
+	iman$MasterPlate.Number=sapply(iman$Barcode,barcPlate)
+	iman$Timeseries.order=as.numeric(sapply(iman$Image.Name,photoNum))
+	iman$Library.Name=sapply(iman$Barcode,barcLib)
+	iman$ORF=mapply(getORF, iman$Library.Name, iman$MasterPlate.Number, iman$Row, iman$Col)
+	iman$Gene=sapply(toupper(iman$ORF),getGene)
+	iman$ScreenID=rep(screenID,length(iman$Image.Name))
+	if("Client"%in%colnames(expt)){iman$Client=sapply(iman$Barcode,barcClient)}
+	if("ExptDate"%in%colnames(expt)){iman$ExptDate=sapply(iman$Barcode,barcExptDate)}
+	if("User"%in%colnames(expt)){iman$User=sapply(iman$Barcode,barcUser)}
+
+	fmt="%Y-%m-%d_%H-%M-%S"
+	t0<-as.POSIXlt(as.character(iman$Inoc.Time),format=fmt)
+	t1<-as.POSIXlt(as.character(iman$Date.Time),format=fmt)
+	iman$Expt.Time=as.numeric(difftime(t1,t0,units="days"))	
+
+
 	# Print checks so people are sure they're using the correct data #
-	print(paste("Number of Barcodes :",length(unique(bigd$Barcode))))
-	print(paste("Number of Plate Photos :",length(unique(bigd$Image.Name))))
-	print(paste("Number of ORFs :",length(unique(bigd$ORF))))
-	print(paste("Number of Culture Images :",length(bigd$Image.Name)))
+	print(paste("Number of Barcodes :",length(unique(iman$Barcode))))
+	print(paste("Number of Plate Photos :",length(unique(iman$Image.Name))))
+	print(paste("Number of ORFs :",length(unique(iman$ORF))))
+	print(paste("Number of Culture Images :",length(iman$Image.Name)))
 	print("Treatments :")
-	print(unique(bigd$Treatments))
+	print(unique(iman$Treatments))
 	print("Media:")
-	print(unique(bigd$Medium))
+	print(unique(iman$Medium))
 	print("Screens:")
-	print(unique(bigd$Screen.Name))
-	platesize<-max(as.numeric(bigd$Row))*max(as.numeric(bigd$Col))
-	if (length(bigd$Date.Time)%%platesize!=0){
+	print(unique(iman$Screen.Name))
+	platesize<-max(as.numeric(iman$Row))*max(as.numeric(iman$Col))
+	if (length(iman$Date.Time)%%platesize!=0){
 		warning("Number of cultures not multiple of plate size")}
 	print("Inoculation DateTimes:")
-	print(unique(bigd$Inoc.Time))
+	print(unique(iman$Inoc.Time))
 
-	return(bigd)
-
+	return(iman)
 }
 
 # For testing older code, we can write a synthetic ROD object to file using this function.
