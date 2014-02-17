@@ -83,7 +83,7 @@ orf2g<-function(orf,dictenv){get(orf,envir=dictenv)}
 sterr <- function(x) sqrt(var(x)/length(x))
 
 ################################################## Epistasis Function ###########################################################
-qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
+qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 	GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE){
 	###### Get ORF median fitnesses for control & double #######
 	print("Calculating median (or mean) fitness for each ORF")
@@ -108,6 +108,9 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	dSe<-sapply(dFstats,sterr)
 	cCount<-sapply(cFstats,length)
 	dCount<-sapply(dFstats,length)
+	
+	cFitDef<-findFit(control)
+	dFitDef<-findFit(double)
 
 	### Fit genetic independence model ###
 	m<-lm.epi(dFms,cFms,modcheck)
@@ -140,19 +143,26 @@ qfa.epi<-function(double,control,qthresh,orfdict="ORF2GENE.txt",
 	nObs=length(p)
 	if(wctest) {testType="wilcoxon"; sumType="median"}else{testType="t-test"; sumType="mean"}
 	results<-data.frame(ORF=orfs,Gene=genes,P=p,Q=q,GIS=gis,
-	QueryFitnessSummary=dFms,ControlFitnessSummary=cFms,QuerySE=dSe,ControlSE=cSe,QueryCount=dCount,ControlCount=cCount,
+	QueryFitnessSummary=dFms,ControlFitnessSummary=cFms,QuerySE=dSe,ControlSE=cSe,QueryCount=dCount,ControlCount=cCount,QueryFit=dFitDef,ControlFit=cFitDef,
 	TestType=rep(testType,nObs),SummaryType=rep(sumType,nObs),
 	cTreat=rep(control$Treatment[1],nObs),cMed=rep(control$Medium[1],nObs),cScrID=rep(control$ScreenID[1],nObs),
 	qTreat=rep(double$Treatment[1],nObs),qMed=rep(double$Medium[1],nObs),qScrID=rep(double$ScreenID[1],nObs),
 	qGen=rep(double$Screen.Name[1],nObs),cGen=rep(control$Screen.Name[1],nObs),
 	cLib=rep(paste(unique(control$Library.Name),collapse="_"),nObs),qLib=rep(paste(unique(double$Library.Name),collapse="_"),nObs))
+	
 	if("Client"%in%colnames(control)) results$cClient=rep(control$Client[1],nObs)
 	if("Client"%in%colnames(double)) results$qClient=rep(double$Client[1],nObs)
-	if("ExptDate"%in%colnames(control)) results$cDate=rep(control$ExptDate[1],nObs)
-	if("ExptDate"%in%colnames(double)) results$qDate=rep(double$ExptDate[1],nObs)
+	if("ExptDate"%in%colnames(control)) results$cDate=rep(gsub("'","",control$ExptDate[1]),nObs)
+	if("ExptDate"%in%colnames(double)) results$qDate=rep(gsub("'","",double$ExptDate[1]),nObs)
 	if("User"%in%colnames(control)) results$cUser=rep(control$User[1],nObs)
 	if("User"%in%colnames(double)) results$qUser=rep(double$User[1],nObs)
-	
+	if("PI"%in%colnames(control)) results$cPI=rep(control$PI[1],nObs)
+	if("PI"%in%colnames(double)) results$qPI=rep(double$PI[1],nObs)
+	if("Condition"%in%colnames(control)) results$cCond=rep(control$Condition[1],nObs)
+	if("Condition"%in%colnames(double)) results$qCond=rep(double$Condition[1],nObs)	
+	if("Inoc"%in%colnames(control)) results$cInoc=rep(control$Inoc[1],nObs)
+	if("Inoc"%in%colnames(double)) results$qInoc=rep(double$Inoc[1],nObs)
+
 	results$Type<-apply(results,1,typemake,m)
 	results<-results[order(results$GIS,results$Q,results$Type),]
 	# Get rid of duplicate entries in results
@@ -311,7 +321,11 @@ varposget<-function(var,orfn,norfs){
 ############################### Likelihood Functions ################################
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
-qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,modelFit=TRUE,...){
+qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,modelFit=TRUE,nCores=1,...){
+	if(nCores>1){
+		library(parallel)
+		cl=makeCluster(nCores)
+	}
 	# Define optimization bounds based on inocguess #
 	lowK<-max(0.9*inocguess,minK); upK<-1.0
 	lowr<-0; upr<-25
@@ -339,21 +353,36 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		positions<-lapply(1:length(dbc[,1]),index2pos,dbc)
 		positions<-unique(positions)
 		# Fit logistic model to each colony
-		bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,modelFit,...))
-		info<-t(sapply(positions,colony.info,dbc))
+		if(nCores>1){
+			print(as.vector(lsf.str(envir=.GlobalEnv)))
+			clusterExport(cl, as.vector(lsf.str(envir=.GlobalEnv)))
+			clusterExport(cl, as.vector(lsf.str(envir=environment(DEoptim))))
+			clusterExport(cl, as.vector(lsf.str(envir=environment(DEoptim-methods))))
+			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,modelFit,...))
+		}else{
+			bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,xybounds,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,modelFit,...))
+		}
+		info<-data.frame(t(sapply(positions,colony.info,dbc)))
 		rows<-sapply(positions,rcget,"row")
 		cols<-sapply(positions,rcget,"col")
 		# Bind Data frame of barcode results to overall results
 		# s=bcfit[,4]
-		results<-rbind(results,data.frame(Barcode=as.character(info[,1]),Row=rows,Col=cols,
-		ScreenID=as.character(info[,9]),Treatment=as.character(info[,2]),Medium=as.character(info[,3]),ORF=as.character(info[,4]),
-		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],nSTP=bcfit[,8],d0=bcfit[,9],Screen.Name=as.character(info[,5]),
-		Library.Name=as.character(info[,6]),MasterPlate.Number=as.numeric(info[,7]),Timeseries.order=as.numeric(info[,8]),
-		Inoc.Time=inoctime,TileX=as.numeric(info[,10]),TileY=as.numeric(info[,11]),XOffset=as.numeric(info[,12]),YOffset=as.numeric(info[,13]),
-		Threshold=as.numeric(info[,14]),EdgeLength=as.numeric(info[,15]),EdgePixels=as.numeric(info[,16]),RepQuad=as.numeric(info[,17])))
-	} #bcode
-	if (ORF2gene!=FALSE){results$Gene<-sapply(as.character(results$ORF),orf2g,gdict)}
-	return(results)
+		results<-rbind(results,data.frame(Barcode=as.character(info$Barcode),Row=rows,Col=cols,
+		ScreenID=as.character(info$ScreenID),Treatment=as.character(info$Treatments),Medium=as.character(info$Medium),ORF=as.character(info$ORF),
+		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],nSTP=bcfit[,8],d0=bcfit[,9],Screen.Name=as.character(info$Screen.Name),Library.Name=as.character(info$Screen.Name),MasterPlate.Number=as.numeric(info$MasterPlate.Number),Timeseries.order=as.numeric(info$Timeseries.order),Inoc.Time=inoctime,TileX=as.numeric(info$Tile.Dimensions.X),TileY=as.numeric(info$Tile.Dimensions.Y),XOffset=as.numeric(info$X.Offset),YOffset=as.numeric(info$Y.Offset),Threshold=as.numeric(info$Threshold),EdgeLength=as.numeric(info$Edge.length),EdgePixels=as.numeric(info$Edge.Pixels),RepQuad=as.numeric(info$RepQuad))		
+		)
+		if("Client"%in%colnames(info)){results$Client=as.character(info$Client)}
+		if("ExptDate"%in%colnames(info)){results$ExptDate=as.character(info$ExptDate)}
+		if("User"%in%colnames(info)){results$User=as.character(info$User)}
+		if("PI"%in%colnames(info)){results$PI=as.character(info$PI)}
+		if("Condition"%in%colnames(info)){results$Condition=as.character(info$Condition)}
+		if("Inoc"%in%colnames(info)){results$Inoc=as.character(info$Inoc)}
+		} #bcode
+		if (ORF2gene!=FALSE){results$Gene<-sapply(as.character(results$ORF),orf2g,gdict)}
+		if(nCores>1){
+			stopCluster(cl)
+		}
+		return(results)
 }
 
 makeFitness<-function(results,AUCLim=5,dtmax=25){
@@ -648,14 +677,31 @@ colony.info<-function(position,bcdata){
 	d<-d[order(d$Date.Time,decreasing=TRUE),]
 	d<-d[1,]
 	# Character vector of colony info
-	cvec=c(as.character(d$Barcode),
-	as.character(d$Treatments),as.character(d$Medium),as.character(d$ORF),
-	as.character(d$Screen.Name),as.character(d$Library.Name),as.character(d$MasterPlate.Number),
-	as.character(d$Timeseries.order),as.character(d$ScreenID),as.numeric(d$Tile.Dimensions.X),as.numeric(d$Tile.Dimensions.Y),
-	as.numeric(d$X.Offset),as.numeric(d$Y.Offset),as.numeric(d$Threshold),as.numeric(d$Edge.length),as.numeric(d$Edge.Pixels),as.numeric(d$RepQuad))
+	cvec=list(
+	Barcode=as.character(d$Barcode),
+	Treatments=as.character(d$Treatments),
+	Medium=as.character(d$Medium),
+	ORF=as.character(d$ORF),
+	Screen.Name=as.character(d$Screen.Name),
+	Library.Name=as.character(d$Library.Name),
+	MasterPlate.Number=as.numeric(d$MasterPlate.Number),
+	Timeseries.order=as.numeric(d$Timeseries.order),
+	ScreenID=as.character(d$ScreenID),
+	Tile.Dimensions.X=as.numeric(d$Tile.Dimensions.X),
+	Tile.Dimensions.Y=as.numeric(d$Tile.Dimensions.Y),
+	X.Offset=as.numeric(d$X.Offset),
+	Y.Offset=as.numeric(d$Y.Offset),
+	Threshold=as.numeric(d$Threshold),
+	Edge.length=as.numeric(d$Edge.length),
+	Edge.Pixels=as.numeric(d$Edge.Pixels),
+	RepQuad=as.numeric(d$RepQuad)
+	)
 	if("Client"%in%colnames(d)){cvec$Client=as.character(d$Client)}
 	if("ExptDate"%in%colnames(d)){cvec$ExptDate=as.character(d$ExptDate)}
-	if("User"%in%colnames(d)){cvec$User=as.character(d$User)}	
+	if("User"%in%colnames(d)){cvec$User=as.character(d$User)}
+	if("PI"%in%colnames(d)){cvec$PI=as.character(d$PI)}
+	if("Condition"%in%colnames(d)){cvec$Condition=as.character(d$Condition)}
+	if("Inoc"%in%colnames(d)){cvec$Inoc=as.character(d$Inoc)}		
 	return(cvec)
 }
 

@@ -2,6 +2,16 @@ showDemo<-function(demoname="telomereCap"){
 	# Function to just display text in demo
 	file.show(system.file("demo", paste(demoname,".R",sep=""), package = "qfa"))
 }
+
+findFit<-function(df){
+	# Find which column corresponds to the "fit" column in df
+	if(!"fit"%in%colnames(df)) return("NoFitCol")
+	cnames=colnames(df)[colnames(df)!="fit"]
+	for(colname in cnames){
+		compare<-df$fit==df[colname]
+		if((!is.na(sum(compare)))&&(sum(compare)==length(df$fit))) return(colname)
+	}
+}
 	
 fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment"){
 	# Eliminate spurious precision to make smaller files
@@ -9,6 +19,8 @@ fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment"){
 	# Summarises mean and median fitnesses for all orfs in an .fit object
 	print(outputfile)
 	fitdf=dataframe[dataframe[[groupcol]]==grp,]
+	fitdf$ExptDate=gsub("'","",fitdf$ExptDate)
+	fitdf$ExptDate=gsub('"',"",fitdf$ExptDate)
 
 	orflst=unique(as.character(fitdf$ORF))
 	orflst=sort(orflst)
@@ -38,10 +50,13 @@ fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment"){
 	rLib=paste("Libraries:",paste(unique(fitdf$Library.Name),collapse=" "))
 	rClient=paste("Client:",paste(unique(fitdf$Client),collapse=" "))
 	rUser=paste("User:",paste(unique(fitdf$User),collapse=" "))
+	rPI=paste("PI:",paste(unique(fitdf$PI),collapse=" "))
 	rDate=paste("Date:",paste(unique(fitdf$ExptDate),collapse=" "))
+	rFit=paste("Fitness definition:",findFit(fitdf))
+	rCond=paste("Condition:",paste(unique(fitdf$Condition),collapse=" "))
 	spacer="#########################################################"
 	header=c(QFAversion,
-	rTreat,rMed,rScrID,rGen,rLib,rClient,rUser,rDate,
+	rTreat,rMed,rScrID,rGen,rLib,rClient,rUser,rPI,rDate,rFit,rCond,
 	spacer)
 	write.table(header,outputfile,sep="\t",quote=FALSE,row.names=FALSE,col.names=FALSE)
 	write.table(results,"tmp.txt",sep="\t",quote=FALSE,row.names=FALSE)
@@ -62,6 +77,7 @@ report.epi<-function(results,filename){
 	QFAversion=paste("R package version:",vno)
 	sumType=paste("Summary type:",paste(unique(results$SummaryType),collapse=" "))
 	testType=paste("Test type:",paste(unique(results$TestType),collapse=" "))
+	
 	cTreat=paste("Control treatment:",paste(unique(results$cTreat),collapse=" "))
 	cMed=paste("Control medium:",paste(unique(results$cMed),collapse=" "))
 	cScrID=paste("Control screen ID:",paste(unique(results$cScrID),collapse=" "))
@@ -70,6 +86,11 @@ report.epi<-function(results,filename){
 	cClient=paste("Control client:",paste(unique(results$cClient),collapse=" "))
 	cUser=paste("Control user:",paste(unique(results$cUser),collapse=" "))
 	cDate=paste("Control date:",paste(unique(results$cDate),collapse=" "))
+	cPI=paste("Control PI:",paste(unique(results$cPI),collapse=" "))
+	cCond=paste("Control condition:",paste(unique(results$cCond),collapse=" "))
+	cInoc=paste("Control inoculation type:",paste(unique(results$cInoc),collapse=" "))
+	cFit=paste("Control fitness definition:",paste(unique(results$ControlFit),collapse=" "))
+	
 	qTreat=paste("Query treatment:",paste(unique(results$qTreat),collapse=" "))
 	qMed=paste("Query medium:",paste(unique(results$qMed),collapse=" "))
 	qScrID=paste("Query screen ID:",paste(unique(results$qScrID),collapse=" "))
@@ -78,15 +99,21 @@ report.epi<-function(results,filename){
 	qClient=paste("Query client:",paste(unique(results$qClient),collapse=" "))
 	qUser=paste("Query user:",paste(unique(results$qUser),collapse=" "))
 	qDate=paste("Query date:",paste(unique(results$qDate),collapse=" "))
+	qPI=paste("Query PI:",paste(unique(results$cPI),collapse=" "))
+	qCond=paste("Query condition:",paste(unique(results$cCond),collapse=" "))
+	qInoc=paste("Query inoculation type:",paste(unique(results$cInoc),collapse=" "))
+	qFit=paste("Query fitness definition:",paste(unique(results$QueryFit),collapse=" "))
+	
 	spacer="#########################################################"
+	
 	header=c(QFAversion,sumType,testType,
-	cTreat,cMed,cScrID,cGen,cLib,cClient,cUser,cDate,
-	qTreat,qMed,qScrID,qGen,qLib,qClient,qUser,qDate,
+	cTreat,cMed,cScrID,cGen,cLib,cClient,cUser,cDate,cPI,cCond,cInoc,cFit,
+	qTreat,qMed,qScrID,qGen,qLib,qClient,qUser,qDate,qPI,qCond,qInoc,qFit,
 	spacer)
 	write.table(header,filename,sep="\t",quote=FALSE,row.names=FALSE,col.names=FALSE)
 	results$SummaryType=results$testType=NULL
-	results$cTreat=results$cMed=results$cScrID=results$cGen=results$cLib=results$cClient=results$cUser=results$cDate=NULL
-	results$qTreat=results$qMed=results$qScrID=results$qGen=results$qLib=results$qClient=results$qUser=results$qDate=NULL
+	results$cTreat=results$cMed=results$cScrID=results$cGen=results$cLib=results$cClient=results$cUser=results$cDate=results$cPI=results$cCond=results$cInoc=results$cFit=NULL
+	results$qTreat=results$qMed=results$qScrID=results$qGen=results$qLib=results$qClient=results$qUser=results$qDate=results$qPI=results$qCond=results$qInoc=results$qFit=NULL
 	write.table(results,"tmp.txt",sep="\t",quote=FALSE,row.names=FALSE)
 	file.append(filename,"tmp.txt")
 	file.remove("tmp.txt")	
