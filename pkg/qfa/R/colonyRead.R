@@ -38,51 +38,51 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	expt=read.delim(experiment,sep="\t",header=TRUE,stringsAsFactors=FALSE)
 	# Watch the mismatch between library names (e.g. BooneSDLV2 and SDL_v2)
 	# barcode-> plate dictionaries for all treatments and repeats
-	starts=expt$Start.Time
-	names(starts)=expt$Barcode
-	barcStart<-function(barc) starts[[barc]]
+	barcStart=expt$Start.Time
+	names(barcStart)=expt$Barcode
 
-	treats=expt$Treatment
-	names(treats)=expt$Barcode
-	barcTreat<-function(barc) treats[[barc]]
+	barcTreat=expt$Treatment
+	names(barcTreat)=expt$Barcode
 
-	meds=expt$Medium
-	names(meds)=expt$Barcode
-	barcMed<-function(barc) meds[[barc]]
+	barcMed=expt$Medium
+	names(barcMed)=expt$Barcode
 
-	screens=expt$Screen
-	names(screens)=expt$Barcode
-	barcScreen<-function(barc) screens[[barc]]
+	barcScreen=expt$Screen
+	names(barcScreen)=expt$Barcode
 
 	if(!"RepQuad"%in%colnames(expt)) stop("Woah there!  We need a RepQuad column in expt. description file")
-	rquad=expt$RepQuad
-	names(rquad)=expt$Barcode
-	barcQuad<-function(barc) rquad[[barc]]
+	barcQuad=expt$RepQuad
+	names(barcQuad)=expt$Barcode
 
-	plates=expt$Plate
-	names(plates)=expt$Barcode
-	barcPlate<-function(barc) plates[[barc]]
+	barcPlate=expt$Plate
+	names(barcPlate)=expt$Barcode
 
-	libs=expt$Library
-	names(libs)=expt$Barcode
-	barcLib<-function(barc) libs[[barc]]
+	barcLib=expt$Library
+	names(barcLib)=expt$Barcode
 	
 	if("Client"%in%colnames(expt)){
-		clients=expt$Client
-		names(clients)=expt$Barcode
-		barcClient<-function(barc) clients[[barc]]
+		barcClient=expt$Client
+		names(barcClient)=expt$Barcode
 	}
 	
 	if("ExptDate"%in%colnames(expt)){
-		exptdate=expt$ExptDate
-		names(exptdate)=expt$Barcode
-		barcExptDate<-function(barc) exptdate[[barc]]
+		barcExptDate=expt$ExptDate
+		names(barcExptDate)=expt$Barcode
 	}
 	
 	if("User"%in%colnames(expt)){	
-		users=expt$User
-		names(users)=expt$Barcode
-		barcUser<-function(barc) users[[barc]]
+		barcUser=expt$User
+		names(barcUser)=expt$Barcode
+	}
+	
+	if("PI"%in%colnames(expt)){
+		barcPI=expt$PI
+		names(barcPI)=expt$Barcode
+	}
+	
+	if("Condition"%in%colnames(expt)){
+		barcCond=expt$Condition
+		names(barcCond)=expt$Barcode
 	}
 		
 	# Open the ORF2GENE file
@@ -93,9 +93,8 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	orf2gene=rbind(orf2gene,c("missing","missing"))
 	orf2gene=rbind(orf2gene,c("MISSING","MISSING"))
 	# Create an ORF2Gene dictionary
-	orfdict=orf2gene$gene
-	names(orfdict)=orf2gene$orf
-	getGene<-function(orf) orfdict[[orf]]
+	getGene=orf2gene$gene
+	names(getGene)=orf2gene$orf
 
 	# Read in the image analysis output
 	iman=do.call(rbind, lapply(fs, read.delim,header=FALSE,sep="\t",stringsAsFactors=FALSE))
@@ -135,30 +134,30 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	}
 
 	fnames=unique(iman$Image.Name)
-	pnum=sapply(fnames,getPhotoNum)
-	names(pnum)=fnames
-	photoNum<-function(fname) as.numeric(pnum[[fname]])
+	photoNum=sapply(fnames,getPhotoNum)
+	names(photoNum)=fnames
 
-	iman$Inoc.Time=sapply(iman$Barcode,barcStart)
-	iman$Treatments=sapply(iman$Barcode,barcTreat)
-	iman$Medium=sapply(iman$Barcode,barcMed)
-	iman$Screen.Name=sapply(iman$Barcode,barcScreen)
-	iman$RepQuad=sapply(iman$Barcode,barcQuad)
-	iman$MasterPlate.Number=sapply(iman$Barcode,barcPlate)
-	iman$Timeseries.order=as.numeric(sapply(iman$Image.Name,photoNum))
-	iman$Library.Name=sapply(iman$Barcode,barcLib)
+	iman$Inoc.Time=barcStart[iman$Barcode]
+	iman$Treatments=barcTreat[iman$Barcode]
+	iman$Medium=barcMed[iman$Barcode]
+	iman$Screen.Name=barcScreen[iman$Barcode]
+	iman$RepQuad=barcQuad[iman$Barcode]
+	iman$MasterPlate.Number=barcPlate[iman$Barcode]
+	iman$Timeseries.order=as.numeric(photoNum[iman$Image.Name])
+	iman$Library.Name=barcLib[iman$Barcode]
 	iman$ORF=mapply(getORF, iman$Library.Name, iman$MasterPlate.Number, iman$Row, iman$Col)
-	iman$Gene=sapply(toupper(iman$ORF),getGene)
+	iman$Gene=getGene[toupper(iman$ORF)]
 	iman$ScreenID=rep(screenID,length(iman$Image.Name))
-	if("Client"%in%colnames(expt)){iman$Client=sapply(iman$Barcode,barcClient)}
-	if("ExptDate"%in%colnames(expt)){iman$ExptDate=sapply(iman$Barcode,barcExptDate)}
-	if("User"%in%colnames(expt)){iman$User=sapply(iman$Barcode,barcUser)}
+	if("Client"%in%colnames(expt)){iman$Client=barcClient[iman$Barcode]}
+	if("ExptDate"%in%colnames(expt)){iman$ExptDate=barcExptDate[iman$Barcode]}
+	if("User"%in%colnames(expt)){iman$User=barcUser[iman$Barcode]}
+	if("PI"%in%colnames(expt)){iman$PI=barcPI[iman$Barcode]}
+	if("Condition"%in%colnames(expt)){iman$Condition=barcCond[iman$Barcode]}
 
 	fmt="%Y-%m-%d_%H-%M-%S"
 	t0<-as.POSIXlt(as.character(iman$Inoc.Time),format=fmt)
 	t1<-as.POSIXlt(as.character(iman$Date.Time),format=fmt)
 	iman$Expt.Time=as.numeric(difftime(t1,t0,units="days"))	
-
 
 	# Print checks so people are sure they're using the correct data #
 	print(paste("Number of Barcodes :",length(unique(iman$Barcode))))
