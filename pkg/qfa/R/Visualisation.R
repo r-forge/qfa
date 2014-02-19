@@ -1,4 +1,4 @@
-# Huge function closure to keep visualisation tool environment out of global environment
+# Huge function closure to keep visualisation tool environment out of global environment and keep CRAN happy
 
 makeVisTool=function(){
 	globs<-new.env()
@@ -41,16 +41,14 @@ makeVisTool=function(){
 		}else{
 			compnm=""
 		}
-		plotdesc=paste(globs$datlist[[datno]]$datname,globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cTreat,":",globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qTreat)
+		#plotdesc=paste(globs$datlist[[datno]]$datname,globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cTreat,":",globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qTreat)
+		plotdesc=globs$datlist[[datno]]$datname
 		maintitle=paste(plotdesc,compnm,sep="\n")
-		# In case of overly-long medium description, remove medium from axis labels
-		if((nchar(globs$datlist[[datno]]$cMed)<22)&(nchar(globs$datlist[[datno]]$qMed)<22)){
-			xlab=paste(globs$datlist[[datno]]$cScrID,globs$datlist[[datno]]$cCli,globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cLibs,globs$datlist[[datno]]$cUse,globs$datlist[[datno]]$cDate,globs$datlist[[datno]]$cTreat,globs$datlist[[datno]]$cMed,globs$datlist[[datno]]$cRep)
-			ylab=paste(globs$datlist[[datno]]$qScrID,globs$datlist[[datno]]$qCli,globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qLibs,globs$datlist[[datno]]$qUse,globs$datlist[[datno]]$qDate,globs$datlist[[datno]]$qTreat,globs$datlist[[datno]]$qMed,globs$datlist[[datno]]$qRep)
-		}else{
-			xlab=paste(globs$datlist[[datno]]$cScrID,globs$datlist[[datno]]$cCli,globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cLibs,globs$datlist[[datno]]$cUse,globs$datlist[[datno]]$cDate,globs$datlist[[datno]]$cTreat,globs$datlist[[datno]]$cRep)
-			ylab=paste(globs$datlist[[datno]]$qScrID,globs$datlist[[datno]]$qCli,globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qLibs,globs$datlist[[datno]]$qUse,globs$datlist[[datno]]$qDate,globs$datlist[[datno]]$qTreat,globs$datlist[[datno]]$qRep)
-		}
+		if (globs$datlist[[datno]]$cCond=="") {ControlCondition=globs$datlist[[datno]]$cMed}else{ControlCondition=globs$datlist[[datno]]$cCond}
+		if (globs$datlist[[datno]]$qCond=="") {QueryCondition=globs$datlist[[datno]]$qMed}else{QueryCondition=globs$datlist[[datno]]$qCond}
+		xlab=paste(globs$datlist[[datno]]$cScrID,globs$datlist[[datno]]$cDate,globs$datlist[[datno]]$cTreat,ControlCondition,globs$datlist[[datno]]$cFit,globs$datlist[[datno]]$cInoc)
+		ylab=paste(globs$datlist[[datno]]$qScrID,globs$datlist[[datno]]$qDate,globs$datlist[[datno]]$qTreat,QueryCondition,globs$datlist[[datno]]$qFit,globs$datlist[[datno]]$qInoc)
+
 		globs$orftargs=globs$dat$ORF[globs$targs]
 		globs$dat=globs$datlist[[datno]]$res
 		globs$targs=match(globs$orftargs,globs$dat$ORF)
@@ -324,6 +322,10 @@ makeVisTool=function(){
 			globs$plotno=globs$plotno+1
 			if ((Sys.info()['sysname']=="Windows")) bringToTop()
 		}
+		if(key=="o"){
+			printSelected(globs)
+		}
+		
 		if(key=="m") {
 			pdfname=sprintf("QFAVisualisation%04d.pdf",globs$plotno)
 			cat("Printing plot to file:",file.path(getwd(),pdfname),"\n")
@@ -389,8 +391,9 @@ makeVisTool=function(){
 		# Split report string and patch in replicate numbers for Query and Control
 		rept=globs$datlist[[globs$datno]]$rept
 		fcont=grep("Control",rept)
+		if (length(fcont)==0) fcont=grep("x-axis",rept)
 		findx=tail(fcont,1)
-		rept2=c(rept[1:findx],paste("Control replicate number:",globs$datlist[[globs$datno]]$ControlCount),rept[(findx+1):length(rept)],paste("Query replicate number:",globs$datlist[[globs$datno]]$ControlCount))
+		rept2=c(rept[1:findx],paste("x-axis number of replicates:",globs$datlist[[globs$datno]]$cRep),rept[(findx+1):length(rept)],paste("y-axis number of replicates:",globs$datlist[[globs$datno]]$qRep))
 		cat(rept2,sep="\n")
 		}
 		return(NULL)
@@ -457,31 +460,32 @@ makeVisTool=function(){
 		globs$Ecol="green"
 		globs$Scol="red"
 
-		cat("\nWindows mouse\n")
+		cat("\nControls: Windows mouse\n")
 		cat("~~~~~~~~~~~~~~~\n")
 		cat("Left click: Highlight gene/Rotate text position\n")
 		cat("Right click: Open SGD page for gene (alternatively, press 'w' on keyboard)\n")
 		cat("Middle click: Remove last gene (alternatively, press 'd' on keyboard)\n\n")
-		cat("Mac mouse\n")
+		cat("Controls: Mac mouse\n")
 		cat("~~~~~~~~~~~~~~~\n")
 		cat("Click: Highlight gene/Rotate text position\n\n")
-		cat("Keyboard\n")
+		cat("Controls: Keyboard\n")
 		cat("~~~~~~~~~~~~~~~\n")
 		cat("Left/Right arrow: Switch to next/previous fitness plot (comparison between different pair of experiments).\n")
 		cat("Up/Down arrow: Change group of genes currently highlighted (in purple).\n")
-		cat("u: Add new group of genes to list of highlightable groups.\n")
-		cat("z: Toggle select tool on/off. Select genes for highlighting by drawing a polygon on plot.  Press 's' to add selection when finished.\n") 
-		cat("s: Highlight genes encircled using select tool ('z').\n") 
-		cat("c: Clear highlighting from currently selected genes.\n") 
-		cat("w: Open SGD web-page for last gene highlighted.\n")
-		cat("d: Remove highlighting from last gene highlighted.\n")
-		cat("t: Toggle colours (red/green) indicating positive and negative interaction.\n")
-		cat("l: Toggle plot style between fitness plot and log ratio plot.\n")
-		cat("i: Toggle between log ratio plot styles.\n")
-		cat("r: Enter zoom mode.  Click on top left and bottom right of area to inspect.\n")
-		cat("p: Save current plot as vector graphic to QFAVisualisation.ps.  Other filetypes can also be generated - 'n': .png and 'm': .pdf\n")
 		cat("b: Print experimental metadata report to console window\n")
+		cat("c: Clear highlighting from currently selected genes.\n") 
+		cat("d: Remove highlighting from last gene highlighted.\n")
+		cat("i: Toggle between log ratio plot styles.\n")
+		cat("l: Toggle plot style between fitness plot and log ratio plot.\n")
+		cat("o: Print list of manually selected genes currently highlighted to console.\n")
+		cat("p: Save current plot as vector graphic to QFAVisualisation.ps.  Other filetypes can also be generated - 'n': .png and 'm': .pdf\n")
 		cat("q: Quit tool and print gene names currently selected to console window.\n")
+		cat("r: Enter zoom mode.  Click on top left and bottom right of area to inspect (experimental, may have to quit to zoom out...).\n")
+		cat("s: Highlight genes encircled using select tool ('z').\n") 
+		cat("t: Toggle colours (red/green) indicating positive and negative interaction.\n")
+		cat("u: Add new group of genes to list of highlightable groups.\n")
+		cat("w: Open SGD web-page for last gene highlighted.\n")
+		cat("z: Toggle select tool on/off. Select genes for highlighting by drawing a polygon on plot.  Press 's' to add selection when finished.\n") 
 
 		globs$datno=1
 		globs$plotno=1
@@ -508,19 +512,8 @@ makeVisTool=function(){
 			makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
 		}
 
-		getGraphicsEvent(prompt="L click: Highlight/Rotate, R click: SGD, M click: Remove, Left/Right: Change plot, z: select tool, s: add selection, c: clear, q: quit", onMouseDown=mouse, onKeybd=keybd)
-		cat("~~~~~~~~~~~~~~~\n")
-		cat("\n")
-		cat("List of genes currently selected:\n")
-		cat(globs$dat$Gene[globs$targs])
-		cat("\n")
-		cat("~~~~~~~~~~~~~~~\n")
-		cat("\n")
-		cat("Systematic names for genes currently selected:\n")
-		cat(globs$dat$ORF[globs$targs])
-		cat("\n")
-		cat("\n")
-		cat("\n")
+		getGraphicsEvent(prompt="Left/Right: Change plot, b: Expt. metadta, L-click: Highlight, M-click: Remove, q: quit", onMouseDown=mouse, onKeybd=keybd)
+		printSelected(globs)
 		#if( sysinf["sysname"]!="Windows") dev.off()
 		dev.off()
 	}
@@ -569,36 +562,67 @@ NAtoBlank=function(x){
 }
 
 getResults<-function(filename){
-	res=read.delim(filename,skip=20,header=TRUE,stringsAsFactors=FALSE)
-	hdr=read.delim(filename,nrows=19,header=FALSE,stringsAsFactors=FALSE)$V1
+	# Need to detect at least two different kinds of header now...
+	fopen=file(filename,"rt")
+	i=1
+	while(!grepl("############",readLines(fopen,1))) i=i+1
+	close(fopen)
+	
+	cStart=-1 # At what line does control metadata start?
+	qStart=-1 # At what line does query metadata start?
+
+	res=read.delim(filename,skip=i,header=TRUE,stringsAsFactors=FALSE)
+	hdr=read.delim(filename,nrows=i-1,header=FALSE,stringsAsFactors=FALSE)$V1
+	
+	for(hdrow in 1:length(hdr)){
+		if(((grepl("x-axis ",hdr[hdrow]))||(grepl("Control ",hdr[hdrow])))&&(cStart<0)) cStart=hdrow
+		if(((grepl("y-axis ",hdr[hdrow]))||(grepl("Query ",hdr[hdrow])))&&(qStart<0)) qStart=hdrow
+	}
+	
 	qfaVersion=NAtoBlank(strsplit(hdr[1],": ")[[1]][2])
 	summType=NAtoBlank(strsplit(hdr[2],": ")[[1]][2])
 	testType=NAtoBlank(strsplit(hdr[3],": ")[[1]][2])
-	cTreat=NAtoBlank(strsplit(hdr[4],": ")[[1]][2])
-	cMed=NAtoBlank(strsplit(hdr[5],": ")[[1]][2])
-	cScrID=NAtoBlank(strsplit(hdr[6],": ")[[1]][2])
-	cScrNm=NAtoBlank(strsplit(hdr[7],": ")[[1]][2])
-	cLibs=NAtoBlank(strsplit(hdr[8],": ")[[1]][2])
-	cCli=NAtoBlank(strsplit(hdr[9],": ")[[1]][2])
-	cUse=NAtoBlank(strsplit(hdr[10],": ")[[1]][2])
-	cDate=NAtoBlank(strsplit(hdr[11],": ")[[1]][2])
+	
+	cTreat=NAtoBlank(strsplit(hdr[cStart+0],": ")[[1]][2])
+	cMed=NAtoBlank(strsplit(hdr[cStart+1],": ")[[1]][2])
+	cScrID=NAtoBlank(strsplit(hdr[cStart+2],": ")[[1]][2])
+	cScrNm=NAtoBlank(strsplit(hdr[cStart+3],": ")[[1]][2])
+	cLibs=NAtoBlank(strsplit(hdr[cStart+4],": ")[[1]][2])
+	cCli=NAtoBlank(strsplit(hdr[cStart+5],": ")[[1]][2])
+	cUse=NAtoBlank(strsplit(hdr[cStart+6],": ")[[1]][2])
+	cDate=NAtoBlank(strsplit(hdr[cStart+7],": ")[[1]][2])
 	cDate=gsub("'","",cDate)
-	qTreat=NAtoBlank(strsplit(hdr[12],": ")[[1]][2])
-	qMed=NAtoBlank(strsplit(hdr[13],": ")[[1]][2])
-	qScrID=NAtoBlank(strsplit(hdr[14],": ")[[1]][2])
-	qScrNm=NAtoBlank(strsplit(hdr[15],": ")[[1]][2])
-	qLibs=NAtoBlank(strsplit(hdr[16],": ")[[1]][2])
-	qCli=NAtoBlank(strsplit(hdr[17],": ")[[1]][2])
-	qUse=NAtoBlank(strsplit(hdr[18],": ")[[1]][2])
-	qDate=NAtoBlank(strsplit(hdr[19],": ")[[1]][2])
+	cDate=gsub('"',"",cDate)
+	cPI=cCond=cInoc=cFit=""
+	if(cStart+8<qStart) cPI=NAtoBlank(strsplit(hdr[cStart+8],": ")[[1]][2])
+	if(cStart+9<qStart) cCond=NAtoBlank(strsplit(hdr[cStart+9],": ")[[1]][2])
+	if(cStart+10<qStart) cInoc=NAtoBlank(strsplit(hdr[cStart+10],": ")[[1]][2])
+	if(cStart+11<qStart) cFit=NAtoBlank(strsplit(hdr[cStart+11],": ")[[1]][2])
+	
+	qTreat=NAtoBlank(strsplit(hdr[qStart+0],": ")[[1]][2])
+	qMed=NAtoBlank(strsplit(hdr[qStart+1],": ")[[1]][2])
+	qScrID=NAtoBlank(strsplit(hdr[qStart+2],": ")[[1]][2])
+	qScrNm=NAtoBlank(strsplit(hdr[qStart+3],": ")[[1]][2])
+	qLibs=NAtoBlank(strsplit(hdr[qStart+4],": ")[[1]][2])
+	qCli=NAtoBlank(strsplit(hdr[qStart+5],": ")[[1]][2])
+	qUse=NAtoBlank(strsplit(hdr[qStart+6],": ")[[1]][2])
+	qDate=NAtoBlank(strsplit(hdr[qStart+7],": ")[[1]][2])
 	qDate=gsub("'","",qDate)
+	qDate=gsub('"',"",qDate)
+	qPI=qCond=qInoc=qFit=""
+	if(qStart+8<=length(hdr)) qPI=NAtoBlank(strsplit(hdr[qStart+8],": ")[[1]][2])
+	if(qStart+9<=length(hdr)) qCond=NAtoBlank(strsplit(hdr[qStart+9],": ")[[1]][2])
+	if(qStart+10<=length(hdr)) qInoc=NAtoBlank(strsplit(hdr[qStart+10],": ")[[1]][2])
+	if(qStart+11<=length(hdr)) qFit=NAtoBlank(strsplit(hdr[qStart+11],": ")[[1]][2])
+
 	fMax=max(c(res$QueryFitnessSummary,res$ControlFitnessSummary))
-	qRep=getMode(res$ControlCount)
-	cRep=getMode(res$QueryCount)
+	qRep=getMode(res$QueryCount)
+	cRep=getMode(res$ControlCount)
+	
 	return(
 	list(res=res,qfaVersion=qfaVersion,summType=summType,testType=testType,
-	cTreat=cTreat,cMed=cMed,cScrID=cScrID,cScrNm=cScrNm,cLibs=cLibs,cCli=cCli,cUse=cUse,cDate=cDate,
-	qTreat=qTreat,qMed=qMed,qScrID=qScrID,qScrNm=qScrNm,qLibs=qLibs,qCli=qCli,qUse=qUse,qDate=qDate,
+	cTreat=cTreat,cMed=cMed,cScrID=cScrID,cScrNm=cScrNm,cLibs=cLibs,cCli=cCli,cUse=cUse,cDate=cDate,cPI=cPI,cCond=cCond,cInoc=cInoc,cFit=cFit,
+	qTreat=qTreat,qMed=qMed,qScrID=qScrID,qScrNm=qScrNm,qLibs=qLibs,qCli=qCli,qUse=qUse,qDate=qDate,qPI=qPI,qCond=qCond,qInoc=qInoc,qFit=qFit,
 	fMax=fMax,rept=hdr,qRep=qRep,cRep=cRep)
 	)
 }
@@ -647,7 +671,22 @@ drawSel=function(selx,sely){
 	}else{
 		points(selx,sely,col="black",lty=2,type="l")
 	}
-}	
+}
+
+printSelected=function(globs){
+	cat("~~~~~~~~~~~~~~~\n")
+	cat("\n")
+	cat("List of genes currently selected:\n")
+	cat(globs$dat$Gene[globs$targs])
+	cat("\n")
+	cat("~~~~~~~~~~~~~~~\n")
+	cat("\n")
+	cat("Systematic names for genes currently selected:\n")
+	cat(globs$dat$ORF[globs$targs])
+	cat("\n")
+	cat("\n")
+	cat("\n")
+}
 
 reportExpts=function(globs,fname=""){
 	if(fname!="") {
@@ -655,16 +694,17 @@ reportExpts=function(globs,fname=""){
 		cat(file.path(getwd(),fname),"\n")
 		sink(fname)
 	}
-	metaSumm=data.frame(PlotNo=numeric(),Control=character(),Query=character(),stringsAsFactors=FALSE)
+	metaSumm=data.frame(PlotNo=numeric(),x.axis=character(),y.axis=character(),stringsAsFactors=FALSE)
 	for (datno in 1:length(globs$datlist)){
-		metaSumm[datno,]=c(datno,paste(globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cTreat),paste(globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qTreat))
+		metaSumm[datno,]=c(datno,paste(globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cTreat,globs$datlist[[datno]]$cCond,globs$datlist[[datno]]$cFit),paste(globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qTreat,globs$datlist[[datno]]$qTreat,globs$datlist[[datno]]$qCond,globs$datlist[[datno]]$qFit))
 		# Print data to console
 		cat("\nExperimental metadata: plot",datno,"\n~~~~~~~~~~~~~~~\n")
 		# Split report string and patch in replicate numbers for Query and Control
 		rept=globs$datlist[[datno]]$rept
 		fcont=grep("Control",rept)
+		if (length(fcont)==0) fcont=grep("x-axis",rept)
 		findx=tail(fcont,1)
-		rept2=c(rept[1:findx],paste("Control replicate number:",globs$datlist[[datno]]$ControlCount),rept[(findx+1):length(rept)],paste("Query replicate number:",globs$datlist[[datno]]$ControlCount))
+		rept2=c(rept[1:findx],paste("x-axis number of replicates:",globs$datlist[[datno]]$cRep),rept[(findx+1):length(rept)],paste("y-axis number of replicates:",globs$datlist[[datno]]$qRep))
 		strt=4
 		r2=rept2[strt:length(rept2)]
 		fin=length(r2)
@@ -677,6 +717,7 @@ reportExpts=function(globs,fname=""){
 		#cat(rept2,sep="\n")
 	}
 	if(fname!="") sink()
+	
 	cat("\nExperimental metadata summary:\n~~~~~~~~~~~~~~~\n")
 	flist=strsplit(fname,"\\.")[[1]]
 	froot=head(flist,1)
