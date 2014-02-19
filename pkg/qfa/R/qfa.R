@@ -367,16 +367,16 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		cols<-sapply(positions,rcget,"col")
 		# Bind Data frame of barcode results to overall results
 		# s=bcfit[,4]
-		results<-rbind(results,data.frame(Barcode=as.character(info$Barcode),Row=rows,Col=cols,
+		barcResults<-data.frame(Barcode=as.character(info$Barcode),Row=rows,Col=cols,
 		ScreenID=as.character(info$ScreenID),Treatment=as.character(info$Treatments),Medium=as.character(info$Medium),ORF=as.character(info$ORF),
-		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],nSTP=bcfit[,8],d0=bcfit[,9],Screen.Name=as.character(info$Screen.Name),Library.Name=as.character(info$Screen.Name),MasterPlate.Number=as.numeric(info$MasterPlate.Number),Timeseries.order=as.numeric(info$Timeseries.order),Inoc.Time=inoctime,TileX=as.numeric(info$Tile.Dimensions.X),TileY=as.numeric(info$Tile.Dimensions.Y),XOffset=as.numeric(info$X.Offset),YOffset=as.numeric(info$Y.Offset),Threshold=as.numeric(info$Threshold),EdgeLength=as.numeric(info$Edge.length),EdgePixels=as.numeric(info$Edge.Pixels),RepQuad=as.numeric(info$RepQuad))		
-		)
-		if("Client"%in%colnames(info)){results$Client=as.character(info$Client)}
-		if("ExptDate"%in%colnames(info)){results$ExptDate=as.character(info$ExptDate)}
-		if("User"%in%colnames(info)){results$User=as.character(info$User)}
-		if("PI"%in%colnames(info)){results$PI=as.character(info$PI)}
-		if("Condition"%in%colnames(info)){results$Condition=as.character(info$Condition)}
-		if("Inoc"%in%colnames(info)){results$Inoc=as.character(info$Inoc)}
+		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],nSTP=bcfit[,8],d0=bcfit[,9],Screen.Name=as.character(info$Screen.Name),Library.Name=as.character(info$Screen.Name),MasterPlate.Number=as.numeric(info$MasterPlate.Number),Timeseries.order=as.numeric(info$Timeseries.order),Inoc.Time=inoctime,TileX=as.numeric(info$Tile.Dimensions.X),TileY=as.numeric(info$Tile.Dimensions.Y),XOffset=as.numeric(info$X.Offset),YOffset=as.numeric(info$Y.Offset),Threshold=as.numeric(info$Threshold),EdgeLength=as.numeric(info$Edge.length),EdgePixels=as.numeric(info$Edge.Pixels),RepQuad=as.numeric(info$RepQuad))
+		if("Client"%in%colnames(info)){barcResults$Client=as.character(info$Client)}
+		if("ExptDate"%in%colnames(info)){barcResults$ExptDate=as.character(info$ExptDate)}
+		if("User"%in%colnames(info)){barcResults$User=as.character(info$User)}
+		if("PI"%in%colnames(info)){barcResults$PI=as.character(info$PI)}
+		if("Condition"%in%colnames(info)){barcResults$Condition=as.character(info$Condition)}
+		if("Inoc"%in%colnames(info)){barcResults$Inoc=as.character(info$Inoc)}
+		results=rbind(results,barcResults)
 		} #bcode
 		if (ORF2gene!=FALSE){results$Gene<-sapply(as.character(results$ORF),orf2g,gdict)}
 		if(nCores>1){
