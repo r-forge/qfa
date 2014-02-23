@@ -84,6 +84,11 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 		barcCond=expt$Condition
 		names(barcCond)=expt$Barcode
 	}
+	
+	if("Inoc"%in%colnames(expt)){
+		barcInoc=expt$Inoc
+		names(barcInoc)=expt$Barcode
+	}
 		
 	# Open the ORF2GENE file
 	orf2gene=read.delim(ORF2gene,sep="\t",header=FALSE,stringsAsFactors=FALSE)
@@ -153,6 +158,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	if("User"%in%colnames(expt)){iman$User=barcUser[iman$Barcode]}
 	if("PI"%in%colnames(expt)){iman$PI=barcPI[iman$Barcode]}
 	if("Condition"%in%colnames(expt)){iman$Condition=barcCond[iman$Barcode]}
+	if("Inoc"%in%colnames(expt)){iman$Inoc=barcInoc[iman$Barcode]}
 
 	fmt="%Y-%m-%d_%H-%M-%S"
 	t0<-as.POSIXlt(as.character(iman$Inoc.Time),format=fmt)
@@ -170,6 +176,12 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	print(unique(iman$Medium))
 	print("Screens:")
 	print(unique(iman$Screen.Name))
+	if("Client"%in%colnames(iman)){print("Client :"); print(unique(iman$Client))}
+	if("ExptDate"%in%colnames(iman)){print("Experiment date :"); print(unique(iman$ExptDate))}
+	if("User"%in%colnames(iman)){print("User :"); print(unique(iman$User))}
+	if("PI"%in%colnames(iman)){print("PI :"); print(unique(iman$PI))}
+	if("Condition"%in%colnames(iman)){print("Condition :"); print(unique(iman$Condition))}
+	if("Inoc"%in%colnames(iman)){print("Inoculation type :"); print(unique(iman$Inoc))}	
 	platesize<-max(as.numeric(iman$Row))*max(as.numeric(iman$Col))
 	if (length(iman$Date.Time)%%platesize!=0){
 		warning("Number of cultures not multiple of plate size")}
