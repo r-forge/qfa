@@ -554,11 +554,7 @@ visToolDemo<-function(groupFun=buildBenschop){
 }
 
 NAtoBlank=function(x){
-	if(is.na(x)){
-		return("")
-	}else{
-		return(x)
-	}
+	return(ifelse((is.na(x))|(x=="NA"),"",x))
 }
 
 getResults<-function(filename){
@@ -696,7 +692,7 @@ reportExpts=function(globs,fname=""){
 	}
 	metaSumm=data.frame(PlotNo=numeric(),x.axis=character(),y.axis=character(),stringsAsFactors=FALSE)
 	for (datno in 1:length(globs$datlist)){
-		metaSumm[datno,]=c(datno,paste(globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cTreat,globs$datlist[[datno]]$cCond,globs$datlist[[datno]]$cFit),paste(globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qTreat,globs$datlist[[datno]]$qTreat,globs$datlist[[datno]]$qCond,globs$datlist[[datno]]$qFit))
+		metaSumm[datno,]=c(datno,paste(globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cTreat,globs$datlist[[datno]]$cCond,globs$datlist[[datno]]$cFit),paste(globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qTreat,globs$datlist[[datno]]$qCond,globs$datlist[[datno]]$qFit))
 		# Print data to console
 		cat("\nExperimental metadata: plot",datno,"\n~~~~~~~~~~~~~~~\n")
 		# Split report string and patch in replicate numbers for Query and Control

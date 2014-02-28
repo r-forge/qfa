@@ -374,7 +374,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		if("ExptDate"%in%colnames(info)){barcResults$ExptDate=as.character(info$ExptDate)}
 		if("User"%in%colnames(info)){barcResults$User=as.character(info$User)}
 		if("PI"%in%colnames(info)){barcResults$PI=as.character(info$PI)}
-		if("Condition"%in%colnames(info)){barcResults$Condition=as.character(info$Condition)}
+		if("Condition"%in%colnames(info)){barcResults$Condition=as.character(info$Condition);barcResults$Condition[is.na(barcResults$Condition)]=""}
 		if("Inoc"%in%colnames(info)){barcResults$Inoc=as.character(info$Inoc)}
 		results=rbind(results,barcResults)
 		} #bcode
