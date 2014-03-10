@@ -46,8 +46,8 @@ makeVisTool=function(){
 		maintitle=paste(plotdesc,compnm,sep="\n")
 		if (globs$datlist[[datno]]$cCond=="") {ControlCondition=globs$datlist[[datno]]$cMed}else{ControlCondition=globs$datlist[[datno]]$cCond}
 		if (globs$datlist[[datno]]$qCond=="") {QueryCondition=globs$datlist[[datno]]$qMed}else{QueryCondition=globs$datlist[[datno]]$qCond}
-		xlab=paste(globs$datlist[[datno]]$cScrID,globs$datlist[[datno]]$cDate,globs$datlist[[datno]]$cTreat,ControlCondition,globs$datlist[[datno]]$cFit,globs$datlist[[datno]]$cInoc)
-		ylab=paste(globs$datlist[[datno]]$qScrID,globs$datlist[[datno]]$qDate,globs$datlist[[datno]]$qTreat,QueryCondition,globs$datlist[[datno]]$qFit,globs$datlist[[datno]]$qInoc)
+		xlab=paste(globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cTreat,ControlCondition,globs$datlist[[datno]]$cFit,globs$datlist[[datno]]$cInoc,globs$datlist[[datno]]$cScrID,globs$datlist[[datno]]$cCli,globs$datlist[[datno]]$cDate)
+		ylab=paste(globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qTreat,QueryCondition,globs$datlist[[datno]]$qFit,globs$datlist[[datno]]$qInoc,globs$datlist[[datno]]$qScrID,globs$datlist[[datno]]$qCli,globs$datlist[[datno]]$qDate)
 
 		globs$orftargs=globs$dat$ORF[globs$targs]
 		globs$dat=globs$datlist[[datno]]$res
@@ -243,8 +243,8 @@ makeVisTool=function(){
 			globs$targs=match(globs$orftargs,globs$dat$ORF)
 		}
 		if(key=="Up") {
-			globs$compno=globs$compno+1
-			if(globs$compno>length(globs$GROUPS$GroupORFs)) globs$compno=1
+			globs$compno=(globs$compno+1)%%(length(globs$GROUPS$GroupORFs)+1)
+			#if(globs$compno>length(globs$GROUPS$GroupORFs)) globs$compno=1
 			if(globs$ratioPlot){
 				ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
 			}else{
@@ -252,8 +252,8 @@ makeVisTool=function(){
 			}
 		}
 		if(key=="Down") {
-			globs$compno=globs$compno-1
-			if(globs$compno<=0) globs$compno=length(globs$GROUPS$GroupORFs)
+			globs$compno=(globs$compno-1)%%(length(globs$GROUPS$GroupORFs)+1)
+			#if(globs$compno<=0) globs$compno=length(globs$GROUPS$GroupORFs)
 			if(globs$ratioPlot){
 				ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
 			}else{
@@ -362,8 +362,8 @@ makeVisTool=function(){
 			newgrp=getText(globs$ORFGENE)
 			newdf=data.frame(GroupName=newgrp[["Label"]],GroupID="R VisTool")
 			newdf$GroupORFs=paste(newgrp[["ORFs"]],collapse=" ")
-			globs$GROUPS=rbind(newdf,globs$GROUPS)
-			globs$compno=1
+			globs$GROUPS=rbind(globs$GROUPS,newdf)
+			globs$compno=length(globs$GROUPS$GroupORFs)
 			if(globs$ratioPlot){
 				ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
 			}else{
