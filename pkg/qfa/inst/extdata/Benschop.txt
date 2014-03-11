@@ -1,544 +1,541 @@
-GroupName	GroupID	GroupORFs
-Checkpoint sliding clampandloader	Lydall	YOR368W YLR288C YPL194W YER173W
-Yku interactors	Lydall	YBR274W YBR136W YDL101C YDR217C YOR033C YOR368W YLR288C YPL194W YER173W
-Telomere capping genes	Lydall	YBR274W YBR136W YDL101C YDR217C YOR033C YOR368W YLR288C YPL194W YER173W YIL009C-A YLR233C TLC1 YLR318W YMR106C YMR284W YDR369C YMR224C YNL250W YBL088C YHR031C YML061C YMR080C YHR077C YGR072W YDR206W
-nuclear telomere cap complex (GO)	Lydall	YBR275C YDL042C YDL220C YDR082W YDR227W YGR099W YLR010C YLR150W YLR442C YLR453C YNL216W
-waif/stray repair proteins	Lydall	YJL092W YLR032W YER095W YML061C YKL113C 
-Chk1 targets	Lydall	YPR145W YBR252W YJR082C YBR177C 
-MTC/RTCs	Lydall	YBR255W YDR128W YEL033W YGL226W YHR151C YJL123C YKL098W YNL254C YOL138C YOR118W YPL183W-A YBR147W YHR087W 
-SEA complex (RTC1/MTC5 etc)	Lydall	YOL138C YBL104C YDR128W YJR138W 
-adjacent to STN1/TEN1	Lydall	YDR083W YDRO81C YLR009W 
-NMD genes	Lydall	YMR080C YHR077C YGR072W 
-Unfolded protein response	Lydall	YHR079C YFL031W YJL034W 
-Spermidine synthase complex	Lydall	YKL184W YOL052C YPR069C 
-Spp381-Prp38 complex	Benschop	YBR152W YGR075C
-Asf1-Rad53 complex	Benschop	YJL115W YPL153C
-Pan1-End3 complex	Benschop	YIR006C YNL084C
-Sod1-Css1 heterodimer	Benschop	YJR104C YMR038C
-HAT-A4 complex	Benschop	YBR010W YBR009C YNL030W YEL056W YPL001W YLL022C YOL054W YNL031C
-Ste11-Ste50 complex	Benschop	YLR362W YCL032W
-Cdc48-Ufd1-Npl4 complex	Benschop	YDL126C YBR170C YGR048W
-Cdc48-Shp1 complex	Benschop	YBL058W YDL126C
-Sit4-Sap155 complex	Benschop	YDL047W YFR040W
-Ste12-Dig1-Dig2 complex	Benschop	YPL049C YHR084W YDR480W
-Rvs161-Rvs167 complex	Benschop	YCR009C YDR388W
-She2-She3-Myo4 complex	Benschop	YAL029C YBR130C YKL130C
-Ubp3-Bre5 complex	Benschop	YNR051C YER151C
-Rad6-Rad18 complex	Benschop	YGL058W YCR066W
-Rtt109-Vps75 complex	Benschop	YLL002W YNL246W
-Csm3-Tof1 complex	Benschop	YMR048W YNL273W
-Psr2-Psr1-Whi2 complex	Benschop	YLR019W YLL010C YOR043W
-Rad23-Png1 complex	Benschop	YEL037C YPL096W
-Tim44-Ssc1 heterodimer	Benschop	YIL022W YJR045C
-Dop1-Mon2 complex	Benschop	YDR141C YNL297C
-Rsp5-Ubp2-Rup1 deubiquitinating enzyme complex	Benschop	YER125W YOR124C YOR138C
-Pho80-Pho81-Pho85 CDK-cyclin complex	Benschop	YGR233C YOL001W YPL031C
-Trm112-Trm11 complex	Benschop	YNR046W YOL124C
-Dug2-Dug3 complex	Benschop	YBR281C YNL191W
-Dph1-Dph2-Dph3 complex	Benschop	YBL071W-A YIL103W YKL191W
-Scs2-Opi1 complex	Benschop	YER120W YHL020C
-Ula1-Uba3 enzyme complex	Benschop	YPL003W YPR066W
-Nam1-Sls1 complex	Benschop	YDL044C YLR139C
-ER SNARE Use1	Benschop	YDR498C YLR440C YNL258C YKL196C YLR268W YGL145W YOR075W YGL098W
-Pba1-Pba2 complex	Benschop	YKL206C YLR199C YBR173C
-Gyl1-Gyp5 complex	Benschop	YMR192W YPL249C
-Rtg1-Rtg3 bHLH-Zip complex	Benschop	YBL103C YOL067C
-Sit4-Sap190 complex	Benschop	YDL047W YKR028W
-Rtt103-Rai1-Rat1 complex	Benschop	YDR289C YGL246C YOR048C
-R2TP complex	Benschop	YCR060W YHR034C YDR190C YPL235W
-adenylyl cyclase complex	Benschop	YJL005W YNL138W
-Ssc1-Mge1 complex	Benschop	YJR045C YOR232W
-Dcs1-Dcs2 heterodimer	Benschop	YLR270W YOR173W
-Kap114-Nap1 histone complex	Benschop	YBL003C YGL241W YBL002W YOL012C YKR048C
-Grh1-Bug1 complex	Benschop	YDL099W YDR517W
-Mad1-Mad2 complex	Benschop	YGL086W YJL030W
-Ic-CPY complex	Benschop	YLR178C YMR297W
-Mlh2-Mlh1 heterodimer	Benschop	YLR035C YMR167W
-Sac3-Thp1 complex	Benschop	YDR159W YOL072W
-tRNA methyltransferase complex	Benschop	YDL201W YDR165W
-Tlg1 SNARE complex	Benschop	YBL050W YDR468C YGL095C YOL018C
-ribosome-associated complex	Benschop	YGR285C YHR064C YJL080C
-Trm9-Trm112 complex	Benschop	YML014W YNR046W
-prohibitin complex	Benschop	YGR132C YGR231C
-succinyl-CoA ligase	Benschop	YGR244C YOR142W
-Gsp1-Prp20 complex	Benschop	YGL097W YLR293C YOR185C
-Kic1-Sog2 complex	Benschop	YHR102W YOR353C
-Nrd1-Nab3-Sen1 termination complex	Benschop	YLR430W YNL251C YPL190C YMR239C
-Ssk1-Ssk2 complex	Benschop	YLR006C YNR031C
-Vti1-Pep12 complex	Benschop	YMR197C YOR036W
-Pcl7-Pho85 CDK-cyclin complex	Benschop	YPL031C YIL050W
-Prs1-Prs3 heterodimer	Benschop	YHL011C YKL181W
-Vac14-Fig4 complex	Benschop	YLR386W YNL325C
-Cpr6-Hsc82-Sti1-Hsp82 complex	Benschop	YLR216C YMR186W YOR027W YPL240C
-Bur1-Bur2 CDK-cyclin complex	Benschop	YPR161C YLR226W
-Bub1-Bub3 kinase complex	Benschop	YGR188C YOR026W
-Sis2-Ykl088w-Vhs3 complex	Benschop	YKR072C YKL088W YOR054C
-putative Slu7-Prp18 complex	Benschop	YDR088C YGR006W
-COMA complex	Benschop	YBR107C YBR211C YDR318W YJR135C YGR179C YDR254W YPL018W YLR381W YDR383C YLR315W YPR046W
-TEL complex	Benschop	YDR227W YDL042C
-nucleoporin Nup84 subcomplex	Benschop	YGL100W YDL116W YGL092W YKL057C YJR042W YLR208W
-Dcp1-Dcp2 decapping enzyme complex	Benschop	YBR094W YEL015W YOL149W YNL118C
-Ulp1 nuclear pore complex	Benschop	YLR347C YMR308C YPL020C
-TFIIK complex	Benschop	YDL108W YDR460W YPR025C
-Spt6-Spn1 elongator factor complex	Benschop	YGR116W YPR133C
-cleavage factor I complex	Benschop	YDR228C YGL044C YOR250C YMR061W
-Cln-Cdc28 protein kinase complex	Benschop	YMR199W YBR160W YKR091W YLR210W YLR079W YDL155W YPL256C YBR135W
-Isw2-Itc1 complex	Benschop	YGL133W YOR304W
-nucleoporin Nup82 subcomplex	Benschop	YIL115C YJL061W YJL041W YER107C YMR047C
-Snx4-Snx41 heterodimer	Benschop	YJL036W YDR425W
-Nup60-Nup2 nuclear pore complex	Benschop	YAR002W YLR335W YLR347C
-Erp1-Erp2-Emp24-Erv25 p24 complex	Benschop	YAL007C YAR002C-A YGL200C YML012W
-nucleoporin Nsp1 subcomplex	Benschop	YFR002W YGL172W YGR119C YJL041W
-HDA complex	Benschop	YDR295C YNL021W YPR179C
-core H-ACA snoRNP	Benschop	YDL208W YHR072W-A YHR089C YLR175W YNL308C
-Atg11-Atg17-Atg29-Cis1 complex	Benschop	YPR049C YPL166W YDR022C YLR423C
-Clathrin	Benschop	YGL206C YGR167W
-Ctf18 RFC-like complex	Benschop	YCL016C YHR191C YMR078C
-commitment complex 2	Benschop	YKL074C YLR116W
-Sec24-Sfb2-Sec16-Sec23 complex	Benschop	YIL109C YNL049C YPL085W YPR181C
-"vacuolar proton-transporting V-type ATPase, V0 domain"	Benschop	YPR149W YKL119C YLR447C YOR270C
-Hrd1 ubiquitin ligase ERAD-L complex	Benschop	YDR057W YLR207W YOL013C YML029W
-anthranilate synthase complex	Benschop	YER090W YKL211C
-nuclear cohesin complex	Benschop	YJL074C YFL008W YIL026C YDL003W
-protein kinase CK2 complex	Benschop	YGL019W YIL035C YOR039W YOR061W
-phosphatidylinositol 3-kinase complex II	Benschop	YBR097W YLR360W YPL120W YLR240W
-mitochondrial proton-transporting ATP synthase complex	Benschop	YBL099W YBR039W YDR298C YKL016C
-GINS complex	Benschop	YDR013W YJL072C YDR489W YOL146W
-mitochondtrial large ribosomal subunit	Benschop	YGR076C YDR405W YBR282W YHR147C YBL038W YDR462W YOR150W YBR122C YCR071C YDR237W YDR116C YDR322W YLR439W YDR296W YCR046C YNL252C YMR193W YGR220C YKL167C YKR006C YJL063C YKR085C YML025C YMR024W YNL005C YLR312W-A YPL183W-A YMR098C YML009C YMR225C YNL177C YNL284C YPR100W
-ribonuclease H2 complex	Benschop	YDR279W YNL072W
-SUMO activating enzyme complex	Benschop	YDR390C YPR180W
-tRNA (m1A) methyltransferase complex	Benschop	YJL125C YNL062C
-polarisome	Benschop	YER149C YLL021W
-TRAMP complex	Benschop	YDL175C YJL050W YOL115W
-transcription factor TFIIA complex	Benschop	YKL058W YOR194C
-CPF complex	Benschop	YMR061W YER133W YDR195W YGR156W YAL043C YNL222W YDR301W YKL059C YJR093C YPR107C YLR115W YLR277C YKR002W YNL317W YKL018W YOR179C
-serine C-palmitoyltransferase complex	Benschop	YDR062W YMR296C
-Cyc8-Tup1 corepressor complex	Benschop	YCR084C YBR112C
-delta DNA polymerase complex	Benschop	YDL102W YJR006W YJR043C
-snRNP U2	Benschop	YDL043C YJL203W YMR240C YDL030W YPL213W YML049C YMR288W
-AP-3 adaptor complex	Benschop	YBR288C YGR261C YJL024C YPL195W
-Ric1-Rgp1 complex	Benschop	YDR137W YLR039C
-Ndc80 complex	Benschop	YER018C YIL144W YOL069W YMR117C
-Rpd3L complex	Benschop	YDR207C YDL076C YAL013W YBR095C YNL097C YIL084C YMR263W YPL181W YOL004W YNL330C YPL139C YMR075W
-methionyl glutamyl tRNA synthetase complex	Benschop	YGL245W YGL105W YGR264C
-protein phosphatase type 2A complex	Benschop	YAL016W YDL188C YGL190C YDL134C YMR273C YML109W YOR014W
-TORC1 complex	Benschop	YHR186C YJR066W
-epsilon DNA polymerase complex	Benschop	YDR121W YBR278W YNL262W YPR175W
-mitochondrial oxoglutarate dehydrogenase complex	Benschop	YFR049W YFL018C YDR148C YIL125W
-NatC complex	Benschop	YPR051W YCR020C-A YEL053C
-SWR1 complex	Benschop	YAL011W YDR485C YLR085C YBR231C YDR334W YLR385C YLR399C YML041C YFL039C YDR190C YPL235W YJL081C YGR002C YNL107W
-transcription factor TFIIE complex	Benschop	YKL028W YKR062W
-mRNA capping enzyme complex	Benschop	YPL228W YGL130W
-Set3C	Benschop	YBR103W YDR155C YIL112W YKR029C YGL194C YOL068C YCR033W
-ESCRT II complex	Benschop	YJR102C YLR417W YPL002C
-MutSalpha complex	Benschop	YOL090W YDR097C
-Cdc73-Paf1 complex	Benschop	YBR279W YGL244W YOR123C YOL145C YLR418C
-mitochondrial small ribosomal subunit	Benschop	YER050C YNR037C YBR251W YGR215W YBR146W YPL118W YMR158W YDR036C YGR084C YDL045W-A YHR059W YDR041W YGL129C YPL013C YKL155C YIL093C YNL137C YDR337W YJR101W YJR113C YBL090W YMR188C YNL081C YDR175C YOR158W YHL004W YDR347W YNR036C YNL306W YGR165W YKL003C
-AP-1 adaptor complex	Benschop	YFL034W YHL019C YKL135C YLR170C YPR029C YPL259C
-U4-U6 x U5 tri-snRNP complex	Benschop	YGR074W YER029C YLR147C YLR275W YER172C YKL173W YHR165C YDL098C YGR091W YDR473C YOR308C YBR055C YPR178W YPR082C
-GET complex	Benschop	YDL100C YER083C YGL020C
-NatB complex	Benschop	YOL076W YPR131C
-heterotrimeric G-protein complex	Benschop	YHR005C YOR212W
-ribonuclease MRP complex	Benschop	YBL018C YAL033W YBR167C YBR257W YGR030C YNL221C YNL282W YDR478W YHR062C
-DASH complex	Benschop	YDR201W YDR016C YKL052C YGR113W YGL061C YKR083C YKR037C YKL138C-A YBR233W-A
-COPI vesicle coat	Benschop	YER122C YGL137W YDL145C YDR238C YNL287W YFR051C YIL076W YPL010W
-GID complex	Benschop	YCL039W YDL176W YDR255C YBR105C YGL227W YIL097W YIL017C YMR135C
-alpha-glucosidase II complex	Benschop	YBR229C YDR221W
-Golgi transport complex	Benschop	YNL041C YPR105C YGL005C YGL223C YER157W YNL051W YGR120C YML071C
-mitochondrial processing peptidase complex	Benschop	YHR024C YLR163C
-carbamoyl-phosphate synthase complex	Benschop	YJR109C YOR303W
-mitochondrial pyruvate dehydrogenase complex	Benschop	YBR221C YER178W YNL071W YGR193C
-Srb-mediator complex	Benschop	YBL093C YDL005C YGL127C YCR081W YGR104C YDR308C YER022W YGL025C YOL051W YPR168W YMR112C YDR443C YBR253W YOL135C YLR071C YPL042C YHR041C YHR058C YBR193C YOR174W YPR070W YNR010W YGL151W YNL236W
-CCR4-NOT complex	Benschop	YGR134W YCR093W YAL021C YNL288W YNR052C YER068W
-ubiquitin conjugating enzyme complex	Benschop	YGL087C YMR140W YDR092W
-MBF transcription complex	Benschop	YDL056W YLR182W
-mitochondrial respiratory chain complex II	Benschop	YKL148C YLL041C
-snf1 protein kinase complex	Benschop	YDR028C YDR422C YER027C YER129W YDR477W YGL115W YGL208W
-m-AAA complex	Benschop	YER017C YMR089C
-ESCRT-0 complex	Benschop	YHL002W YNR006W
-TREX complex	Benschop	YDR381W YDL084W YDR138W YHR167W YML062C YNL139C YNL253W YNL004W
-alpha DNA polymerase:primase complex	Benschop	YBL035C YNL102W YIR008C YKL045W
-NatA complex	Benschop	YDL040C YHR013C YOR253W
-signal recognition particle	Benschop	YDL051W YKL122C YML105C YPR088C YDL092W YPL210C YPL243W
-NEF4 complex	Benschop	YJR052W YPL046C
-CCAAT-binding factor complex	Benschop	YBL021C YGL237C YOR358W
-"vacuolar proton-transporting V-type ATPase, V1 domain"	Benschop	YJR033C YDL185W YBR127C YGR020C YHR039C-A YEL051W YPR036W YOR332W YKL080W
-PAN complex	Benschop	YGL094C YKL025C
-cytosolic small ribosomal subunit	Benschop	YDR025W YER102W YBR048W YBR189W YBL072C YDR064W YOR096W YJR145C YHR203C YJL190C YIL069C YLR367W YML024W YPL081W YOR204W
-"gamma-tubulin small complex, spindle pole body"	Benschop	YAL047C YHR172W YNL126W YLR212C
-Elg1 RFC-like complex	Benschop	YBR087W YOL094C YNL290W YJR068W YOR217W YOR144C
-tRNA-intron endonuclease complex	Benschop	YLR105C YPL083C
-ISW1 complex	Benschop	YBR245C YKR001C YPL082C YLR095C YMR044W
-EKC-KEOPS protein complex	Benschop	YGR262C YJL184W YKR038C YML036W
-FACT complex	Benschop	YGL207W YML069W
-HOPS complex	Benschop	YMR231W YAL002W YLR396C YLR148W YDR080W YDL077C YPL045W
-MutSBeta complex	Benschop	YOL090W YCR092C
-"cytochome c oxidase complex, subunits IV, Va, VI and VIIa"	Benschop	YNL052W YGL187C YDL067C YHR051W
-SCF ubiquitin ligase complex	Benschop	YDL132W YDR054C YJL047C YGL252C YOL133W
-nucleotide-excision repair factor 1 complex	Benschop	YAL027W YML095C YPL022W
-carboxy-terminal domain protein kinase complex	Benschop	YKL139W YJL006C YML112W
-eukaryotic translation elongation factor 1 complex	Benschop	YAL003W YPL048W YKL081W YPR080W
-NuA4 histone acetyltransferase complex	Benschop	YDR359C YEL018W YFL024C YOR244W YJR082C YHR090C YNL136W YPR023C YJL081C YGR002C YNL107W YFL039C
-RNA polymerase I complex	Benschop	YNL113W YPR110C YHR143W-A YBR154C YPR187W YOR224C YOR210W YDR156W YJL148W YJR063W YNL248C YOR340C YOR341W YPR010C
-90S preribosome	Benschop	YBR247C YDR324C YPL126W YOR310C YGR145W YLR222C YNL075W YJL109C YDR398W YCR057C YPR144C YLR409C YNL132W YLL011W YDL148C YOR145C YBL004W YLR186W YCL059C YJR145C YDR449C YPR112C YMR128W YJR002W YDR299W YOR096W YPL217C YLR197W YOR078W YDL014W YPR137W YMR093W YOL010W YPL266W YLR003C YJL069C YGR128C YLR129W YGR090W YPL012W YER127W YKR060W YER082C YEL055C YDR064W YHR196W YGL171W YHR148W
-RSC complex	Benschop	YMR091C YGL013C YNR023W YHR056C YLR357W YML127W YDR303C YDR225W YOR156C YGR056W YFR037C YOR290C YIL126W YHL025W YJL176C YMR033W YDR073W YCR020W-B YPR034W YCR052W YBR289W YLR321C YLR033W YGR275W YFL049W YPL016W YKR008W
-CAAX-protein geranylgeranyltransferase complex	Benschop	YKL019W YGL155W
-Arp2-3 protein complex	Benschop	YDL029W YBR234C YIL062C YNR035C YKL013C YLR370C YJR065C
-SAGA complex	Benschop	YBR198C YDR167W YDR145W YMR236W YDR448W YGR252W YGL112C YDR392W YCL010C YOL148C YBR081C YDR176W YGL066W YPL254W YLR055C YMR223W YPL047W YHR099W
-TRAPP complex	Benschop	YGR166W YKR068C YOR115C YDR108W YDR246W YML077W YDR407C YBR254C YDR472W YMR218C
-AP-2 adaptor complex	Benschop	YBL037W YJR058C YJR005W YOL062C
-CAF-1 complex	Benschop	YBR195C YML102W YPR018W
-GARP complex	Benschop	YDR484W YDR027C YJL029C YJL034W YKR020W
-CCR4-NOT Not2-Not5 subcomplex	Benschop	YDL165W YPR072W
-origin recognition complex	Benschop	YBR060C YML065W YLL004W YPR162C YHR118C YNL261W
-Smc5-Smc6 complex	Benschop	YEL019C YDR288W YOL034W YDL105W
-RNA polymerase III complex	Benschop	YDR045C YDL150W YJL011C YKL144C YKR025W YNL151C YPR190C YNR003C YOR207C YOR116C YNL113W YPR110C YBR154C YPR187W YOR224C YOR210W
-proteasome regulatory particle	Benschop	YDL147W YHL030W YDR363W-A YFR010W YGR232W YDR394W YER021W YDR427W YDL007W YHR200W YFR004W YFR052W YOR259C YOR261C YDL097C YGL048C YLR421C YHR027C YOR117W YPR108W YIL075C YKL145W
-Ski complex	Benschop	YGL213C YLR398C YKL023W YPR189W
-eukaryotic translation initiation factor 2B complex	Benschop	YDR211W YLR215C YOR260W YLR291C YGR083C YJR007W YER025W YKR026C YPL237W
-exomer complex	Benschop	YLR330W YJL099W YKR027W YOR299W YMR237W
-INO80 complex	Benschop	YFL039C YER092W YGL150C YDL002C YFL013C YOR141C YLR052W YNL059C YNL215W YDR190C YPL235W YJL081C
-MIND complex	Benschop	YAL034W-A YPL233W YIR010W YJR112W
-Elongator holoenzyme complex	Benschop	YLR384C YGR200C YPL086C YHR187W YPL101W YMR312W
-retromer complex	Benschop	YHR012W YJL154C YJL053W YOR069W YOR132W YPL070W
-anaphase-promoting complex	Benschop	YDR260C YFR036W YIR025W YGL240W YBL084C YDR118W YOR249C YHR166C YKL022C YLR127C YNL172W YLR102C
-proteasome core complex	Benschop	YFL007W YER012W YGL011C YBL041W YOL038W YFR050C YGR135W YER094C YJL001W YOR362C YPR103W YGR253C YML092C YOR157C YMR314W
-"alpha-1,6-mannosyltransferase complex"	Benschop	YDR245W YEL036C YJL183W YPL050C YJR075W
-ESCRT I complex	Benschop	YCL008C YLR119W YGR206W YPL065W
-cAMP-dependent protein kinase complex	Benschop	YKL166C YIL033C YJL164C YPL203W
-translation release factor complex	Benschop	YBR143C YDR172W
-Ku70:Ku80 complex	Benschop	YMR106C YMR284W
-transcription factor TFIIIC complex	Benschop	YGR047C YAL001C YDR362C YBR123C YOR110W YPL007C
-fatty acid synthase complex	Benschop	YKL182W YPL231W
-RENT complex	Benschop	YDL042C YJL076W
-septin complex	Benschop	YJR092W YJR076C YCR002C YHR107C YDL225W YLR314C
-exocyst	Benschop	YPR055W YER008C YJL085W YIL068C YDR166C YLR166C YBR102C YGL233W
-signalosome	Benschop	YDR179C YDL216C YOL117W YIL071C YMR025W
-"preribosome, large subunit precursor"	Benschop	YLL008W YER006W YPL211W YBR142W YNL061W YNL110C YOL077C YDR496C YHR052W YMR290C YKR081C YLL034C YOR272W YKL172W YPR016C YDR087C YGL111W YHR088W YLR002C YFL002C YKL009W YCL054W YDL031W YPL093W YOR206W YLR449W YMR049C YNL002C YMR229C YGR103W
-nucleotide-excision repair factor 2 complex	Benschop	YEL037C YER162C
-calcineurin complex	Benschop	YKL190W YML057W
-mitochondrial isocitrate dehydrogenase complex (NAD+)	Benschop	YOR136W YNL037C
-Mre11 complex	Benschop	YDR369C YMR224C YNL250W
-Rab-protein geranylgeranyltransferase complex	Benschop	YJL031C YPR176C
-signal recognition particle receptor complex	Benschop	YDR292C YKL154W
-endoplasmic reticulum Sec complex	Benschop	YBR171W YLR292C YOR254C YPL094C
-eukaryotic translation initiation factor 3 complex	Benschop	YAL035W YDR091C YBR079C YMR309C YLR192C YDR429C YMR146C YPR041W YOR361C YNL244C
-HIR complex	Benschop	YBL008W YOR038C YBR215W YJR140C
-MutLalpha complex	Benschop	YMR167W YNL082W
-RNA polymerase II complex	Benschop	YGL043W YDL115C YDL140C YGL070C YGR005C YGR186W YIL021W YDR404C YOL005C YJL140W YOR151C YGR063C YML010W YPL129W YBR154C YPR187W YOR224C YOR210W
-chaperonin-containing T-complex	Benschop	YJL014W YDL143W YDR188W YIL142W YJL111W YOR281C YNL212W YJL008C YJR064W
-transcription factor TFIID complex	Benschop	YBR198C YDR167W YDR145W YMR236W YGL112C YGR274C YMR227C YML015C YPL011C YMR005W YML098W
-nascent polypeptide-associated complex	Benschop	YHR193C YPL037C YDR252W
-cytosolic large ribosomal subunit	Benschop	YBL092W YGL014W YBR191W YHR141C YLR287C-A YFR032C-A YGR118W YNL302C YNL096C YGL031C YDR418W YGL123W YDR382W YDL083C YCR031C YDR447C YER074W YBL027W YDL136W YHL001W YJL177W YGR034W YMR194W YKL180W YBR181C YOL040C YHL033C YFR031C-A YNL069C YML073C YLR448W YNL301C YLR075W YML063W YLR441C YJR123W YNL178W YPL090C YLR150W YGL147C YBR031W YGL030W YDL075W YGL103W YDL082W YDR471W YMR242C YOL127W YGL135W YGR085C YIL133C YLR029C YDR012W YOR312C YGL076C YLL045C YOR063W YPL198W YPL249C-A YLR340W YIL018W YPL220W YMR142C YOL039W
-RAVE complex	Benschop	YDR202C YJR033C YDR328C
-prefoldin complex	Benschop	YJL179W YEL003W YGR078C YNL153C YML094W YLR200W
-eukaryotic translation initiation factor 4F complex	Benschop	YER165W YGL049C YGR162W YOL139C
-core TFIIH complex	Benschop	YDR311W YLR005W YPR056W
-phenylalanine-tRNA ligase complex	Benschop	YLR060W YFL022C
-DNA replication factor A complex	Benschop	YAR007C YNL312W YJL173C YHR164C
-"alpha,alpha-trehalose-phosphate synthase complex (UDP-forming)"	Benschop	YBR126C YDR074W YMR261C YML100W
-GPI-anchor transamidase complex	Benschop	YDR331W YHR188C YLR088W YDR434W
-ribonucleoside-diphosphate reductase complex	Benschop	YGR180C YJL026W YOR230W
-exosome (RNase complex)	Benschop	YHR081W YCR035C YGR195W YDL111C YDR280W YOR076C YGR158C YHR069C YGR095C YOL142W YNL232W YOL021C YOR001W YNR024W YNL189W
-COMPASS complex	Benschop	YBR175W YBR258C YDR469W YHR119W YAR003W YLR015W YPL138C YKL018W
-SBF transcription complex	Benschop	YER111C YLR182W
-protein farnesyltransferase complex	Benschop	YDL090C YKL019W
-nuclear condensin complex	Benschop	YFR031C YDR325W YLR272C YLR086W YBL097W
-snRNP U6	Benschop	YER146W YDL160C YER112W YCR077C YJL124C YBL026W YDR378C YNL147W YJR022W YMR268C YLR438C-A
-subunit VII of the cytochrome bc1 complex	Benschop	YDL189W YDR529C YBL045C YPR191W
-putatie Saf1-Aah1 complex	Benschop	YNL141W YBR280C
-putative Tkl2-Tkl1 isozyme complex	Benschop	YBR117C YPR074C
-putative Trm7-Ymr259c complex	Benschop	YBR061C YMR259C
-putative Atg18-Atg2 complex	Benschop	YFR021W YNL242W
-putative Trm7-Rtt10 complex	Benschop	YBR061C YPL183C
-putative Nuc1-Trz1-Ymr099c complex	Benschop	YJL208C YKR079C YMR099C
-putative Sas5-Wtm2 complex	Benschop	YOR213C YOR229W
-putative Cdc47-Erg26 complex	Benschop	YBR202W YGL001C
-putative Flc2-Tcb3 complex	Benschop	YAL053W YML072C
-putative Rpl23a-Rpl23b-Bcp1-Rkm1 complex	Benschop	YBL087C YER117W YDR361C YPL208W
-putative Rsa3-Urb1-Urb2-Nop8 complex	Benschop	YLR221C YKL014C YJR041C YOL144W
-putative Ybr225w-Mds3-Cdc25 complex	Benschop	YBR225W YGL197W YLR310C
-putative Tom71-Ylr072w complex	Benschop	YHR117W YLR072W
-putative Flc2-Pdr5 complex	Benschop	YAL053W YOR153W
-putative Ecm30-Ubp15 complex	Benschop	YLR436C YMR304W
-putative Cox20-Chs1 complex	Benschop	YDR231C YNL192W
-putative Hca4-Esf1-Esf2 complex	Benschop	YJL033W YDR365C YNR054C
-putative Hsp42-Gln1 complex	Benschop	YDR171W YPR035W
-putative Bud6-Yor304c-a complex	Benschop	YLR319C YOR304C-A
-putative Skp1-Ypt52-Ymr258c complex	Benschop	YDR328C YKR014C YMR258C
-putative Bat1-Bat2 complex	Benschop	YHR208W YJR148W
-putative Nfs1-Isd11 complex	Benschop	YCL017C YER048W-A
-putative Ser3-Ser33 isozyme complex	Benschop	YER081W YIL074C
-putative Slx5-Swa2 complex	Benschop	YDL013W YDR320C
-putative Yjl070c-Amd1 complex	Benschop	YJL070C YML035C
-putative Yer071c-Aim21-Cap1-Cap2 complex	Benschop	YER071C YIR003W YIL034C YKL007W
-putative Mob1-Dbf20 complex	Benschop	YIL106W YPR111W
-putative Psy2-Rrd1 complex	Benschop	YNL201C YIL153W
-putative Nvj1-Tos4 complex	Benschop	YHR195W YLR183C
-putative Ark1-Ste4 complex	Benschop	YDR264C YOR212W
-putative Sla2-Lsb3 complex	Benschop	YNL243W YFR024C-A
-putative Cyc3-Yat1 complex	Benschop	YAL039C YAR035W
-putative Uba1-Ydr415c complex	Benschop	YKL210W YDR415C
-putative Las17-Sla1-Vrp1 complex	Benschop	YLR337C YBL007C YOR181W
-putative Ela1-Tys1 complex	Benschop	YNL230C YGR185C
-putative Dre2-Tah18 complex	Benschop	YKR071C YPR048W
-putative Kex2-Sil1 complex	Benschop	YNL238W YOL031C
-putative Ssl2-Yor352w complex	Benschop	YIL143C YOR352W
-putative Tdh3-Pgk1-Eno2-Fba1-Pgm1 complex	Benschop	YGR192C YCR012W YHR174W YKL060C YKL152C
-putative Cin8-Zwf1 complex	Benschop	YEL061C YNL241C
-putative Pcm1-Mgs1 complex	Benschop	YEL058W YNL218W
-putative Yef1-Utr1 complex	Benschop	YEL041W YJR049C
-putative Ost1-Stt3 complex	Benschop	YJL002C YGL022W
-putative Osh2-Swh1 complex	Benschop	YDL019C YAR042W
-putative Sit4-Sap185-Rts3-Hrk1 complex	Benschop	YDL047W YJL098W YGR161C YOR267C
-putative Grh1-Fmp38 complex	Benschop	YDR517W YOR205C
-putative Tif1-Tif2 complex	Benschop	YKR059W YJL138C
-putative Sah1-Caf16 complex	Benschop	YER043C YFL028C
-putative Bre1-Lge1 complex	Benschop	YDL074C YPL055C
-putative Fmc1-Atp12 complex	Benschop	YIL098C YJL180C
-putative Fpr3-Ssb2 complex	Benschop	YML074C YNL209W
-putative Ptc7-Sec14 complex	Benschop	YHR076W YMR079W
-putative Faa4-Ygl082w complex	Benschop	YGL082W YMR246W
-putative Ykl088w-Ppz1 complex	Benschop	YKL088W YML016C
-putative Hmt1-Scd6-Psp2 complex	Benschop	YBR034C YPR129W YML017W
-putative Eft1-Eft2 complex	Benschop	YOR133W YDR385W
-putative Mnl1-Pdi1 complex	Benschop	YHR204W YCL043C
-putative Nnf2-Yel043w complex	Benschop	YEL043W YGR089W
-putative Yae1-Ynl260c complex	Benschop	YJR067C YNL260C
-putative Erv46-Erv41-Ero1 complex	Benschop	YAL042W YML067C YML130C
-putative Sok1-Rtn1-Crp1-Ids2-Pep4 complex	Benschop	YDR006C YDR233C YHR146W YJL146W YPL154C
-putative Vac8-Nce102 complex	Benschop	YEL013W YPR149W
-putative Tma20-Tma22 complex	Benschop	YER007C-A YJR014W
-putative Wbp1-Swp1 complex	Benschop	YEL002C YMR149W
-putative Ubc4-Ufd4 complex	Benschop	YBR082C YKL010C
-putative Sfp1-Mrs6 complex	Benschop	YLR403W YOR370C
-putative Trm3-Fas1 complex	Benschop	YDL112W YKL182W
-putative Ste23-Mrn1 complex	Benschop	YLR389C YPL184C
-putative Drn1-Dbr1 complex	Benschop	YGR093W YKL149C
-putative Yak1-Ypl247c complex	Benschop	YJL141C YPL247C
-putative Fap1-Fpr1-Yil161w complex	Benschop	YNL135C YNL023C YIL161W
-putative Crn1-Inp52-Bsp1 complex	Benschop	YLR429W YNL106C YPR171W
-putative Uga1-Ndt80 complex	Benschop	YGR019W YHR124W
-putative Ptc6-Pro2 complex	Benschop	YCR079W YOR323C
-putative Tub3-Gcn1-Gcn20-Gfa1-Mae1-Sam1-Clu1 complex	Benschop	YML124C YGL195W YFR009W YKL104C YKL029C YLR180W YMR012W
-putative Pex5-Mmt1 complex	Benschop	YDR244W YMR177W
-putative Pcl8-Pho85 CDK-cyclin complex	Benschop	YPL031C YPL219W
-putative Mba1-Ste50 complex	Benschop	YBR185C YCL032W
-putative Ura5-Ura10 isozyme complex	Benschop	YML106W YMR271C
-putative Pmr1-Psd1 complex	Benschop	YGL167C YNL169C
-putative Kem1-Gbp2-Sro9-Sbp1 complex	Benschop	YGL173C YCL011C YCL037C YHL034C
-putative Ipp1-Tus1-Ypl066w complex	Benschop	YBR011C YLR425W YPL066W
-putative Ede1-Syp1 complex	Benschop	YBL047C YCR030C
-putative Pex14-Pex17 complex	Benschop	YGL153W YNL214W
-putative Sum1-Rfm1 complex	Benschop	YDR310C YOR279C
-putative Ptc4-Ydr186c complex	Benschop	YBR125C YDR186C
-putative Ybr137w-Sgt2-Mdy2-Yor164c complex	Benschop	YBR137W YOR007C YOL111C YOR164C
-putative Ygr071c-Vid22-Tbf1 complex	Benschop	YGR071C YLR373C YPL128C
-putative Yhb1-Aco1 complex	Benschop	YGR234W YLR304C
-putative Yjr136c-Ykl033w complex	Benschop	YJR136C YKL033W
-putative Lys20-Lys21 isozyme complex	Benschop	YDL131W YDL182W
-putative Nth1-Bmh1-Bmh2 complex	Benschop	YDR001C YDR099W YER177W
-putative Met13-Yml082w complex	Benschop	YGL125W YML082W
-putative Pyc1-Pyc2 isozyme complex	Benschop	YGL062W YBR218C
-putative Gir2-Rbg2 complex	Benschop	YDR152W YGR173W
-putative Yhr131c-Rsp5 complex	Benschop	YHR131C YER125W
-putative Ptc3-Paa1 complex	Benschop	YBL056W YDR071C
-putative Aro3-Bcs1 complex	Benschop	YDR035W YDR375C
-putative Yor251c-Rev1 complex	Benschop	YOR251C YOR346W
-putative Cmd1-Mlc1-Myo2-Myo1-Mlc2 complex	Benschop	YBR109C YGL106W YOR326W YHR023W YPR188C
-putative Efg1-Bud22 complex	Benschop	YMR014W YGR271C-A
-putative Hsp42-Sis1 complex	Benschop	YDR171W YNL007C
-putative Ygr017w-Vip1 complex	Benschop	YGR017W YLR410W
-putative Ygr130c-Ymr031c complex	Benschop	YGR130C YMR031C
-putative Put1-Ymr315w complex	Benschop	YLR142W YMR315W
-putative Crm1-Mir1-Erd2-Tub1-Gea2-Mtr10-Kap104 complex	Benschop	YGR218W YJR077C YBL040C YML085C YEL022W YOR160W YBR017C
-putative Kap95-Nup1 nuclear pore subcomplex	Benschop	YLR347C YOR098C
-putative Emp24-Erv25-Erp3-Erp5 complex	Benschop	YGL200C YML012W YDL018C YHR110W
-putative Gdh1-Gdh3 isozyme complex	Benschop	YOR375C YAL062W
-putative Sas3-Nto1-Ylr455w complex	Benschop	YBL052C YPR031W YLR455W
-putative Cwc2-Spp382-Ntr2 complex	Benschop	YDL209C YLR424W YKR022C
-putative Heh2-Erg24 complex	Benschop	YDR458C YNL280C
-putative Sgn1-Ygr250c complex	Benschop	YGR250C YIR001C
-putative Oca6-Oca5-Oca4-Oca3-Oca1-Oca2 complex	Benschop	YDR067C YHL029C YCR095C YNL032W YNL099C YNL056W
-putative Yll032c-Yml119w complex	Benschop	YLL032C YML119W
-putative Map1-Ybr030w complex	Benschop	YBR030W YLR244C
-putative core TFIIH Tfb5-Tfb2 subcomplex	Benschop	YDR079C-A YPL122C
-putative Gsy1-Gsy2 complex	Benschop	YLR258W YFR015C
-putative Ycp4-Rfs1-Pst2 complex	Benschop	YCR004C YBR052C YDR032C
-putative Dhr2-Ubp10 complex	Benschop	YKL078W YNL186W
-putative Ats1-Kti11 complex	Benschop	YAL020C YBL071W-A
-putative Yer140w-Slp1 complex	Benschop	YER140W YOR154W
-putative Ipp1-Ack1-Rom2 complex	Benschop	YBR011C YDL203C YLR371W
-putative Ypk1-Ypk2 complex	Benschop	YKL126W YMR104C
-putative Tao3-Yml081w complex	Benschop	YIL129C YML081W
-putative Hrr25-Ltv1-Rio2-Tsr1 complex	Benschop	YKL143W YDL060W YPL204W YNL207W
-putative Arx1-Rsa4-Sda1-Ipi3-Nsa2-Nog2-Bud20-Ipi1-Mdn1 complex	Benschop	YDR101C YCR072C YGR245C YNL182C YER126C YNR053C YLR074C YHR085W YLR106C
-putative Hog1-Rck2 complex	Benschop	YLR113W YLR248W
-putative Nup170-Nup53-Hms1 complex	Benschop	YBL079W YMR153W YOR032C
-putative Ade16-Ade17-Sol2 complex	Benschop	YMR120C YCR073W-A YLR028C
-putative Rgd1-Fyv8 complex	Benschop	YBR260C YGR196C
-putative Pet112-Ymr293c complex	Benschop	YBL080C YMR293C
-putative Cul3-Yil001w complex	Benschop	YGR003W YIL001W
-putative Paa1-Ptc2 complex	Benschop	YDR071C YER089C
-putative Ypt1-Dss4 complex	Benschop	YFL038C YPR017C
-putative Nma2-Nma1 complex	Benschop	YGR010W YLR328W
-putative Cia1-Yhr122w-Met18-Nar1 complex	Benschop	YDR267C YHR122W YIL128W YNL240C
-putative Ddi1-Pmt4 complex	Benschop	YER143W YJR143C
-putative Ygr283c-Idp3 complex	Benschop	YGR283C YNL009W
-putative Abp1-Crn1 complex	Benschop	YCR088W YLR429W
-putative Met13-Met12 isozyme complex	Benschop	YGL125W YPL023C
-putative Boi2-Cdc24 complex	Benschop	YAL041W YER114C
-putative Fun19-Kap123 complex	Benschop	YAL034C YER110C
-putative Ygr283c-Ymr310c complex	Benschop	YGR283C YMR310C
-putative Trr1-Trr2 complex	Benschop	YDR353W YHR106W
-putative Fbp26-Ylr345w complex	Benschop	YJL155C YLR345W
-putative Pck1-Eno1 complex	Benschop	YBL105C YGR254W
-putative Tdh1-Tdh2 isozyme complex	Benschop	YJL052W YJR009C
-putative Gdi1-Ypt6-Ypt1 complex	Benschop	YER136W YLR262C YFL038C
-putative Bdh1-Bdh2 complex	Benschop	YAL060W YAL061W
-putative Rps0a-Rps0b complex	Benschop	YGR214W YLR048W
-putative Ubp13-Yol087c complex	Benschop	YBL067C YOL087C
-putative Pol4-Rpn5 complex	Benschop	YCR014C YDL147W
-putative Erg7-Erg27 complex	Benschop	YHR072W YLR100W
-putative Rrp7-Ifh1 complex	Benschop	YCL031C YLR223C
-putative Asn1-Asn2 isozyme complex	Benschop	YGR124W YPR145W
-putative Mdm10-Mpm1-Tom40-Yhm2 complex	Benschop	YAL010C YJL066C YMR203W YMR241W
-putative Ybt1-Dak1 complex	Benschop	YLL048C YML070W
-putative Cdc19-Pyk2 isozyme complex	Benschop	YAL038W YOR347C
-putative Pkh1-Mrp8-Pil1-Lsp1 complex	Benschop	YDR490C YKL142W YGR086C YPL004C
-putative Lsg1-Nmd3-Rei1 complex	Benschop	YGL099W YBR267W YHR170W
-putative Taf8-Taf14-Taf2 TFIID subcomplex	Benschop	YML114C YPL129W YCR042C
-putative Ssd1-Psy4-Pph3-Psy2 complex	Benschop	YDR293C YBL046W YDR075W YNL201C
-putative Rim1-Rad52 complex	Benschop	YCR028C-A YML032C
-putative Nqm1-Tal1 complex	Benschop	YGR043C YLR354C
-putative Vab2-Ydr357c-Ykl061w-YGL079w-Ynl086w complex	Benschop	YDR357C YKL061W YEL005C YGL079W YNL086W
-putative Kap123-Ypr174c complex	Benschop	YER110C YPR174C
-putative Spe3-Spe4 complex	Benschop	YLR146C YPR069C
-putative Leu4-Leu9 isozyme complex	Benschop	YNL104C YOR108W
-putative Snf7-Vps4 complex	Benschop	YLR025W YPR173C
-putative Hmg1-Hmg2 isozyme complex	Benschop	YLR450W YML075C
-putative Oye2-Oye3 complex	Benschop	YHR179W YPL171C
-putative Glt1-Ylr257w complex	Benschop	YDL171C YLR257W
-spliceosome	Benschop	YGL120C YBR065C YJR050W YAL032C YDR364C YGR278W YCR063W YMR213W YDL209C YDR416W YLL036C YLR117C YPL151C YPR101W YGL128C YLR424W
-"1,3-beta-glucan synthase complex (GO)"	Benschop	YGR032W YLR342W YPR165W
-6-phosphofructokinase complex (GO)	Benschop	YGR240C YMR205C
-90S preribosome (GO)	Benschop	YCR057C YGR081C YGR103W YJL010C snR17a snR17b
-acetolactate synthase complex (GO)	Benschop	YCL009C YMR108W
-box C/D snoRNP complex (GO)	Benschop	YDL014W YEL026W YLR197W YOR310C snR128 snR13 snR17a snR17b snR18 snR190 snR24 snR38 snR39 snR39B snR4 snR40 snR41 snR47 snR48 snR50 snR51 snR52 snR53 snR54 snR55 snR56 snR57 snR58 snR59 snR60 snR61 snR62 snR63 snR64 snR65 snR66 snR67 snR68 snR69 snR70 snR71 snR72 snR73 snR74 snR75 snR76 snR77 snR78 snR79 snR87
-box H/ACA snoRNP complex (GO)	Benschop	YHR089C YLR175W snR10 snR11 snR161 snR189 snR191 snR3 snR30 snR31 snR32 snR33 snR34 snR35 snR36 snR37 snR42 snR43 snR44 snR46 snR49 snR5 snR8 snR80 snR81 snR82 snR83 snR84 snR85 snR86 snR9
-calcineurin complex (GO)	Benschop	YKL159C YKL190W YLR433C YML057W
-CBF3 complex (GO)	Benschop	YDR328C YGR140W YMR094W YMR168C
-CCR4-NOT complex (GO)	Benschop	YFL028C YGR134W YKR036C YNL278W YNL288W
-chromatin accessibility complex (GO)	Benschop	YDR121W YGL133W YJL065C YOR304W
-chromatin assembly complex (GO)	Benschop	YER030W YJL115W YOL012C
-chromatin silencing complex (GO)	Benschop	YBR195C YDR227W YKR101W YLR442C
-cohesin loading complex (GO)	Benschop	YDR180W YER147C
-commitment complex (GO)	Benschop	YDR240C YGR074W YHR086W YIL061C YKL074C YLR116W YLR147C YLR298C YML046W YMR125W YPL178W snR19
-Cul3-RING ubiquitin ligase complex (GO)	Benschop	YBR114W YGR003W YJR052W YNL230C YPL046C
-CURI complex (GO)	Benschop	YCL031C YGR090W YLR223C YOR039W YPR104C
-cyclin-dependent protein kinase holoenzyme complex (GO)	Benschop	YBR135W YBR160W YDL127W YDL179W YER059W YGL134W YGL215W YHR071W YIL050W YNL289W YOL001W YPL219W YPL256C
-cytoplasmic dynein complex (GO)	Benschop	YDR424C YDR488C YKR054C YMR299C
-Dbf4-dependent protein kinase complex (GO)	Benschop	YDL017W YDR052C
-DNA ligase IV complex (GO)	Benschop	YGL090W YLR265C YOR005C
-"DNA-directed RNA polymerase II, holoenzyme (GO)"	Benschop	YBR236C YDL115C YGR097W
-DSIF complex (GO)	Benschop	YGR063C YML010W
-dynactin complex (GO)	Benschop	YDR106W YHR129C YMR294W YPL174C
-ESCRT III complex (GO)	Benschop	YKL002W YKL041W YLR025W YMR077C
-exosome (RNase complex) (GO)	Benschop	YOR076C
-F-actin capping protein complex (GO)	Benschop	YIL034C YKL007W
-glutamate synthase complex (GO)	Benschop	YDL171C
-glycine cleavage complex (GO)	Benschop	YAL044C YDR019C YFL018C YMR189W
-glycosylphosphatidylinositol-N-acetylglucosaminyltransferase (GPI-GnT) complex (GO)	Benschop	YDR437W YGR216C YNL038W YPL076W YPL096C-A YPL175W
-heterogeneous nuclear ribonucleoprotein complex (GO)	Benschop	YNL004W YNL016W
-heterotrimeric G-protein complex (GO)	Benschop	YHR005C YJR086W YOR212W
-high affinity iron permease complex (GO)	Benschop	YER145C YMR058W
-Holliday junction resolvase complex (GO)	Benschop	YBR098W YDR386W
-i-AAA complex (GO)	Benschop	YCL044C YPR024W
-kinesin complex (GO)	Benschop	YBL063W YEL061C YGL216W YMR198W YPL155C YPL253C
-mannosyltransferase complex (GO)	Benschop	YBR004C YNL158W
-MCM complex (GO)	Benschop	YBL023C YBR202W YEL032W YGL201C YLR274W YPR019W
-Mdm10/Mdm12/Mmm1 complex (GO)	Benschop	YAL010C YLL006W YOL009C
-mitochondrial inner membrane peptidase complex (GO)	Benschop	YEL059C-A YMR035W YMR150C
-mitochondrial inner membrane presequence translocase complex (GO)	Benschop	YGR033C YJL104W YJL143W YLR008C YNR017W YPL063W
-mitochondrial inner membrane protein insertion complex (GO)	Benschop	YBR091C YDL217C YJL054W YOR297C
-mitochondrial intermembrane space protein transporter complex (GO)	Benschop	YEL020W-A YGR181W YHR005C-A YJR135W-A
-mitochondrial outer membrane translocase complex (GO)	Benschop	YGR082W YKL195W YMR203W YNL070W YNL121C YNL131W YOR045W YPR133W-A
-mitochondrial proton-transporting ATP synthase complex (GO)	Benschop	YDL130W-A YDL181W YGR008C
-"mitochondrial proton-transporting ATP synthase complex, coupling factor F(o) (GO)"	Benschop	Q0080 Q0085 Q0130 YDR322C-A YDR377W YLR295C YML081C-A YOL077W-A YPR020W
-mitochondrial respiratory chain complex II (GO)	Benschop	YDR178W YKL141W YKL148C YLL041C
-mitochondrial ribonuclease P complex (GO)	Benschop	YML091C
-mitochondrial ribosome (GO)	Benschop	YDL069C YGL068W YKL142W YPL132W
-mitochondrial sorting and assembly machinery complex (GO)	Benschop	YAL010C YHR083W YMR060C YNL026W
-mitotic checkpoint complex (GO)	Benschop	YGL116W YJL013C YJL030W YOR026W
-monopolin complex (GO)	Benschop	YCR086W YDR439W YER106W YPL204W
-Mre11 complex (GO)	Benschop	YDR369C YMR224C YNL250W
-mRNA cap complex (GO)	Benschop	YJL124C YKL204W YOR276W
-MutLbeta complex (GO)	Benschop	YMR167W YPL164C
-myosin II complex (GO)	Benschop	YHR023W
-myosin V complex (GO)	Benschop	YAL029C YOR326W
-Noc1p-Noc2p complex (GO)	Benschop	YDR060W YOR206W
-Noc2p-Noc3p complex (GO)	Benschop	YLR002C YOR206W
-Noc4p-Nop14p complex (GO)	Benschop	YDL148C YPR144C
-NuA3 histone acetyltransferase complex (GO)	Benschop	YBL052C YJR082C YOR064C YPL129W YPR031W
-nuclear cap binding complex (GO)	Benschop	YMR125W YPL178W
-nuclear RNA export factor complex (GO)	Benschop	YKL186C YPL169C
-nuclear SCF ubiquitin ligase complex (GO)	Benschop	YFL009W YIL046W
-nuclear telomere cap complex (GO)	Benschop	YBR275C YDL042C YDL220C YDR082W YDR227W YGR099W YLR010C YLR150W YLR442C YLR453C YNL216W
-"nucleolar preribosome, large subunit precursor (GO)"	Benschop	YER126C YGR103W YLR022C YLR221C YNR038W YPL093W
-"nucleolar preribosome, small subunit precursor (GO)"	Benschop	YBR247C YGR081C YJL010C YKL143W YNL178W
-nucleotide-excision repair factor 1 complex (GO)	Benschop	YML095C YMR201C YPL022W
-nucleotide-excision repair factor 3 complex (GO)	Benschop	YDR460W YGR258C
-nucleotide-excision repair factor 4 complex (GO)	Benschop	YBR114W YJR052W YKL112W YPL046C
-oligosaccharyl transferase complex (GO)	Benschop	YDL232W YEL002C YGL022W YGL226C-A YJL002C YML019W YMR149W YOR085W YOR103C
-palmitoyltransferase complex (GO)	Benschop	YLR246W YOL110W
-PCNA complex (GO)	Benschop	YBR088C
-phosphopyruvate hydratase complex (GO)	Benschop	YGR254W YHR174W
-preribosome (GO)	Benschop	YDL166C YOR056C
-proteasome complex (GO)	Benschop	YBR082C YDR059C YDR069C YDR177W YEL037C YGL058W YGR184C YHL030W YHR052W
-proteasome core complex (GO)	Benschop	YFL007W
-proteasome regulatory particle (GO)	Benschop	YDL020C YFR010W YGR232W
-protein phosphatase type 1 complex (GO)	Benschop	YBR045C YBR050C YDR028C YER054C YER133W YLR273C YOR178C
-RecQ helicase-Topo III complex (GO)	Benschop	YLR234W YMR190C YPL024W
-RENT complex (GO)	Benschop	YDL042C YFR028C YJL076W YPL126W
-repairosome (GO)	Benschop	YBR114W YEL037C YER162C YJR052W
-"retromer complex, outer shell (GO)"	Benschop	YOR069W YOR132W
-Rhp55-Rhp57 complex (GO)	Benschop	YDR004W YDR076W
-ribonuclease H2 complex (GO)	Benschop	YDR279W YLR154C YNL072W
-ribonucleoprotein complex (GO)	Benschop	YIL149C YKR095W YOR198C
-ribonucleoside-diphosphate reductase complex (GO)	Benschop	YER070W YGR180C YIL066C YJL026W
-RNA polymerase I transcription factor complex (GO)	Benschop	YBL014C YER148W YJL025W YKL125W YML043C
-RNA polymerase I upstream activating factor complex (GO)	Benschop	YBL025W YLR141W YMR270C YOR295W
-signal peptidase complex (GO)	Benschop	YIR022W YJR010C-A YLR066W YML055W
-Sin3 complex (GO)	Benschop	YMR053C YNL309W YOL004W
-Slx1-Slx4 complex (GO)	Benschop	YBR228W YLR135W
-small nuclear ribonucleoprotein complex (GO)	Benschop	YER127W YPR057W YPR137W
-SNARE complex (GO)	Benschop	YAL030W YGR009C YPL232W
-sulfite reductase complex (NADPH) (GO)	Benschop	YFR030W YJR137C
-synaptonemal complex (GO)	Benschop	YGL249W YNL088W
-telomerase catalytic core complex (GO)	Benschop	TLC1 YLR318W
-telomerase holoenzyme complex (GO)	Benschop	YIL009C-A YLR233C
-TORC1 complex (GO)	Benschop	YHR186C YJR066W YKL203C YNL006W YPL180W
-TORC2 complex (GO)	Benschop	YER093C YIL105C YJL058C YKL203C YMR068W YNL006W YNL047C YOL078W
-transcription elongation factor complex (GO)	Benschop	YER164W YGR116W YNL230C YPL046C YPR133C
-transcription factor complex (GO)	Benschop	YCR081W YDR443C YNL025C YPL042C YPR186C
-transcription factor TFIIIB complex (GO)	Benschop	YER148W YGR246C YNL039W
-translocon complex (GO)	Benschop	YBR283C YDR086C YER019C-A YER087C-B YLR378C
-tRNA-intron endonuclease complex (GO)	Benschop	YAR008W YLR105C YMR059W YPL083C
-ubiquitin conjugating enzyme complex (GO)	Benschop	YDR092W YGL087C
-ubiquitin ligase complex (GO)	Benschop	YDL013W YDR219C YDR306C YER116C YER125W YLR224W YML111W YMR275C YNL311C YOR057W
-UDP-N-acetylglucosamine transferase complex (GO)	Benschop	YBR070C YGL047W
-vacuolar transporter chaperone complex (GO)	Benschop	YER072W YFL004W YJL012C YPL019C
-zeta DNA polymerase complex (GO)	Benschop	YIL139C YPL167C
-Proteolysis	Stirling	YGL011C YOL038W YGR253C YMR314W YOR362C YJL001W YER094C YER012W YPR103W YFR050C YDR363W-A YHR052W YDL097C YDL147W YFR004W YHR027C YFR052W YGR184C YFL009W YML088W YDL126C 
-"Kinetochore, Spindle and Cell Cycle"	Stirling	YIL144W YMR117C YOL069W YER018C YAL034W-A YIR010W YJR112W YPL233W YPL209C YHR199C-A  YBR156C YDR254W YLR381W YGR179C YPL018W YDR201W YKR037C YGR113W YGL061C YKL052C YOR026W YFR046C YKL089W YBR211C YMR168C YMR094W YGR140W YOR195W YGL060W YKL049C YOR057W YPR046W YDR318W YJR135C YDL139C YBR107C YDR328C YCL029C YHR166C YDR118W YGL240W YGL116W YGL003C YDL008W YGL086W YJL030W YGR188C YOR073W YLR457C YGL093W YPL253C YNL126W YHR172W YKL042W YOL091W YDR356W YDR532C YDL028C YOR058C YBL031W YBL034C YCR065W YEL061C YMR198W YPL017C YDR130C YER016W YPR141C YOR349W YPL241C YMR138W YER007W YEL003W YML094W YGR078C YJL179W YLR200W YLR212C YML124C YML085C YFL037W YBR158W YFR028C YJR053W YGR108W YDL155W YPR120C YBR160W YBR135W YAL040C YOR066W YLR079W YFL017C YPL031C YOR083W YCR008W YML016C YLR361C YDR168W YDR113C YDR510W YDL064W YLR394W YER133W YKL193C YLR273C YMR311C YBL058W YAL016W YOR014W 
-"DNA replication, repair and cohesion"	Stirling	YIL026C YDR014W YDR180W YER147C YDL003W YFL008W YJL074C YLR086W YGL250W YDR285W YIL150C YBL023C YEL032W YPR019W YLR274W YGL201C YBR202W YML065W YBR060C YLL004W YPR162C YNL261W YHR118C YFR027W YHR164C YNL102W YDL102W YBL035C YBR088C YJR006W YJR046W YJR043C YLR103C YJL194W YDL164C YDR052C YOR080W YPR135W YBR278W YDL017W YDR439W YCR086W YKL108W YGL113W YDR013W YJL072C YOL146W YDR489W YAR007C YNL312W YER070W YJL026W YGR180C YNL072W YDR279W YLR154C YOR144C YMR078C YHR191C YCL016C YJR068W YOL094C YBR087W YIR008C YKL045W YBR274W YPL022W YML095C YOR368W YCR066W YER173W YKL113C YER162C YLR032W YNL250W YER095W YML032C YGL163C YDR076W YDR004W YDL059C YGL058W YDR217C YBR073W YPL194W YDR440W YDL101C YBR136W YLR288C YPR164W YLR320W YBR098W YIR002C YCL061C YMR224C YPL153C YIL139C YHR154W YLL002W YNL273W YHR134W YDR369C YIL132C YNL133C YDR386W YLR007W YDR288W YDL105W YML023C YHL006C YDL013W YER116C YJL092W YJL047C YMR048W YOL034W YLR383W YEL037C YPL024W YMR190C YPL008W YHR031C YLR234W YOL006C YBR009C YNL030W YNL031C YOL012C YLR052W YDL002C YPL235W YDR359C YNL136W YNL107W YGR002C YAL011W YBR231C YDR334W YLR357W YDR303C YFR037C YMR033W YKR008W 
-Chromatin and Transcription	Stirling	YDL074C YPR068C YOR025W YDR191W YDR176W YPR018W YNL206C YJL127C YER161C YMR179W YGR270W YML102W YJL115W YPL055C YBR195C YFR013W YJR060W YGR099W YPR085C YKL033W YMR219W YDR363W YIL009C-A YBR275C YOR209C YPL128C YMR106C YDL040C YKL117W YPL047W YGL066W YGR274C YDR167W YPL129W YCR042C YMR005W YBR198C YMR227C YML114C YMR236W YLR071C YGL207W YBR123C YKL028W YKR062W YDR311W YDR460W YJR063W YDR156W YJL148W YIL021W YJL140W YBR154C YDR404C YDR045C YKR025W YLR005W YIL143C YLR226W YLR418C YJL006C YML112W YNR010W YHR058C YGL151W YML069W YOL054W YDL140C YDR289C YCR081W YNL222W YPR161C YPR133C YML010W YGR063C YMR043W YGL071W YGR044C YML099C YPL082C YBR112C YKR038C YHR206W YNL257C YHR167W YML062C YNL309W YIL084C YIL036W 
-Ribosome biogenesis and Translation	Stirling	YLR291C YBR079C YOR361C YOR260W YBR143C YEL034W YJR047C YDR172W YPL179W YCR057C YOR272W YMR049C YHR066W YHR085W YDR091C YNR038W YHR088W YOL144W YNL002C YLR222C YDR449C YLR002C YPR144C YKR092C YHR065C YLR196W YLR409C YDR398W YKR024C YNL132W YNL075W YKR094C YIL148W YKL006W YGL030W YIL018W YNL162W YDL082W YIL052C YGR027C YBR189W YHL015W YGR118W YGR148C YPL160W YLR060W YFL022C YOR168W YBR121C YGL245W YGR264C YLR316C YHR070W YHR020W YBR167C YIR015W 
-Mitochondrial Functions	Stirling	YMR203W YNL131W YPR047W YGR171C YBR282W YML009C YNL252C YEL050C YJL102W YPR067W YER048W-A YPL059W YLL027W YKR071C YMR301C YPL061W YML086C YNL080C YML028W YPR131C YBR026C YNR016C YDL141W YKL055C YKL192C YDR487C YLR304C YFL016C YIL125W YDR194C YPL271W YOR241W YKR087C YDR350C YHR194W YDR231C YMR267W YLR193C YOL009C YAL008W YMR066W YNR045W YNL315C YJR144W YOR060C YNL213C YAL019W YLR163C YGR102C YHR001W-A YHR076W 
-RNA Processing	Stirling	YPR082C YLR298C YOR308C YBL074C YIL061C YPL213W YDL098C YGR091W YPR178W YBR055C YMR288W YBR152W YEL026W YDL209C YDR416W YKL173W YKL074C YOR250C YOL123W YGL044C YOL115W YER165W YJR093C YLR115W YDR228C YNL317W YGR156W YGL173C YJL124C YBL026W YDR378C YOL021C YCR035C YHR069C YDL165W YCR093W YAL021C YNR052C YPL190C YLR116W YDL084W YLR424W YPR042C YHR087W YPL228W YNL118C 
-Nucleocytoplasmic Transport	Stirling	YKL057C YKR082W YAR002W YDL116W YBL079W YJR042W YDR159W YOL072W YER009W YMR308C YJR074W YIR011C YLR293C YHR036W YMR235C YGL238W YDR002W YGL097W YGR218W YPL125W YOR160W
-Endomembrane system	Stirling	YDR292C YKL154W YPR088C YLR378C YJL031C YML077W YNR026C YBL050W YDR170C YIL109C YDR189W YMR218C YDR246W YFL038C YGR172C YIL004C YMR079W YNR049C YLR440C YOR326W YCR067C YPR032W YFR051C YGL098W YJR005W YMR197C YNR048W YCR094W YML130C YIL090W YNL291C YLR423C YEL013W YLR373C YGR141W YDR200C YBR042C YPL117C YHR133C YMR008C YJL167W YDR182W YBR109C YDR017C YLR410W YPL268W YER177W YDR099W 
-Morphogenesis and Cell integrity	Stirling	YFL039C YLR370C YKL013C YLR085C YOR122C YLR429W YNL138W YLL050C YLR229C YAL041W YDR208W YJL058C YNL047C YML064C YNL152W YHR107C YDL117W YGR058W YNL066W YGL142C YDR434W YOR149C YLR459W YDL103C YLR242C YCL052C YIR019C YOR002W YKL104C YFR042W YHR204W YHR101C YLR443W YOR336W YBL105C YKL035W YOL081W YGR014W YLR006C YLR425W 
-Other housekeeping pathways	Stirling	YJL060W YEL029C YBR035C YDL045C YCR028C YGR267C YLR058C YEL046C YKL221W YOL064C YER023W YKR093W YCR012W YHR092C YKL217W YDR050C YJR009C YAL038W YKR097W YKL024C YAR015W YMR120C YOR128C YMR300C YGL234W YGR061C YDR408C YDR226W YJR032W YIR004W YPL037C YDR171W YHR064C YGR285C YPL106C 
-Unknown function	Stirling	YGL168W YLL049W YJL038C YOL070C YCR095C YDL204W YPL027W YMR095C YLL005C YKR091W YIL137C YLL028W YNR068C YNL086W YMR185W YMR134W YJR154W YJR008W YGR153W YGR071C YGL235W YGL117W YER156C YDR286C YDL156W YDL025C YLR312C YOL014W YLR287C YMR266W YOR262W YHR122W 
-Dubious ORFs	Stirling	YLR255C YPR044C YOR300W YOR024W YOR015W YNR042W YNL140C YNL089C YML009W-B YML009C-A YLR374C YLR235C YKL053W YJL075C YJL007C YHR093W YGR219W YGR064W YFL013W-A YDR431W YDR417C YDR290W YDR187C YDL162C YDL096C YBR277C YBR113W YBR099C YML090W YDR433W YDL151C 
+Notes	GroupName	GroupID	GroupORFs
+From Lydall lab	Checkpoint sliding clamp and loader	Lydall	YOR368W YLR288C YPL194W YER173W
+From Lydall lab	Telomere capping genes	Lydall	YBR274W YBR136W YDL101C YDR217C YOR033C YOR368W YLR288C YPL194W YER173W YIL009C-A YLR233C TLC1 YLR318W YMR106C YMR284W YDR369C YMR224C YNL250W YBL088C YHR031C YML061C YMR080C YHR077C YGR072W YDR206W
+From Lydall lab	nuclear telomere cap complex (GO)	Lydall	YBR275C YDL042C YDL220C YDR082W YDR227W YGR099W YLR010C YLR150W YLR442C YLR453C YNL216W
+From Lydall lab	Chk1 targets	Lydall	YPR145W YBR252W YJR082C YBR177C 
+From Lydall lab	MTC/RTCs	Lydall	YBR255W YDR128W YEL033W YGL226W YHR151C YJL123C YKL098W YNL254C YOL138C YOR118W YPL183W-A YBR147W YHR087W 
+From Lydall lab	SEA complex (RTC1/MTC5 etc)	Lydall	YOL138C YBL104C YDR128W YJR138W 
+From Lydall lab	adjacent to STN1/TEN1	Lydall	YDR083W YDRO81C YLR009W 
+From Lydall lab	NMD genes	Lydall	YMR080C YHR077C YGR072W 
+From Lydall lab	Unfolded protein response	Lydall	YHR079C YFL031W YJL034W 
+From Lydall lab	Spermidine synthase complex	Lydall	YKL184W YOL052C YPR069C 
+Benschop et al. Molecular Cell (2010)	Spp381-Prp38 complex	Benschop	YBR152W YGR075C
+Benschop et al. Molecular Cell (2010)	Asf1-Rad53 complex	Benschop	YJL115W YPL153C
+Benschop et al. Molecular Cell (2010)	Pan1-End3 complex	Benschop	YIR006C YNL084C
+Benschop et al. Molecular Cell (2010)	Sod1-Css1 heterodimer	Benschop	YJR104C YMR038C
+Benschop et al. Molecular Cell (2010)	HAT-A4 complex	Benschop	YBR010W YBR009C YNL030W YEL056W YPL001W YLL022C YOL054W YNL031C
+Benschop et al. Molecular Cell (2010)	Ste11-Ste50 complex	Benschop	YLR362W YCL032W
+Benschop et al. Molecular Cell (2010)	Cdc48-Ufd1-Npl4 complex	Benschop	YDL126C YBR170C YGR048W
+Benschop et al. Molecular Cell (2010)	Cdc48-Shp1 complex	Benschop	YBL058W YDL126C
+Benschop et al. Molecular Cell (2010)	Sit4-Sap155 complex	Benschop	YDL047W YFR040W
+Benschop et al. Molecular Cell (2010)	Ste12-Dig1-Dig2 complex	Benschop	YPL049C YHR084W YDR480W
+Benschop et al. Molecular Cell (2010)	Rvs161-Rvs167 complex	Benschop	YCR009C YDR388W
+Benschop et al. Molecular Cell (2010)	She2-She3-Myo4 complex	Benschop	YAL029C YBR130C YKL130C
+Benschop et al. Molecular Cell (2010)	Ubp3-Bre5 complex	Benschop	YNR051C YER151C
+Benschop et al. Molecular Cell (2010)	Rad6-Rad18 complex	Benschop	YGL058W YCR066W
+Benschop et al. Molecular Cell (2010)	Rtt109-Vps75 complex	Benschop	YLL002W YNL246W
+Benschop et al. Molecular Cell (2010)	Csm3-Tof1 complex	Benschop	YMR048W YNL273W
+Benschop et al. Molecular Cell (2010)	Psr2-Psr1-Whi2 complex	Benschop	YLR019W YLL010C YOR043W
+Benschop et al. Molecular Cell (2010)	Rad23-Png1 complex	Benschop	YEL037C YPL096W
+Benschop et al. Molecular Cell (2010)	Tim44-Ssc1 heterodimer	Benschop	YIL022W YJR045C
+Benschop et al. Molecular Cell (2010)	Dop1-Mon2 complex	Benschop	YDR141C YNL297C
+Benschop et al. Molecular Cell (2010)	Rsp5-Ubp2-Rup1 deubiquitinating enzyme complex	Benschop	YER125W YOR124C YOR138C
+Benschop et al. Molecular Cell (2010)	Pho80-Pho81-Pho85 CDK-cyclin complex	Benschop	YGR233C YOL001W YPL031C
+Benschop et al. Molecular Cell (2010)	Trm112-Trm11 complex	Benschop	YNR046W YOL124C
+Benschop et al. Molecular Cell (2010)	Dug2-Dug3 complex	Benschop	YBR281C YNL191W
+Benschop et al. Molecular Cell (2010)	Dph1-Dph2-Dph3 complex	Benschop	YBL071W-A YIL103W YKL191W
+Benschop et al. Molecular Cell (2010)	Scs2-Opi1 complex	Benschop	YER120W YHL020C
+Benschop et al. Molecular Cell (2010)	Ula1-Uba3 enzyme complex	Benschop	YPL003W YPR066W
+Benschop et al. Molecular Cell (2010)	Nam1-Sls1 complex	Benschop	YDL044C YLR139C
+Benschop et al. Molecular Cell (2010)	ER SNARE Use1	Benschop	YDR498C YLR440C YNL258C YKL196C YLR268W YGL145W YOR075W YGL098W
+Benschop et al. Molecular Cell (2010)	Pba1-Pba2 complex	Benschop	YKL206C YLR199C YBR173C
+Benschop et al. Molecular Cell (2010)	Gyl1-Gyp5 complex	Benschop	YMR192W YPL249C
+Benschop et al. Molecular Cell (2010)	Rtg1-Rtg3 bHLH-Zip complex	Benschop	YBL103C YOL067C
+Benschop et al. Molecular Cell (2010)	Sit4-Sap190 complex	Benschop	YDL047W YKR028W
+Benschop et al. Molecular Cell (2010)	Rtt103-Rai1-Rat1 complex	Benschop	YDR289C YGL246C YOR048C
+Benschop et al. Molecular Cell (2010)	R2TP complex	Benschop	YCR060W YHR034C YDR190C YPL235W
+Benschop et al. Molecular Cell (2010)	adenylyl cyclase complex	Benschop	YJL005W YNL138W
+Benschop et al. Molecular Cell (2010)	Ssc1-Mge1 complex	Benschop	YJR045C YOR232W
+Benschop et al. Molecular Cell (2010)	Dcs1-Dcs2 heterodimer	Benschop	YLR270W YOR173W
+Benschop et al. Molecular Cell (2010)	Kap114-Nap1 histone complex	Benschop	YBL003C YGL241W YBL002W YOL012C YKR048C
+Benschop et al. Molecular Cell (2010)	Grh1-Bug1 complex	Benschop	YDL099W YDR517W
+Benschop et al. Molecular Cell (2010)	Mad1-Mad2 complex	Benschop	YGL086W YJL030W
+Benschop et al. Molecular Cell (2010)	Ic-CPY complex	Benschop	YLR178C YMR297W
+Benschop et al. Molecular Cell (2010)	Mlh2-Mlh1 heterodimer	Benschop	YLR035C YMR167W
+Benschop et al. Molecular Cell (2010)	Sac3-Thp1 complex	Benschop	YDR159W YOL072W
+Benschop et al. Molecular Cell (2010)	tRNA methyltransferase complex	Benschop	YDL201W YDR165W
+Benschop et al. Molecular Cell (2010)	Tlg1 SNARE complex	Benschop	YBL050W YDR468C YGL095C YOL018C
+Benschop et al. Molecular Cell (2010)	ribosome-associated complex	Benschop	YGR285C YHR064C YJL080C
+Benschop et al. Molecular Cell (2010)	Trm9-Trm112 complex	Benschop	YML014W YNR046W
+Benschop et al. Molecular Cell (2010)	prohibitin complex	Benschop	YGR132C YGR231C
+Benschop et al. Molecular Cell (2010)	succinyl-CoA ligase	Benschop	YGR244C YOR142W
+Benschop et al. Molecular Cell (2010)	Gsp1-Prp20 complex	Benschop	YGL097W YLR293C YOR185C
+Benschop et al. Molecular Cell (2010)	Kic1-Sog2 complex	Benschop	YHR102W YOR353C
+Benschop et al. Molecular Cell (2010)	Nrd1-Nab3-Sen1 termination complex	Benschop	YLR430W YNL251C YPL190C YMR239C
+Benschop et al. Molecular Cell (2010)	Ssk1-Ssk2 complex	Benschop	YLR006C YNR031C
+Benschop et al. Molecular Cell (2010)	Vti1-Pep12 complex	Benschop	YMR197C YOR036W
+Benschop et al. Molecular Cell (2010)	Pcl7-Pho85 CDK-cyclin complex	Benschop	YPL031C YIL050W
+Benschop et al. Molecular Cell (2010)	Prs1-Prs3 heterodimer	Benschop	YHL011C YKL181W
+Benschop et al. Molecular Cell (2010)	Vac14-Fig4 complex	Benschop	YLR386W YNL325C
+Benschop et al. Molecular Cell (2010)	Cpr6-Hsc82-Sti1-Hsp82 complex	Benschop	YLR216C YMR186W YOR027W YPL240C
+Benschop et al. Molecular Cell (2010)	Bur1-Bur2 CDK-cyclin complex	Benschop	YPR161C YLR226W
+Benschop et al. Molecular Cell (2010)	Bub1-Bub3 kinase complex	Benschop	YGR188C YOR026W
+Benschop et al. Molecular Cell (2010)	Sis2-Ykl088w-Vhs3 complex	Benschop	YKR072C YKL088W YOR054C
+Benschop et al. Molecular Cell (2010)	putative Slu7-Prp18 complex	Benschop	YDR088C YGR006W
+Benschop et al. Molecular Cell (2010)	COMA complex	Benschop	YBR107C YBR211C YDR318W YJR135C YGR179C YDR254W YPL018W YLR381W YDR383C YLR315W YPR046W
+Benschop et al. Molecular Cell (2010)	TEL complex	Benschop	YDR227W YDL042C
+Benschop et al. Molecular Cell (2010)	nucleoporin Nup84 subcomplex	Benschop	YGL100W YDL116W YGL092W YKL057C YJR042W YLR208W
+Benschop et al. Molecular Cell (2010)	Dcp1-Dcp2 decapping enzyme complex	Benschop	YBR094W YEL015W YOL149W YNL118C
+Benschop et al. Molecular Cell (2010)	Ulp1 nuclear pore complex	Benschop	YLR347C YMR308C YPL020C
+Benschop et al. Molecular Cell (2010)	TFIIK complex	Benschop	YDL108W YDR460W YPR025C
+Benschop et al. Molecular Cell (2010)	Spt6-Spn1 elongator factor complex	Benschop	YGR116W YPR133C
+Benschop et al. Molecular Cell (2010)	cleavage factor I complex	Benschop	YDR228C YGL044C YOR250C YMR061W
+Benschop et al. Molecular Cell (2010)	Cln-Cdc28 protein kinase complex	Benschop	YMR199W YBR160W YKR091W YLR210W YLR079W YDL155W YPL256C YBR135W
+Benschop et al. Molecular Cell (2010)	Isw2-Itc1 complex	Benschop	YGL133W YOR304W
+Benschop et al. Molecular Cell (2010)	nucleoporin Nup82 subcomplex	Benschop	YIL115C YJL061W YJL041W YER107C YMR047C
+Benschop et al. Molecular Cell (2010)	Snx4-Snx41 heterodimer	Benschop	YJL036W YDR425W
+Benschop et al. Molecular Cell (2010)	Nup60-Nup2 nuclear pore complex	Benschop	YAR002W YLR335W YLR347C
+Benschop et al. Molecular Cell (2010)	Erp1-Erp2-Emp24-Erv25 p24 complex	Benschop	YAL007C YAR002C-A YGL200C YML012W
+Benschop et al. Molecular Cell (2010)	nucleoporin Nsp1 subcomplex	Benschop	YFR002W YGL172W YGR119C YJL041W
+Benschop et al. Molecular Cell (2010)	HDA complex	Benschop	YDR295C YNL021W YPR179C
+Benschop et al. Molecular Cell (2010)	core H-ACA snoRNP	Benschop	YDL208W YHR072W-A YHR089C YLR175W YNL308C
+Benschop et al. Molecular Cell (2010)	Atg11-Atg17-Atg29-Cis1 complex	Benschop	YPR049C YPL166W YDR022C YLR423C
+Benschop et al. Molecular Cell (2010)	Clathrin	Benschop	YGL206C YGR167W
+Benschop et al. Molecular Cell (2010)	Ctf18 RFC-like complex	Benschop	YCL016C YHR191C YMR078C
+Benschop et al. Molecular Cell (2010)	commitment complex 2	Benschop	YKL074C YLR116W
+Benschop et al. Molecular Cell (2010)	Sec24-Sfb2-Sec16-Sec23 complex	Benschop	YIL109C YNL049C YPL085W YPR181C
+Benschop et al. Molecular Cell (2010)	"vacuolar proton-transporting V-type ATPase, V0 domain"	Benschop	YPR149W YKL119C YLR447C YOR270C
+Benschop et al. Molecular Cell (2010)	Hrd1 ubiquitin ligase ERAD-L complex	Benschop	YDR057W YLR207W YOL013C YML029W
+Benschop et al. Molecular Cell (2010)	anthranilate synthase complex	Benschop	YER090W YKL211C
+Benschop et al. Molecular Cell (2010)	nuclear cohesin complex	Benschop	YJL074C YFL008W YIL026C YDL003W
+Benschop et al. Molecular Cell (2010)	protein kinase CK2 complex	Benschop	YGL019W YIL035C YOR039W YOR061W
+Benschop et al. Molecular Cell (2010)	phosphatidylinositol 3-kinase complex II	Benschop	YBR097W YLR360W YPL120W YLR240W
+Benschop et al. Molecular Cell (2010)	mitochondrial proton-transporting ATP synthase complex	Benschop	YBL099W YBR039W YDR298C YKL016C
+Benschop et al. Molecular Cell (2010)	GINS complex	Benschop	YDR013W YJL072C YDR489W YOL146W
+Benschop et al. Molecular Cell (2010)	mitochondtrial large ribosomal subunit	Benschop	YGR076C YDR405W YBR282W YHR147C YBL038W YDR462W YOR150W YBR122C YCR071C YDR237W YDR116C YDR322W YLR439W YDR296W YCR046C YNL252C YMR193W YGR220C YKL167C YKR006C YJL063C YKR085C YML025C YMR024W YNL005C YLR312W-A YPL183W-A YMR098C YML009C YMR225C YNL177C YNL284C YPR100W
+Benschop et al. Molecular Cell (2010)	ribonuclease H2 complex	Benschop	YDR279W YNL072W
+Benschop et al. Molecular Cell (2010)	SUMO activating enzyme complex	Benschop	YDR390C YPR180W
+Benschop et al. Molecular Cell (2010)	tRNA (m1A) methyltransferase complex	Benschop	YJL125C YNL062C
+Benschop et al. Molecular Cell (2010)	polarisome	Benschop	YER149C YLL021W
+Benschop et al. Molecular Cell (2010)	TRAMP complex	Benschop	YDL175C YJL050W YOL115W
+Benschop et al. Molecular Cell (2010)	transcription factor TFIIA complex	Benschop	YKL058W YOR194C
+Benschop et al. Molecular Cell (2010)	CPF complex	Benschop	YMR061W YER133W YDR195W YGR156W YAL043C YNL222W YDR301W YKL059C YJR093C YPR107C YLR115W YLR277C YKR002W YNL317W YKL018W YOR179C
+Benschop et al. Molecular Cell (2010)	serine C-palmitoyltransferase complex	Benschop	YDR062W YMR296C
+Benschop et al. Molecular Cell (2010)	Cyc8-Tup1 corepressor complex	Benschop	YCR084C YBR112C
+Benschop et al. Molecular Cell (2010)	delta DNA polymerase complex	Benschop	YDL102W YJR006W YJR043C
+Benschop et al. Molecular Cell (2010)	snRNP U2	Benschop	YDL043C YJL203W YMR240C YDL030W YPL213W YML049C YMR288W
+Benschop et al. Molecular Cell (2010)	AP-3 adaptor complex	Benschop	YBR288C YGR261C YJL024C YPL195W
+Benschop et al. Molecular Cell (2010)	Ric1-Rgp1 complex	Benschop	YDR137W YLR039C
+Benschop et al. Molecular Cell (2010)	Ndc80 complex	Benschop	YER018C YIL144W YOL069W YMR117C
+Benschop et al. Molecular Cell (2010)	Rpd3L complex	Benschop	YDR207C YDL076C YAL013W YBR095C YNL097C YIL084C YMR263W YPL181W YOL004W YNL330C YPL139C YMR075W
+Benschop et al. Molecular Cell (2010)	methionyl glutamyl tRNA synthetase complex	Benschop	YGL245W YGL105W YGR264C
+Benschop et al. Molecular Cell (2010)	protein phosphatase type 2A complex	Benschop	YAL016W YDL188C YGL190C YDL134C YMR273C YML109W YOR014W
+Benschop et al. Molecular Cell (2010)	TORC1 complex	Benschop	YHR186C YJR066W
+Benschop et al. Molecular Cell (2010)	epsilon DNA polymerase complex	Benschop	YDR121W YBR278W YNL262W YPR175W
+Benschop et al. Molecular Cell (2010)	mitochondrial oxoglutarate dehydrogenase complex	Benschop	YFR049W YFL018C YDR148C YIL125W
+Benschop et al. Molecular Cell (2010)	NatC complex	Benschop	YPR051W YCR020C-A YEL053C
+Benschop et al. Molecular Cell (2010)	SWR1 complex	Benschop	YAL011W YDR485C YLR085C YBR231C YDR334W YLR385C YLR399C YML041C YFL039C YDR190C YPL235W YJL081C YGR002C YNL107W
+Benschop et al. Molecular Cell (2010)	transcription factor TFIIE complex	Benschop	YKL028W YKR062W
+Benschop et al. Molecular Cell (2010)	mRNA capping enzyme complex	Benschop	YPL228W YGL130W
+Benschop et al. Molecular Cell (2010)	Set3C	Benschop	YBR103W YDR155C YIL112W YKR029C YGL194C YOL068C YCR033W
+Benschop et al. Molecular Cell (2010)	ESCRT II complex	Benschop	YJR102C YLR417W YPL002C
+Benschop et al. Molecular Cell (2010)	MutSalpha complex	Benschop	YOL090W YDR097C
+Benschop et al. Molecular Cell (2010)	Cdc73-Paf1 complex	Benschop	YBR279W YGL244W YOR123C YOL145C YLR418C
+Benschop et al. Molecular Cell (2010)	mitochondrial small ribosomal subunit	Benschop	YER050C YNR037C YBR251W YGR215W YBR146W YPL118W YMR158W YDR036C YGR084C YDL045W-A YHR059W YDR041W YGL129C YPL013C YKL155C YIL093C YNL137C YDR337W YJR101W YJR113C YBL090W YMR188C YNL081C YDR175C YOR158W YHL004W YDR347W YNR036C YNL306W YGR165W YKL003C
+Benschop et al. Molecular Cell (2010)	AP-1 adaptor complex	Benschop	YFL034W YHL019C YKL135C YLR170C YPR029C YPL259C
+Benschop et al. Molecular Cell (2010)	U4-U6 x U5 tri-snRNP complex	Benschop	YGR074W YER029C YLR147C YLR275W YER172C YKL173W YHR165C YDL098C YGR091W YDR473C YOR308C YBR055C YPR178W YPR082C
+Benschop et al. Molecular Cell (2010)	GET complex	Benschop	YDL100C YER083C YGL020C
+Benschop et al. Molecular Cell (2010)	NatB complex	Benschop	YOL076W YPR131C
+Benschop et al. Molecular Cell (2010)	heterotrimeric G-protein complex	Benschop	YHR005C YOR212W
+Benschop et al. Molecular Cell (2010)	ribonuclease MRP complex	Benschop	YBL018C YAL033W YBR167C YBR257W YGR030C YNL221C YNL282W YDR478W YHR062C
+Benschop et al. Molecular Cell (2010)	DASH complex	Benschop	YDR201W YDR016C YKL052C YGR113W YGL061C YKR083C YKR037C YKL138C-A YBR233W-A
+Benschop et al. Molecular Cell (2010)	COPI vesicle coat	Benschop	YER122C YGL137W YDL145C YDR238C YNL287W YFR051C YIL076W YPL010W
+Benschop et al. Molecular Cell (2010)	GID complex	Benschop	YCL039W YDL176W YDR255C YBR105C YGL227W YIL097W YIL017C YMR135C
+Benschop et al. Molecular Cell (2010)	alpha-glucosidase II complex	Benschop	YBR229C YDR221W
+Benschop et al. Molecular Cell (2010)	Golgi transport complex	Benschop	YNL041C YPR105C YGL005C YGL223C YER157W YNL051W YGR120C YML071C
+Benschop et al. Molecular Cell (2010)	mitochondrial processing peptidase complex	Benschop	YHR024C YLR163C
+Benschop et al. Molecular Cell (2010)	carbamoyl-phosphate synthase complex	Benschop	YJR109C YOR303W
+Benschop et al. Molecular Cell (2010)	mitochondrial pyruvate dehydrogenase complex	Benschop	YBR221C YER178W YNL071W YGR193C
+Benschop et al. Molecular Cell (2010)	Srb-mediator complex	Benschop	YBL093C YDL005C YGL127C YCR081W YGR104C YDR308C YER022W YGL025C YOL051W YPR168W YMR112C YDR443C YBR253W YOL135C YLR071C YPL042C YHR041C YHR058C YBR193C YOR174W YPR070W YNR010W YGL151W YNL236W
+Benschop et al. Molecular Cell (2010)	CCR4-NOT complex	Benschop	YGR134W YCR093W YAL021C YNL288W YNR052C YER068W
+Benschop et al. Molecular Cell (2010)	ubiquitin conjugating enzyme complex	Benschop	YGL087C YMR140W YDR092W
+Benschop et al. Molecular Cell (2010)	MBF transcription complex	Benschop	YDL056W YLR182W
+Benschop et al. Molecular Cell (2010)	mitochondrial respiratory chain complex II	Benschop	YKL148C YLL041C
+Benschop et al. Molecular Cell (2010)	snf1 protein kinase complex	Benschop	YDR028C YDR422C YER027C YER129W YDR477W YGL115W YGL208W
+Benschop et al. Molecular Cell (2010)	m-AAA complex	Benschop	YER017C YMR089C
+Benschop et al. Molecular Cell (2010)	ESCRT-0 complex	Benschop	YHL002W YNR006W
+Benschop et al. Molecular Cell (2010)	TREX complex	Benschop	YDR381W YDL084W YDR138W YHR167W YML062C YNL139C YNL253W YNL004W
+Benschop et al. Molecular Cell (2010)	alpha DNA polymerase:primase complex	Benschop	YBL035C YNL102W YIR008C YKL045W
+Benschop et al. Molecular Cell (2010)	NatA complex	Benschop	YDL040C YHR013C YOR253W
+Benschop et al. Molecular Cell (2010)	signal recognition particle	Benschop	YDL051W YKL122C YML105C YPR088C YDL092W YPL210C YPL243W
+Benschop et al. Molecular Cell (2010)	NEF4 complex	Benschop	YJR052W YPL046C
+Benschop et al. Molecular Cell (2010)	CCAAT-binding factor complex	Benschop	YBL021C YGL237C YOR358W
+Benschop et al. Molecular Cell (2010)	"vacuolar proton-transporting V-type ATPase, V1 domain"	Benschop	YJR033C YDL185W YBR127C YGR020C YHR039C-A YEL051W YPR036W YOR332W YKL080W
+Benschop et al. Molecular Cell (2010)	PAN complex	Benschop	YGL094C YKL025C
+Benschop et al. Molecular Cell (2010)	cytosolic small ribosomal subunit	Benschop	YDR025W YER102W YBR048W YBR189W YBL072C YDR064W YOR096W YJR145C YHR203C YJL190C YIL069C YLR367W YML024W YPL081W YOR204W
+Benschop et al. Molecular Cell (2010)	"gamma-tubulin small complex, spindle pole body"	Benschop	YAL047C YHR172W YNL126W YLR212C
+Benschop et al. Molecular Cell (2010)	Elg1 RFC-like complex	Benschop	YBR087W YOL094C YNL290W YJR068W YOR217W YOR144C
+Benschop et al. Molecular Cell (2010)	tRNA-intron endonuclease complex	Benschop	YLR105C YPL083C
+Benschop et al. Molecular Cell (2010)	ISW1 complex	Benschop	YBR245C YKR001C YPL082C YLR095C YMR044W
+Benschop et al. Molecular Cell (2010)	EKC-KEOPS protein complex	Benschop	YGR262C YJL184W YKR038C YML036W
+Benschop et al. Molecular Cell (2010)	FACT complex	Benschop	YGL207W YML069W
+Benschop et al. Molecular Cell (2010)	HOPS complex	Benschop	YMR231W YAL002W YLR396C YLR148W YDR080W YDL077C YPL045W
+Benschop et al. Molecular Cell (2010)	MutSBeta complex	Benschop	YOL090W YCR092C
+Benschop et al. Molecular Cell (2010)	"cytochome c oxidase complex, subunits IV, Va, VI and VIIa"	Benschop	YNL052W YGL187C YDL067C YHR051W
+Benschop et al. Molecular Cell (2010)	SCF ubiquitin ligase complex	Benschop	YDL132W YDR054C YJL047C YGL252C YOL133W
+Benschop et al. Molecular Cell (2010)	nucleotide-excision repair factor 1 complex	Benschop	YAL027W YML095C YPL022W
+Benschop et al. Molecular Cell (2010)	carboxy-terminal domain protein kinase complex	Benschop	YKL139W YJL006C YML112W
+Benschop et al. Molecular Cell (2010)	eukaryotic translation elongation factor 1 complex	Benschop	YAL003W YPL048W YKL081W YPR080W
+Benschop et al. Molecular Cell (2010)	NuA4 histone acetyltransferase complex	Benschop	YDR359C YEL018W YFL024C YOR244W YJR082C YHR090C YNL136W YPR023C YJL081C YGR002C YNL107W YFL039C
+Benschop et al. Molecular Cell (2010)	RNA polymerase I complex	Benschop	YNL113W YPR110C YHR143W-A YBR154C YPR187W YOR224C YOR210W YDR156W YJL148W YJR063W YNL248C YOR340C YOR341W YPR010C
+Benschop et al. Molecular Cell (2010)	90S preribosome	Benschop	YBR247C YDR324C YPL126W YOR310C YGR145W YLR222C YNL075W YJL109C YDR398W YCR057C YPR144C YLR409C YNL132W YLL011W YDL148C YOR145C YBL004W YLR186W YCL059C YJR145C YDR449C YPR112C YMR128W YJR002W YDR299W YOR096W YPL217C YLR197W YOR078W YDL014W YPR137W YMR093W YOL010W YPL266W YLR003C YJL069C YGR128C YLR129W YGR090W YPL012W YER127W YKR060W YER082C YEL055C YDR064W YHR196W YGL171W YHR148W
+Benschop et al. Molecular Cell (2010)	RSC complex	Benschop	YMR091C YGL013C YNR023W YHR056C YLR357W YML127W YDR303C YDR225W YOR156C YGR056W YFR037C YOR290C YIL126W YHL025W YJL176C YMR033W YDR073W YCR020W-B YPR034W YCR052W YBR289W YLR321C YLR033W YGR275W YFL049W YPL016W YKR008W
+Benschop et al. Molecular Cell (2010)	CAAX-protein geranylgeranyltransferase complex	Benschop	YKL019W YGL155W
+Benschop et al. Molecular Cell (2010)	Arp2-3 protein complex	Benschop	YDL029W YBR234C YIL062C YNR035C YKL013C YLR370C YJR065C
+Benschop et al. Molecular Cell (2010)	SAGA complex	Benschop	YBR198C YDR167W YDR145W YMR236W YDR448W YGR252W YGL112C YDR392W YCL010C YOL148C YBR081C YDR176W YGL066W YPL254W YLR055C YMR223W YPL047W YHR099W
+Benschop et al. Molecular Cell (2010)	TRAPP complex	Benschop	YGR166W YKR068C YOR115C YDR108W YDR246W YML077W YDR407C YBR254C YDR472W YMR218C
+Benschop et al. Molecular Cell (2010)	AP-2 adaptor complex	Benschop	YBL037W YJR058C YJR005W YOL062C
+Benschop et al. Molecular Cell (2010)	CAF-1 complex	Benschop	YBR195C YML102W YPR018W
+Benschop et al. Molecular Cell (2010)	GARP complex	Benschop	YDR484W YDR027C YJL029C YJL034W YKR020W
+Benschop et al. Molecular Cell (2010)	CCR4-NOT Not2-Not5 subcomplex	Benschop	YDL165W YPR072W
+Benschop et al. Molecular Cell (2010)	origin recognition complex	Benschop	YBR060C YML065W YLL004W YPR162C YHR118C YNL261W
+Benschop et al. Molecular Cell (2010)	Smc5-Smc6 complex	Benschop	YEL019C YDR288W YOL034W YDL105W
+Benschop et al. Molecular Cell (2010)	RNA polymerase III complex	Benschop	YDR045C YDL150W YJL011C YKL144C YKR025W YNL151C YPR190C YNR003C YOR207C YOR116C YNL113W YPR110C YBR154C YPR187W YOR224C YOR210W
+Benschop et al. Molecular Cell (2010)	proteasome regulatory particle	Benschop	YDL147W YHL030W YDR363W-A YFR010W YGR232W YDR394W YER021W YDR427W YDL007W YHR200W YFR004W YFR052W YOR259C YOR261C YDL097C YGL048C YLR421C YHR027C YOR117W YPR108W YIL075C YKL145W
+Benschop et al. Molecular Cell (2010)	Ski complex	Benschop	YGL213C YLR398C YKL023W YPR189W
+Benschop et al. Molecular Cell (2010)	eukaryotic translation initiation factor 2B complex	Benschop	YDR211W YLR215C YOR260W YLR291C YGR083C YJR007W YER025W YKR026C YPL237W
+Benschop et al. Molecular Cell (2010)	exomer complex	Benschop	YLR330W YJL099W YKR027W YOR299W YMR237W
+Benschop et al. Molecular Cell (2010)	INO80 complex	Benschop	YFL039C YER092W YGL150C YDL002C YFL013C YOR141C YLR052W YNL059C YNL215W YDR190C YPL235W YJL081C
+Benschop et al. Molecular Cell (2010)	MIND complex	Benschop	YAL034W-A YPL233W YIR010W YJR112W
+Benschop et al. Molecular Cell (2010)	Elongator holoenzyme complex	Benschop	YLR384C YGR200C YPL086C YHR187W YPL101W YMR312W
+Benschop et al. Molecular Cell (2010)	retromer complex	Benschop	YHR012W YJL154C YJL053W YOR069W YOR132W YPL070W
+Benschop et al. Molecular Cell (2010)	anaphase-promoting complex	Benschop	YDR260C YFR036W YIR025W YGL240W YBL084C YDR118W YOR249C YHR166C YKL022C YLR127C YNL172W YLR102C
+Benschop et al. Molecular Cell (2010)	proteasome core complex	Benschop	YFL007W YER012W YGL011C YBL041W YOL038W YFR050C YGR135W YER094C YJL001W YOR362C YPR103W YGR253C YML092C YOR157C YMR314W
+Benschop et al. Molecular Cell (2010)	"alpha-1,6-mannosyltransferase complex"	Benschop	YDR245W YEL036C YJL183W YPL050C YJR075W
+Benschop et al. Molecular Cell (2010)	ESCRT I complex	Benschop	YCL008C YLR119W YGR206W YPL065W
+Benschop et al. Molecular Cell (2010)	cAMP-dependent protein kinase complex	Benschop	YKL166C YIL033C YJL164C YPL203W
+Benschop et al. Molecular Cell (2010)	translation release factor complex	Benschop	YBR143C YDR172W
+Benschop et al. Molecular Cell (2010)	Ku70:Ku80 complex	Benschop	YMR106C YMR284W
+Benschop et al. Molecular Cell (2010)	transcription factor TFIIIC complex	Benschop	YGR047C YAL001C YDR362C YBR123C YOR110W YPL007C
+Benschop et al. Molecular Cell (2010)	fatty acid synthase complex	Benschop	YKL182W YPL231W
+Benschop et al. Molecular Cell (2010)	RENT complex	Benschop	YDL042C YJL076W
+Benschop et al. Molecular Cell (2010)	septin complex	Benschop	YJR092W YJR076C YCR002C YHR107C YDL225W YLR314C
+Benschop et al. Molecular Cell (2010)	exocyst	Benschop	YPR055W YER008C YJL085W YIL068C YDR166C YLR166C YBR102C YGL233W
+Benschop et al. Molecular Cell (2010)	signalosome	Benschop	YDR179C YDL216C YOL117W YIL071C YMR025W
+Benschop et al. Molecular Cell (2010)	"preribosome, large subunit precursor"	Benschop	YLL008W YER006W YPL211W YBR142W YNL061W YNL110C YOL077C YDR496C YHR052W YMR290C YKR081C YLL034C YOR272W YKL172W YPR016C YDR087C YGL111W YHR088W YLR002C YFL002C YKL009W YCL054W YDL031W YPL093W YOR206W YLR449W YMR049C YNL002C YMR229C YGR103W
+Benschop et al. Molecular Cell (2010)	nucleotide-excision repair factor 2 complex	Benschop	YEL037C YER162C
+Benschop et al. Molecular Cell (2010)	calcineurin complex	Benschop	YKL190W YML057W
+Benschop et al. Molecular Cell (2010)	mitochondrial isocitrate dehydrogenase complex (NAD+)	Benschop	YOR136W YNL037C
+Benschop et al. Molecular Cell (2010)	Mre11 complex	Benschop	YDR369C YMR224C YNL250W
+Benschop et al. Molecular Cell (2010)	Rab-protein geranylgeranyltransferase complex	Benschop	YJL031C YPR176C
+Benschop et al. Molecular Cell (2010)	signal recognition particle receptor complex	Benschop	YDR292C YKL154W
+Benschop et al. Molecular Cell (2010)	endoplasmic reticulum Sec complex	Benschop	YBR171W YLR292C YOR254C YPL094C
+Benschop et al. Molecular Cell (2010)	eukaryotic translation initiation factor 3 complex	Benschop	YAL035W YDR091C YBR079C YMR309C YLR192C YDR429C YMR146C YPR041W YOR361C YNL244C
+Benschop et al. Molecular Cell (2010)	HIR complex	Benschop	YBL008W YOR038C YBR215W YJR140C
+Benschop et al. Molecular Cell (2010)	MutLalpha complex	Benschop	YMR167W YNL082W
+Benschop et al. Molecular Cell (2010)	RNA polymerase II complex	Benschop	YGL043W YDL115C YDL140C YGL070C YGR005C YGR186W YIL021W YDR404C YOL005C YJL140W YOR151C YGR063C YML010W YPL129W YBR154C YPR187W YOR224C YOR210W
+Benschop et al. Molecular Cell (2010)	chaperonin-containing T-complex	Benschop	YJL014W YDL143W YDR188W YIL142W YJL111W YOR281C YNL212W YJL008C YJR064W
+Benschop et al. Molecular Cell (2010)	transcription factor TFIID complex	Benschop	YBR198C YDR167W YDR145W YMR236W YGL112C YGR274C YMR227C YML015C YPL011C YMR005W YML098W
+Benschop et al. Molecular Cell (2010)	nascent polypeptide-associated complex	Benschop	YHR193C YPL037C YDR252W
+Benschop et al. Molecular Cell (2010)	cytosolic large ribosomal subunit	Benschop	YBL092W YGL014W YBR191W YHR141C YLR287C-A YFR032C-A YGR118W YNL302C YNL096C YGL031C YDR418W YGL123W YDR382W YDL083C YCR031C YDR447C YER074W YBL027W YDL136W YHL001W YJL177W YGR034W YMR194W YKL180W YBR181C YOL040C YHL033C YFR031C-A YNL069C YML073C YLR448W YNL301C YLR075W YML063W YLR441C YJR123W YNL178W YPL090C YLR150W YGL147C YBR031W YGL030W YDL075W YGL103W YDL082W YDR471W YMR242C YOL127W YGL135W YGR085C YIL133C YLR029C YDR012W YOR312C YGL076C YLL045C YOR063W YPL198W YPL249C-A YLR340W YIL018W YPL220W YMR142C YOL039W
+Benschop et al. Molecular Cell (2010)	RAVE complex	Benschop	YDR202C YJR033C YDR328C
+Benschop et al. Molecular Cell (2010)	prefoldin complex	Benschop	YJL179W YEL003W YGR078C YNL153C YML094W YLR200W
+Benschop et al. Molecular Cell (2010)	eukaryotic translation initiation factor 4F complex	Benschop	YER165W YGL049C YGR162W YOL139C
+Benschop et al. Molecular Cell (2010)	core TFIIH complex	Benschop	YDR311W YLR005W YPR056W
+Benschop et al. Molecular Cell (2010)	phenylalanine-tRNA ligase complex	Benschop	YLR060W YFL022C
+Benschop et al. Molecular Cell (2010)	DNA replication factor A complex	Benschop	YAR007C YNL312W YJL173C YHR164C
+Benschop et al. Molecular Cell (2010)	"alpha,alpha-trehalose-phosphate synthase complex (UDP-forming)"	Benschop	YBR126C YDR074W YMR261C YML100W
+Benschop et al. Molecular Cell (2010)	GPI-anchor transamidase complex	Benschop	YDR331W YHR188C YLR088W YDR434W
+Benschop et al. Molecular Cell (2010)	ribonucleoside-diphosphate reductase complex	Benschop	YGR180C YJL026W YOR230W
+Benschop et al. Molecular Cell (2010)	exosome (RNase complex)	Benschop	YHR081W YCR035C YGR195W YDL111C YDR280W YOR076C YGR158C YHR069C YGR095C YOL142W YNL232W YOL021C YOR001W YNR024W YNL189W
+Benschop et al. Molecular Cell (2010)	COMPASS complex	Benschop	YBR175W YBR258C YDR469W YHR119W YAR003W YLR015W YPL138C YKL018W
+Benschop et al. Molecular Cell (2010)	SBF transcription complex	Benschop	YER111C YLR182W
+Benschop et al. Molecular Cell (2010)	protein farnesyltransferase complex	Benschop	YDL090C YKL019W
+Benschop et al. Molecular Cell (2010)	nuclear condensin complex	Benschop	YFR031C YDR325W YLR272C YLR086W YBL097W
+Benschop et al. Molecular Cell (2010)	snRNP U6	Benschop	YER146W YDL160C YER112W YCR077C YJL124C YBL026W YDR378C YNL147W YJR022W YMR268C YLR438C-A
+Benschop et al. Molecular Cell (2010)	subunit VII of the cytochrome bc1 complex	Benschop	YDL189W YDR529C YBL045C YPR191W
+Benschop et al. Molecular Cell (2010)	putatie Saf1-Aah1 complex	Benschop	YNL141W YBR280C
+Benschop et al. Molecular Cell (2010)	putative Tkl2-Tkl1 isozyme complex	Benschop	YBR117C YPR074C
+Benschop et al. Molecular Cell (2010)	putative Trm7-Ymr259c complex	Benschop	YBR061C YMR259C
+Benschop et al. Molecular Cell (2010)	putative Atg18-Atg2 complex	Benschop	YFR021W YNL242W
+Benschop et al. Molecular Cell (2010)	putative Trm7-Rtt10 complex	Benschop	YBR061C YPL183C
+Benschop et al. Molecular Cell (2010)	putative Nuc1-Trz1-Ymr099c complex	Benschop	YJL208C YKR079C YMR099C
+Benschop et al. Molecular Cell (2010)	putative Sas5-Wtm2 complex	Benschop	YOR213C YOR229W
+Benschop et al. Molecular Cell (2010)	putative Cdc47-Erg26 complex	Benschop	YBR202W YGL001C
+Benschop et al. Molecular Cell (2010)	putative Flc2-Tcb3 complex	Benschop	YAL053W YML072C
+Benschop et al. Molecular Cell (2010)	putative Rpl23a-Rpl23b-Bcp1-Rkm1 complex	Benschop	YBL087C YER117W YDR361C YPL208W
+Benschop et al. Molecular Cell (2010)	putative Rsa3-Urb1-Urb2-Nop8 complex	Benschop	YLR221C YKL014C YJR041C YOL144W
+Benschop et al. Molecular Cell (2010)	putative Ybr225w-Mds3-Cdc25 complex	Benschop	YBR225W YGL197W YLR310C
+Benschop et al. Molecular Cell (2010)	putative Tom71-Ylr072w complex	Benschop	YHR117W YLR072W
+Benschop et al. Molecular Cell (2010)	putative Flc2-Pdr5 complex	Benschop	YAL053W YOR153W
+Benschop et al. Molecular Cell (2010)	putative Ecm30-Ubp15 complex	Benschop	YLR436C YMR304W
+Benschop et al. Molecular Cell (2010)	putative Cox20-Chs1 complex	Benschop	YDR231C YNL192W
+Benschop et al. Molecular Cell (2010)	putative Hca4-Esf1-Esf2 complex	Benschop	YJL033W YDR365C YNR054C
+Benschop et al. Molecular Cell (2010)	putative Hsp42-Gln1 complex	Benschop	YDR171W YPR035W
+Benschop et al. Molecular Cell (2010)	putative Bud6-Yor304c-a complex	Benschop	YLR319C YOR304C-A
+Benschop et al. Molecular Cell (2010)	putative Skp1-Ypt52-Ymr258c complex	Benschop	YDR328C YKR014C YMR258C
+Benschop et al. Molecular Cell (2010)	putative Bat1-Bat2 complex	Benschop	YHR208W YJR148W
+Benschop et al. Molecular Cell (2010)	putative Nfs1-Isd11 complex	Benschop	YCL017C YER048W-A
+Benschop et al. Molecular Cell (2010)	putative Ser3-Ser33 isozyme complex	Benschop	YER081W YIL074C
+Benschop et al. Molecular Cell (2010)	putative Slx5-Swa2 complex	Benschop	YDL013W YDR320C
+Benschop et al. Molecular Cell (2010)	putative Yjl070c-Amd1 complex	Benschop	YJL070C YML035C
+Benschop et al. Molecular Cell (2010)	putative Yer071c-Aim21-Cap1-Cap2 complex	Benschop	YER071C YIR003W YIL034C YKL007W
+Benschop et al. Molecular Cell (2010)	putative Mob1-Dbf20 complex	Benschop	YIL106W YPR111W
+Benschop et al. Molecular Cell (2010)	putative Psy2-Rrd1 complex	Benschop	YNL201C YIL153W
+Benschop et al. Molecular Cell (2010)	putative Nvj1-Tos4 complex	Benschop	YHR195W YLR183C
+Benschop et al. Molecular Cell (2010)	putative Ark1-Ste4 complex	Benschop	YDR264C YOR212W
+Benschop et al. Molecular Cell (2010)	putative Sla2-Lsb3 complex	Benschop	YNL243W YFR024C-A
+Benschop et al. Molecular Cell (2010)	putative Cyc3-Yat1 complex	Benschop	YAL039C YAR035W
+Benschop et al. Molecular Cell (2010)	putative Uba1-Ydr415c complex	Benschop	YKL210W YDR415C
+Benschop et al. Molecular Cell (2010)	putative Las17-Sla1-Vrp1 complex	Benschop	YLR337C YBL007C YOR181W
+Benschop et al. Molecular Cell (2010)	putative Ela1-Tys1 complex	Benschop	YNL230C YGR185C
+Benschop et al. Molecular Cell (2010)	putative Dre2-Tah18 complex	Benschop	YKR071C YPR048W
+Benschop et al. Molecular Cell (2010)	putative Kex2-Sil1 complex	Benschop	YNL238W YOL031C
+Benschop et al. Molecular Cell (2010)	putative Ssl2-Yor352w complex	Benschop	YIL143C YOR352W
+Benschop et al. Molecular Cell (2010)	putative Tdh3-Pgk1-Eno2-Fba1-Pgm1 complex	Benschop	YGR192C YCR012W YHR174W YKL060C YKL152C
+Benschop et al. Molecular Cell (2010)	putative Cin8-Zwf1 complex	Benschop	YEL061C YNL241C
+Benschop et al. Molecular Cell (2010)	putative Pcm1-Mgs1 complex	Benschop	YEL058W YNL218W
+Benschop et al. Molecular Cell (2010)	putative Yef1-Utr1 complex	Benschop	YEL041W YJR049C
+Benschop et al. Molecular Cell (2010)	putative Ost1-Stt3 complex	Benschop	YJL002C YGL022W
+Benschop et al. Molecular Cell (2010)	putative Osh2-Swh1 complex	Benschop	YDL019C YAR042W
+Benschop et al. Molecular Cell (2010)	putative Sit4-Sap185-Rts3-Hrk1 complex	Benschop	YDL047W YJL098W YGR161C YOR267C
+Benschop et al. Molecular Cell (2010)	putative Grh1-Fmp38 complex	Benschop	YDR517W YOR205C
+Benschop et al. Molecular Cell (2010)	putative Tif1-Tif2 complex	Benschop	YKR059W YJL138C
+Benschop et al. Molecular Cell (2010)	putative Sah1-Caf16 complex	Benschop	YER043C YFL028C
+Benschop et al. Molecular Cell (2010)	putative Bre1-Lge1 complex	Benschop	YDL074C YPL055C
+Benschop et al. Molecular Cell (2010)	putative Fmc1-Atp12 complex	Benschop	YIL098C YJL180C
+Benschop et al. Molecular Cell (2010)	putative Fpr3-Ssb2 complex	Benschop	YML074C YNL209W
+Benschop et al. Molecular Cell (2010)	putative Ptc7-Sec14 complex	Benschop	YHR076W YMR079W
+Benschop et al. Molecular Cell (2010)	putative Faa4-Ygl082w complex	Benschop	YGL082W YMR246W
+Benschop et al. Molecular Cell (2010)	putative Ykl088w-Ppz1 complex	Benschop	YKL088W YML016C
+Benschop et al. Molecular Cell (2010)	putative Hmt1-Scd6-Psp2 complex	Benschop	YBR034C YPR129W YML017W
+Benschop et al. Molecular Cell (2010)	putative Eft1-Eft2 complex	Benschop	YOR133W YDR385W
+Benschop et al. Molecular Cell (2010)	putative Mnl1-Pdi1 complex	Benschop	YHR204W YCL043C
+Benschop et al. Molecular Cell (2010)	putative Nnf2-Yel043w complex	Benschop	YEL043W YGR089W
+Benschop et al. Molecular Cell (2010)	putative Yae1-Ynl260c complex	Benschop	YJR067C YNL260C
+Benschop et al. Molecular Cell (2010)	putative Erv46-Erv41-Ero1 complex	Benschop	YAL042W YML067C YML130C
+Benschop et al. Molecular Cell (2010)	putative Sok1-Rtn1-Crp1-Ids2-Pep4 complex	Benschop	YDR006C YDR233C YHR146W YJL146W YPL154C
+Benschop et al. Molecular Cell (2010)	putative Vac8-Nce102 complex	Benschop	YEL013W YPR149W
+Benschop et al. Molecular Cell (2010)	putative Tma20-Tma22 complex	Benschop	YER007C-A YJR014W
+Benschop et al. Molecular Cell (2010)	putative Wbp1-Swp1 complex	Benschop	YEL002C YMR149W
+Benschop et al. Molecular Cell (2010)	putative Ubc4-Ufd4 complex	Benschop	YBR082C YKL010C
+Benschop et al. Molecular Cell (2010)	putative Sfp1-Mrs6 complex	Benschop	YLR403W YOR370C
+Benschop et al. Molecular Cell (2010)	putative Trm3-Fas1 complex	Benschop	YDL112W YKL182W
+Benschop et al. Molecular Cell (2010)	putative Ste23-Mrn1 complex	Benschop	YLR389C YPL184C
+Benschop et al. Molecular Cell (2010)	putative Drn1-Dbr1 complex	Benschop	YGR093W YKL149C
+Benschop et al. Molecular Cell (2010)	putative Yak1-Ypl247c complex	Benschop	YJL141C YPL247C
+Benschop et al. Molecular Cell (2010)	putative Fap1-Fpr1-Yil161w complex	Benschop	YNL135C YNL023C YIL161W
+Benschop et al. Molecular Cell (2010)	putative Crn1-Inp52-Bsp1 complex	Benschop	YLR429W YNL106C YPR171W
+Benschop et al. Molecular Cell (2010)	putative Uga1-Ndt80 complex	Benschop	YGR019W YHR124W
+Benschop et al. Molecular Cell (2010)	putative Ptc6-Pro2 complex	Benschop	YCR079W YOR323C
+Benschop et al. Molecular Cell (2010)	putative Tub3-Gcn1-Gcn20-Gfa1-Mae1-Sam1-Clu1 complex	Benschop	YML124C YGL195W YFR009W YKL104C YKL029C YLR180W YMR012W
+Benschop et al. Molecular Cell (2010)	putative Pex5-Mmt1 complex	Benschop	YDR244W YMR177W
+Benschop et al. Molecular Cell (2010)	putative Pcl8-Pho85 CDK-cyclin complex	Benschop	YPL031C YPL219W
+Benschop et al. Molecular Cell (2010)	putative Mba1-Ste50 complex	Benschop	YBR185C YCL032W
+Benschop et al. Molecular Cell (2010)	putative Ura5-Ura10 isozyme complex	Benschop	YML106W YMR271C
+Benschop et al. Molecular Cell (2010)	putative Pmr1-Psd1 complex	Benschop	YGL167C YNL169C
+Benschop et al. Molecular Cell (2010)	putative Kem1-Gbp2-Sro9-Sbp1 complex	Benschop	YGL173C YCL011C YCL037C YHL034C
+Benschop et al. Molecular Cell (2010)	putative Ipp1-Tus1-Ypl066w complex	Benschop	YBR011C YLR425W YPL066W
+Benschop et al. Molecular Cell (2010)	putative Ede1-Syp1 complex	Benschop	YBL047C YCR030C
+Benschop et al. Molecular Cell (2010)	putative Pex14-Pex17 complex	Benschop	YGL153W YNL214W
+Benschop et al. Molecular Cell (2010)	putative Sum1-Rfm1 complex	Benschop	YDR310C YOR279C
+Benschop et al. Molecular Cell (2010)	putative Ptc4-Ydr186c complex	Benschop	YBR125C YDR186C
+Benschop et al. Molecular Cell (2010)	putative Ybr137w-Sgt2-Mdy2-Yor164c complex	Benschop	YBR137W YOR007C YOL111C YOR164C
+Benschop et al. Molecular Cell (2010)	putative Ygr071c-Vid22-Tbf1 complex	Benschop	YGR071C YLR373C YPL128C
+Benschop et al. Molecular Cell (2010)	putative Yhb1-Aco1 complex	Benschop	YGR234W YLR304C
+Benschop et al. Molecular Cell (2010)	putative Yjr136c-Ykl033w complex	Benschop	YJR136C YKL033W
+Benschop et al. Molecular Cell (2010)	putative Lys20-Lys21 isozyme complex	Benschop	YDL131W YDL182W
+Benschop et al. Molecular Cell (2010)	putative Nth1-Bmh1-Bmh2 complex	Benschop	YDR001C YDR099W YER177W
+Benschop et al. Molecular Cell (2010)	putative Met13-Yml082w complex	Benschop	YGL125W YML082W
+Benschop et al. Molecular Cell (2010)	putative Pyc1-Pyc2 isozyme complex	Benschop	YGL062W YBR218C
+Benschop et al. Molecular Cell (2010)	putative Gir2-Rbg2 complex	Benschop	YDR152W YGR173W
+Benschop et al. Molecular Cell (2010)	putative Yhr131c-Rsp5 complex	Benschop	YHR131C YER125W
+Benschop et al. Molecular Cell (2010)	putative Ptc3-Paa1 complex	Benschop	YBL056W YDR071C
+Benschop et al. Molecular Cell (2010)	putative Aro3-Bcs1 complex	Benschop	YDR035W YDR375C
+Benschop et al. Molecular Cell (2010)	putative Yor251c-Rev1 complex	Benschop	YOR251C YOR346W
+Benschop et al. Molecular Cell (2010)	putative Cmd1-Mlc1-Myo2-Myo1-Mlc2 complex	Benschop	YBR109C YGL106W YOR326W YHR023W YPR188C
+Benschop et al. Molecular Cell (2010)	putative Efg1-Bud22 complex	Benschop	YMR014W YGR271C-A
+Benschop et al. Molecular Cell (2010)	putative Hsp42-Sis1 complex	Benschop	YDR171W YNL007C
+Benschop et al. Molecular Cell (2010)	putative Ygr017w-Vip1 complex	Benschop	YGR017W YLR410W
+Benschop et al. Molecular Cell (2010)	putative Ygr130c-Ymr031c complex	Benschop	YGR130C YMR031C
+Benschop et al. Molecular Cell (2010)	putative Put1-Ymr315w complex	Benschop	YLR142W YMR315W
+Benschop et al. Molecular Cell (2010)	putative Crm1-Mir1-Erd2-Tub1-Gea2-Mtr10-Kap104 complex	Benschop	YGR218W YJR077C YBL040C YML085C YEL022W YOR160W YBR017C
+Benschop et al. Molecular Cell (2010)	putative Kap95-Nup1 nuclear pore subcomplex	Benschop	YLR347C YOR098C
+Benschop et al. Molecular Cell (2010)	putative Emp24-Erv25-Erp3-Erp5 complex	Benschop	YGL200C YML012W YDL018C YHR110W
+Benschop et al. Molecular Cell (2010)	putative Gdh1-Gdh3 isozyme complex	Benschop	YOR375C YAL062W
+Benschop et al. Molecular Cell (2010)	putative Sas3-Nto1-Ylr455w complex	Benschop	YBL052C YPR031W YLR455W
+Benschop et al. Molecular Cell (2010)	putative Cwc2-Spp382-Ntr2 complex	Benschop	YDL209C YLR424W YKR022C
+Benschop et al. Molecular Cell (2010)	putative Heh2-Erg24 complex	Benschop	YDR458C YNL280C
+Benschop et al. Molecular Cell (2010)	putative Sgn1-Ygr250c complex	Benschop	YGR250C YIR001C
+Benschop et al. Molecular Cell (2010)	putative Oca6-Oca5-Oca4-Oca3-Oca1-Oca2 complex	Benschop	YDR067C YHL029C YCR095C YNL032W YNL099C YNL056W
+Benschop et al. Molecular Cell (2010)	putative Yll032c-Yml119w complex	Benschop	YLL032C YML119W
+Benschop et al. Molecular Cell (2010)	putative Map1-Ybr030w complex	Benschop	YBR030W YLR244C
+Benschop et al. Molecular Cell (2010)	putative core TFIIH Tfb5-Tfb2 subcomplex	Benschop	YDR079C-A YPL122C
+Benschop et al. Molecular Cell (2010)	putative Gsy1-Gsy2 complex	Benschop	YLR258W YFR015C
+Benschop et al. Molecular Cell (2010)	putative Ycp4-Rfs1-Pst2 complex	Benschop	YCR004C YBR052C YDR032C
+Benschop et al. Molecular Cell (2010)	putative Dhr2-Ubp10 complex	Benschop	YKL078W YNL186W
+Benschop et al. Molecular Cell (2010)	putative Ats1-Kti11 complex	Benschop	YAL020C YBL071W-A
+Benschop et al. Molecular Cell (2010)	putative Yer140w-Slp1 complex	Benschop	YER140W YOR154W
+Benschop et al. Molecular Cell (2010)	putative Ipp1-Ack1-Rom2 complex	Benschop	YBR011C YDL203C YLR371W
+Benschop et al. Molecular Cell (2010)	putative Ypk1-Ypk2 complex	Benschop	YKL126W YMR104C
+Benschop et al. Molecular Cell (2010)	putative Tao3-Yml081w complex	Benschop	YIL129C YML081W
+Benschop et al. Molecular Cell (2010)	putative Hrr25-Ltv1-Rio2-Tsr1 complex	Benschop	YKL143W YDL060W YPL204W YNL207W
+Benschop et al. Molecular Cell (2010)	putative Arx1-Rsa4-Sda1-Ipi3-Nsa2-Nog2-Bud20-Ipi1-Mdn1 complex	Benschop	YDR101C YCR072C YGR245C YNL182C YER126C YNR053C YLR074C YHR085W YLR106C
+Benschop et al. Molecular Cell (2010)	putative Hog1-Rck2 complex	Benschop	YLR113W YLR248W
+Benschop et al. Molecular Cell (2010)	putative Nup170-Nup53-Hms1 complex	Benschop	YBL079W YMR153W YOR032C
+Benschop et al. Molecular Cell (2010)	putative Ade16-Ade17-Sol2 complex	Benschop	YMR120C YCR073W-A YLR028C
+Benschop et al. Molecular Cell (2010)	putative Rgd1-Fyv8 complex	Benschop	YBR260C YGR196C
+Benschop et al. Molecular Cell (2010)	putative Pet112-Ymr293c complex	Benschop	YBL080C YMR293C
+Benschop et al. Molecular Cell (2010)	putative Cul3-Yil001w complex	Benschop	YGR003W YIL001W
+Benschop et al. Molecular Cell (2010)	putative Paa1-Ptc2 complex	Benschop	YDR071C YER089C
+Benschop et al. Molecular Cell (2010)	putative Ypt1-Dss4 complex	Benschop	YFL038C YPR017C
+Benschop et al. Molecular Cell (2010)	putative Nma2-Nma1 complex	Benschop	YGR010W YLR328W
+Benschop et al. Molecular Cell (2010)	putative Cia1-Yhr122w-Met18-Nar1 complex	Benschop	YDR267C YHR122W YIL128W YNL240C
+Benschop et al. Molecular Cell (2010)	putative Ddi1-Pmt4 complex	Benschop	YER143W YJR143C
+Benschop et al. Molecular Cell (2010)	putative Ygr283c-Idp3 complex	Benschop	YGR283C YNL009W
+Benschop et al. Molecular Cell (2010)	putative Abp1-Crn1 complex	Benschop	YCR088W YLR429W
+Benschop et al. Molecular Cell (2010)	putative Met13-Met12 isozyme complex	Benschop	YGL125W YPL023C
+Benschop et al. Molecular Cell (2010)	putative Boi2-Cdc24 complex	Benschop	YAL041W YER114C
+Benschop et al. Molecular Cell (2010)	putative Fun19-Kap123 complex	Benschop	YAL034C YER110C
+Benschop et al. Molecular Cell (2010)	putative Ygr283c-Ymr310c complex	Benschop	YGR283C YMR310C
+Benschop et al. Molecular Cell (2010)	putative Trr1-Trr2 complex	Benschop	YDR353W YHR106W
+Benschop et al. Molecular Cell (2010)	putative Fbp26-Ylr345w complex	Benschop	YJL155C YLR345W
+Benschop et al. Molecular Cell (2010)	putative Pck1-Eno1 complex	Benschop	YBL105C YGR254W
+Benschop et al. Molecular Cell (2010)	putative Tdh1-Tdh2 isozyme complex	Benschop	YJL052W YJR009C
+Benschop et al. Molecular Cell (2010)	putative Gdi1-Ypt6-Ypt1 complex	Benschop	YER136W YLR262C YFL038C
+Benschop et al. Molecular Cell (2010)	putative Bdh1-Bdh2 complex	Benschop	YAL060W YAL061W
+Benschop et al. Molecular Cell (2010)	putative Rps0a-Rps0b complex	Benschop	YGR214W YLR048W
+Benschop et al. Molecular Cell (2010)	putative Ubp13-Yol087c complex	Benschop	YBL067C YOL087C
+Benschop et al. Molecular Cell (2010)	putative Pol4-Rpn5 complex	Benschop	YCR014C YDL147W
+Benschop et al. Molecular Cell (2010)	putative Erg7-Erg27 complex	Benschop	YHR072W YLR100W
+Benschop et al. Molecular Cell (2010)	putative Rrp7-Ifh1 complex	Benschop	YCL031C YLR223C
+Benschop et al. Molecular Cell (2010)	putative Asn1-Asn2 isozyme complex	Benschop	YGR124W YPR145W
+Benschop et al. Molecular Cell (2010)	putative Mdm10-Mpm1-Tom40-Yhm2 complex	Benschop	YAL010C YJL066C YMR203W YMR241W
+Benschop et al. Molecular Cell (2010)	putative Ybt1-Dak1 complex	Benschop	YLL048C YML070W
+Benschop et al. Molecular Cell (2010)	putative Cdc19-Pyk2 isozyme complex	Benschop	YAL038W YOR347C
+Benschop et al. Molecular Cell (2010)	putative Pkh1-Mrp8-Pil1-Lsp1 complex	Benschop	YDR490C YKL142W YGR086C YPL004C
+Benschop et al. Molecular Cell (2010)	putative Lsg1-Nmd3-Rei1 complex	Benschop	YGL099W YBR267W YHR170W
+Benschop et al. Molecular Cell (2010)	putative Taf8-Taf14-Taf2 TFIID subcomplex	Benschop	YML114C YPL129W YCR042C
+Benschop et al. Molecular Cell (2010)	putative Ssd1-Psy4-Pph3-Psy2 complex	Benschop	YDR293C YBL046W YDR075W YNL201C
+Benschop et al. Molecular Cell (2010)	putative Rim1-Rad52 complex	Benschop	YCR028C-A YML032C
+Benschop et al. Molecular Cell (2010)	putative Nqm1-Tal1 complex	Benschop	YGR043C YLR354C
+Benschop et al. Molecular Cell (2010)	putative Vab2-Ydr357c-Ykl061w-YGL079w-Ynl086w complex	Benschop	YDR357C YKL061W YEL005C YGL079W YNL086W
+Benschop et al. Molecular Cell (2010)	putative Kap123-Ypr174c complex	Benschop	YER110C YPR174C
+Benschop et al. Molecular Cell (2010)	putative Spe3-Spe4 complex	Benschop	YLR146C YPR069C
+Benschop et al. Molecular Cell (2010)	putative Leu4-Leu9 isozyme complex	Benschop	YNL104C YOR108W
+Benschop et al. Molecular Cell (2010)	putative Snf7-Vps4 complex	Benschop	YLR025W YPR173C
+Benschop et al. Molecular Cell (2010)	putative Hmg1-Hmg2 isozyme complex	Benschop	YLR450W YML075C
+Benschop et al. Molecular Cell (2010)	putative Oye2-Oye3 complex	Benschop	YHR179W YPL171C
+Benschop et al. Molecular Cell (2010)	putative Glt1-Ylr257w complex	Benschop	YDL171C YLR257W
+Benschop et al. Molecular Cell (2010)	spliceosome	Benschop	YGL120C YBR065C YJR050W YAL032C YDR364C YGR278W YCR063W YMR213W YDL209C YDR416W YLL036C YLR117C YPL151C YPR101W YGL128C YLR424W
+Benschop et al. Molecular Cell (2010)	"1,3-beta-glucan synthase complex (GO)"	Benschop	YGR032W YLR342W YPR165W
+Benschop et al. Molecular Cell (2010)	6-phosphofructokinase complex (GO)	Benschop	YGR240C YMR205C
+Benschop et al. Molecular Cell (2010)	90S preribosome (GO)	Benschop	YCR057C YGR081C YGR103W YJL010C snR17a snR17b
+Benschop et al. Molecular Cell (2010)	acetolactate synthase complex (GO)	Benschop	YCL009C YMR108W
+Benschop et al. Molecular Cell (2010)	box C/D snoRNP complex (GO)	Benschop	YDL014W YEL026W YLR197W YOR310C snR128 snR13 snR17a snR17b snR18 snR190 snR24 snR38 snR39 snR39B snR4 snR40 snR41 snR47 snR48 snR50 snR51 snR52 snR53 snR54 snR55 snR56 snR57 snR58 snR59 snR60 snR61 snR62 snR63 snR64 snR65 snR66 snR67 snR68 snR69 snR70 snR71 snR72 snR73 snR74 snR75 snR76 snR77 snR78 snR79 snR87
+Benschop et al. Molecular Cell (2010)	box H/ACA snoRNP complex (GO)	Benschop	YHR089C YLR175W snR10 snR11 snR161 snR189 snR191 snR3 snR30 snR31 snR32 snR33 snR34 snR35 snR36 snR37 snR42 snR43 snR44 snR46 snR49 snR5 snR8 snR80 snR81 snR82 snR83 snR84 snR85 snR86 snR9
+Benschop et al. Molecular Cell (2010)	calcineurin complex (GO)	Benschop	YKL159C YKL190W YLR433C YML057W
+Benschop et al. Molecular Cell (2010)	CBF3 complex (GO)	Benschop	YDR328C YGR140W YMR094W YMR168C
+Benschop et al. Molecular Cell (2010)	CCR4-NOT complex (GO)	Benschop	YFL028C YGR134W YKR036C YNL278W YNL288W
+Benschop et al. Molecular Cell (2010)	chromatin accessibility complex (GO)	Benschop	YDR121W YGL133W YJL065C YOR304W
+Benschop et al. Molecular Cell (2010)	chromatin assembly complex (GO)	Benschop	YER030W YJL115W YOL012C
+Benschop et al. Molecular Cell (2010)	chromatin silencing complex (GO)	Benschop	YBR195C YDR227W YKR101W YLR442C
+Benschop et al. Molecular Cell (2010)	cohesin loading complex (GO)	Benschop	YDR180W YER147C
+Benschop et al. Molecular Cell (2010)	commitment complex (GO)	Benschop	YDR240C YGR074W YHR086W YIL061C YKL074C YLR116W YLR147C YLR298C YML046W YMR125W YPL178W snR19
+Benschop et al. Molecular Cell (2010)	Cul3-RING ubiquitin ligase complex (GO)	Benschop	YBR114W YGR003W YJR052W YNL230C YPL046C
+Benschop et al. Molecular Cell (2010)	CURI complex (GO)	Benschop	YCL031C YGR090W YLR223C YOR039W YPR104C
+Benschop et al. Molecular Cell (2010)	cyclin-dependent protein kinase holoenzyme complex (GO)	Benschop	YBR135W YBR160W YDL127W YDL179W YER059W YGL134W YGL215W YHR071W YIL050W YNL289W YOL001W YPL219W YPL256C
+Benschop et al. Molecular Cell (2010)	cytoplasmic dynein complex (GO)	Benschop	YDR424C YDR488C YKR054C YMR299C
+Benschop et al. Molecular Cell (2010)	Dbf4-dependent protein kinase complex (GO)	Benschop	YDL017W YDR052C
+Benschop et al. Molecular Cell (2010)	DNA ligase IV complex (GO)	Benschop	YGL090W YLR265C YOR005C
+Benschop et al. Molecular Cell (2010)	"DNA-directed RNA polymerase II, holoenzyme (GO)"	Benschop	YBR236C YDL115C YGR097W
+Benschop et al. Molecular Cell (2010)	DSIF complex (GO)	Benschop	YGR063C YML010W
+Benschop et al. Molecular Cell (2010)	dynactin complex (GO)	Benschop	YDR106W YHR129C YMR294W YPL174C
+Benschop et al. Molecular Cell (2010)	ESCRT III complex (GO)	Benschop	YKL002W YKL041W YLR025W YMR077C
+Benschop et al. Molecular Cell (2010)	exosome (RNase complex) (GO)	Benschop	YOR076C
+Benschop et al. Molecular Cell (2010)	F-actin capping protein complex (GO)	Benschop	YIL034C YKL007W
+Benschop et al. Molecular Cell (2010)	glutamate synthase complex (GO)	Benschop	YDL171C
+Benschop et al. Molecular Cell (2010)	glycine cleavage complex (GO)	Benschop	YAL044C YDR019C YFL018C YMR189W
+Benschop et al. Molecular Cell (2010)	glycosylphosphatidylinositol-N-acetylglucosaminyltransferase (GPI-GnT) complex (GO)	Benschop	YDR437W YGR216C YNL038W YPL076W YPL096C-A YPL175W
+Benschop et al. Molecular Cell (2010)	heterogeneous nuclear ribonucleoprotein complex (GO)	Benschop	YNL004W YNL016W
+Benschop et al. Molecular Cell (2010)	heterotrimeric G-protein complex (GO)	Benschop	YHR005C YJR086W YOR212W
+Benschop et al. Molecular Cell (2010)	high affinity iron permease complex (GO)	Benschop	YER145C YMR058W
+Benschop et al. Molecular Cell (2010)	Holliday junction resolvase complex (GO)	Benschop	YBR098W YDR386W
+Benschop et al. Molecular Cell (2010)	i-AAA complex (GO)	Benschop	YCL044C YPR024W
+Benschop et al. Molecular Cell (2010)	kinesin complex (GO)	Benschop	YBL063W YEL061C YGL216W YMR198W YPL155C YPL253C
+Benschop et al. Molecular Cell (2010)	mannosyltransferase complex (GO)	Benschop	YBR004C YNL158W
+Benschop et al. Molecular Cell (2010)	MCM complex (GO)	Benschop	YBL023C YBR202W YEL032W YGL201C YLR274W YPR019W
+Benschop et al. Molecular Cell (2010)	Mdm10/Mdm12/Mmm1 complex (GO)	Benschop	YAL010C YLL006W YOL009C
+Benschop et al. Molecular Cell (2010)	mitochondrial inner membrane peptidase complex (GO)	Benschop	YEL059C-A YMR035W YMR150C
+Benschop et al. Molecular Cell (2010)	mitochondrial inner membrane presequence translocase complex (GO)	Benschop	YGR033C YJL104W YJL143W YLR008C YNR017W YPL063W
+Benschop et al. Molecular Cell (2010)	mitochondrial inner membrane protein insertion complex (GO)	Benschop	YBR091C YDL217C YJL054W YOR297C
+Benschop et al. Molecular Cell (2010)	mitochondrial intermembrane space protein transporter complex (GO)	Benschop	YEL020W-A YGR181W YHR005C-A YJR135W-A
+Benschop et al. Molecular Cell (2010)	mitochondrial outer membrane translocase complex (GO)	Benschop	YGR082W YKL195W YMR203W YNL070W YNL121C YNL131W YOR045W YPR133W-A
+Benschop et al. Molecular Cell (2010)	mitochondrial proton-transporting ATP synthase complex (GO)	Benschop	YDL130W-A YDL181W YGR008C
+Benschop et al. Molecular Cell (2010)	"mitochondrial proton-transporting ATP synthase complex, coupling factor F(o) (GO)"	Benschop	Q0080 Q0085 Q0130 YDR322C-A YDR377W YLR295C YML081C-A YOL077W-A YPR020W
+Benschop et al. Molecular Cell (2010)	mitochondrial respiratory chain complex II (GO)	Benschop	YDR178W YKL141W YKL148C YLL041C
+Benschop et al. Molecular Cell (2010)	mitochondrial ribonuclease P complex (GO)	Benschop	YML091C
+Benschop et al. Molecular Cell (2010)	mitochondrial ribosome (GO)	Benschop	YDL069C YGL068W YKL142W YPL132W
+Benschop et al. Molecular Cell (2010)	mitochondrial sorting and assembly machinery complex (GO)	Benschop	YAL010C YHR083W YMR060C YNL026W
+Benschop et al. Molecular Cell (2010)	mitotic checkpoint complex (GO)	Benschop	YGL116W YJL013C YJL030W YOR026W
+Benschop et al. Molecular Cell (2010)	monopolin complex (GO)	Benschop	YCR086W YDR439W YER106W YPL204W
+Benschop et al. Molecular Cell (2010)	Mre11 complex (GO)	Benschop	YDR369C YMR224C YNL250W
+Benschop et al. Molecular Cell (2010)	mRNA cap complex (GO)	Benschop	YJL124C YKL204W YOR276W
+Benschop et al. Molecular Cell (2010)	MutLbeta complex (GO)	Benschop	YMR167W YPL164C
+Benschop et al. Molecular Cell (2010)	myosin II complex (GO)	Benschop	YHR023W
+Benschop et al. Molecular Cell (2010)	myosin V complex (GO)	Benschop	YAL029C YOR326W
+Benschop et al. Molecular Cell (2010)	Noc1p-Noc2p complex (GO)	Benschop	YDR060W YOR206W
+Benschop et al. Molecular Cell (2010)	Noc2p-Noc3p complex (GO)	Benschop	YLR002C YOR206W
+Benschop et al. Molecular Cell (2010)	Noc4p-Nop14p complex (GO)	Benschop	YDL148C YPR144C
+Benschop et al. Molecular Cell (2010)	NuA3 histone acetyltransferase complex (GO)	Benschop	YBL052C YJR082C YOR064C YPL129W YPR031W
+Benschop et al. Molecular Cell (2010)	nuclear cap binding complex (GO)	Benschop	YMR125W YPL178W
+Benschop et al. Molecular Cell (2010)	nuclear RNA export factor complex (GO)	Benschop	YKL186C YPL169C
+Benschop et al. Molecular Cell (2010)	nuclear SCF ubiquitin ligase complex (GO)	Benschop	YFL009W YIL046W
+Benschop et al. Molecular Cell (2010)	nuclear telomere cap complex (GO)	Benschop	YBR275C YDL042C YDL220C YDR082W YDR227W YGR099W YLR010C YLR150W YLR442C YLR453C YNL216W
+Benschop et al. Molecular Cell (2010)	"nucleolar preribosome, large subunit precursor (GO)"	Benschop	YER126C YGR103W YLR022C YLR221C YNR038W YPL093W
+Benschop et al. Molecular Cell (2010)	"nucleolar preribosome, small subunit precursor (GO)"	Benschop	YBR247C YGR081C YJL010C YKL143W YNL178W
+Benschop et al. Molecular Cell (2010)	nucleotide-excision repair factor 1 complex (GO)	Benschop	YML095C YMR201C YPL022W
+Benschop et al. Molecular Cell (2010)	nucleotide-excision repair factor 3 complex (GO)	Benschop	YDR460W YGR258C
+Benschop et al. Molecular Cell (2010)	nucleotide-excision repair factor 4 complex (GO)	Benschop	YBR114W YJR052W YKL112W YPL046C
+Benschop et al. Molecular Cell (2010)	oligosaccharyl transferase complex (GO)	Benschop	YDL232W YEL002C YGL022W YGL226C-A YJL002C YML019W YMR149W YOR085W YOR103C
+Benschop et al. Molecular Cell (2010)	palmitoyltransferase complex (GO)	Benschop	YLR246W YOL110W
+Benschop et al. Molecular Cell (2010)	PCNA complex (GO)	Benschop	YBR088C
+Benschop et al. Molecular Cell (2010)	phosphopyruvate hydratase complex (GO)	Benschop	YGR254W YHR174W
+Benschop et al. Molecular Cell (2010)	preribosome (GO)	Benschop	YDL166C YOR056C
+Benschop et al. Molecular Cell (2010)	proteasome complex (GO)	Benschop	YBR082C YDR059C YDR069C YDR177W YEL037C YGL058W YGR184C YHL030W YHR052W
+Benschop et al. Molecular Cell (2010)	proteasome core complex (GO)	Benschop	YFL007W
+Benschop et al. Molecular Cell (2010)	proteasome regulatory particle (GO)	Benschop	YDL020C YFR010W YGR232W
+Benschop et al. Molecular Cell (2010)	protein phosphatase type 1 complex (GO)	Benschop	YBR045C YBR050C YDR028C YER054C YER133W YLR273C YOR178C
+Benschop et al. Molecular Cell (2010)	RecQ helicase-Topo III complex (GO)	Benschop	YLR234W YMR190C YPL024W
+Benschop et al. Molecular Cell (2010)	RENT complex (GO)	Benschop	YDL042C YFR028C YJL076W YPL126W
+Benschop et al. Molecular Cell (2010)	repairosome (GO)	Benschop	YBR114W YEL037C YER162C YJR052W
+Benschop et al. Molecular Cell (2010)	"retromer complex, outer shell (GO)"	Benschop	YOR069W YOR132W
+Benschop et al. Molecular Cell (2010)	Rhp55-Rhp57 complex (GO)	Benschop	YDR004W YDR076W
+Benschop et al. Molecular Cell (2010)	ribonuclease H2 complex (GO)	Benschop	YDR279W YLR154C YNL072W
+Benschop et al. Molecular Cell (2010)	ribonucleoprotein complex (GO)	Benschop	YIL149C YKR095W YOR198C
+Benschop et al. Molecular Cell (2010)	ribonucleoside-diphosphate reductase complex (GO)	Benschop	YER070W YGR180C YIL066C YJL026W
+Benschop et al. Molecular Cell (2010)	RNA polymerase I transcription factor complex (GO)	Benschop	YBL014C YER148W YJL025W YKL125W YML043C
+Benschop et al. Molecular Cell (2010)	RNA polymerase I upstream activating factor complex (GO)	Benschop	YBL025W YLR141W YMR270C YOR295W
+Benschop et al. Molecular Cell (2010)	signal peptidase complex (GO)	Benschop	YIR022W YJR010C-A YLR066W YML055W
+Benschop et al. Molecular Cell (2010)	Sin3 complex (GO)	Benschop	YMR053C YNL309W YOL004W
+Benschop et al. Molecular Cell (2010)	Slx1-Slx4 complex (GO)	Benschop	YBR228W YLR135W
+Benschop et al. Molecular Cell (2010)	small nuclear ribonucleoprotein complex (GO)	Benschop	YER127W YPR057W YPR137W
+Benschop et al. Molecular Cell (2010)	SNARE complex (GO)	Benschop	YAL030W YGR009C YPL232W
+Benschop et al. Molecular Cell (2010)	sulfite reductase complex (NADPH) (GO)	Benschop	YFR030W YJR137C
+Benschop et al. Molecular Cell (2010)	synaptonemal complex (GO)	Benschop	YGL249W YNL088W
+Benschop et al. Molecular Cell (2010)	telomerase catalytic core complex (GO)	Benschop	TLC1 YLR318W
+Benschop et al. Molecular Cell (2010)	telomerase holoenzyme complex (GO)	Benschop	YIL009C-A YLR233C
+Benschop et al. Molecular Cell (2010)	TORC1 complex (GO)	Benschop	YHR186C YJR066W YKL203C YNL006W YPL180W
+Benschop et al. Molecular Cell (2010)	TORC2 complex (GO)	Benschop	YER093C YIL105C YJL058C YKL203C YMR068W YNL006W YNL047C YOL078W
+Benschop et al. Molecular Cell (2010)	transcription elongation factor complex (GO)	Benschop	YER164W YGR116W YNL230C YPL046C YPR133C
+Benschop et al. Molecular Cell (2010)	transcription factor complex (GO)	Benschop	YCR081W YDR443C YNL025C YPL042C YPR186C
+Benschop et al. Molecular Cell (2010)	transcription factor TFIIIB complex (GO)	Benschop	YER148W YGR246C YNL039W
+Benschop et al. Molecular Cell (2010)	translocon complex (GO)	Benschop	YBR283C YDR086C YER019C-A YER087C-B YLR378C
+Benschop et al. Molecular Cell (2010)	tRNA-intron endonuclease complex (GO)	Benschop	YAR008W YLR105C YMR059W YPL083C
+Benschop et al. Molecular Cell (2010)	ubiquitin conjugating enzyme complex (GO)	Benschop	YDR092W YGL087C
+Benschop et al. Molecular Cell (2010)	ubiquitin ligase complex (GO)	Benschop	YDL013W YDR219C YDR306C YER116C YER125W YLR224W YML111W YMR275C YNL311C YOR057W
+Benschop et al. Molecular Cell (2010)	UDP-N-acetylglucosamine transferase complex (GO)	Benschop	YBR070C YGL047W
+Benschop et al. Molecular Cell (2010)	vacuolar transporter chaperone complex (GO)	Benschop	YER072W YFL004W YJL012C YPL019C
+Benschop et al. Molecular Cell (2010)	zeta DNA polymerase complex (GO)	Benschop	YIL139C YPL167C
+Stirling et al. PLoS Genetics (2011)	"Kinetochore, Spindle and Cell Cycle"	Stirling	YIL144W YMR117C YOL069W YER018C YAL034W-A YIR010W YJR112W YPL233W YPL209C YHR199C-A  YBR156C YDR254W YLR381W YGR179C YPL018W YDR201W YKR037C YGR113W YGL061C YKL052C YOR026W YFR046C YKL089W YBR211C YMR168C YMR094W YGR140W YOR195W YGL060W YKL049C YOR057W YPR046W YDR318W YJR135C YDL139C YBR107C YDR328C YCL029C YHR166C YDR118W YGL240W YGL116W YGL003C YDL008W YGL086W YJL030W YGR188C YOR073W YLR457C YGL093W YPL253C YNL126W YHR172W YKL042W YOL091W YDR356W YDR532C YDL028C YOR058C YBL031W YBL034C YCR065W YEL061C YMR198W YPL017C YDR130C YER016W YPR141C YOR349W YPL241C YMR138W YER007W YEL003W YML094W YGR078C YJL179W YLR200W YLR212C YML124C YML085C YFL037W YBR158W YFR028C YJR053W YGR108W YDL155W YPR120C YBR160W YBR135W YAL040C YOR066W YLR079W YFL017C YPL031C YOR083W YCR008W YML016C YLR361C YDR168W YDR113C YDR510W YDL064W YLR394W YER133W YKL193C YLR273C YMR311C YBL058W YAL016W YOR014W 
+Stirling et al. PLoS Genetics (2011)	"DNA replication, repair and cohesion"	Stirling	YIL026C YDR014W YDR180W YER147C YDL003W YFL008W YJL074C YLR086W YGL250W YDR285W YIL150C YBL023C YEL032W YPR019W YLR274W YGL201C YBR202W YML065W YBR060C YLL004W YPR162C YNL261W YHR118C YFR027W YHR164C YNL102W YDL102W YBL035C YBR088C YJR006W YJR046W YJR043C YLR103C YJL194W YDL164C YDR052C YOR080W YPR135W YBR278W YDL017W YDR439W YCR086W YKL108W YGL113W YDR013W YJL072C YOL146W YDR489W YAR007C YNL312W YER070W YJL026W YGR180C YNL072W YDR279W YLR154C YOR144C YMR078C YHR191C YCL016C YJR068W YOL094C YBR087W YIR008C YKL045W YBR274W YPL022W YML095C YOR368W YCR066W YER173W YKL113C YER162C YLR032W YNL250W YER095W YML032C YGL163C YDR076W YDR004W YDL059C YGL058W YDR217C YBR073W YPL194W YDR440W YDL101C YBR136W YLR288C YPR164W YLR320W YBR098W YIR002C YCL061C YMR224C YPL153C YIL139C YHR154W YLL002W YNL273W YHR134W YDR369C YIL132C YNL133C YDR386W YLR007W YDR288W YDL105W YML023C YHL006C YDL013W YER116C YJL092W YJL047C YMR048W YOL034W YLR383W YEL037C YPL024W YMR190C YPL008W YHR031C YLR234W YOL006C YBR009C YNL030W YNL031C YOL012C YLR052W YDL002C YPL235W YDR359C YNL136W YNL107W YGR002C YAL011W YBR231C YDR334W YLR357W YDR303C YFR037C YMR033W YKR008W 
+Stirling et al. PLoS Genetics (2011)	Chromatin and Transcription	Stirling	YDL074C YPR068C YOR025W YDR191W YDR176W YPR018W YNL206C YJL127C YER161C YMR179W YGR270W YML102W YJL115W YPL055C YBR195C YFR013W YJR060W YGR099W YPR085C YKL033W YMR219W YDR363W YIL009C-A YBR275C YOR209C YPL128C YMR106C YDL040C YKL117W YPL047W YGL066W YGR274C YDR167W YPL129W YCR042C YMR005W YBR198C YMR227C YML114C YMR236W YLR071C YGL207W YBR123C YKL028W YKR062W YDR311W YDR460W YJR063W YDR156W YJL148W YIL021W YJL140W YBR154C YDR404C YDR045C YKR025W YLR005W YIL143C YLR226W YLR418C YJL006C YML112W YNR010W YHR058C YGL151W YML069W YOL054W YDL140C YDR289C YCR081W YNL222W YPR161C YPR133C YML010W YGR063C YMR043W YGL071W YGR044C YML099C YPL082C YBR112C YKR038C YHR206W YNL257C YHR167W YML062C YNL309W YIL084C YIL036W 
+Stirling et al. PLoS Genetics (2011)	Ribosome biogenesis and Translation	Stirling	YLR291C YBR079C YOR361C YOR260W YBR143C YEL034W YJR047C YDR172W YPL179W YCR057C YOR272W YMR049C YHR066W YHR085W YDR091C YNR038W YHR088W YOL144W YNL002C YLR222C YDR449C YLR002C YPR144C YKR092C YHR065C YLR196W YLR409C YDR398W YKR024C YNL132W YNL075W YKR094C YIL148W YKL006W YGL030W YIL018W YNL162W YDL082W YIL052C YGR027C YBR189W YHL015W YGR118W YGR148C YPL160W YLR060W YFL022C YOR168W YBR121C YGL245W YGR264C YLR316C YHR070W YHR020W YBR167C YIR015W 
+Stirling et al. PLoS Genetics (2011)	Mitochondrial Functions	Stirling	YMR203W YNL131W YPR047W YGR171C YBR282W YML009C YNL252C YEL050C YJL102W YPR067W YER048W-A YPL059W YLL027W YKR071C YMR301C YPL061W YML086C YNL080C YML028W YPR131C YBR026C YNR016C YDL141W YKL055C YKL192C YDR487C YLR304C YFL016C YIL125W YDR194C YPL271W YOR241W YKR087C YDR350C YHR194W YDR231C YMR267W YLR193C YOL009C YAL008W YMR066W YNR045W YNL315C YJR144W YOR060C YNL213C YAL019W YLR163C YGR102C YHR001W-A YHR076W 
+Stirling et al. PLoS Genetics (2011)	RNA Processing	Stirling	YPR082C YLR298C YOR308C YBL074C YIL061C YPL213W YDL098C YGR091W YPR178W YBR055C YMR288W YBR152W YEL026W YDL209C YDR416W YKL173W YKL074C YOR250C YOL123W YGL044C YOL115W YER165W YJR093C YLR115W YDR228C YNL317W YGR156W YGL173C YJL124C YBL026W YDR378C YOL021C YCR035C YHR069C YDL165W YCR093W YAL021C YNR052C YPL190C YLR116W YDL084W YLR424W YPR042C YHR087W YPL228W YNL118C 
+Stirling et al. PLoS Genetics (2011)	Nucleocytoplasmic Transport	Stirling	YKL057C YKR082W YAR002W YDL116W YBL079W YJR042W YDR159W YOL072W YER009W YMR308C YJR074W YIR011C YLR293C YHR036W YMR235C YGL238W YDR002W YGL097W YGR218W YPL125W YOR160W
+Stirling et al. PLoS Genetics (2011)	Endomembrane system	Stirling	YDR292C YKL154W YPR088C YLR378C YJL031C YML077W YNR026C YBL050W YDR170C YIL109C YDR189W YMR218C YDR246W YFL038C YGR172C YIL004C YMR079W YNR049C YLR440C YOR326W YCR067C YPR032W YFR051C YGL098W YJR005W YMR197C YNR048W YCR094W YML130C YIL090W YNL291C YLR423C YEL013W YLR373C YGR141W YDR200C YBR042C YPL117C YHR133C YMR008C YJL167W YDR182W YBR109C YDR017C YLR410W YPL268W YER177W YDR099W 
+Stirling et al. PLoS Genetics (2011)	Morphogenesis and Cell integrity	Stirling	YFL039C YLR370C YKL013C YLR085C YOR122C YLR429W YNL138W YLL050C YLR229C YAL041W YDR208W YJL058C YNL047C YML064C YNL152W YHR107C YDL117W YGR058W YNL066W YGL142C YDR434W YOR149C YLR459W YDL103C YLR242C YCL052C YIR019C YOR002W YKL104C YFR042W YHR204W YHR101C YLR443W YOR336W YBL105C YKL035W YOL081W YGR014W YLR006C YLR425W 
+Stirling et al. PLoS Genetics (2011)	Other housekeeping pathways	Stirling	YJL060W YEL029C YBR035C YDL045C YCR028C YGR267C YLR058C YEL046C YKL221W YOL064C YER023W YKR093W YCR012W YHR092C YKL217W YDR050C YJR009C YAL038W YKR097W YKL024C YAR015W YMR120C YOR128C YMR300C YGL234W YGR061C YDR408C YDR226W YJR032W YIR004W YPL037C YDR171W YHR064C YGR285C YPL106C 
+Stirling et al. PLoS Genetics (2011)	Unknown function	Stirling	YGL168W YLL049W YJL038C YOL070C YCR095C YDL204W YPL027W YMR095C YLL005C YKR091W YIL137C YLL028W YNR068C YNL086W YMR185W YMR134W YJR154W YJR008W YGR153W YGR071C YGL235W YGL117W YER156C YDR286C YDL156W YDL025C YLR312C YOL014W YLR287C YMR266W YOR262W YHR122W 
+Stirling et al. PLoS Genetics (2011)	Dubious ORFs	Stirling	YLR255C YPR044C YOR300W YOR024W YOR015W YNR042W YNL140C YNL089C YML009W-B YML009C-A YLR374C YLR235C YKL053W YJL075C YJL007C YHR093W YGR219W YGR064W YFL013W-A YDR431W YDR417C YDR290W YDR187C YDL162C YDL096C YBR277C YBR113W YBR099C YML090W YDR433W YDL151C 
