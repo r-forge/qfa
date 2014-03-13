@@ -362,7 +362,7 @@ makeVisTool=function(){
 		# Get user input for a new list of genes
 			if (Sys.info()['sysname']=="Windows") bringToTop(which=-1)
 			newgrp=getText(globs$ORFGENE)
-			newdf=data.frame(GroupName=newgrp[["Label"]],GroupID="R VisTool")
+			newdf=data.frame(Notes="Generated interactively by user",GroupName=newgrp[["Label"]],GroupID="VisTool")
 			newdf$GroupORFs=paste(newgrp[["ORFs"]],collapse=" ")
 			globs$GROUPS=rbind(globs$GROUPS,newdf)
 			globs$compno=length(globs$GROUPS$GroupORFs)
