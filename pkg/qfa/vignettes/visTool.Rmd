@@ -1,0 +1,8 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{visTool}
+-->
+
+Introduction 
+------------------------------------------------
+QFA experiments are often used to compare the fitnesses of independent microbial strains under two different environmental conditions (e.g. query and control conditions), or in two different genetic backgrounds, to search for evidence for drug interactions or genetic interactions for example. Such comparisons can become difficult to visualise by static scatterplot due to the sheer number of strains examined, simply because simultaneous labelling of ~4,000 genes on a single plot is not practical. For example, in Figure 2 from Addinall et al., 2011 the labels for many genes in interesting locations are obscured.
