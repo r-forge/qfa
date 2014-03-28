@@ -5,4 +5,66 @@
 
 Introduction 
 ------------------------------------------------
-QFA experiments are often used to compare the fitnesses of independent microbial strains under two different environmental conditions (e.g. query and control conditions), or in two different genetic backgrounds, to search for evidence for drug interactions or genetic interactions for example. Such comparisons can become difficult to visualise by static scatterplot due to the sheer number of strains examined, simply because simultaneous labelling of ~4,000 genes on a single plot is not practical. For example, in Figure 2 from Addinall et al., 2011 the labels for many genes in interesting locations are obscured.
+[QFA] [qfa] experiments are often used to compare the fitnesses of independent microbial strains under two different environmental conditions (e.g. query and control conditions), or in two different genetic backgrounds, to search for evidence for drug interactions or genetic interactions for example. Such comparisons can become difficult to visualise by static scatterplot due to the sheer number of strains examined, simply because simultaneous labelling of ~4,000 genes on a single plot is not practical. For example, in [Figure 2] [fig2] from [Addinall et al., 2011] [addinall] the labels for many genes in interesting locations are obscured:
+
+<a href="http://www.plosgenetics.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pgen.1001362.g002&representation=PNG_M"><img src="http://www.plosgenetics.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pgen.1001362.g002&representation=PNG_M" width=500px></a>
+
+[qfa]: http://research.ncl.ac.uk/qfa/ "Quantiative Fitness Analysis"
+[fig2]: http://www.plosgenetics.org/article/fetchObject.action?uri=info:doi/10.1371/journal.pgen.1001362.g002&representation=PNG_M "Figure 2 from Addinall et al."
+[addinall]: http://www.plosgenetics.org/doi/pgen.1001362 "Addinall et al., 2011"
+
+The qfaR visualisation tool provides a means to interact with such scatterplots, to make rapid, visual comparisons between different pairs of QFA experiments and to query plots in real time, aiding analysis and interpretation of the underlying data. qfaR visualisation can be applied to any paired sets of control and query fitnesses, including SGA screen data, or fitnesses derived from liquid growth curves, for example.
+
+<a href="QFAVisualisation0001.png"><img src="QFAVisualisation0001.png" width=300px></a>
+<a href="QFAVisualisation0002.png"><img src="QFAVisualisation0002.png" width=300px></a>
+<a href="QFAVisualisation0003.png"><img src="QFAVisualisation0003.png" width=300px></a>
+
+**qfaR Fitness Plots** Scatterplots of data from Addinall et al., 2011 printed using the qfaR visualisation tool. The same four functionally related genes are highlighted in purple on each plot and names printed. Genes highlighted in green significantly enhance the background mutation phenotype indicated in the y-axis label. Similarly, genes highlighted in red suppress the phenotype. Blue horizontal and vertical lines intersect at the point corresponding to *his3&Delta;* (a wild-type surrogate). Solid grey line is predicted double-mutant fitness, given single deletion fitness and assuming a multiplicative model of genetic independence. Dashed grey line is the line of equal fitness. Click on panels to zoom.
+
+Screen pairs are indicated with shorthand labels on the x and y axis. For example, the label 'CDC13-1 20' represents an experiment combining the yeast deletion collection with a background *cdc13-1* mutation, grown at 20&deg;C. Similarly, the label 'URA3 20' represents an experiment combining the yeast deletion collection with a neutral, background *ura3&Delta;* mutation, grown at 20&deg;C. For each QFA pair, the plot title indicates the fitness definition used (e.g. MDR*MDP or MDR), the statistic used to summarise replicate fitness observations (e.g. mean or median) and the statistical test used to identify enhancers and suppressors (e.g. Student's t-test or the Wilcoxon test).
+
+Starting the tool (OSX or Windows)
+------------------------------------------------
+
+To start the visualisation tool, first start the R application. Once R is running, type the following two commands (pressing enter after each) at the command prompt:
+```
+library(qfa)
+visToolDemo(buildBenschop)
+```
+A plotting window should appear alongside the text console, and instructions for using the keyboard and mouse to interact with the data should be printed to the console (copied below). Note that you will need to click on the console window to put it into focus before typing in Gene names etc., if prompted. Similarly, you may have to click on the plotting window to put it into focus before attempting to use any keyboard plotting commands.
+
+The command above allows highlighting of groups of genes built based on a list of consensus functionally related complexes from Benschop et al. (2010). If you would like to use a version of the tool with GO terms highlighted instead, quit the visualisation tool (preferablty by pressing 'q' on the keyboard, rather than clicking on the 'x' button) and type the following command in the text console (followed by enter):
+```
+visToolDemo(buildGO)
+```
+However, note that there are about 4,000 GO terms to browse through...
+
+Interacting with plots
+------------------------------------------------
+
+Users can interact with plots in several ways, using the keyboard and mouse. The full set of controls are described below. Briefly, clicking on points highlights them and prints the relevant gene names (corresponding to the relevant deletion from the yeast deletion collection, for example). Right-clicking on a point (or pressing the 'w' key) opens the Saccharomyces Genome Database web-page for that gene. The user can browse through different pairs of QFA experiments, while keeping the same genes highlighted, by pressing the left and right arrow keys. The user can browse different functionally related groups of genes, by using the up and down arrow keys, highlighting groups of genes based on a user-specified list of genes. Two default lists are presented within the QFA package itself: 1) A list of about 500 genes including telomere-related genes that are of interest to the Lydall lab together with hits from telomere-length screens by Askree et al. (2004) & Meng et al. (2009), replicative senescence screens by Chang et al.(2010), a chromosome instability screen by Stirling et al. (2011) and a manually curated list of functionally related complexes by Benschop et al. (2010) 2) A list of all genes co-annotated with about 4,000 GO terms from the gene ontology database. The user can also examine different views of the same data, toggling between QFA fitness plots (as presented in Addinall et al., 2011) and query/control fitness ratio plots, with genes ranked by standard gene name, by pressing 'l'. Users can search for groups of their favourite genes by pressing 'u' and following instructions in the R console to manually add to the pre-loaded list of functional groups. Finally, users can output plots to publication quality PDF figures after highlighting genes of interest by pressing 'p'.
+
+__Windows mouse__
+- Left click: Highlight gene/Rotate text position
+- Right click: Open SGD page for gene (alternatively, press 'w' on keyboard)
+- Middle click: Remove last gene (alternatively, press 'd' on keyboard)
+
+__Mac mouse__
+- Click: Highlight gene/Rotate text position
+
+__Keyboard__
+- Left/Right arrow: Switch to next/previous fitness plot (comparison between different pair of experiments).
+- Up/Down arrow: Change group of genes currently highlighted (in purple).
+- u: Add new group of genes to list of highlightable groups.
+- z: Toggle select tool on/off. Select genes for highlighting by drawing a polygon on plot. Press 's' to add selection when finished.
+- s: Highlight genes encircled using select tool ('z').
+- c: Clear highlighting from currently selected genes.
+- w: Open SGD web-page for last gene highlighted.
+- d: Remove highlighting from last gene highlighted.
+- t: Toggle colours (red/green) indicating positive and negative interaction.
+- l: Toggle plot style between fitness plot and ratio plot.
+- i: Toggle between log ratio plot styles.
+- r: Enter zoom mode. Click on top left and bottom right of area to inspect.
+- p: Save current plot as vector graphic to QFAVisualisation.ps. Other filetypes can also be generated - 'n': .png and 'm': .pdf
+- b: Print experimental metadata report to console window
+- q: Quit tool and print gene names currently selected to console window.
