@@ -401,7 +401,7 @@ makeVisTool=function(){
 		return(NULL)
 	}
 
-	visTool<-function(groups,orf2gene,GISfiles,metaRep=""){
+	visTool<-function(groups,orf2gene,GISfiles,metaRep="MetaReport.txt"){
 		# Function for generating interactive plot
 		globs$GROUPS=groups()
 		globs$ORFGENE=orf2gene
@@ -523,27 +523,29 @@ makeVisTool=function(){
 	return(visTool)
 }
 
-benschopFromSource<-function(){
+complexesFromSource<-function(){
 	# Read in functionally related complexes
 	# Largely from Benschopp Mol Cell 2010
 	# Can add some complexes manually
 	compfile=file.path(system.file(package = "qfa"),"extdata","FunctionalComplexes.txt",sep="")
-	Benschopp=read.delim(compfile,stringsAsFactors=FALSE,sep="\t")
-	Benschopp$CompList=gsub(";"," ",gsub("\\s","",Benschopp$Complex.members..systematic.name))
-	res=data.frame(GroupName=Benschopp$X..Complex.name,GroupID="Func.")
-	res$GroupORFs=Benschopp$CompList
+	Complexes=read.delim(compfile,stringsAsFactors=FALSE,sep="\t")
+	Complexes$CompList=gsub(";"," ",gsub("\\s","",Complexes$Complex.members..systematic.name))
+	res=data.frame(GroupName=Complexes$X..Complex.name,GroupID="Func.")
+	res$GroupORFs=Complexes$CompList
 	return(res)
 }
 
-buildBenschop<-function(){
-	fname=file.path(system.file(package = "qfa"),"extdata","Benschop.txt")
+buildComplexes<-function(){
+	fname=file.path(system.file(package = "qfa"),"extdata","FunctionalComplexes.txt")
 	cat("\nGroups of functionally related complexes are specified in this file which you can edit with any text editor:\n~~~~~~~~~~~~~~~\n")
 	cat(paste(fname,"\n"))
-	Benschop=read.delim(fname,sep="\t",header=TRUE,stringsAsFactors=FALSE)
-	return(Benschop)
+	ComplexesData=read.delim(fname,sep="\t",header=TRUE,stringsAsFactors=FALSE)
+	return(ComplexesData)
 }
 
-visToolDemo<-function(groupFun=buildBenschop){
+buildBenschop<-function() buildComplexes()
+
+visToolDemo<-function(groupFun=buildComplexes){
 	orfile=file.path(file.path(system.file(package = "qfa"),"extdata","ORF2GENE.txt.gz"))
 	ORFGENE=read.delim(orfile,stringsAsFactors=FALSE,sep="\t",header=FALSE)
 	colnames(ORFGENE)=c("ORF","Gene")
@@ -686,7 +688,7 @@ printSelected=function(globs){
 	cat("\n")
 }
 
-reportExpts=function(globs,fname=""){
+reportExpts=function(globs,fname="MetaReport.txt"){
 	if(fname!="") {
 		cat("\nDetailed plot metadata will be written to file:\n~~~~~~~~~~~~~~~\n")
 		cat(file.path(getwd(),fname),"\n")
@@ -711,8 +713,8 @@ reportExpts=function(globs,fname=""){
 		reptQuer=r2[((fin/2)+1):fin]
 		reptQuer=gsub("Query ","",reptQuer)
 		df=data.frame(Control=reptCont,Query=reptQuer)
-		print(df,row.names=FALSE)
-		#cat(rept2,sep="\n")
+		#print(df,row.names=FALSE)
+		cat(rept2,sep="\n")
 	}
 	if(fname!="") sink()
 	
