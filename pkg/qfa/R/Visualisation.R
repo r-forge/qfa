@@ -292,6 +292,7 @@ makeVisTool=function(){
 			globs$posits=c(globs$posits,rep(1,length(globs$tsel)))
 			globs$selx=c()
 			globs$sely=c()
+			globs$sel=0
 			if(globs$ratioPlot){
 				ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
 			}else{
