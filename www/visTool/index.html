@@ -12,8 +12,8 @@
  
 <header>
 <a href="http://www.flickr.com/photos/conchur/8187964744/" title="FourCulturesCropped by Conor Lawless, on Flickr">
-<img src="http://farm9.staticflickr.com/8489/8187964744_583f1264b2_m.jpg" width="180" alt="FourCulturesCropped" style="display: inline; float:left; margin-right: 5px; margin-bottom: 30px;"></a>
-<h1>qfaR visualisation tool</h1> 
+<img src="http://farm9.staticflickr.com/8489/8187964744_583f1264b2_m.jpg" width="15%" alt="FourCulturesCropped" style="display: inline; float:left; margin-right: 5px; margin-bottom: 30px;"></a>
+<h1>qfa visualisation tool</h1> 
 <hr></hr>
 </header>
 
@@ -22,14 +22,12 @@
 <ul>
 	<li><a href="../">Home</a></li>
 	<li><a href="#intro">Introduction</a></li>
-	<li><a href="#osx">Installation for OSX</a></li>
-	<li><a href="#windows">Installation for Windows</a></li>
-	<li><a href="#instruct">Loading the tool</a></li>
-	<li><a href="#interact">Interacting with plots</a></li>
+	<li><a href="#install">Installing or updating</a></li>
+	<li><a href="#doc">Documentation</a></li>
 </ul>
 </nav>
 
-<article>
+<article id="main">
 <p>This page is for users interested in the interactive data visualisation tools which form a part of the QFA R package.  A more general introduction to the QFA R package can be found <a href="../">here</a>.  Currently, interactive R plots are only available under OSX and Windows.  A web-based visualisation tool is under development <a href="http://bioinf1.ncl.ac.uk/qfa">here</a>.  </p>
 
 <a name="intro"><h2>Introduction</h2></a>
@@ -48,49 +46,20 @@
 
 <hr></hr>
 
-<a name="osx"><h2>Installation for OSX</h2></a>
+<a name="install"><h2>Installing or updating the visualisation tool</h2></a>
 
-<p>You will require administrator rights on your machine to install <a href="http://cran.r-project.org/bin/macosx/">R</a>.
-
-<ol><li>Make sure you have the latest version of R installed on your computer (or at least a version >= 3.0.1).  If not, <a href="http://cran.r-project.org/bin/macosx/">download</a> the latest installation file (.pkg file) to your hard drive and install.</li>
-	<li>Install the qfa package containing the visualisation tool and the <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> QFA datasets:<ol type="a">
-		<li>Start the R application</li>
-		<li>Paste the following line of code after the command line prompt (followed by Enter):</li>
-	</ol>
-<code>
-install.packages("qfa")
-</code>
-</ol>
-Note that, depending on the version of your operating system, you might be prompted to install the <a href="http://xquartz.macosforge.org">X11</a> software for Mac at a later stage.  X11 is necessary for the visualisation tool to work, so please install it if promoted.  This may require restarting your machine.</p>
-
-<p>Installation should be complete.  You do not have to go through these steps again to use the tool.  To update an existing installation to the latest version, simply repeat step 2.</p>
+<p>The visualisation tool is part of the qfa R package.  To install the tool, please follow the <a href="http://qfa.r-forge.r-project.org/#install">installation instructions</a> on the qfa R package webpage.</p>
 
 <hr></hr>
-
-<a name="windows"><h2>Installation for Windows</h2></a>
-
-<p>You will require administrator rights on your PC to install <a href="http://cran.r-project.org/bin/windows/base/">R</a> and the qfa package.
-
-<ol><li>Make sure you have the latest version of R installed on your computer.  If not, <a href="http://cran.r-project.org/bin/windows/base/">download</a> the latest .exe file to your hard drive and install.</li>
-<li>Install the qfa package containing the visualisation tool and the <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> QFA datasets:<ol type="a">
-	<li>Start the R application (e.g. Start->All Programs->R->R x64 3.0.1)</li>
-	<li>Paste the following line of code after the command line prompt (followed by Enter):</li>
-</ol></li>
-<code>
-install.packages("qfa")
-</code>
-</ol>
-
-<p>Installation should be complete.  You do not have to go through these steps again to use the tool.  To update an existing installation to the latest version, simply repeat step 2.</p>
-
-<hr></hr>
-<a name="instruct"><h2>Documentation</h2></a>
+<a name="doc"><h2>Documentation</h2></a>
 
 <p>Once the qfa package is installed, you can access detailed documentation for the visualisation tool by typing the following command into the R console (followed by pressing enter):</p>
 
 <code>
 vignette("qfa")
 </code>
+
+<p>This should open a webpage in your browser.</p>
 
 </article>
 
