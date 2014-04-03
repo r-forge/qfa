@@ -82,8 +82,8 @@ makeVisTool=function(){
 		axislab=paste("Fit ",ylab,"/Fit ",xlab,sep="") 
 		
 		globs$orftargs=globs$dat$ORF[globs$targs]
-		if(globs$ind=="gindex") ratlab="Ranked by gene name (alphabetical order)"
-		if(globs$ind=="oindex") ratlab="Ranked by Y-number (chromosome coordinate)"
+		if(globs$ind=="gindex") ratlab="Ranked by standard gene name (alphabetical order)"
+		if(globs$ind=="oindex") ratlab="Ranked by systematic gene name (chromosome coordinate)"
 		if(globs$ind=="cindex") ratlab="Ranked by control fitness"
 		if(globs$ind=="qindex") ratlab="Ranked by query fitness"
 		if(globs$ind=="rindex") ratlab="Ranked by query/control fitness ratio"
@@ -546,7 +546,7 @@ buildComplexes<-function(){
 
 buildBenschop<-function() buildComplexes()
 
-visToolDemo<-function(groupFun=buildComplexes){
+iRVisDemo<-function(groupFun=buildComplexes){
 	orfile=file.path(file.path(system.file(package = "qfa"),"extdata","ORF2GENE.txt.gz"))
 	ORFGENE=read.delim(orfile,stringsAsFactors=FALSE,sep="\t",header=FALSE)
 	colnames(ORFGENE)=c("ORF","Gene")
