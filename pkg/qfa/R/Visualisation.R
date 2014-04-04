@@ -538,7 +538,7 @@ complexesFromSource<-function(){
 
 buildComplexes<-function(){
 	fname=file.path(system.file(package = "qfa"),"extdata","FunctionalComplexes.txt")
-	cat("\nGroups of functionally related complexes are specified in this file which you can edit with any text editor:\n~~~~~~~~~~~~~~~\n")
+	cat("\nGroups of functionally related complexes are specified in this file which you can edit with any text editor:\n")
 	cat(paste(fname,"\n"))
 	ComplexesData=read.delim(fname,sep="\t",header=TRUE,stringsAsFactors=FALSE)
 	return(ComplexesData)
@@ -691,7 +691,7 @@ printSelected=function(globs){
 
 reportExpts=function(globs,fname="MetaReport.txt"){
 	if(fname!="") {
-		cat("\nDetailed plot metadata will be written to file:\n~~~~~~~~~~~~~~~\n")
+		cat("\nDetailed plot metadata will be written to file:\n")
 		cat(file.path(getwd(),fname),"\n")
 		sink(fname)
 	}
@@ -699,7 +699,7 @@ reportExpts=function(globs,fname="MetaReport.txt"){
 	for (datno in 1:length(globs$datlist)){
 		metaSumm[datno,]=c(datno,paste(globs$datlist[[datno]]$cScrNm,globs$datlist[[datno]]$cTreat,globs$datlist[[datno]]$cCond,globs$datlist[[datno]]$cFit),paste(globs$datlist[[datno]]$qScrNm,globs$datlist[[datno]]$qTreat,globs$datlist[[datno]]$qCond,globs$datlist[[datno]]$qFit))
 		# Print data to console
-		cat("\nExperimental metadata: plot",datno,"\n~~~~~~~~~~~~~~~\n")
+		cat("\nExperimental metadata: plot",datno,"\n")
 		# Split report string and patch in replicate numbers for Query and Control
 		rept=globs$datlist[[datno]]$rept
 		fcont=grep("Control",rept)
@@ -719,14 +719,15 @@ reportExpts=function(globs,fname="MetaReport.txt"){
 	}
 	if(fname!="") sink()
 	
-	cat("\nExperimental metadata summary:\n~~~~~~~~~~~~~~~\n")
 	flist=strsplit(fname,"\\.")[[1]]
 	froot=head(flist,1)
 	fext=tail(flist,1)
 	froot2=paste(froot,"Summary",sep="")
 	fname2=paste(froot2,fext,sep=".")
+	cat("\nExperimental metadata summary written to file:\n")
+	cat(file.path(getwd(),fname2),"\n")
+	cat("\nExperimental metadata summary:\n")
 	print(metaSumm,row.names=FALSE)
-	cat("\nExperimental metadata summary written to file:\n~~~~~~~~~~~~~~~\n")
-	cat(fname2,"\n")
+
 	write.table(metaSumm,file=fname2,sep="\t",row.names=FALSE,quote=FALSE)
 }
