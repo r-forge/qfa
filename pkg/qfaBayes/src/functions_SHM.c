@@ -1,6 +1,6 @@
-#include "headers.h"
-#include "functions.h"
-#include "print.h"
+#include "headers_SHM.h"
+#include "functions_SHM.h"
+#include "print_SHM.h"
 
 /*trun*/
 double trun_const_low(double x,double m, double l)

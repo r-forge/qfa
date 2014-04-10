@@ -77,7 +77,7 @@ L+
 1+
 1+
 1
-tmp <- .C("main", as.integer(burn),as.integer(iters),as.integer(thin),as.integer(L),OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
+tmp <- .C("main_SHM", as.integer(burn),as.integer(iters),as.integer(thin),as.integer(L),OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
 QFAI=as.integer(QFA.I),QFAy=as.double(QFA.y),QFAx=as.double(QFA.x),QFANoORF=as.integer(QFA.NoORF),QFANoTIME=as.integer(QFA.NoTIME),
 PRIORS=as.double(PRIORS),PACKAGE="qfaBayes"
 )
@@ -242,7 +242,7 @@ NCOL=
 L+
 1+
 1+
-L+
+2*L+
 1+
 1+
 1+
