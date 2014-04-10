@@ -1,5 +1,5 @@
-#include "headers.h"
-#include "print.h"
+#include "headers_SHM.h"
+#include "print_SHM.h"
 
 
 void printheader(struct struct_data *D,char **HEADER){
