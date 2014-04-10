@@ -22,8 +22,8 @@ int
       	inzstruct_para_JHM(para,data,priors);
 	inzstruct_MH_JHM(MH);
 
-	gibbsandMHloop_JHM(burn,1,data,para,priors,MH,0,OUT,HEADER);
-	gibbsandMHloop_JHM(iters,thin,data,para,priors,MH,1,OUT,HEADER);
+	gibbsandMHloop_JHM(1,1,data,para,priors,MH,0,OUT,HEADER);/*
+	gibbsandMHloop_JHM(iters,thin,data,para,priors,MH,1,OUT,HEADER);*/
   PutRNGstate();
 	return 0;
 }
