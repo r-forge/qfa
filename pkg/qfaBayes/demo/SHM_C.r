@@ -17,8 +17,12 @@ a<-a[!a$Col==24,]
 Row<-paste(a$Row)
 Col<-paste(a$Col)
 for (i in 1:nrow(a)){
-if (nchar(Row[i])<2){Row[i]=paste(0,Row[i],sep="")}
-if (nchar(Col[i])<2){Col[i]=paste(0,Col[i],sep="")}
+  if (nchar(Row[i])<2){
+    Row[i]=paste(0,Row[i],sep="")
+  }
+  if (nchar(Col[i])<2){
+    Col[i]=paste(0,Col[i],sep="")
+  }
 }
 
 a$ID<-paste(a$Barcode,a$MasterPlate.Number,Row,Col,sep="")
@@ -38,7 +42,8 @@ dimr<-max(NoORF_a);dimc<-max(NoTime_a)
 y<-funcXY(a$Growth,M,N,NoTime_a,NoSum_a,dimr,dimc)
 x<-funcXY(a$Expt.Time,M,N,NoTime_a,NoSum_a,dimr,dimc)
 
-QFA.I<-list("NoORF"=c(NoORF_a),"NoTime"=c(NoTime_a)[-1],"NoSum"=c(NoSum_a),"N"=N,"M"=M,"gene"=gene)
+QFA.I<-list("NoORF"=c(NoORF_a),"NoTime"=c(NoTime_a)[-1],"NoSum"=c(NoSum_a),
+  "N"=N,"M"=M,"gene"=gene)
 QFA.D<-list(y=y,x=x,ORFuni=ORFuni)
 
 x[is.na(x)]=-999
@@ -50,7 +55,8 @@ write.table(file="ydata.txt",c(yy))
 
 write.table(file="NoORFdata.txt",c(NoORF_a))
 write.table(file="NoTIMEdata.txt",c(NoTime_a)[-1])
-write.table(file="LMNmaxdata.txt",c(N,max(NoORF_a),max(NoTime_a),length(y),length(NoTime_a[-1])))
+write.table(file="LMNmaxdata.txt",c(N,max(NoORF_a),max(NoTime_a),length(y),
+  length(NoTime_a[-1])))
 
 save.image(paste(filename,".RData",sep=""))
 #################################################
@@ -93,10 +99,10 @@ L+
 1+
 1+
 1
-tmp <- .C("main", as.integer(burn),as.integer(iters),as.integer(thin),as.integer(L),OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
-QFAI=QFA.I,QFAy=QFA.y,QFAx=QFA.x,QFANoORF=QFA.NoORF,QFANoTIME=QFA.NoTIME,
-PRIORS=PRIORS
-)
+tmp <- .C("main", as.integer(burn),as.integer(iters),as.integer(thin),
+  as.integer(L),OUT=as.double(1:(NCOL*iters)),
+  HEADER=as.character(rep("NULLNULL",NCOL)),QFAI=QFA.I,QFAy=QFA.y,QFAx=QFA.x,
+  QFANoORF=QFA.NoORF,QFANoTIME=QFA.NoTIME,PRIORS=PRIORS)
 mat=matrix(c(tmp$OUT),nrow=iters,byrow=T)
 mat=data.frame(mat)
 names(mat)=tmp$HEADER
@@ -114,8 +120,12 @@ A<-main(burn,iters,thin,CAPL)
 plotYN=0
 while(plotYN < 1 ){
   n<-readline("do you wish to plot? Y or N: ")
-if(n=="Y"){plotYN=1}
-if(n=="N"){stop()}
+  if(n=="Y"){
+    plotYN=1
+  }
+  if(n=="N"){
+    stop()
+  }
 }
 
 ####################
@@ -137,30 +147,31 @@ NoTime<-NoTime_a[-1]
 
 M=sum(NoORF[1:CAPL])
 
-K_lm=tau_K_l=K_o_l=sigma_K_o=K_p=P_l=r_lm=tau_r_l=r_o_l=sigma_r_o=r_p=nu_l=nu_p=sigma_nu=0
+K_lm=tau_K_l=K_o_l=sigma_K_o=K_p=P_l=r_lm=tau_r_l=r_o_l=sigma_r_o=r_p=
+  nu_l=nu_p=sigma_nu=0
 aa<-samp
 #K_lm[%i]
 t=1
 for (i in 1:M){
-j=i
-K_lm[t]=mean(samp[,j]);t=t+1
-j=j+1
+  j=i
+  K_lm[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
 #tau_K_l[%i]
 j=M+1
 for (i in (2*M+3*N+8):(2*M+4*N+7)){
-tau_K_l[t]=mean(samp[,j]);t=t+1
-j=j+1
+  tau_K_l[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
 #"K_o_l[%i] 
 j=M+N+1
 for (i in (M+1):(M+N)){
-K_o_l[t]=mean(samp[,j]);t=t+1
-j=j+1
+  K_o_l[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
@@ -185,24 +196,24 @@ t=1
 #r_lm[%i] 
 j=M+2*N+4
 for (i in (M+2*N+4):(2*M+2*N+3)){
-r_lm[t]=mean(samp[,j]);t=t+1
-j=j+1
+  r_lm[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
 #tau_r_l[%i] ",l);
 j=2*M+2*N+4
 for (i in (2*M+4*N+8):(2*M+5*N+7)){
-tau_r_l[t]=mean(samp[,j]);t=t+1
-j=j+1
+  tau_r_l[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
 #r_o_l[%i] ",l);
 j=2*M+3*N+4
 for (i in (2*M+2*N+4):(2*M+3*N+3)){
-r_o_l[t]=mean(samp[,j]);t=t+1
-j=j+1
+  r_o_l[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
@@ -221,8 +232,8 @@ t=1
 #"nu_l[%i] ",l);
 j=2*M+4*N+6
 for (i in (M+N+3):(M+2*N+2)){
-nu_l[t]=mean(samp[,j]);t=t+1
-j=j+1
+  nu_l[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
@@ -252,21 +263,20 @@ r_i_tau<-exp(sigma_r_o)
 K_ij_tau<-exp(tau_K_l)
 r_ij_tau<-exp(tau_r_l)
 
-for (i in 1:N)
-{
-ylimmax=max(y[,,i][!is.na(y[,,i])])
-xlimmax=max(x[,,i][!is.na(y[,,i])])
-plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)", ylab="Culture Density (AU)",xlim=c(0,xlimmax),ylim=c(0,ylimmax))
-for (j in 1:NoORF[i])
-{
-points(x[j,,i],y[j,,i])
-KK=K_ij[(j+NoSum[i])]
-rr=r_ij[(j+NoSum[i])]
-curve((KK*P*exp(rr*x))/(KK+P*(exp(rr*x)-1)), 0, xlimmax,add=TRUE) 
-}
-K=exp(K_o_l[i])
-r=exp(r_o_l[i])
-curve((K*P*exp(r*x))/(K+P*(exp(r*x)-1)),lwd=3,col="red",add=T)
+for (i in 1:N){
+  ylimmax=max(y[,,i][!is.na(y[,,i])])
+  xlimmax=max(x[,,i][!is.na(y[,,i])])
+  plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)",
+    ylab="Culture Density (AU)",xlim=c(0,xlimmax),ylim=c(0,ylimmax))
+  for (j in 1:NoORF[i]){
+    points(x[j,,i],y[j,,i])
+    KK=K_ij[(j+NoSum[i])]
+    rr=r_ij[(j+NoSum[i])]
+    curve((KK*P*exp(rr*x))/(KK+P*(exp(rr*x)-1)), 0, xlimmax,add=TRUE) 
+  }
+  K=exp(K_o_l[i])
+  r=exp(r_o_l[i])
+  curve((K*P*exp(r*x))/(K+P*(exp(r*x)-1)),lwd=3,col="red",add=T)
 }
 #dev.off()
 

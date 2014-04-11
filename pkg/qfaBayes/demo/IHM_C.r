@@ -16,8 +16,12 @@ a<-a[!a$Col==24,]
 Row<-paste(a$Row)
 Col<-paste(a$Col)
 for (i in 1:nrow(a)){
-if (nchar(Row[i])<2){Row[i]=paste(0,Row[i],sep="")}
-if (nchar(Col[i])<2){Col[i]=paste(0,Col[i],sep="")}
+  if (nchar(Row[i])<2){
+     Row[i]=paste(0,Row[i],sep="")
+  }
+  if (nchar(Col[i])<2){
+    Col[i]=paste(0,Col[i],sep="")
+  }
 }
 
 a$ID<-paste(a$Barcode,a$MasterPlate.Number,Row,Col,sep="")
@@ -39,7 +43,8 @@ dimr<-max(NoORF_a);dimc<-max(NoTime_a)
 y<-funcXY(a$Growth,M,N,NoTime_a,NoSum_a,dimr,dimc)
 x<-funcXY(a$Expt.Time,M,N,NoTime_a,NoSum_a,dimr,dimc)
 
-QFA.I<-list("NoORF"=c(NoORF_a),"NoTime"=c(NoTime_a)[-1],"NoSum"=c(NoSum_a),"N"=N,"M"=M,"gene"=gene)
+QFA.I<-list("NoORF"=c(NoORF_a),"NoTime"=c(NoTime_a)[-1],"NoSum"=c(NoSum_a),
+  "N"=N,"M"=M,"gene"=gene)
 QFA.D<-list(y=y,x=x,ORFuni=ORFuni)
 
 x[is.na(x)]=-999
@@ -51,7 +56,8 @@ write.table(file="ydata_A.txt",c(yy))
 
 write.table(file="NoORFdata_A.txt",c(NoORF_a))
 write.table(file="NoTIMEdata_A.txt",c(NoTime_a)[-1])
-write.table(file="LMNmaxdata_A.txt",c(N,max(NoORF_a),max(NoTime_a),length(y),length(NoTime_a[-1])))
+write.table(file="LMNmaxdata_A.txt",c(N,max(NoORF_a),max(NoTime_a),length(y),
+  length(NoTime_a[-1])))
 
 save.image(paste(filename,".RData",sep=""))
 #################################################
@@ -75,8 +81,12 @@ a<-a[!a$Col==24,]
 Row<-paste(a$Row)
 Col<-paste(a$Col)
 for (i in 1:nrow(a)){
-if (nchar(Row[i])<2){Row[i]=paste(0,Row[i],sep="")}
-if (nchar(Col[i])<2){Col[i]=paste(0,Col[i],sep="")}
+  if (nchar(Row[i])<2){
+    Row[i]=paste(0,Row[i],sep="")
+  }
+  if (nchar(Col[i])<2){
+    Col[i]=paste(0,Col[i],sep="")
+  }
 }
 
 a$ID<-paste(a$Barcode,a$MasterPlate.Number,Row,Col,sep="")
@@ -98,7 +108,8 @@ dimr<-max(NoORF_a);dimc<-max(NoTime_a)
 y<-funcXY(a$Growth,M,N,NoTime_a,NoSum_a,dimr,dimc)
 x<-funcXY(a$Expt.Time,M,N,NoTime_a,NoSum_a,dimr,dimc)
 
-QFA.I<-list("NoORF"=c(NoORF_a),"NoTime"=c(NoTime_a)[-1],"NoSum"=c(NoSum_a),"N"=N,"M"=M,"gene"=gene)
+QFA.I<-list("NoORF"=c(NoORF_a),"NoTime"=c(NoTime_a)[-1],"NoSum"=c(NoSum_a),
+  "N"=N,"M"=M,"gene"=gene)
 QFA.D<-list(y=y,x=x,ORFuni=ORFuni)
 
 x[is.na(x)]=-999
@@ -110,7 +121,8 @@ write.table(file="ydata_B.txt",c(yy))
 
 write.table(file="NoORFdata_B.txt",c(NoORF_a))
 write.table(file="NoTIMEdata_B.txt",c(NoTime_a)[-1])
-write.table(file="LMNmaxdata_B.txt",c(N,max(NoORF_a),max(NoTime_a),length(y),length(NoTime_a[-1])))
+write.table(file="LMNmaxdata_B.txt",c(N,max(NoORF_a),max(NoTime_a),length(y),
+  length(NoTime_a[-1])))
 
 save.image(paste(filename,".RData",sep=""))
 #################################################
@@ -154,10 +166,10 @@ L+
 1+
 1+
 1
-tmp <- .C("main_SHM", as.integer(burn),as.integer(iters),as.integer(thin),as.integer(L),OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
-QFAI=QFA.I,QFAy=QFA.y,QFAx=QFA.x,QFANoORF=QFA.NoORF,QFANoTIME=QFA.NoTIME,
-PRIORS=PRIORS
-)
+tmp <- .C("main_SHM", as.integer(burn),as.integer(iters),as.integer(thin),
+  as.integer(L),OUT=as.double(1:(NCOL*iters)),
+  HEADER=as.character(rep("NULLNULL",NCOL)),QFAI=QFA.I,QFAy=QFA.y,QFAx=QFA.x,
+  QFANoORF=QFA.NoORF,QFANoTIME=QFA.NoTIME,PRIORS=PRIORS)
 mat=matrix(c(tmp$OUT),nrow=iters,byrow=T)
 mat=data.frame(mat)
 names(mat)=tmp$HEADER
@@ -210,10 +222,10 @@ L+
 1+
 1+
 1
-tmp <- .C("main_SHM", as.integer(burn),as.integer(iters),as.integer(thin),as.integer(L),OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
-QFAI=QFA.I,QFAy=QFA.y,QFAx=QFA.x,QFANoORF=QFA.NoORF,QFANoTIME=QFA.NoTIME,
-PRIORS=PRIORS
-)
+tmp <- .C("main_SHM", as.integer(burn),as.integer(iters),as.integer(thin),
+  as.integer(L),OUT=as.double(1:(NCOL*iters)),
+  HEADER=as.character(rep("NULLNULL",NCOL)),QFAI=QFA.I,QFAy=QFA.y,QFAx=QFA.x,
+  QFANoORF=QFA.NoORF,QFANoTIME=QFA.NoTIME,PRIORS=PRIORS)
 mat=matrix(c(tmp$OUT),nrow=iters,byrow=T)
 mat=data.frame(mat)
 names(mat)=tmp$HEADER
@@ -248,24 +260,15 @@ data("priors_IHM")
 PRIORS=as.double((priors_IHM)[[1]])
 aa<-read.table("NoORFdata_A.txt",header=T)
 bb<-read.table("NoORFdata_B.txt",header=T)
-if(!(nrow(aa)==nrow(bb))){stop()}
+if(!(nrow(aa)==nrow(bb))){
+  stop()
+}
 L=nrow(aa)
-NCOL=
-L+
-1+
-1+
-L+
-1+
-1+
-1+
-L+
-L+
-1
-tmp <- .C("main_IHM", as.integer(burn),as.integer(iters),as.integer(thin),OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
-QFAIA=QFA.IA,QFAyA=QFA.yA,QFANoORFA=QFA.NoORFA,
-QFAIB=QFA.IB,QFAyB=QFA.yB,QFANoORFB=QFA.NoORFB,
-PRIORS=PRIORS
-)
+NCOL=L+1+1+L+1+1+1+L+L+1
+tmp <- .C("main_IHM", as.integer(burn),as.integer(iters),as.integer(thin),
+  OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
+  QFAIA=QFA.IA,QFAyA=QFA.yA,QFANoORFA=QFA.NoORFA,
+  QFAIB=QFA.IB,QFAyB=QFA.yB,QFANoORFB=QFA.NoORFB,PRIORS=PRIORS)
 mat=matrix((tmp$OUT),nrow=iters,byrow=T)
 mat=data.frame(mat)
 names(mat)=tmp$HEADER
@@ -281,14 +284,22 @@ C<-main_IHM(burn,iters,thin)
 plotYN=0
 while(plotYN < 1 ){
   n<-readline("do you wish to plot? Y or N: ")
-if(n=="Y"){plotYN=1}
-if(n=="N"){stop()}
+  if(n=="Y"){
+    plotYN=1
+  }
+  if(n=="N"){
+    stop()
+  }
 }
 
 ###
 load("M_IHM_demo_a_27.RData")
 samp=C
-if(nrow(samp)>1) {vecsamp<-colMeans(samp)} else {vecsamp<-as.numeric(samp)}
+if(nrow(samp)>1){
+  vecsamp<-colMeans(samp)
+} else {
+  vecsamp<-as.numeric(samp)
+}
 namesamp<-names(vecsamp)
 #write.table(samp,"backup.txt")
 #write.table(vecsamp,"backup2.txt")
@@ -303,7 +314,11 @@ A2<-exp(vecsamp[3*N+5])
 delta<-vecsamp[(3*N+6):(4*N+5)]
 gamma<-vecsamp[(4*N+6):(5*N+5)]
 sigma_gamma<-exp(vecsamp[(5*N+6)])
-if(nrow(samp)>1) {delta_gamma<-colMeans(samp[,(3*N+6):(4*N+5)]*samp[,(4*N+6):(5*N+5)])} else {delta_gamma<-colMeans(samp[,(3*N+6):(4*N+5)]*(samp[,(4*N+6):(5*N+5)]))}
+if(nrow(samp)>1) {
+  delta_gamma<-colMeans(samp[,(3*N+6):(4*N+5)]*samp[,(4*N+6):(5*N+5)])
+  } else {
+    delta_gamma<-colMeans(samp[,(3*N+6):(4*N+5)]*(samp[,(4*N+6):(5*N+5)]))
+  }
 delta_gamma=exp(delta_gamma)
 
 sig<-sum(rep(1,N)[delta>0.5])
@@ -318,7 +333,10 @@ limmin<-0
 limmax<-max(A2*Z_l*delta_gamma)
 limmaxx<-max(A1*Z_l)
 i=1:N
-plot(1,type="n",main=expression(paste("Treatment",Treat,degree,"C"," (delta=Posterior Expectations)")),ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),xlab="Control Fitness (=exp(Z_l))",ylab="Query Fitness (=exp(alpha+Z_l+delta_l*gamma_l))",col=8,pch=19,cex=0.5)
+plot(1,type="n",main=expression(paste("Treatment",Treat,degree,"C",
+  " (delta=Posterior Expectations)")),ylim=c(limmin,limmax),
+  xlim=c(limmin,limmaxx),xlab="Control Fitness (=exp(Z_l))",
+  ylab="Query Fitness (=exp(alpha+Z_l+delta_l*gamma_l))",col=8,pch=19,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=4)
 lines(A1*c(-1000,10000),A2*c(-1000,10000),col="grey",lwd=2)
 points(A1*Z_l[i], A2*(Z_l[i]*delta_gamma[i]),col=8,pch=19,cex=0.5)
@@ -359,8 +377,11 @@ list<-unique(as.character(list[list[,6]<0.05,1]))
 lORF<-ORFuni[vecorder]
 llORF<-lORF[lORF%in%list]
 llORF_not<-lORF[!(lORF%in%list)]
-lgene<-cbind(gene[ORFuni%in%llORF],as.numeric(delta[ORFuni%in%llORF]),as.numeric(delta_gamma[ORFuni%in%llORF]))
-lgene_not<-cbind(gene[ORFuni%in%llORF_not],as.numeric(delta[ORFuni%in%llORF_not]),as.numeric(delta_gamma[ORFuni%in%llORF_not]))
+lgene<-cbind(gene[ORFuni%in%llORF],as.numeric(delta[ORFuni%in%llORF]),
+  as.numeric(delta_gamma[ORFuni%in%llORF]))
+lgene_not<-cbind(gene[ORFuni%in%llORF_not],
+  as.numeric(delta[ORFuni%in%llORF_not]),
+  as.numeric(delta_gamma[ORFuni%in%llORF_not]))
 
 
 list2<-list2[order(abs(list2[,4]),decreasing=T),]
@@ -370,7 +391,8 @@ ADD_position<-list2[,8]
 
 
 
-ORDER<-cbind(gene[vecorder],as.numeric(delta[vecorder]),as.numeric(delta_gamma[vecorder]),ADD_position[vecorder])
+ORDER<-cbind(gene[vecorder],as.numeric(delta[vecorder]),
+  as.numeric(delta_gamma[vecorder]),ADD_position[vecorder])
 write.table(file="IHM_interactions.txt",ORDER)
 
 ORDER[,4][order(abs(as.numeric(ORDER[,3])),decreasing=T)]
@@ -379,7 +401,8 @@ l<-list[!(list%in%lORF)]
 l<-gene[ORFuni%in%l]
 write.table(l,"IHM_not_interactions.txt")
 
-write.table(cbind(gene[order],ORFuni[order],delta[order],delta_gamma[order],ADD_position[order]),"IHM_all.txt")
+write.table(cbind(gene[order],ORFuni[order],delta[order],delta_gamma[order],
+  ADD_position[order]),"IHM_all.txt")
 
 save.image(file="IHM_4oct_8k_8k_8k.RData")
 #Percent interactors
