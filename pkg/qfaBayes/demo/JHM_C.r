@@ -26,8 +26,12 @@ a<-a[!a$Col==24,]
 Row<-a$Row
 Col<-a$Col
 for (i in 1:nrow(a)){
-if (nchar(Row[i])<2){Row[i]=paste(0,Row[i],sep="")}
-if (nchar(Col[i])<2){Col[i]=paste(0,Col[i],sep="")}
+  if (nchar(Row[i])<2){
+    Row[i]=paste(0,Row[i],sep="")
+  }
+  if (nchar(Col[i])<2){
+    Col[i]=paste(0,Col[i],sep="")
+  }
 }
 
 a$ID<-paste(a$Barcode,a$MasterPlate.Number,Row,Col,sep="")
@@ -50,8 +54,12 @@ b<-b[!b$Col==24,]
 Row<-b$Row
 Col<-b$Col
 for (i in 1:nrow(b)){
-if (nchar(Row[i])<2){Row[i]=paste(0,Row[i],sep="")}
-if (nchar(Col[i])<2){Col[i]=paste(0,Col[i],sep="")}
+  if (nchar(Row[i])<2){
+    Row[i]=paste(0,Row[i],sep="")
+  }
+  if (nchar(Col[i])<2){
+    Col[i]=paste(0,Col[i],sep="")
+  }
 }
 
 b$ID<-paste(b$Barcode,b$MasterPlate.Number,Row,Col,sep="")
@@ -78,11 +86,14 @@ NoSum_b<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_b)))
 
 dimr<-max(NoORF_a,NoORF_b);dimc<-max(NoTime_a,NoTime_b)
 
-y<-funcXY_J(a$Growth,b$Growth,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
-x<-funcXY_J(a$Expt.Time,b$Expt.Time,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
+y<-funcXY_J(a$Growth,b$Growth,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,
+  NoSum_b,dimr,dimc)
+x<-funcXY_J(a$Expt.Time,b$Expt.Time,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,
+  NoSum_b,dimr,dimc)
 
-QFA.I<-list("NoORF"=cbind(NoORF_a,NoORF_b),"NoTime_a"=NoTime_a[-1],"NoTime_b"=NoTime_b[-1],"NoSum"=cbind(NoSum_a,NoSum_b),"N"=N,"Ma"=Ma,"Mb"=Mb,"gene"=gene,SHIFT=c(0,max(NoSum_a,NoSum_b))
-)
+QFA.I<-list("NoORF"=cbind(NoORF_a,NoORF_b),"NoTime_a"=NoTime_a[-1],
+  "NoTime_b"=NoTime_b[-1],"NoSum"=cbind(NoSum_a,NoSum_b),"N"=N,
+  "Ma"=Ma,"Mb"=Mb,"gene"=gene,SHIFT=c(0,max(NoSum_a,NoSum_b)))
 QFA.D<-list(x=x,y=y)
 
 x[is.na(x)]=-999
@@ -94,7 +105,8 @@ write.table(file="ydata_A2.txt",c(yy))
 
 write.table(file="NoORFdata_A2.txt",c(NoORF_a))
 write.table(file="NoTIMEdata_A2.txt",c(NoTime_a)[-1])
-write.table(file="LMNmaxdata_A2.txt",c(N,max(NoORF_a),max(NoTime_a),length(y)/2,length(NoTime_a[-1])))
+write.table(file="LMNmaxdata_A2.txt",c(N,max(NoORF_a),max(NoTime_a),
+  length(y)/2,length(NoTime_a[-1])))
 
 xx<-aperm(x[,,,2],c(2,1,3))
 yy<-aperm(y[,,,2],c(2,1,3))
@@ -103,7 +115,8 @@ write.table(file="ydata_B2.txt",c(yy))
 
 write.table(file="NoORFdata_B2.txt",c(NoORF_b))
 write.table(file="NoTIMEdata_B2.txt",c(NoTime_b)[-1])
-write.table(file="LMNmaxdata_B2.txt",c(N,max(NoORF_b),max(NoTime_b),length(y)/2,length(NoTime_b[-1])))
+write.table(file="LMNmaxdata_B2.txt",c(N,max(NoORF_b),max(NoTime_b),
+  length(y)/2,length(NoTime_b[-1])))
 
 save.image(paste(filename,".RData",sep=""))
 
@@ -137,39 +150,18 @@ PRIORS=as.double((priors_JHM)[[1]])
 PRIORS[19]=0##
 aa<-read.table("NoORFdata_A2.txt",header=T)
 bb<-read.table("NoORFdata_B2.txt",header=T)
-if(!(nrow(aa)==nrow(bb))){stop()}
+if(!(nrow(aa)==nrow(bb))){
+  stop()
+}
 L=nrow(aa)
 LMa<-sum(aa)
 LMb<-sum(bb)
-NCOL=
-LMa+LMb+
-2*L+
-L+
-1+
-1+
-1+
-LMa+LMb+
-2*L+
-L+
-1+
-1+
-L+
-1+
-1+
-1+
-1+
-L+
-L+
-1+
-L+
-1+
-2*2+
-2*2
-tmp <- .C("main_JHM", as.integer(burn),as.integer(iters),as.integer(thin),OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
-QFAIA=QFA.IA,QFAy=QFA.yA,QFAxA=QFA.xA,QFANoORFA=QFA.NoORFA,QFANoTIMEA=QFA.NoTIMEA,
-QFAIB=QFA.IB,QFAy=QFA.yB,QFAxB=QFA.xB,QFANoORFB=QFA.NoORFB,QFANoTIMEB=QFA.NoTIMEB,
-PRIORS=PRIORS
-)
+NCOL=LMa+LMb+2*L+L+1+1+1+LMa+LMb+2*L+L+1+1+L+1+1+1+1+L+L+1+L+1+2*2+2*2
+tmp <- .C("main_JHM", as.integer(burn),as.integer(iters),as.integer(thin),
+  OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
+  QFAIA=QFA.IA,QFAy=QFA.yA,QFAxA=QFA.xA,QFANoORFA=QFA.NoORFA,
+  QFANoTIMEA=QFA.NoTIMEA,QFAIB=QFA.IB,QFAy=QFA.yB,QFAxB=QFA.xB,
+  QFANoORFB=QFA.NoORFB,QFANoTIMEB=QFA.NoTIMEB,PRIORS=PRIORS)
 mat=matrix(c(tmp$OUT),nrow=iters,byrow=T)
 mat=data.frame(mat)
 names(mat)=tmp$HEADER
@@ -185,8 +177,12 @@ D<-main_JHM(burn,iters,thin)
 plotYN=0
 while(plotYN < 1 ){
   n<-readline("do you wish to plot? Y or N: ")
-if(n=="Y"){plotYN=1}
-if(n=="N"){stop()}
+  if(n=="Y"){
+    plotYN=1
+  }
+  if(n=="N"){
+    stop()
+  }
 }
 
 
@@ -212,32 +208,31 @@ SHIFT<-QFA$SHIFT
 ###
 L=N#4294
 M=sum(NoORF)
-K_clm=tau_K_cl=K_o_l=sigma_K_o=K_p=P=r_clm=tau_r_cl=r_o_l=sigma_r_o=r_p=nu_cl=sigma_nu=nu_p=alpha_c=beta_c=delta_l=gamma_cl=sigma_gamma=omega_cl=sigma_omega=upsilon_c=sigma_upsilon=0
+K_clm=tau_K_cl=K_o_l=sigma_K_o=K_p=P=r_clm=tau_r_cl=r_o_l=sigma_r_o=r_p=
+  nu_cl=sigma_nu=nu_p=alpha_c=beta_c=delta_l=gamma_cl=sigma_gamma=omega_cl=
+  sigma_omega=upsilon_c=sigma_upsilon=0
 ####
 t=1
 #K_clm
-for (i in 1:c(M))
-{
-j=i
-K_clm[t]=mean(samp[,j]);t=t+1
+for (i in 1:c(M)){
+  j=i
+  K_clm[t]=mean(samp[,j]);t=t+1
 }
 
 t=1
 #tau_K_cl
 j=M+1
-for (i in (2*M+9*L+15):(2*M+11*L+14))
-{
-tau_K_cl[t]=mean(samp[,j]);t=t+1
-j=j+1
+for (i in (2*M+9*L+15):(2*M+11*L+14)){
+  tau_K_cl[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
 #K_o_l
 j=M+2*L+1
-for (i in (M+1):(M+L))
-{
-K_o_l[t]=mean(samp[,j]);t=t+1
-j=j+1
+for (i in (M+1):(M+L)){
+  K_o_l[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
@@ -261,28 +256,25 @@ P=mean(samp[,j])
 t=1
 #r_clm
 j=M+3*L+4
-for (i in (M+8*L+8):(2*M+8*L+7))
-{
-r_clm[t]=mean(samp[,j]);t=t+1
-j=j+1
+for (i in (M+8*L+8):(2*M+8*L+7)){
+  r_clm[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
 #tau_r_cl
 j=2*M+3*L+4
-for (i in (2*M+11*L+15):(2*M+13*L+14))
-{
-tau_r_cl[t]=mean(samp[,j]);t=t+1
-j=j+1
+for (i in (2*M+11*L+15):(2*M+13*L+14)){
+  tau_r_cl[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
 #r_o_l
 j=2*M+5*L+4
-for (i in (2*M+8*L+8):(2*M+9*L+7))
-{
-r_o_l[t]=mean(samp[,j]);t=t+1
-j=j+1
+for (i in (2*M+8*L+8):(2*M+9*L+7)){
+  r_o_l[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
@@ -301,10 +293,9 @@ r_p=mean(samp[,j])
 t=1
 #nu_cl
 j=2*M+6*L+6
-for (i in (M+5*L+7):(M+7*L+6))
-{
-nu_cl[t]=mean(samp[,j]);t=t+1
-j=j+1
+for (i in (M+5*L+7):(M+7*L+6)){
+  nu_cl[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
@@ -334,19 +325,17 @@ beta_c=mean(samp[,j])
 t=1
 #delta_l
 j=2*M+8*L+10
-for (i in (M+2*L+7):(M+3*L+6))
-{
-delta_l[t]=mean(samp[,j]);t=t+1
-j=j+1
+for (i in (M+2*L+7):(M+3*L+6)){
+  delta_l[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
 #gamma_cl
 j=2*M+9*L+10
-for (i in (M+4*L+7):(M+5*L+6))
-{
-gamma_cl[t]=mean(samp[,j]);t=t+1
-j=j+1
+for (i in (M+4*L+7):(M+5*L+6)){
+  gamma_cl[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
@@ -358,10 +347,9 @@ sigma_gamma=mean(samp[,j])
 t=1
 #omega_cl
 j=2*M+10*L+11
-for (i in (M+7*L+8):(M+8*L+7))
-{
-omega_cl[t]=mean(samp[,j]);t=t+1
-j=j+1
+for (i in (M+7*L+8):(M+8*L+7)){
+  omega_cl[t]=mean(samp[,j]);t=t+1
+  j=j+1
 }
 
 t=1
@@ -389,12 +377,11 @@ j=2*M+8*L+10
 jj=2*M+9*L+10
 ii=M+4*L+7
 t=1
-for (i in (M+2*L+7):(M+3*L+6))
-{
-gamdelt[t]=mean(samp[,j]*samp[,jj]);t=t+1
-j=j+1
-ii=i+1
-jj=jj+1
+for (i in (M+2*L+7):(M+3*L+6)){
+  gamdelt[t]=mean(samp[,j]*samp[,jj]);t=t+1
+  j=j+1
+  ii=i+1
+  jj=jj+1
 }
 
 omegadelt=0
@@ -402,12 +389,11 @@ j=2*M+8*L+10
 jj=2*M+10*L+11
 ii=M+7*L+8
 t=1
-for (i in (M+2*L+7):(M+3*L+6))
-{
-omegadelt[t]=mean(samp[,j]*samp[,jj]);t=t+1
-j=j+1
-ii=i+1
-jj=jj+1
+for (i in (M+2*L+7):(M+3*L+6)){
+  omegadelt[t]=mean(samp[,j]*samp[,jj]);t=t+1
+  j=j+1
+  ii=i+1
+  jj=jj+1
 }
 
 delta<-delta_l
@@ -441,7 +427,8 @@ Treat=TreatA=TreatB=27
 file="DEMO"
 #pdf(paste("JHM_plot_",file,".pdf",sep=""),useDingbats=F)
 
-plot(1,type="n",ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),main="",xlab="",ylab="",pch=19,col=8,cex=0.5)
+plot(1,type="n",ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),main="",xlab="",
+  ylab="",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=4)
 
 vecMDRa<-r_ij/log(2*(K_ij-PO)/(K_ij-2*PO)) #MDR
@@ -449,11 +436,14 @@ vecMDPa<-log(K_ij/PO)/log(2) #MDP
 vecMDPa*vecMDRa
 
 i=1:L
-points(mu_a[i],mu_b[i],ylim=c(limmin,limmax),xlim=c(limmin,limmax),col=8,pch=19,cex=0.5)
+points(mu_a[i],mu_b[i],ylim=c(limmin,limmax),xlim=c(limmin,limmax),
+  col=8,pch=19,cex=0.5)
 i=vecorder[omegadelt[order][1:sig]>0]#######
-points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
+points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),
+  xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
 i=vecorder[omegadelt[order][1:sig]<=0]  #######
-points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
+points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),
+  xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder
 text(mu_a[i],(mu_b[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 
@@ -463,15 +453,19 @@ limmin<-0
 limmax<-max(na.omit(c(mu_b)))
 limmaxx<-max(na.omit(c(mu_a)))
 
-plot(1,type="n",ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),main="",xlab="",ylab="",pch=19,col=8,cex=0.5)
+plot(1,type="n",ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),main="",
+  xlab="",ylab="",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=4)
 lines(c(-1000,1000),A2*c(-1000,1000),col="grey",lty=2)########
 i=1:L
-points(mu_a[i],mu_b[i],ylim=c(limmin,limmax),xlim=c(limmin,limmax),col=8,pch=19,cex=0.5)
+points(mu_a[i],mu_b[i],ylim=c(limmin,limmax),xlim=c(limmin,limmax),
+  col=8,pch=19,cex=0.5)
 i=vecorder[gamdelt[order][1:sig]>0]####
-points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
+points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),
+  xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
 i=vecorder[gamdelt[order][1:sig]<=0]  #######
-points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
+points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),
+  xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder
 text(mu_a[i],(mu_b[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 
@@ -481,15 +475,19 @@ limmin<-0
 limmax<-max(na.omit(c(mu_b)))
 limmaxx<-max(na.omit(c(mu_a)))
 
-plot(1,type="n",ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),main="",xlab="",ylab="",pch=19,col=8,cex=0.5)
+plot(1,type="n",ylim=c(limmin,limmax),xlim=c(limmin,limmaxx),main="",
+  xlab="",ylab="",pch=19,col=8,cex=0.5)
 lines(c(-1000,10000),c(-1000,10000),lwd=2,col="grey",lty=4)
 lines(c(-1000,1000),B2*c(-1000,1000),col="grey",lty=2)#######
 i=1:L
-points(mu_a[i],mu_b[i],ylim=c(limmin,limmax),xlim=c(limmin,limmax),col=8,pch=19,cex=0.5)
+points(mu_a[i],mu_b[i],ylim=c(limmin,limmax),xlim=c(limmin,limmax),
+  col=8,pch=19,cex=0.5)
 i=vecorder[omegadelt[order][1:sig]>0]#######
-points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
+points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),
+  xlab="Single",ylab="Double",col=2,pch=19,cex=0.5)
 i=vecorder[omegadelt[order][1:sig]<=0]  #######
-points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
+points(mu_a[i],(mu_b[i]),ylim=c(limmin,limmax),xlim=c(limmin,limmax),
+  xlab="Single",ylab="Double",col=3,pch=19,cex=0.5)
 i=vecorder
 text(mu_a[i],(mu_b[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 #dev.off()
@@ -519,8 +517,11 @@ delta_omega<-exp(omegadelt)
 lORF<-ORFuni[vecorder]
 llORF<-lORF[lORF%in%list]
 llORF_not<-lORF[!(lORF%in%list)]
-lgene<-cbind(gene[ORFuni%in%llORF],as.numeric(delta[ORFuni%in%llORF]),as.numeric(delta_gamma[ORFuni%in%llORF]))
-lgene_not<-cbind(gene[ORFuni%in%llORF_not],as.numeric(delta[ORFuni%in%llORF_not]),as.numeric(delta_gamma[ORFuni%in%llORF_not]))
+lgene<-cbind(gene[ORFuni%in%llORF],as.numeric(delta[ORFuni%in%llORF]),
+  as.numeric(delta_gamma[ORFuni%in%llORF]))
+lgene_not<-cbind(gene[ORFuni%in%llORF_not],
+  as.numeric(delta[ORFuni%in%llORF_not]),
+  as.numeric(delta_gamma[ORFuni%in%llORF_not]))
 
 
 ###
@@ -545,7 +546,9 @@ ADD_position<-list2[,8]
 
 
 
-ORDER<-cbind(ORFuni[vecorder],gene[vecorder],as.numeric(delta[vecorder]),as.numeric(delta_gamma[vecorder]),as.numeric(delta_omega[vecorder]),FIT[vecorder],ADD_position[vecorder])
+ORDER<-cbind(ORFuni[vecorder],gene[vecorder],as.numeric(delta[vecorder]),
+  as.numeric(delta_gamma[vecorder]),as.numeric(delta_omega[vecorder]),
+  FIT[vecorder],ADD_position[vecorder])
 write.table(file="JHM_interactions.txt",ORDER)
 
 
@@ -556,7 +559,9 @@ ORDER[,4][order(abs(as.numeric(ORDER[,3])),decreasing=T)]
 l<-list[!(list%in%lORF)]
 l<-gene[ORFuni%in%l]
 write.table(l,"JHM_not_interactions.txt")
-write.table(cbind(ORFuni[order],gene[order],ORFuni[order],delta[order],delta_gamma[order],delta_omega[order],FIT[order],ADD_position[order]),"JHM_all.txt")
+write.table(cbind(ORFuni[order],gene[order],ORFuni[order],delta[order],
+  delta_gamma[order],delta_omega[order],FIT[order],
+  ADD_position[order]),"JHM_all.txt")
 
 #Percent interactors
 #
