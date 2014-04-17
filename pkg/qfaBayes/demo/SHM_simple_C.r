@@ -4,7 +4,7 @@ a<-a_15
 data("priors_SHM")
 PRIORS=as.double((priors_SHM)[[1]])[1:18]
 data("tuning_SHM")
-TUNING=as.double((tuning_SHM)[[1]])[1:8]
+TUNING=as.double((tuning_SHM))[1:8]
 qfa.variables(a)
 
 Screen<-unique(a$Screen.Name)
