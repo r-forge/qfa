@@ -14,13 +14,8 @@ funcIDORDER<-function(data){
 }
 
 ### Gives number of repeats for each ORF ###
-funcNoORF<-function(x,data){
-  length(unique((data$ID[data$ORF==x])))
-}
-
-### Gives number of time points for a repeat ###
-funcNoTime<-function(x,data){
-  length((data$ID[data$ID==x]))
+funcNoORF=function(x){
+  length(unique(x$ID))
 }
 
 ### Gives running total of number of number of repeats for each ORF ###

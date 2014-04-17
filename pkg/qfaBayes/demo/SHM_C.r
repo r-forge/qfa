@@ -35,8 +35,8 @@ ORFuni=unique(a$ORF)
 gene<-a$Gene[match(ORFuni,a$ORF)]
 
 N<-length(ORFuni);M<-length(IDuni)
-NoORF_a<-unlist(lapply(ORFuni,funcNoORF,data=a))#no of repeats each orf
-NoTime_a<-c(0,unlist(lapply(IDuni,funcNoTime,data=a)))# 0+ no of
+NoORF_a<-as.numeric(lapply(split(a,a$ORF),funcNoORF))#no of repeats each orf
+NoTime_a<-c(0,as.numeric(lapply(split(a,a$ID),nrow)))# 0+ no of time each repeat
 NoSum_a<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_a)))
 dimr<-max(NoORF_a);dimc<-max(NoTime_a)
 y<-funcXY(a$Growth,M,N,NoTime_a,NoSum_a,dimr,dimc)
