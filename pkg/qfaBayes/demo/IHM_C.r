@@ -142,6 +142,8 @@ QFA.NoTIME=as.integer((aa)[[1]])
 data("priors_SHM")
 #priors_SHM=read.table("priors.txt",header=T)
 PRIORS=as.double((priors_SHM)[[1]])[1:18]
+data("tuning_SHM")
+TUNING=as.double((tuning_SHM))[1:8]
 
 main <- function(burn,iters,thin,CAPL) {
 aa<-read.table("NoORFdata_A.txt",header=T)
@@ -169,7 +171,7 @@ L+
 tmp <- .C("main_SHM", as.integer(burn),as.integer(iters),as.integer(thin),
   as.integer(L),OUT=as.double(1:(NCOL*iters)),
   HEADER=as.character(rep("NULLNULL",NCOL)),QFAI=QFA.I,QFAy=QFA.y,QFAx=QFA.x,
-  QFANoORF=QFA.NoORF,QFANoTIME=QFA.NoTIME,PRIORS=PRIORS)
+  QFANoORF=QFA.NoORF,QFANoTIME=QFA.NoTIME,PRIORS=PRIORS,TUNING=TUNING)
 mat=matrix(c(tmp$OUT),nrow=iters,byrow=T)
 mat=data.frame(mat)
 names(mat)=tmp$HEADER
@@ -200,6 +202,8 @@ QFA.NoTIME=as.integer((aa)[[1]])
 data("priors_SHM")
 #priors_SHM=read.table("priors.txt",header=T)
 PRIORS=as.double((priors_SHM)[[1]])[1:18]
+data("tuning_SHM")
+TUNING=as.double((tuning_SHM))[1:8]
 aa<-read.table("NoORFdata_B.txt",header=T)
 L=min(CAPL,nrow(aa))
 LM<-sum(aa[1:L,])
@@ -225,7 +229,7 @@ L+
 tmp <- .C("main_SHM", as.integer(burn),as.integer(iters),as.integer(thin),
   as.integer(L),OUT=as.double(1:(NCOL*iters)),
   HEADER=as.character(rep("NULLNULL",NCOL)),QFAI=QFA.I,QFAy=QFA.y,QFAx=QFA.x,
-  QFANoORF=QFA.NoORF,QFANoTIME=QFA.NoTIME,PRIORS=PRIORS)
+  QFANoORF=QFA.NoORF,QFANoTIME=QFA.NoTIME,PRIORS=PRIORS,TUNING=TUNING)
 mat=matrix(c(tmp$OUT),nrow=iters,byrow=T)
 mat=data.frame(mat)
 names(mat)=tmp$HEADER
@@ -257,7 +261,10 @@ aa<-read.table("NoORFdata_B.txt",header=T)
 QFA.NoORFB=as.integer((aa)[[1]])
 #priors_IHM=read.table("priors_IHM.txt",header=T)
 data("priors_IHM")
-PRIORS=as.double((priors_IHM)[[1]])
+PRIORS_IHM=as.double((priors_IHM)[[1]])
+data("tuning_SHM")
+TUNING_IHM=as.double((tuning_SHM))[1:8]
+
 aa<-read.table("NoORFdata_A.txt",header=T)
 bb<-read.table("NoORFdata_B.txt",header=T)
 if(!(nrow(aa)==nrow(bb))){
@@ -268,7 +275,7 @@ NCOL=L+1+1+L+1+1+1+L+L+1
 tmp <- .C("main_IHM", as.integer(burn),as.integer(iters),as.integer(thin),
   OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
   QFAIA=QFA.IA,QFAyA=QFA.yA,QFANoORFA=QFA.NoORFA,
-  QFAIB=QFA.IB,QFAyB=QFA.yB,QFANoORFB=QFA.NoORFB,PRIORS=PRIORS)
+  QFAIB=QFA.IB,QFAyB=QFA.yB,QFANoORFB=QFA.NoORFB,PRIORS=PRIORS_IHM,TUNING=TUNING_IHM)
 mat=matrix((tmp$OUT),nrow=iters,byrow=T)
 mat=data.frame(mat)
 names(mat)=tmp$HEADER

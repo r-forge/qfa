@@ -228,7 +228,7 @@ plot_SHM_simple<-function(SHM_output,SHM){
 }
 
 
-IHM_main <- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.NoORFB,PRIORS){
+IHM_main <- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.NoORFB,PRIORS,TUNING){
   aa<-QFA.NoORFA
   bb<-QFA.NoORFB
   if(!(length(aa)==length(bb))){
@@ -240,7 +240,8 @@ IHM_main <- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.
     OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
     QFAIA=QFA.IA,QFAyA=as.double(QFA.yA),QFANoORFA=as.integer(QFA.NoORFA),
     QFAIB=as.integer(QFA.IB),QFAyB=as.double(QFA.yB),
-	QFANoORFB=as.integer(QFA.NoORFB),PRIORS=PRIORS,PACKAGE="qfaBayes")
+	QFANoORFB=as.integer(QFA.NoORFB),PRIORS=as.double(PRIORS),
+	TUNING=as.double(TUNING),PACKAGE="qfaBayes")
   mat=matrix((tmp$OUT),nrow=iters,byrow=T)
   mat=data.frame(mat)
   names(mat)=tmp$HEADER
@@ -397,7 +398,7 @@ JHM_postpro<-function(a,TreatA,Screen_a,MPlate_a,b,TreatB,Screen_b,MPlate_b)
 	QFA.NoSUMB=c(NoSum_b),gene=gene)
 }
 
-JHM_main<- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS) {
+JHM_main<- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS,TUNING) {
   aa<-QFA.NoORFA
   bb<-QFA.NoORFB
   if(!(length(aa)==length(bb))){
@@ -413,7 +414,7 @@ JHM_main<- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,
     QFANoORFA=as.integer(QFA.NoORFA),QFANoTIMEA=as.integer(QFA.NoTIMEA),
     QFAIB=as.integer(QFA.IB),QFAy=as.double(QFA.yB),QFAxB=as.double(QFA.xB),
     QFANoORFB=as.integer(QFA.NoORFB),QFANoTIMEB=as.integer(QFA.NoTIMEB),
-    PRIORS=PRIORS,PACKAGE="qfaBayes")
+    PRIORS=as.double(PRIORS),TUNING=as.double(TUNING),PACKAGE="qfaBayes")
   mat=matrix(c(tmp$OUT),nrow=iters,byrow=T)
   mat=data.frame(mat)
   names(mat)=tmp$HEADER

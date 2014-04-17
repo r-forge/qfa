@@ -148,6 +148,8 @@ QFA.NoTIMEB=as.integer((aa)[[1]])
 data("priors_JHM")
 PRIORS=as.double((priors_JHM)[[1]])
 PRIORS[19]=0##
+data("tuning_JHM")
+TUNING=as.double((tuning_JHM))[1:5]
 aa<-read.table("NoORFdata_A2.txt",header=T)
 bb<-read.table("NoORFdata_B2.txt",header=T)
 if(!(nrow(aa)==nrow(bb))){
@@ -161,7 +163,7 @@ tmp <- .C("main_JHM", as.integer(burn),as.integer(iters),as.integer(thin),
   OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
   QFAIA=QFA.IA,QFAy=QFA.yA,QFAxA=QFA.xA,QFANoORFA=QFA.NoORFA,
   QFANoTIMEA=QFA.NoTIMEA,QFAIB=QFA.IB,QFAy=QFA.yB,QFAxB=QFA.xB,
-  QFANoORFB=QFA.NoORFB,QFANoTIMEB=QFA.NoTIMEB,PRIORS=PRIORS)
+  QFANoORFB=QFA.NoORFB,QFANoTIMEB=QFA.NoTIMEB,PRIORS=PRIORS,TUNING=TUNING)
 mat=matrix(c(tmp$OUT),nrow=iters,byrow=T)
 mat=data.frame(mat)
 names(mat)=tmp$HEADER

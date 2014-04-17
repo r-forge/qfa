@@ -3,7 +3,9 @@
 #include "functions_SHM.h"
 #include "print_SHM.h"
 
-int main_SHM(int *arga,int *argb,int *argc,int *argd,double *OUT, char **HEADER,int *QFAI,double *QFADy,double *QFADx,int *QFADNoORF,int *QFADNoTIME,double *PRIORS,double *TUNING)
+int main_SHM(int *arga,int *argb,int *argc,int *argd,double *OUT,
+  char **HEADER,int *QFAI,double *QFADy,double *QFADx,int *QFADNoORF,
+  int *QFADNoTIME,double *PRIORS,double *TUNING)
 {
   GetRNGstate();
   struct_data *data= malloc(sizeof(struct_data));
