@@ -24,9 +24,9 @@ int testsame(int a,int b)
 
 /*INZ*/
 
-int inzstruct_MH(struct_MH *MH)
+int inzstruct_MH(struct_MH *MH,double *TUNING)
 {
-  fillMH(MH);
+  fillMH(MH,TUNING);
   return 0;
 }
 
@@ -144,12 +144,22 @@ int inzstruct_para(struct_para *para,struct_data *data,struct_priors *priors)
 
 /*FILL*/
 
-int fillMH(struct_MH *MH)
+int fillMH(struct_MH *MH,double *TUNING)
 {
+  MH->hK=TUNING[0];
+  MH->accept_K=TUNING[1];
+  MH->hr=TUNING[2];
+  MH->accept_r=TUNING[3];
+  MH->hnu=TUNING[4];
+  MH->accept_nu=TUNING[5];
+  MH->hP=TUNING[6];
+  MH->accept_P=TUNING[7]; 
+
+/*HARDCODED VER
   MH->hK=0.1;MH->accept_K=0;
   MH->hr=0.1;MH->accept_r=0;
   MH->hnu=0.1;MH->accept_nu=0;
-  MH->hP=0.2;MH->accept_P=0;  /*h sd; accept=0*/
+  MH->hP=0.2;MH->accept_P=0;  */
   return 0;
 }
 
