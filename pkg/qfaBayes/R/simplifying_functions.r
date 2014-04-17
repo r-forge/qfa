@@ -37,7 +37,7 @@ SHM_postpro<-function(a,Treat,Screen,MPlate)
   IDuni<-unique(a$ID)
   ORFuni=unique(a$ORF)
 
-  gene<-unlist(lapply(ORFuni,funcGENE,data=a))
+  gene<-a$Gene[match(ORFuni,a$ORF)]
 
   N<-length(ORFuni)
   M<-length(IDuni)
@@ -353,7 +353,7 @@ JHM_postpro<-function(a,TreatA,Screen_a,MPlate_a,b,TreatB,Screen_b,MPlate_b)
   ORFuni<-unique(b$ORF)
 
   IDuni<-unique(a$ID)
-  gene<-unlist(lapply(ORFuni,funcGENE,data=a))
+  gene<-a$Gene[match(ORFuni,a$ORF)]
 
   N<-length(ORFuni)
   M=Ma=length(IDuni)

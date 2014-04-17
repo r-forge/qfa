@@ -32,7 +32,7 @@ a<-a[order(a$ORF,a$ID,a$Expt.Time), ]
 IDuni<-unique(a$ID)
 ORFuni=unique(a$ORF)
 
-gene<-unlist(lapply(ORFuni,funcGENE,data=a))
+gene<-a$Gene[match(ORFuni,a$ORF)]
 
 N<-length(ORFuni);M<-length(IDuni)
 NoORF_a<-unlist(lapply(ORFuni,funcNoORF,data=a))#no of repeats each orf

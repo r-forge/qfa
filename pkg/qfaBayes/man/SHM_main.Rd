@@ -6,7 +6,7 @@ For use with SHM post processed Colonyzer output.
 Runs SHM C code
 }
 \usage{
-SHM_main(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS)
+SHM_main(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS,TUNING)
 }
 \arguments{
   \item{burn}{Burn in period}
@@ -19,6 +19,7 @@ SHM_main(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS)
   \item{QFA.NoORF}{QFA.NoORF}
   \item{QFA.NoTIME}{QFA.NoTIME}
   \item{PRIORS}{PRIORS}
+  \item{TUNING}{TUNING}
 }
 \value{
 SHM output
