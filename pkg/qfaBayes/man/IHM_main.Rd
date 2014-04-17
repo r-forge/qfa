@@ -6,7 +6,7 @@ For use with control and query SHM output.
 Runs IHM C code
 }
 \usage{
-IHM_main(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.NoORFB,PRIORS)
+IHM_main(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.NoORFB,PRIORS,TUNING)
 }
 \arguments{
   \item{burn}{Burn in period}
@@ -19,6 +19,7 @@ IHM_main(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.NoORFB,PRIOR
   \item{QFA.yB}{QFA.yB}
   \item{QFA.NoORFB}{QFA.NoORFB}
   \item{PRIORS}{PRIORS}
+    \item{TUNING}{TUNING}
 }
 \value{
 IHM output

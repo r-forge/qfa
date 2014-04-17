@@ -13,11 +13,6 @@ funcIDORDER<-function(data){
   data<-data[order(paste(data$ORF,data$ID),data$Timeseries.order), ]
 }
 
-### Gives gene names ###
-funcGENE<-function(x,data){
-  data$Gene[data$ORF%in%x][1]
-}
-
 ### Gives number of repeats for each ORF ###
 funcNoORF<-function(x,data){
   length(unique((data$ID[data$ORF==x])))

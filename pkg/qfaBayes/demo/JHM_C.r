@@ -69,7 +69,7 @@ ORFuni_b<-unique(b$ORF)
 ORFuni<-unique(b$ORF)
 
 IDuni<-unique(a$ID)
-gene<-unlist(lapply(ORFuni,funcGENE,data=a))
+gene<-a$Gene[match(ORFuni,a$ORF)]
 
 N<-length(ORFuni);M=Ma=length(IDuni)
 NoORF_a<-unlist(lapply(ORFuni_a,funcNoORF,data=a))#no of repeats each orf

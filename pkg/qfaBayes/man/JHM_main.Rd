@@ -6,7 +6,7 @@ For use with JHM post processed Colonyzer output.
 Runs JHM C code
 }
 \usage{
-JHM_main(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS)
+JHM_main(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS,TUNING)
 }
 \arguments{
   \item{burn}{Burn in period}
@@ -23,6 +23,7 @@ JHM_main(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.
   \item{QFA.NoORFB}{QFA.NoORFB}
   \item{QFA.NoTIMEB}{QFA.NoTIMEB}
   \item{PRIORS}{PRIORS}
+  \item{TUNING}{TUNING}
 }
 \value{
 JHM output
