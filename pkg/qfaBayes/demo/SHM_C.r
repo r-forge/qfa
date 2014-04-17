@@ -76,7 +76,7 @@ data("priors_SHM")
 #priors_SHM=read.table("priors.txt",header=T)
 PRIORS=as.double((priors_SHM)[[1]])[1:18]
 data("tuning_SHM")
-TUNING=as.double((tuning_SHM)[[1]])[1:8]
+TUNING=as.double((tuning_SHM))[1:8]
 
 main <- function(burn,iters,thin,CAPL) {
 aa<-read.table("NoORFdata.txt",header=T)
