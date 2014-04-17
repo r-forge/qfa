@@ -3,7 +3,7 @@
 #include "functions_SHM.h"
 #include "print_SHM.h"
 
-int main_SHM(int *arga,int *argb,int *argc,int *argd,double *OUT, char **HEADER,int *QFAI,double *QFADy,double *QFADx,int *QFADNoORF,int *QFADNoTIME,double *PRIORS)
+int main_SHM(int *arga,int *argb,int *argc,int *argd,double *OUT, char **HEADER,int *QFAI,double *QFADy,double *QFADx,int *QFADNoORF,int *QFADNoTIME,double *PRIORS,double *TUNING)
 {
   GetRNGstate();
   struct_data *data= malloc(sizeof(struct_data));
@@ -20,9 +20,9 @@ int main_SHM(int *arga,int *argb,int *argc,int *argd,double *OUT, char **HEADER,
   CAPL=*argd;              /*CAP D->L*/
   
   inzstruct_data(data,QFAI,QFADy,QFADx,QFADNoORF,QFADNoTIME);
+  inzstruct_MH(MH,TUNING);
   inzstruct_priors(priors,PRIORS);
   inzstruct_para(para,data,priors);
-  inzstruct_MH(MH);
   
   gibbsandMHloop(burn,1,data,para,priors,MH,CAPL,0,OUT,HEADER);
   gibbsandMHloop(iters,thin,data,para,priors,MH,CAPL,1,OUT,HEADER);

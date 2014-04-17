@@ -67,7 +67,7 @@ SHM_postpro<-function(a,Treat,Screen,MPlate)
     QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME,QFA.NoSUM=QFA.NoSUM,gene=gene)
 }
 
-SHM_main <- function(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS){
+SHM_main <- function(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS,TUNING){
   L=min(CAPL,length(QFA.NoORF))
   LM<-sum(QFA.NoORF[1:L])
   NCOL=LM+L+L+1+1+1+LM+L+L+1+1+L+1+1+1+1+1+1
@@ -75,7 +75,7 @@ SHM_main <- function(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME
     as.integer(L),OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
     QFAI=as.integer(QFA.I),QFAy=as.double(QFA.y),QFAx=as.double(QFA.x),
 	QFANoORF=as.integer(QFA.NoORF),QFANoTIME=as.integer(QFA.NoTIME),
-    PRIORS=as.double(PRIORS),PACKAGE="qfaBayes")
+    PRIORS=as.double(PRIORS),TUNING=as.double(TUNING),PACKAGE="qfaBayes")
   mat=matrix(c(tmp$OUT),nrow=iters,byrow=T)
   mat=data.frame(mat)
   names(mat)=tmp$HEADER

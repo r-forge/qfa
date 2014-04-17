@@ -75,6 +75,8 @@ QFA.NoTIME=as.integer((aa)[[1]])
 data("priors_SHM")
 #priors_SHM=read.table("priors.txt",header=T)
 PRIORS=as.double((priors_SHM)[[1]])[1:18]
+data("tuning_SHM")
+TUNING=as.double((tuning_SHM)[[1]])[1:8]
 
 main <- function(burn,iters,thin,CAPL) {
 aa<-read.table("NoORFdata.txt",header=T)
@@ -102,7 +104,7 @@ L+
 tmp <- .C("main", as.integer(burn),as.integer(iters),as.integer(thin),
   as.integer(L),OUT=as.double(1:(NCOL*iters)),
   HEADER=as.character(rep("NULLNULL",NCOL)),QFAI=QFA.I,QFAy=QFA.y,QFAx=QFA.x,
-  QFANoORF=QFA.NoORF,QFANoTIME=QFA.NoTIME,PRIORS=PRIORS)
+  QFANoORF=QFA.NoORF,QFANoTIME=QFA.NoTIME,PRIORS=PRIORS,TUNING=TUNING)
 mat=matrix(c(tmp$OUT),nrow=iters,byrow=T)
 mat=data.frame(mat)
 names(mat)=tmp$HEADER
