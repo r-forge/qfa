@@ -41,8 +41,8 @@ SHM_postpro<-function(a,Treat,Screen,MPlate)
 
   N<-length(ORFuni)
   M<-length(IDuni)
-  NoORF_a<-unlist(lapply(ORFuni,funcNoORF,data=a))#no of repeats each orf
-  NoTime_a<-c(0,unlist(lapply(IDuni,funcNoTime,data=a)))# 0+ no of
+  NoORF_a<-as.numeric(lapply(split(a,a$ORF),funcNoORF))#no of repeats each orf
+  NoTime_a<-c(0,as.numeric(lapply(split(a,a$ID),nrow)))# 0+ no of time each repeat
   NoSum_a<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_a)))
   dimr<-max(NoORF_a)
   dimc<-max(NoTime_a)
@@ -357,16 +357,16 @@ JHM_postpro<-function(a,TreatA,Screen_a,MPlate_a,b,TreatB,Screen_b,MPlate_b)
 
   N<-length(ORFuni)
   M=Ma=length(IDuni)
-  NoORF_a<-unlist(lapply(ORFuni_a,funcNoORF,data=a))#no of repeats each orf
-  NoTime_a<-c(0,unlist(lapply(IDuni,funcNoTime,data=a)))# 0+ no of time each repeat
+  NoORF_a<-as.numeric(lapply(split(a,a$ORF),funcNoORF))#no of repeats each orf
+  NoTime_a<-c(0,as.numeric(lapply(split(a,a$ID),nrow)))# 0+ no of time each repeat
   NoSum_a<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_a)))
 
   IDuni<-unique(b$ID)
 
   N<-length(ORFuni)
   M=Mb=length(IDuni)
-  NoORF_b<-unlist(lapply(ORFuni,funcNoORF,data=b))#no of repeats each orf
-  NoTime_b<-c(0,unlist(lapply(IDuni,funcNoTime,data=b)))# 0+ no of time each repeat
+  NoORF_a<-as.numeric(lapply(split(a,a$ORF),funcNoORF))#no of repeats each orf
+  NoTime_b<-c(0,as.numeric(lapply(split(b,b$ID),nrow)))# 0+ no of time each repeat
   NoSum_b<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_b)))
 
   dimr<-max(NoORF_a,NoORF_b)
