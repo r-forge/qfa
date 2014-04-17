@@ -3,7 +3,9 @@
 #include "functions_IHM.h"
 #include "print_IHM.h"
 
-int main_IHM(int *arga,int *argb,int *argc,double *OUT,char **HEADER,int *QFAIA,double *QFADyA,int *QFADNoORFA,int *QFAIB,double *QFADyB,int *QFADNoORFB,double *PRIORS)/****/
+int main_IHM(int *arga,int *argb,int *argc,double *OUT,char **HEADER,
+  int *QFAIA,double *QFADyA,int *QFADNoORFA,int *QFAIB,double *QFADyB,
+  int *QFADNoORFB,double *PRIORS,double *TUNING)
 {
   GetRNGstate();
 
@@ -19,9 +21,9 @@ int main_IHM(int *arga,int *argb,int *argc,double *OUT,char **HEADER,int *QFAIA,
   thin=*argc;        /*thining*/
   
   inzstruct_data_IHM(data,QFAIA,QFADyA,QFADNoORFA,QFAIB,QFADyB,QFADNoORFB);
+  inzstruct_MH_IHM(MH,TUNING);
   inzstruct_priors_IHM(priors,PRIORS);
   inzstruct_para_IHM(para,data,priors);
-  inzstruct_MH_IHM(MH);
 
   gibbsandMHloop_IHM(burn,1,data,para,priors,MH,0,OUT,HEADER);
   gibbsandMHloop_IHM(iters,thin,data,para,priors,MH,1,OUT,HEADER);

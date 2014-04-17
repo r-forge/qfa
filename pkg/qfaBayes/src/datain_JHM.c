@@ -24,9 +24,9 @@ return 0;
 
 /*INZ*/
 
-int inzstruct_MH_JHM(struct_MH_JHM *MH)
+int inzstruct_MH_JHM(struct_MH_JHM *MH,double *TUNING)
 {
-	fillMH_JHM(MH);
+	fillMH_JHM(MH,TUNING);
 return 0;
 }
 
@@ -183,9 +183,9 @@ int inzstruct_para_JHM(struct_para_JHM *para,struct_data_JHM *data,struct_priors
 	para->beta_c=malloc(size*sizeof(double));
 
 	para->tau_K_p=malloc(size*sizeof(double));
-	  para->tau_r_p=malloc(size*sizeof(double));
-	  para->sigma_tau_K=malloc(size*sizeof(double));
-	  para->sigma_tau_r=malloc(size*sizeof(double));
+	para->tau_r_p=malloc(size*sizeof(double));
+	para->sigma_tau_K=malloc(size*sizeof(double));
+	para->sigma_tau_r=malloc(size*sizeof(double));
 
 	fillpara_JHM(para,data,priors);
 return 0;
@@ -193,13 +193,24 @@ return 0;
 
 /*FILL*/
 
-int fillMH_JHM(struct_MH_JHM *MH)
+int fillMH_JHM(struct_MH_JHM *MH,double *TUNING)
 {
+	MH->hK=TUNING[0];	
+	MH->hr=TUNING[1];	
+	MH->hnu=TUNING[2];	
+	MH->hP=TUNING[3];	
+	MH->halpha=TUNING[4];
+	MH->accept_K=0;
+	MH->accept_r=0;
+	MH->accept_nu=0;
+	MH->accept_P=0; 
+	
+/*HARDCODED VER
 	MH->hK=0.1;	MH->accept_K=0;
 	MH->hr=0.1;	MH->accept_r=0;
 	MH->hnu=0.4;	MH->accept_nu=0;
-	MH->hP=0.2;	MH->accept_P=0;  /*h sd; accept=0*/
-	MH->halpha=0.01;
+	MH->hP=0.2;	MH->accept_P=0; 
+	MH->halpha=0.01;*/
 return 0;
 }
 

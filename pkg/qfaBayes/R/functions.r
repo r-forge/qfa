@@ -1,7 +1,7 @@
 ### Filter by Screen Name, Temprature and Master Plate Number ###
 funcREMOVE<-function(data,Screen,Treat,MPlate){
   data=data[data$Screen.Name%in%Screen,]
-  data=data[data$Treatment%in%Treat,]
+  data=data[data$Treatments%in%Treat,]
   data=data[data$MasterPlate.Number%in%MPlate,]
   data
 }
@@ -95,7 +95,7 @@ funcSCALING<-function(data,vec){
 ###  Gives experiment variables from Colonyzer output###
 qfa.variables<-function(data){
   Screen<-as.character(unique(data$Screen.Name))
-  Treat<-as.character(unique(data$Treatment))
+  Treat<-as.character(unique(data$Treatments))
   MPlate<-unique(data$MasterPlate.Number)
   list(Screen=Screen,Treat=Treat,MPlate=MPlate)
 }

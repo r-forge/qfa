@@ -83,9 +83,9 @@ return 0;
 
 /*INZ*/
 
-int inzstruct_MH_IHM(struct_MH_IHM *MH)
+int inzstruct_MH_IHM(struct_MH_IHM *MH,double *TUNING)
 {
-	fillMH_IHM(MH);
+	fillMH_IHM(MH,TUNING);
 return 0;
 }
 
@@ -167,11 +167,24 @@ return 0;
 
 /*FILL*/
 
-int fillMH_IHM(struct_MH_IHM *MH)
+int fillMH_IHM(struct_MH_IHM *MH,double *TUNING)
 {
+	MH->halpha_c=TUNING[0];
+	MH->hsigma_gamma=TUNING[1];
+    MH->hsigma_nu=TUNING[2];
+	MH->hsigma_Z=TUNING[3];
+	MH->hnu_p=TUNING[4];
+	MH->hgamma_cl=TUNING[5];
+	MH->hZ_l=TUNING[6];
+	MH->hnu_l=TUNING[7];
+	MH->accept_Z=0;
+	MH->accept_up=0;
+	MH->accept_nu=0;
+	
+/*HARDCODED VER
 	MH->halpha_c=0.008;
 	MH->hsigma_gamma=0.5;
-     	MH->hsigma_nu=0.5;
+    MH->hsigma_nu=0.5;
 	MH->hsigma_Z=0.5;
 	MH->hnu_p=0.5;
 	MH->hgamma_cl=0.5;
@@ -179,7 +192,7 @@ int fillMH_IHM(struct_MH_IHM *MH)
 	MH->hnu_l=0.5;
 	MH->accept_Z=0;
 	MH->accept_up=0;
-	MH->accept_nu=0; /*h sd; accept=0*/
+	MH->accept_nu=0; */
 return 0;
 }
 
