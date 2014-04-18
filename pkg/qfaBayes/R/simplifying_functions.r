@@ -365,7 +365,7 @@ JHM_postpro<-function(a,TreatA,Screen_a,MPlate_a,b,TreatB,Screen_b,MPlate_b)
 
   N<-length(ORFuni)
   M=Mb=length(IDuni)
-  NoORF_a<-as.numeric(lapply(split(a,a$ORF),funcNoORF))#no of repeats each orf
+  NoORF_b<-as.numeric(lapply(split(b,b$ORF),funcNoORF))#no of repeats each orf
   NoTime_b<-c(0,as.numeric(lapply(split(b,b$ID),nrow)))# 0+ no of time each repeat
   NoSum_b<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_b)))
 
