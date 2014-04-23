@@ -66,8 +66,7 @@ int inzstruct_data(struct_data *data,int *QFAI,double *QFADy,double *QFADx,int *
 	data->N=QFAI[2];
 	data->maxy=QFAI[3];
 	data->maxNoTIME=QFAI[4];
-  testsame(data->L*data->M*data->N,data->maxy);
-
+	
   size=data->L*data->M*data->N; /*input from file*/ 
   data->y=malloc(size*sizeof(double));        /*Cycle with SHIFTlmn*/
   data->x=malloc(size*sizeof(double));        /*Cycle with SHIFTlmn*/
@@ -90,8 +89,6 @@ data->NoORF[i]=QFADNoORF[i];
 }
  
   filldata(data);
-  testsame(data->maxNoTIME,data->SHIFTlmn);
-
   size=data->SHIFTlmn;/*inputfromfile*/
   data->NoTIME=malloc(size*sizeof(double));   /*Cycle with SHIFTlm*/
 
