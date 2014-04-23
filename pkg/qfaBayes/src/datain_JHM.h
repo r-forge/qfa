@@ -7,7 +7,7 @@ int testsame_JHM(int a,int b);
 int datadouble_JHM(char filename[], char filename2[], double datavec[],int length);
 int dataint_JHM(char filename[],char filename2[], int datavec[] ,int lengtha,int lengthb );
 int dataLMN_JHM(char filename[],char filename2[], 
-	int *datavecL,int *datavecM,int *datavecN,int *datavecmaxy,int *datavecmaxTIMEa,int *datavecmaxTIMEb);
+int *datavecL,int *datavecM,int *datavecN,int *datavecmaxy,int *datavecmaxTIMEa,int *datavecmaxTIMEb);
 
 int inzstruct_MH_JHM(struct_MH_JHM *MH,double *TUNING);
 int inzstruct_priors_JHM(struct_priors_JHM *D_priors,double *PRIORS);

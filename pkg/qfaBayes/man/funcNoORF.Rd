@@ -6,11 +6,10 @@ For use with Colonyzer output.
 Gives number of repeats for each ORF
 }
 \usage{
-funcNoORF(x,data)
+funcNoORF(x)
 }
 \arguments{
-  \item{x}{ORF name}
-  \item{data}{Colonyzer output}
+  \item{x}{Colonyzer output}
 }
 \value{
 Number of repeats

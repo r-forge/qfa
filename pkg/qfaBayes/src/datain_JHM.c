@@ -1,27 +1,6 @@
 #include "headers_JHM.h"
 #include "datain_JHM.h"
 
-/*TEST*/
-
-int testargc_JHM(int argc)
-{
- 	if (argc!=4) {
-    		perror("argc failed");
-    		exit(EXIT_FAILURE);
-  	}
-return 0;
-}
-
-int testsame_JHM(int a,int b)
-{
- 	if (a!=b) {
-    		perror("data int failed");
-    		exit(EXIT_FAILURE);
-  	}
-return 0;
-}
-
-
 /*INZ*/
 
 int inzstruct_MH_JHM(struct_MH_JHM *MH,double *TUNING)
