@@ -93,7 +93,6 @@ int inzstruct_data_JHM(struct_data_JHM *data,int *QFAIA,double *QFADyA,double *Q
 		data->L=QFAIB[0];
 		data->M=QFAIB[1];
 		data->N=QFAIB[2];
-		testsame_JHM(QFAIA[3],QFAIB[3]);
 		data->maxy=QFAIA[3]+QFAIB[3];
 		data->maxTIMEb=QFAIB[4];
 
@@ -106,11 +105,6 @@ int inzstruct_data_JHM(struct_data_JHM *data,int *QFAIA,double *QFADyA,double *Q
 	data->NoSUM=malloc(size*sizeof(double));
 	size=data->maxTIMEa+data->maxTIMEb;
 	data->NoTIME=malloc(size*sizeof(double));  
-	
-	if (data->y==NULL||data->x==NULL||data->NoORF==NULL||data->NoSUM==NULL||data->NoTIME==NULL) {
-		perror("malloc failed");
-    		exit(EXIT_FAILURE);
-  	}
 /**/
  for (i=0;i<(data->maxy-data->SHIFTlmn);i++){
 data->y[i]=QFADyA[i];
