@@ -1,27 +1,6 @@
 #include "headers_SHM.h"
 #include "datain_SHM.h"
 
-
-/*TEST*/
-
-int testargc(int argc)
-{
-  if (argc!=5) {
-    perror("argc failed");
-    exit(EXIT_FAILURE);
-  }
-  return 0;
-}
-
-int testsame(int a,int b)
-{
-  if (a!=b) {
-    perror("data int failed");
-    exit(EXIT_FAILURE);
-  }
-  return 0;
-}
-
 /*INZ*/
 
 int inzstruct_MH(struct_MH *MH,double *TUNING)

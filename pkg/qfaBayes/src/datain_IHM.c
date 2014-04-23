@@ -1,26 +1,6 @@
 #include "headers_IHM.h"
 #include "datain_IHM.h"
 
-/*TEST*/
-
-int testargc_IHM(int argc)
-{
- 	if (argc!=4) {
-    		perror("argc failed");
-    		exit(EXIT_FAILURE);
-  	}
-return 0;
-}
-
-int testsame_IHM(int a,int b)
-{
- 	if (a!=b) {
-    		perror("data int failed");
-    		exit(EXIT_FAILURE);
-  	}
-return 0;
-}
-
 
 int datadouble_IHM(char filename[],char filename2[],struct_data_IHM *D,double *QFADyA,double *QFADyB)
 {
