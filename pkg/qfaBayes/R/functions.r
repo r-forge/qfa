@@ -84,8 +84,8 @@ funcSCALING<-function(data,vec){
 
 ###  Gives experiment variables from Colonyzer output###
 qfa.variables<-function(data){
-  Screen<-as.character(unique(data$Screen.Name))
   Treat<-as.character(unique(data$Treatments))
+  Screen<-as.character(unique(data$Screen.Name))
   MPlate<-unique(data$MasterPlate.Number)
   list(Screen=Screen,Treat=Treat,MPlate=MPlate)
 }
