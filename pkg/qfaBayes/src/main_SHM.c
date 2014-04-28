@@ -3,7 +3,7 @@
 #include "functions_SHM.h"
 #include "print_SHM.h"
 
-int main_SHM(int *arga,int *argb,int *argc,int *argd,double *OUT,
+int main_SHM(int *arga,int *argb,int *argc,double *OUT,
   char **HEADER,int *QFAI,double *QFADy,double *QFADx,int *QFADNoORF,
   int *QFADNoTIME,double *PRIORS,double *TUNING)
 {
@@ -18,16 +18,14 @@ int main_SHM(int *arga,int *argb,int *argc,int *argd,double *OUT,
   burn=*arga;    /*Burn in*/
   iters=*argb;    /*iterations*/
   thin=*argc;         /*thining*/
-  
-  CAPL=*argd;              /*CAP D->L*/
-  
+    
   inzstruct_data(data,QFAI,QFADy,QFADx,QFADNoORF,QFADNoTIME);
   inzstruct_MH(MH,TUNING);
   inzstruct_priors(priors,PRIORS);
   inzstruct_para(para,data,priors);
   
-  gibbsandMHloop(burn,1,data,para,priors,MH,CAPL,0,OUT,HEADER);
-  gibbsandMHloop(iters,thin,data,para,priors,MH,CAPL,1,OUT,HEADER);
+  gibbsandMHloop(burn,1,data,para,priors,MH,0,OUT,HEADER);
+  gibbsandMHloop(iters,thin,data,para,priors,MH,1,OUT,HEADER);
   
   PutRNGstate();
   

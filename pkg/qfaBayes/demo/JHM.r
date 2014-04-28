@@ -7,7 +7,6 @@ qfa.variables(b)
 
 data("priors_JHM")
 PRIORS=as.double((priors_JHM)[[1]])
-PRIORS[19]=0##
 data("tuning_JHM")
 TUNING=as.double((tuning_JHM))[1:5]
 
@@ -24,7 +23,8 @@ JHM<-JHM_postpro(a,TreatA=TreatA,Screen_a=Screen_a,MPlate_a,b,TreatB=TreatB,
 JHM_output<-JHM_main(burn=1,iters=1,thin=1,QFA.IA=JHM$QFA.IA,QFA.yA=JHM$QFA.yA,
   QFA.xA=JHM$QFA.xA,QFA.NoORFA=JHM$QFA.NoORFA,QFA.NoTIMEA=JHM$QFA.NoTIMEA,
   QFA.IB=JHM$QFA.IB,QFA.yB=JHM$QFA.yB,QFA.xB=JHM$QFA.xB,
-  QFA.NoORFB=JHM$QFA.NoORFB,QFA.NoTIMEB=JHM$QFA.NoTIMEB,PRIORS=PRIORS,TUNING=TUNING)
+  QFA.NoORFB=JHM$QFA.NoORFB,QFA.NoTIMEB=JHM$QFA.NoTIMEB,
+  PRIORS=PRIORS,TUNING=TUNING)
 
 ask_plot_simple()
 filename="DEMO"
