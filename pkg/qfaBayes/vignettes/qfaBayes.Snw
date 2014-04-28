@@ -48,14 +48,14 @@ vignette("qfaBayes")
 
 This R package is intended to fit the three Bayesian Models described in J Heydari, C Lawless, D Lydall and D J Wilkinson. \emph{Bayesian hierarchical modelling for inferring genetic interactions in yeast. Journal of the Royal Statistical Society: Series C (Applied Statistics)}, in submission.
 The three Bayesian models are the SHM (Single hierarchical model), IHM (Interacation hierarchical model), and JHM (Joint hierarchical model).
-There are six demos included in this packge, three of which (\verb$SHM_simple_C$, \verb$IHM_simple_C$ and \verb$JHM_simple_c$)have been made for ease of use, hiding all post-processing. 
+There are six demos included in this packge, three of which (\verb$SHM$, \verb$IHM$ and \verb$JHM$)have been made for ease of use, hiding all post-processing. 
 The other three (\verb$SHM_C$, \verb$IHM_C$ and \verb$JHM_C$) consist of many lines of code that can be more easily edited to create a much more tailored post-processing.
 Variables \verb$burn$, \verb$iter$ and \verb$thin$ control the burn-in period, output sample size and thinning.
 These are all set to 1 in all the six of the demo's so that a user can get familiar with the workflow first, it is essential that you change them to much larger numbers for sufficient convergence to happen.
 Typically the models need a computational time that ranges from range from days to weeks.
 
 \subsection{SHM}
-\verb$SHM_simple_C$
+\verb$SHM$
 This demo runs the SHM for the $\emph{ura3}\Delta$ data set at $27\,^{\circ}\mathrm{C}$ trimmed to only include plate 15, which accounts for only 50 of the 4294 $\emph{orf}\Delta$s avalible.
 It is expected that you will wish to create ouput with larger sample size, burn in period and thinning, to do this simply copy all the code from the demo and change the variables \verb$burn$, \verb$iter$ and \verb$thin$.
 
@@ -64,7 +64,7 @@ The typical model computation time of the SHM alone is one week with burn-in of 
 A more detailed workflow which is compatible with the standalone C code is given in demo \verb$SHM_C$.
 
 \subsection{IHM}
-\verb$IHM_simple_C$
+\verb$IHM$
 This demo runs the SHM for the $\emph{ura3}\Delta$ data set at $27\,^{\circ}\mathrm{C}$, trimmed to only include plate 15, which accounts for only 50 of the 4294 $\emph{orf}\Delta$s available.
 Next, the SHM is then run for the $\emph{cdc13-1}\Delta$ data set at $27\,^{\circ}\mathrm{C}$, trimmed to only include plate 15, which accounts for only 50 of the 4294 $\emph{orf}\Delta$s available.
 The IHM is then run using the output from the SHM output for the two data sets.
@@ -76,7 +76,7 @@ The typical model computation time of the IHM alone is one day with burn-in of 8
 A more detailed workflow which is compatible with the standalone C code is given in demo \verb$IHM_C$.
 
 \subsection{JHM}
-\verb$JHM_simple_C$
+\verb$JHM$
 This demo runs the JHM for the $\emph{ura3}\Delta$ and $\emph{cdc13-1}\Delta$ data sets, both at $27\,^{\circ}\mathrm{C}$, trimmed to only include plate 15, which accounts for only 50 of the 4294 $\emph{orf}\Delta$s available.
 At the end of the demo you will be asked if you wish to create a fitness plot with your results.
 
@@ -85,9 +85,9 @@ The typical model computation time of the JHM alone is two weeks with burn-in of
 
 A more detailed workflow which is compatible with the standalone C code is given in demo \verb$JHM_C$.
 
-\section{SHM$\_$simple$\_$C Demo}
-To see how the \verb$SHM_simple_C$ demo works the following detailed explaination is provided and is to be used in conjunction with the R package manual.
-The \verb$SHM_simple_C$ demo runs the following commands: \\
+\section{SHM$ Demo}
+To see how the \verb$SHM$ demo works the following detailed explaination is provided and is to be used in conjunction with the R package manual.
+The \verb$SHM$ demo runs the following commands: \\
 \\
 \verb$> data("URA3_Raw_extratrim_15")$\\
 \verb$> a<-a_15$\\
