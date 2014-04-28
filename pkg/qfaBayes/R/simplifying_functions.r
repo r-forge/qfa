@@ -1,16 +1,4 @@
-ask_plot_simple<-function(){
-  plotYN=0
-  while(plotYN < 1 ){
-    n<-readline("do you wish to plot? Y or N: ")
-    if(n=="Y"){
-	  plotYN=1
-	}
-    if(n=="N"){
-	  stop()
-	}
-  }
-}
-
+### ###
 SHM_postpro<-function(a,Treat,Screen,MPlate)
 {
   a<-funcREMOVE(a,Screen,Treat,MPlate)
@@ -67,6 +55,7 @@ SHM_postpro<-function(a,Treat,Screen,MPlate)
     QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME,QFA.NoSUM=QFA.NoSUM,gene=gene)
 }
 
+### ###
 SHM_main <- function(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS,TUNING){
   L=min(CAPL,length(QFA.NoORF))
   LM<-sum(QFA.NoORF[1:L])
@@ -82,6 +71,7 @@ SHM_main <- function(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME
   mat
 }
 
+### ###
 plot_SHM_simple<-function(SHM_output,SHM){
   samp<-SHM_output
   y<-SHM$y
@@ -227,7 +217,7 @@ plot_SHM_simple<-function(SHM_output,SHM){
   }
 }
 
-
+### ###
 IHM_main <- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.NoORFB,PRIORS,TUNING){
   aa<-QFA.NoORFA
   bb<-QFA.NoORFB
@@ -248,6 +238,7 @@ IHM_main <- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.
   mat
 }
 
+### ###
 plot_IHM_simple<-function(IHM_output,SHM){
   N=SHM$QFA.I[1]
   gene=SHM$gene
@@ -301,8 +292,7 @@ plot_IHM_simple<-function(IHM_output,SHM){
   text(A1*Z_l[i],A2*(Z_l[i]*delta_gamma[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 }
 
-
-
+### ###
 JHM_postpro<-function(a,TreatA,Screen_a,MPlate_a,b,TreatB,Screen_b,MPlate_b)
 {
   a<-funcREMOVE(a,Screen_a,TreatA,MPlate_a)
@@ -398,6 +388,7 @@ JHM_postpro<-function(a,TreatA,Screen_a,MPlate_a,b,TreatB,Screen_b,MPlate_b)
 	QFA.NoSUMB=c(NoSum_b),gene=gene)
 }
 
+### ###
 JHM_main<- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS,TUNING) {
   aa<-QFA.NoORFA
   bb<-QFA.NoORFB
@@ -421,6 +412,7 @@ JHM_main<- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,
   mat
 }
 
+### ###
 plot_JHM_simple<-function(JHM_output,JHM){
   samp<-JHM_output
   gene=JHM$gene
