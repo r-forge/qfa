@@ -138,7 +138,7 @@ int inzstruct_para_IHM(struct_para_IHM *para,struct_data_IHM *data,struct_priors
 	para->gamma_cl=malloc(size*sizeof(double));
 	para->Z_l=malloc(size*sizeof(double));
 	size=data->L*2;/***/
-	para->nu_l=malloc(size*sizeof(double));
+	para->nu_cl=malloc(size*sizeof(double));
 	size=2;
 	para->alpha_c=malloc(size*sizeof(double));
 	fillpara_IHM(para,data,priors);
@@ -156,7 +156,7 @@ int fillMH_IHM(struct_MH_IHM *MH,double *TUNING)
 	MH->hnu_p=TUNING[4];
 	MH->hgamma_cl=TUNING[5];
 	MH->hZ_l=TUNING[6];
-	MH->hnu_l=TUNING[7];
+	MH->hnu_cl=TUNING[7];
 	MH->accept_Z=0;
 	MH->accept_up=0;
 	MH->accept_nu=0;
@@ -169,7 +169,7 @@ int fillMH_IHM(struct_MH_IHM *MH,double *TUNING)
 	MH->hnu_p=0.5;
 	MH->hgamma_cl=0.5;
 	MH->hZ_l=0.2;
-	MH->hnu_l=0.5;
+	MH->hnu_cl=0.5;
 	MH->accept_Z=0;
 	MH->accept_up=0;
 	MH->accept_nu=0; */
@@ -220,7 +220,7 @@ int fillpara_IHM(struct_para_IHM *D_para, struct_data_IHM *D,struct_priors_IHM *
 	D_para->sigma_Z=D_priors->eta_Z;     
 
 
-	for (l=0;l<2*D->L;l++)          {D_para->nu_l[l]=D_priors->nu_mu;}          
+	for (l=0;l<2*D->L;l++)          {D_para->nu_cl[l]=D_priors->nu_mu;}          
 	D_para->sigma_nu=D_priors->eta_nu;   
   
 	D_para->nu_p=D_priors->nu_mu;    

@@ -1,12 +1,18 @@
-### ###
-SHM_postpro<-function(a,Treat,Screen,MPlate)
+### Creates an object with information in the format for running the SHM ###
+SHM_postpro<-function(a,Treat,Screen,MPlate,remove_row,remove_col)
 {
   a<-funcREMOVE(a,Screen,Treat,MPlate)
-  a<-a[!a$Row==1,]
-  a<-a[!a$Row==16,]
-  a<-a[!a$Col==1,]
-  a<-a[!a$Col==24,]
-
+  if (length(remove_row)>=1){
+    for (1 in 1:length(remove_row)){
+    a<-a[!a$Row==remove_row[i],]
+    a<-a[!a$Row==remove_row[i],]
+  }
+  if (length(remove_col)>=1){
+    for (1 in 1:length(remove_col)){
+    a<-a[!a$Col==remove_col[i],]
+    a<-a[!a$Col==remove_col[i],]
+  }
+  
   Row<-paste(a$Row)
   Col<-paste(a$Col)
   for (i in 1:nrow(a)){
@@ -55,7 +61,7 @@ SHM_postpro<-function(a,Treat,Screen,MPlate)
     QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME,QFA.NoSUM=QFA.NoSUM,gene=gene)
 }
 
-### ###
+### Calls the C code for running the SHM MCMC ###
 SHM_main <- function(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS,TUNING){
   L=min(CAPL,length(QFA.NoORF))
   LM<-sum(QFA.NoORF[1:L])
@@ -71,12 +77,12 @@ SHM_main <- function(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME
   mat
 }
 
-### ###
+### Displays repeat level logistic growth curves for each ORF###
 plot_SHM_simple<-function(SHM_output,SHM){
   samp<-SHM_output
   y<-SHM$y
   x<-SHM$x
-  N=L=SHM$QFA.I[1]   ###L=M=CAPL if CAPL is in use (not used in demo i.e. CAPL=L)###
+  N=L=SHM$QFA.I[1]
   NoSum<-SHM$QFA.NoSUM
   NoORF<-SHM$QFA.NoORF
   NoTime<-SHM$QFA.NoTIME
@@ -217,7 +223,7 @@ plot_SHM_simple<-function(SHM_output,SHM){
   }
 }
 
-### ###
+### Calls the C code for running the IHM MCMC ###
 IHM_main <- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.NoORFB,PRIORS,TUNING){
   aa<-QFA.NoORFA
   bb<-QFA.NoORFB
@@ -238,7 +244,7 @@ IHM_main <- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.
   mat
 }
 
-### ###
+### Displays a fitness plot of the control vs query, using MDRxMDP ###
 plot_IHM_simple<-function(IHM_output,SHM){
   N=SHM$QFA.I[1]
   gene=SHM$gene
@@ -292,15 +298,20 @@ plot_IHM_simple<-function(IHM_output,SHM){
   text(A1*Z_l[i],A2*(Z_l[i]*delta_gamma[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 }
 
-### ###
-JHM_postpro<-function(a,TreatA,Screen_a,MPlate_a,b,TreatB,Screen_b,MPlate_b)
+### Creates an object with information in the format for running the JHM ###
+JHM_postpro<-function(a,TreatA,Screen_a,MPlate_a,b,TreatB,Screen_b,MPlate_b,remove_row_a,remove_col_a,remove_row_b,remove_col_b)
 {
   a<-funcREMOVE(a,Screen_a,TreatA,MPlate_a)
-
-  a<-a[!a$Row==1,]
-  a<-a[!a$Row==16,]
-  a<-a[!a$Col==1,]
-  a<-a[!a$Col==24,]
+  if (length(remove_row)>=1){
+    for (1 in 1:length(remove_row)){
+    a<-a[!a$Row==remove_row[i],]
+    a<-a[!a$Row==remove_row[i],]
+  }
+  if (length(remove_col)>=1){
+    for (1 in 1:length(remove_col)){
+    a<-a[!a$Col==remove_col[i],]
+    a<-a[!a$Col==remove_col[i],]
+  }
 
   Row<-a$Row
   Col<-a$Col
@@ -320,10 +331,16 @@ JHM_postpro<-function(a,TreatA,Screen_a,MPlate_a,b,TreatB,Screen_b,MPlate_b)
   ORFuni_a<-unique(a$ORF)
 
   b<-funcREMOVE(b,Screen_b,TreatB,MPlate_b)
-  b<-b[!b$Row==1,]
-  b<-b[!b$Row==16,]
-  b<-b[!b$Col==1,]
-  b<-b[!b$Col==24,]
+  if (length(remove_row)>=1){
+    for (1 in 1:length(remove_row)){
+    b<-b[!b$Row==remove_row[i],]
+    b<-b[!b$Row==remove_row[i],]
+  }
+  if (length(remove_col)>=1){
+    for (1 in 1:length(remove_col)){
+    b<-b[!b$Col==remove_col[i],]
+    b<-b[!b$Col==remove_col[i],]
+  }
 
   Row<-b$Row
   Col<-b$Col
@@ -388,7 +405,7 @@ JHM_postpro<-function(a,TreatA,Screen_a,MPlate_a,b,TreatB,Screen_b,MPlate_b)
 	QFA.NoSUMB=c(NoSum_b),gene=gene)
 }
 
-### ###
+### Calls the C code for running the JHM MCMC ###
 JHM_main<- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS,TUNING) {
   aa<-QFA.NoORFA
   bb<-QFA.NoORFB
@@ -412,7 +429,7 @@ JHM_main<- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,
   mat
 }
 
-### ###
+### Displays a fitness plot of the control vs query, using MDRxMDP, K and then r ###
 plot_JHM_simple<-function(JHM_output,JHM){
   samp<-JHM_output
   gene=JHM$gene

@@ -41,7 +41,7 @@ void printdata_IHM(struct struct_data_IHM *D,struct struct_para_IHM *D_para,stru
 	OUT[*T]=D_para->Z_p;*T+=1;
 
 	for (l=0;l<(2*D->L);l++){
-	OUT[*T]=D_para->nu_l[l];*T+=1;
+	OUT[*T]=D_para->nu_cl[l];*T+=1;
 	}
 
 	OUT[*T]=D_para->sigma_nu;*T+=1;
