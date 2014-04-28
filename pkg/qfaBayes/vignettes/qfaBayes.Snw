@@ -85,57 +85,209 @@ The typical model computation time of the JHM alone is two weeks with burn-in of
 
 A more detailed workflow which is compatible with the standalone C code is given in demo \verb$JHM_C$.
 
-\section{SHM Demo}
+\section{Demos}
+\subsection{SHM demo}
 To see how the \verb$SHM$ demo works the following detailed explaination is provided and is to be used in conjunction with the R package manual.
 The \verb$SHM$ demo runs the following commands:
 \\
 \\
-\verb$> data("URA3_Raw_extratrim_15")$\\
-\verb$> a<-a_15$\\
+\verb@> data("URA3_Raw_extratrim_15")@\\
+\verb@> a<-a_15@\\
 \\
 The above commands load a trimmed ura3Del data set consisting of only of master plate 15 to the variable \verb$a_15$ and copys this to a variable "a".
 \\
 \\
-\verb$> qfa.variables(a)$\\
+\verb@> qfa.variables(a)@\\
 \\
 The above command lists the avalible options for the treatment, screen number and master plate.
 \\
 \\
-\verb$> data("priors_SHM")$\\
-\verb$> PRIORS=as.double((priors_SHM)[[1]])[1:18]$\\
+\verb@> Treatment<-27@\\
+\verb@> Screen<-unique(a$Screen.Name)@\\
+\verb@> MPlate<-15@\\
+\verb@> remove_row<-c(1,16)@\\
+\verb@> remove_col<-c(1,24)@\\
+\verb@> SHM<-SHM_postpro(a=a,Treatment=Treatment,Screen=Screen,MPlate=MPlate,@\\
+\verb@>   remove_row=remove_row,remove_col=remove_col)@\\
 \\
 The above commands loads a broad set of prior values for the SHM to the variable \verb$priors_SHM$ and then copys this to variable PRIORS.
 \\
 \\
-\verb@> Screen<-unique(a$Screen.Name)@\\
+\verb@> data("priors_SHM")@\\
+\verb@> PRIORS<-priors_SHM[[1]]@\\
+\verb@> data("tuning_SHM")@\\
+\verb@> TUNING<-tuning_SHM[[1]]@\\
 \\
 The above command selects all screens for the following SHM analysis.
 \\
 \\
-\verb$> SHM<-SHM_postpro(a=a,Treat=27,Screen=Screen,MPlate=15)$\\
+\verb@> burn<-600000@\\
+\verb@> iters<-1000@\\
+\verb@> thin<-100@\\
 \\
 The above command runs the post processing for the SHM, organising the Colonyser ouput in variable \verb$a$ for use with the SHM.
 The dataset will be trimmed to only include the data corresponding to the specified \verb$Treat$, \verb$Screen$ and \verb$MPlate$.
 \\
 \\
-\verb@> SHM_output<-SHM_main(burn=1,iters=1,thin=1,CAPL=50,@\\
-\verb@QFA.I=SHM$QFA.I,QFA.y=SHM$QFA.y,QFA.x=SHM$QFA.x,@\\
-\verb@QFA.NoORF=SHM$QFA.NoORF,QFA.NoTIME=SHM$QFA.NoTIME,PRIORS=PRIORS)@\\
+\verb@> SHM_output<-SHM_main(burn=burn,iters=iters,thin=thin,QFA.I=SHM$QFA.I,@\\
+\verb@>   QFA.y=SHM$QFA.y,QFA.x=SHM$QFA.x,QFA.NoORF=SHM$QFA.NoORF,@\\
+\verb@>   QFA.NoTIME=SHM$QFA.NoTIME,PRIORS=PRIORS,TUNING=TUNING)@\\
 \\
 The above command runs the C code for the SHM in R. \verb$burn$, \verb$iters$ and \verb$thin$ which have all been set to 1 for the purpose of the demo.
 \verb$CAPL$ is the number of orfs for the SHM to proform the analysis on.
 The output \verb$SHM_output$ will be a table of posterior samples, where each coloumn corresponds to a different model paramater; a table header is included to idendify each coloumn.
-\\
-\verb@> ask_plot_simple()@\\
-\\
 The above command will ask the user if they would like an example of some plots created form the posterior sample.
+\\
 \\
 \verb@> plot_SHM_simple(SHM_output,SHM)@\\
 \\
 The above commands outputs fitted logistic growth curve plots for each ORF, where black is for the repeat fitted curves and red for orf level fitted curves.
 
-\section{IHM Demo}
-
-\section{JHM Demo}
+\subsection{IHM demo}
+abc
+\\
+\\
+\verb@> data("URA3_Raw_extratrim_15")@\\
+\verb@> a<-a_15@\\
+\verb@> data("CDC13-1_Raw_extratrim_15")@\\
+\verb@> b<-b_15@\\
+\\
+abc
+\\
+\\
+\verb@> qfa.variables(a)@\\
+\verb@> qfa.variables(b)@\\
+\\
+abc
+\\
+\\
+\verb@> Treatment_a=27@\\
+\verb@> Screen_a<-unique(a$Screen.Name)@\\
+\verb@> MPlate_a<-15@\\
+\verb@> Treatment_b=27@\\
+\verb@> Screen_b<-unique(b$Screen.Name)@\\
+\verb@> MPlate_b<-15@\\
+\verb@> SHM_a<-SHM_postpro(a=a,Treatment=Treatment_a,Screen=Screen_a,MPlate=MPlate_a)@\\
+\verb@> SHM_b<-SHM_postpro(a=b,Treatment=Treatment_b,Screen=Screen_b,MPlate=MPlate_b)@\\
+\\
+abc
+\\
+\\
+\verb@> data("priors_SHM")@\\
+\verb@> PRIORS=priors_SHM[[1]]@\\
+\verb@> data("tuning_SHM")@\\
+\verb@> TUNING=tuning_SHM[[1]]@\\
+\\
+abc
+\\
+\\
+\verb@> burn<-600000@\\
+\verb@> iters<-1000@\\
+\verb@> thin<-100@\\
+\\
+abc
+\\
+\\
+\verb@> SHM_output_a<-SHM_main(burn=burn,iters=iters,thin=thin,QFA.I=SHM_a$QFA.I,@\\
+\verb@>   QFA.y=SHM_a$QFA.y,QFA.x=SHM_a$QFA.x,QFA.NoORF=SHM_a$QFA.NoORF,@\\
+\verb@>   QFA.NoTIME=SHM_a$QFA.NoTIME,PRIORS=PRIORS,TUNING=TUNING)@\\
+\verb@> SHM_output_b<-SHM_main(burn=burn,iters=iters,thin=thin,QFA.I=SHM_b$QFA.I,@\\
+\verb@>   QFA.y=SHM_b$QFA.y,QFA.x=SHM_b$QFA.x,QFA.NoORF=SHM_b$QFA.NoORF,@\\
+\verb@>   QFA.NoTIME=SHM_b$QFA.NoTIME,PRIORS=PRIORS,TUNING=TUNING)@\\
+\\
+abc
+\\
+\\
+\verb@> SHM_a$QFA.yA=colMeans(SHM_output_a)@\\
+\verb@> SHM_b$QFA.yB=colMeans(SHM_output_b)@\\
+\\
+abc
+\\
+\\
+\verb@> data("priors_IHM")@\\
+\verb@> PRIORS_IHM=priors_IHM[[1]]@\\
+\verb@> data("tuning_IHM")@\\
+\verb@> TUNING_IHM=tuning_IHM[[1]]@\\
+\\
+abc
+\\
+\\
+\verb@> burn_IHM<-600000@\\
+\verb@> iters_IHM<-1000@\\
+\verb@> thin_IHM<-100@\\
+\\
+abc
+\\
+\\
+\verb@> IHM_output=IHM_main(burn=burn_IHM,iters=iters_IHM,thin=thin_IHM,@\\
+\verb@>   QFA.IA=SHM_a$QFA.I,QFA.yA=SHM_a$QFA.yA,QFA.NoORFA=SHM_a$QFA.NoORF,@\\
+\verb@>   QFA.IB=SHM_b$QFA.I,QFA.yB=SHM_b$QFA.yB,QFA.NoORFB=SHM_b$QFA.NoORF,@\\
+\verb@>   PRIORS=PRIORS_IHM,TUNING=TUNING_IHM)@\\
+\\
+abc
+\\
+\\
+\verb@> plot_IHM_simple(IHM_output,SHM_a)@\\
+\\
+abc
+\subsection{JHM demo}
+abc
+\\
+\\
+\verb@> data("URA3_Raw_extratrim_15")@\\
+\verb@> a<-a_15@\\
+\verb@> data("CDC13-1_Raw_extratrim_15")@\\
+\verb@> b<-b_15@\\
+\\
+abc
+\\
+\\
+\verb@> qfa.variables(a)@\\
+\verb@> qfa.variables(b)@\\
+\\
+abc
+\\
+\\
+\verb@> Treatment_a=27@\\
+\verb@> Screen_a<-unique(a$Screen.Name)@\\
+\verb@> MPlate_a<-15@\\
+\verb@> Treatment_b=27@\\
+\verb@> Screen_b<-unique(b$Screen.Name)@\\
+\verb@> MPlate_b<-15@\\
+\verb@> remove_row<-c(1,16)@\\
+\verb@> remove_col<-c(1,24)@\\
+\verb@> JHM<-JHM_postpro(a,Treatment_a=Treatment_a,Screen_a=Screen_a,MPlate_a,b,@\\
+\verb@>   Treatment_b=Treatment_b,Screen_b=Screen_b,MPlate_b=MPlate_b,@\\
+\verb@>   remove_row=remove_row,remove_col=remove_col)@\\
+\\
+abc
+\\
+\\
+\verb@> data("priors_JHM")@\\
+\verb@> PRIORS=priors_JHM[[1]]@\\
+\verb@> data("tuning_JHM")@\\
+\verb@> TUNING=tuning_JHM[[1]]@\\
+\\
+abc
+\\
+\\
+\verb@> burn<-800000@\\
+\verb@> iters<-1000@\\
+\verb@> thin<-100@\\
+\\
+abc
+\\
+\\
+\verb@> JHM_output<-JHM_main(burn=burn,iters=iters,thin=thin,QFA.IA=JHM$QFA.IA,@\\
+\verb@>   QFA.yA=JHM$QFA.yA,QFA.xA=JHM$QFA.xA,QFA.NoORFA=JHM$QFA.NoORFA,@\\
+\verb@>   QFA.NoTIMEA=JHM$QFA.NoTIMEA,QFA.IB=JHM$QFA.IB,QFA.yB=JHM$QFA.yB,@\\
+\verb@>   QFA.xB=JHM$QFA.xB,QFA.NoORFB=JHM$QFA.NoORFB,QFA.NoTIMEB=JHM$QFA.NoTIMEB,@\\
+\verb@>   PRIORS=PRIORS,TUNING=TUNING)@\\
+\\
+abc
+\\
+\\
+\verb@> plot_JHM_simple(JHM_output,JHM)@\\
+\\
 \end{document}
 % eof

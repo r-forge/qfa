@@ -6,11 +6,11 @@ For use with Colonyzer output.
 Proforms post processing for SHM.
 }
 \usage{
-SHM_postpro(a,Treat,Screen,MPlate)
+SHM_postpro(a,Treatment,Screen,MPlate,remove_row,remove_col)
 }
 \arguments{
 \item{a}{Colonyzer output}
-  \item{Treat}{List of treatments}
+  \item{Treatment}{List of treatments}
   \item{Screen}{List of Screens}
   \item{MPlate}{List of Master Plates}
   \item{remove_row}{plate rows to remove}

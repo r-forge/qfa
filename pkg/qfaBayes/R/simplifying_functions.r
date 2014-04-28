@@ -304,16 +304,16 @@ plot_IHM_simple<-function(IHM_output,SHM){
 JHM_postpro<-function(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,b,Treatment_b,Screen_b,MPlate_b,remove_row_b,remove_col_b)
 {
   a<-funcREMOVE(a,Screen_a,Treatment_a,MPlate_a)
-  if (length(remove_row)>=1){
-    for (i in 1:length(remove_row)){
-      a<-a[!a$Row==remove_row[i],]
-    a<-a[!a$Row==remove_row[i],]
+  if (length(remove_row_a)>=1){
+    for (i in 1:length(remove_row_a)){
+      a<-a[!a$Row==remove_row_a[i],]
+    a<-a[!a$Row==remove_row_a[i],]
 	}
   }
-  if (length(remove_col)>=1){
-    for (i in 1:length(remove_col)){
-      a<-a[!a$Col==remove_col[i],]
-      a<-a[!a$Col==remove_col[i],]
+  if (length(remove_col_a)>=1){
+    for (i in 1:length(remove_col_a)){
+      a<-a[!a$Col==remove_col_a[i],]
+      a<-a[!a$Col==remove_col_a[i],]
 	}
   }
 
@@ -335,16 +335,16 @@ JHM_postpro<-function(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,
   ORFuni_a<-unique(a$ORF)
 
   b<-funcREMOVE(b,Screen_b,Treatment_b,MPlate_b)
-  if (length(remove_row)>=1){
-    for (i in 1:length(remove_row)){
-      b<-b[!b$Row==remove_row[i],]
-      b<-b[!b$Row==remove_row[i],]
+  if (length(remove_row_b)>=1){
+    for (i in 1:length(remove_row_b)){
+      b<-b[!b$Row==remove_row_b[i],]
+      b<-b[!b$Row==remove_row_b[i],]
 	}
   }
-  if (length(remove_col)>=1){
-    for (i in 1:length(remove_col)){
-      b<-b[!b$Col==remove_col[i],]
-      b<-b[!b$Col==remove_col[i],]
+  if (length(remove_col_b)>=1){
+    for (i in 1:length(remove_col_b)){
+      b<-b[!b$Col==remove_col_b[i],]
+      b<-b[!b$Col==remove_col_b[i],]
 	}
   }
 
