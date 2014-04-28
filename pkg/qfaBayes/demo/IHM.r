@@ -59,7 +59,7 @@ data("tuning_IHM")
 TUNING_IHM=tuning_IHM[[1]]
 
 ## select lengths for burn-in, posterior sample and thinning for the IHM
-burn_IHM<-600000
+burn_IHM<-500000
 iters_IHM<-1000
 thin_IHM<-100
 
