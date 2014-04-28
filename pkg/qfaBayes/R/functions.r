@@ -1,3 +1,8 @@
+### Load dynamic library (for C code) when package loads ###
+".onLoad" <- function(lib, pkg){
+  library.dynam(pkg, pkg, lib)
+}
+
 ### Filter by Screen Name, Temprature and Master Plate Number ###
 funcREMOVE<-function(data,Screen,Treat,MPlate){
   data=data[data$Screen.Name%in%Screen,]
