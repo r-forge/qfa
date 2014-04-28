@@ -37,8 +37,8 @@ TUNING=tuning_JHM[[1]]
 
 ## select lengths for burn-in, posterior sample and thinning
 burn<-800000
-iters<-1000
-thin<-100
+iters<-50000
+thin<-10
 
 ## run MCMC code to produce posterior samples from the JHM
 JHM_output<-JHM_main(burn=burn,iters=iters,thin=thin,QFA.IA=JHM$QFA.IA,

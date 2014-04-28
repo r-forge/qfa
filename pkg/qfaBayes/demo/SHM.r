@@ -29,7 +29,7 @@ data("tuning_SHM")
 TUNING<-tuning_SHM[[1]]
 
 ## select lengths for burn-in, posterior sample and thinning
-burn<-600000
+burn<-800000
 iters<-1000
 thin<-100
 
