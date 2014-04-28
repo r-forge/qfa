@@ -23,8 +23,11 @@ MPlate_a<-15
 Treat_b=27
 Screen_b<-unique(b$Screen.Name)
 MPlate_b<-15
+remove_row<-c(1,16)
+remove_col<-c(1,24) 
 JHM<-JHM_postpro(a,TreatA=Treat_a,Screen_a=Screen_a,MPlate_a,b,TreatB=Treat_b,
-  Screen_b,MPlate_b)
+  Screen_b=Screen_b,MPlate_b=MPlate_b,remove_row=remove_row,
+  remove_col=remove_col)
 
 ## load JHM specific priors and tuning parameters
 data("priors_JHM")

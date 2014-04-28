@@ -17,7 +17,9 @@ qfa.variables(a)
 Treat<-27
 Screen<-unique(a$Screen.Name)
 MPlate<-15
-SHM<-SHM_postpro(a=a,Treat=Treat,Screen=Screen,MPlate=MPlate)
+remove_row<-c(1,16)
+remove_col<-c(1,24) 
+SHM<-SHM_postpro(a=a,Treat=Treat,Screen=Screen,MPlate=MPlate,remove_row=remove_row,remove_col=remove_col)
 
 ## load SHM specific priors and tuning parameters
 data("priors_SHM")
