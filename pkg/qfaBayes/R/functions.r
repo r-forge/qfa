@@ -96,4 +96,3 @@ qfa.variables<-function(data){
 }
 
 #############
-

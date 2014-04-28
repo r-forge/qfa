@@ -21,7 +21,7 @@ hsigma_Z,
 hnu_p,
 hgamma_cl,
 hZ_l,
-hnu_l,
+hnu_cl,
 accept_Z,accept_nu,accept_up;
 } struct_MH_IHM;
 
@@ -32,7 +32,7 @@ typedef struct struct_para_IHM {
     *gamma_cl,	        sigma_gamma,
 
     *Z_l,              sigma_Z,         
-    *nu_l,             sigma_nu,
+    *nu_cl,             sigma_nu,
     Z_p,
     nu_p;
 

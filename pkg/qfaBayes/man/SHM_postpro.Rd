@@ -13,6 +13,8 @@ SHM_postpro(a,Treat,Screen,MPlate)
   \item{Treat}{List of treatments}
   \item{Screen}{List of Screens}
   \item{MPlate}{List of Master Plates}
+  \item{remove_row}{plate rows to remove}
+  \item{remove_col}{plate columns to remove}
 }
 \value{
 Post processed Colonyzer output for SHM.

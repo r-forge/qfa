@@ -1,16 +1,18 @@
 ### Creates an object with information in the format for running the SHM ###
-SHM_postpro<-function(a,Treat,Screen,MPlate,remove_row,remove_col)
+SHM_postpro<-function(a,Treatment,Screen,MPlate,remove_row,remove_col)
 {
-  a<-funcREMOVE(a,Screen,Treat,MPlate)
+  a<-funcREMOVE(a,Screen,Treatment,MPlate)
   if (length(remove_row)>=1){
-    for (1 in 1:length(remove_row)){
-    a<-a[!a$Row==remove_row[i],]
-    a<-a[!a$Row==remove_row[i],]
+    for (i in 1:length(remove_row)){
+      a<-a[!a$Row==remove_row[i],]
+      a<-a[!a$Row==remove_row[i],]
+	}
   }
   if (length(remove_col)>=1){
-    for (1 in 1:length(remove_col)){
-    a<-a[!a$Col==remove_col[i],]
-    a<-a[!a$Col==remove_col[i],]
+    for (i in 1:length(remove_col)){
+      a<-a[!a$Col==remove_col[i],]
+      a<-a[!a$Col==remove_col[i],]
+	}
   }
   
   Row<-paste(a$Row)
@@ -283,7 +285,7 @@ plot_IHM_simple<-function(IHM_output,SHM){
   limmax<-max(A2*Z_l*delta_gamma)
   limmaxx<-max(A1*Z_l)
   i=1:N
-  plot(1,type="n",main=expression(paste("Treatment",Treat,degree,"C",
+  plot(1,type="n",main=expression(paste("Treatment",Treatment,degree,"C",
   " (delta=Posterior Expectations)")),ylim=c(limmin,limmax),
   xlim=c(limmin,limmaxx),xlab="Control Fitness (=exp(Z_l))",
   ylab="Query Fitness (=exp(alpha+Z_l+delta_l*gamma_l))",col=8,pch=19,cex=0.5)
@@ -299,18 +301,20 @@ plot_IHM_simple<-function(IHM_output,SHM){
 }
 
 ### Creates an object with information in the format for running the JHM ###
-JHM_postpro<-function(a,TreatA,Screen_a,MPlate_a,b,TreatB,Screen_b,MPlate_b,remove_row_a,remove_col_a,remove_row_b,remove_col_b)
+JHM_postpro<-function(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,b,Treatment_b,Screen_b,MPlate_b,remove_row_b,remove_col_b)
 {
-  a<-funcREMOVE(a,Screen_a,TreatA,MPlate_a)
+  a<-funcREMOVE(a,Screen_a,Treatment_a,MPlate_a)
   if (length(remove_row)>=1){
-    for (1 in 1:length(remove_row)){
+    for (i in 1:length(remove_row)){
+      a<-a[!a$Row==remove_row[i],]
     a<-a[!a$Row==remove_row[i],]
-    a<-a[!a$Row==remove_row[i],]
+	}
   }
   if (length(remove_col)>=1){
-    for (1 in 1:length(remove_col)){
-    a<-a[!a$Col==remove_col[i],]
-    a<-a[!a$Col==remove_col[i],]
+    for (i in 1:length(remove_col)){
+      a<-a[!a$Col==remove_col[i],]
+      a<-a[!a$Col==remove_col[i],]
+	}
   }
 
   Row<-a$Row
@@ -330,16 +334,18 @@ JHM_postpro<-function(a,TreatA,Screen_a,MPlate_a,b,TreatB,Screen_b,MPlate_b,remo
   ORFuni=unique(a$ORF)########
   ORFuni_a<-unique(a$ORF)
 
-  b<-funcREMOVE(b,Screen_b,TreatB,MPlate_b)
+  b<-funcREMOVE(b,Screen_b,Treatment_b,MPlate_b)
   if (length(remove_row)>=1){
-    for (1 in 1:length(remove_row)){
-    b<-b[!b$Row==remove_row[i],]
-    b<-b[!b$Row==remove_row[i],]
+    for (i in 1:length(remove_row)){
+      b<-b[!b$Row==remove_row[i],]
+      b<-b[!b$Row==remove_row[i],]
+	}
   }
   if (length(remove_col)>=1){
-    for (1 in 1:length(remove_col)){
-    b<-b[!b$Col==remove_col[i],]
-    b<-b[!b$Col==remove_col[i],]
+    for (i in 1:length(remove_col)){
+      b<-b[!b$Col==remove_col[i],]
+      b<-b[!b$Col==remove_col[i],]
+	}
   }
 
   Row<-b$Row
@@ -713,3 +719,5 @@ plot_JHM_simple<-function(JHM_output,JHM){
   i=vecorder
   text(mu_a[i],(mu_b[i]),gene[i],pos=4,offset=0.1,cex=0.4)
 }
+
+#############
