@@ -11,7 +11,7 @@ double MCMC_P(struct_data *D,struct_para *D_para,struct_priors *D_priors,double 
 double MCMC_nu_l(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
 double MCMC_K_lm(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
 double MCMC_r_lm(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
-int gibbsandMHloop(int iter,int thin,struct_data *D,struct_para *D_para,struct_priors *D_priors ,struct_MH *D_MH,int CAPL,int print,double *OUT,char **HEADER);/*********************/
+int gibbsandMHloop(int iter,int thin,struct_data *D,struct_para *D_para,struct_priors *D_priors ,struct_MH *D_MH,int print,double *OUT,char **HEADER);/*********************/
 
 double MCMC_sigma_K_o(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
 double MCMC_sigma_r_o(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);

@@ -299,11 +299,10 @@ double MCMC_sigma_tau_r(struct_data *D,struct_para *D_para,struct_priors *D_prio
 
 
 
-int gibbsandMHloop(int iter,int thin,struct_data *D,struct_para *D_para,struct_priors *D_priors ,struct_MH *D_MH,int CAPL,int print,double *OUT,char **HEADER){/*********************/
+int gibbsandMHloop(int iter,int thin,struct_data *D,struct_para *D_para,struct_priors *D_priors ,struct_MH *D_MH,int print,double *OUT,char **HEADER){/*********************/
 int i,j,l,m,mm,*T,t;
 T=&t;
 *T=0;
-D->L=fmin(D->L,CAPL);
 	if (print==0){printheader(D,HEADER);}	
 	for (i=0;i<iter;i++){
 for (j=0;j<thin;j++){

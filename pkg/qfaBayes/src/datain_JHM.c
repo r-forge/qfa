@@ -54,27 +54,30 @@ int inzstruct_priors_JHM(struct_priors_JHM *D_priors,double *PRIORS)
 
 	/*data2.c*/       
 
-	D_priors->alpha_mu=PRIORS[19];     
+	D_priors->alpha_mu=PRIORS[18];     
 
-     D_priors->eta_alpha=PRIORS[20];
+     D_priors->eta_alpha=PRIORS[19];
 
-	D_priors->beta_mu=PRIORS[21];        
+	D_priors->beta_mu=PRIORS[20];        
 
-   D_priors->eta_beta=PRIORS[22];
+   D_priors->eta_beta=PRIORS[21];
 
-	D_priors->p=PRIORS[23];    
+	D_priors->p=PRIORS[22];    
 
-	D_priors->eta_gamma=PRIORS[24];
+	D_priors->eta_gamma=PRIORS[23];
 
-	D_priors->psi_gamma=PRIORS[25];
+	D_priors->psi_gamma=PRIORS[24];
 
-	D_priors->eta_omega=PRIORS[26];	
+	D_priors->eta_omega=PRIORS[25];	
 
-D_priors->psi_omega=PRIORS[27];
+D_priors->psi_omega=PRIORS[26];
    
+   	D_priors->eta_tau_K=PRIORS[27];  
+	D_priors->psi_tau_K=PRIORS[28];
+	D_priors->eta_tau_r=PRIORS[29];  
+	D_priors->psi_tau_r=PRIORS[30];
+	
 	D_priors->df=3;
-	D_priors->eta_tau_K=D_priors->eta_tau_K_p;  D_priors->psi_tau_K=D_priors->eta_tau_K_p;
-	D_priors->eta_tau_r=D_priors->eta_tau_r_p;  D_priors->psi_tau_r=D_priors->eta_tau_r_p;
 	/*fillpriors(priors);*/
 
 return 0;
