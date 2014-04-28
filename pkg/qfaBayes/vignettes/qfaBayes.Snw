@@ -85,9 +85,10 @@ The typical model computation time of the JHM alone is two weeks with burn-in of
 
 A more detailed workflow which is compatible with the standalone C code is given in demo \verb$JHM_C$.
 
-\section{SHM$ Demo}
+\section{SHM Demo}
 To see how the \verb$SHM$ demo works the following detailed explaination is provided and is to be used in conjunction with the R package manual.
-The \verb$SHM$ demo runs the following commands: \\
+The \verb$SHM$ demo runs the following commands:
+\\
 \\
 \verb$> data("URA3_Raw_extratrim_15")$\\
 \verb$> a<-a_15$\\
@@ -95,15 +96,15 @@ The \verb$SHM$ demo runs the following commands: \\
 The above commands load a trimmed ura3Del data set consisting of only of master plate 15 to the variable \verb$a_15$ and copys this to a variable "a".
 \\
 \\
+\verb$> qfa.variables(a)$\\
+\\
+The above command lists the avalible options for the treatment, screen number and master plate.
+\\
+\\
 \verb$> data("priors_SHM")$\\
 \verb$> PRIORS=as.double((priors_SHM)[[1]])[1:18]$\\
 \\
 The above commands loads a broad set of prior values for the SHM to the variable \verb$priors_SHM$ and then copys this to variable PRIORS.
-\\
-\\
-\verb$> qfa.variables(a)$\\
-\\
-The above command lists the avalible options for the treatment, screen number and master plate.
 \\
 \\
 \verb@> Screen<-unique(a$Screen.Name)@\\
@@ -132,5 +133,9 @@ The above command will ask the user if they would like an example of some plots 
 \verb@> plot_SHM_simple(SHM_output,SHM)@\\
 \\
 The above commands outputs fitted logistic growth curve plots for each ORF, where black is for the repeat fitted curves and red for orf level fitted curves.
+
+\section{IHM Demo}
+
+\section{JHM Demo}
 \end{document}
 % eof

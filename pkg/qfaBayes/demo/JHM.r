@@ -1,38 +1,48 @@
-data("URA3_Raw_extratrim_15")#Control a 
+#########################################################################
+# Demonstration of the separate hierarchical model with a small data set.
+# Estimating logistic growth parameters for a wild-type deletion (URA3D) data set at 27C
+# 8 replicates of a plate (plate 15).
+#########################################################################
+
+require(qfaBayes)
+
+## load control and query qfa datasets
+data("URA3_Raw_extratrim_15")#Control
 a<-a_15
-data("CDC13-1_Raw_extratrim_15")#Query b 
+data("CDC13-1_Raw_extratrim_15")#Query
 b<-b_15
 
+## display experiment variables: Treatment, Screen name and Master plate number
 qfa.variables(a)
 qfa.variables(b)
 
+## choose experimental variables of interest and filter by them
+Treat_a=27
+Screen_a<-unique(a$Screen.Name)
+MPlate_a<-15
+Treat_b=27
+Screen_b<-unique(b$Screen.Name)
+MPlate_b<-15
+JHM<-JHM_postpro(a,TreatA=Treat_a,Screen_a=Screen_a,MPlate_a,b,TreatB=Treat_b,
+  Screen_b,MPlate_b)
+
+## load JHM specific priors and tuning parameters
 data("priors_JHM")
 PRIORS=priors_JHM[[1]]
 data("tuning_JHM")
 TUNING=tuning_JHM[[1]]
 
-Treat_a=27
-Screen_a<-unique(a$Screen.Name)
-MPlate_a<-15
+## select lengths for burn-in, posterior sample and thinning
+burn<-800000
+iters<-1000
+thin<-100
 
-Treat_b=27
-Screen_b<-unique(b$Screen.Name)
-MPlate_b<-15
-
-burn<-1
-iters<-1
-thin<-1
-
-JHM<-JHM_postpro(a,TreatA=Treat_a,Screen_a=Screen_a,MPlate_a,b,TreatB=Treat_b,
-  Screen_b,MPlate_b)
-  
+## run MCMC code to produce posterior samples from the JHM
 JHM_output<-JHM_main(burn=burn,iters=iters,thin=thin,QFA.IA=JHM$QFA.IA,
   QFA.yA=JHM$QFA.yA,QFA.xA=JHM$QFA.xA,QFA.NoORFA=JHM$QFA.NoORFA,
   QFA.NoTIMEA=JHM$QFA.NoTIMEA,QFA.IB=JHM$QFA.IB,QFA.yB=JHM$QFA.yB,
   QFA.xB=JHM$QFA.xB,QFA.NoORFB=JHM$QFA.NoORFB,QFA.NoTIMEB=JHM$QFA.NoTIMEB,
   PRIORS=PRIORS,TUNING=TUNING)
-
-ask_plot_simple()
+  
+## plot simple JHM fitness plots (control vs query)
 plot_JHM_simple(JHM_output,JHM)
-
-
