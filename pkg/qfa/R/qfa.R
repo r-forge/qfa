@@ -84,7 +84,7 @@ sterr <- function(x) sqrt(var(x)/length(x))
 
 ################################################## Epistasis Function ###########################################################
 qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
-	GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE){
+	GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE,bootstrap=NULL){
 	###### Get ORF median fitnesses for control & double #######
 	print("Calculating median (or mean) fitness for each ORF")
 	## LIK ##
@@ -100,9 +100,19 @@ qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 	dFstats<-lapply(orfs,orffit,double)
 	names(dFstats)<-orfs
 	# Get means or medians for each ORF
-	if(wctest){cFms<-sapply(cFstats,median)}else{cFms<-sapply(cFstats,mean)}
+	if(!is.null(bootstrap)){
+		cFms<-sapply(cFstats,bootstrap)
+		dFms<-sapply(dFstats,bootstrap)	
+	}else{
+		if(wctest){
+			cFms<-sapply(cFstats,median)
+			dFms<-sapply(dFstats,median)
+		}else{
+			cFms<-sapply(cFstats,mean)
+			dFms<-sapply(dFstats,mean)
+		}
+	}
 	names(cFms)<-orfs
-	if(wctest){dFms<-sapply(dFstats,median)}else{dFms<-sapply(dFstats,mean)}
 	names(dFms)<-orfs
 	cSe<-sapply(cFstats,sterr)
 	dSe<-sapply(dFstats,sterr)
@@ -117,7 +127,12 @@ qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 	print(paste("Ratio of background mutant fitness to wildtype fitness =",round(m,4)))
 	###### Estimate probability of interaction #######
 	print("Calculating interaction probabilities")
-	pg<-sapply(orfs,pgis,m,cFstats,dFstats,wilcoxon=wctest)
+	if(!is.null(bootstrap)){
+		pg<-sapply(orfs,pgis_bootstrap,cFstats,dFstats,sampSumm=bootstrap,Nreps=5000)
+	}else{
+		pg<-sapply(orfs,pgis,m,cFstats,dFstats,wilcoxon=wctest)
+	}
+	
 	pg<-as.data.frame(t(pg))
 	colnames(pg)=c("p","gis")
 	p<-pg$p
@@ -163,7 +178,8 @@ qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 	if("Inoc"%in%colnames(control)) results$cInoc=rep(control$Inoc[1],nObs)
 	if("Inoc"%in%colnames(double)) results$qInoc=rep(double$Inoc[1],nObs)
 
-	results$Type<-apply(results,1,typemake,m)
+	#results$Type<-apply(results,1,typemake,m)
+	results$Type=ifelse(results$GIS>0,"S","E") 
 	results<-results[order(results$GIS,results$Q,results$Type),]
 	# Get rid of duplicate entries in results
 	orflist<-unique(as.character(results$ORF))
@@ -175,6 +191,7 @@ qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 	Suppressors=gethits(results,qthresh,type="S",GISthresh=GISthresh))
 	return(final)
 }
+
 
 ############### Epistasis Functions ##################
 # Makes epistasis plot for a given fdr level #
@@ -195,7 +212,8 @@ qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Co
 	col=8,pch=19,cex=0.5)
 	# Add line for genetic independence
 	if (fitratio!=FALSE){abline(0,fitratio,lwd=2,col=8)} else {
-		abline(0,lm.epi(results$QueryFitnessSummary,results$ControlFitnessSummary,modcheck=FALSE),lwd=2,col=8)}
+		slope=lm.epi(results$QueryFitnessSummary,results$ControlFitnessSummary,modcheck=FALSE)
+		abline(0,slope,lwd=2,col=8)}
 	# Add 1:1 fitness line
 	abline(0,1,lwd=2,lty=4,col=8)
 	# Add reference ORF fitnesses lines
@@ -215,6 +233,9 @@ qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Co
 		points(suppressors$ControlFitnessSummary,suppressors$QueryFitnessSummary,col='red',pch=19,cex=0.5)
 		text(suppressors$ControlFitnessSummary,suppressors$QueryFitnessSummary,suppressors$Gene,col=1,pos=4,offset=0.1,cex=0.4)
 	}
+	Corr=signif(cor(results$QueryFitnessSummary,results$ControlFitnessSummary),3)
+	Slope=signif(slope,3)
+	legend("topleft",c(paste("Correlation: ",Corr),paste("Slope: ",Slope)),bty = "n")
 }
 
 ## Extract hits from epistasis results object ##
@@ -293,7 +314,42 @@ pgis<-function(orf,m,cFs,dFs,wilcoxon=TRUE){
 	}
 }
 
-# Get type of interaction
+# Estimates p-value and estimated strength of interaction
+pgis_bootstrap<-function(orf,cFs,dFs,sampSumm=mean,wt="YOR202W",Nreps=10000){
+	# Need to come up with a good estimate for a minumum non-zero fitness
+	# in order to avoid problems with division by zero later
+	fitMin=median(c(unlist(cFs,use.names=FALSE),unlist(dFs,use.names=FALSE)))/200
+
+	# If this orf is not present in both lists, return appropriate p,gis
+	if((length(dFs[[orf]])==0)|(length(cFs[[orf]])==0)){return(c(1,0))}
+	
+	# Bootstrap estimates of fitness summary distribution for relevant genotypes
+	obsDoubleMut=bsSamp(dFs[[orf]],Nreps,sampSumm)
+	arrayMut=bsSamp(cFs[[orf]],Nreps,sampSumm)
+	backMut=bsSamp(dFs[[wt]],Nreps,sampSumm)
+	wtMut=bsSamp(cFs[[wt]],Nreps,sampSumm)
+	
+	# Uncertainty about summary of predicted double mutant fitness
+	predDoubleMut=backMut*arrayMut/pmax(wtMut,fitMin)
+	
+	# Genetic interaction strength is difference between observed and predicted fitnesses
+	GIS=obsDoubleMut-predDoubleMut
+	g=sampSumm(GIS)
+	if(g>0){p=greaterFrac(obsDoubleMut,predDoubleMut)}else{p=greaterFrac(predDoubleMut,obsDoubleMut)}
+	return(c(p,g))
+}
+
+greaterFrac=function(A,B){
+	tst=B-A
+	return(length(tst[tst>0])/length(tst))
+}
+
+bsSamp=function(A,Nrep=100000,sampSumm=mean){
+	bsreps=replicate(Nrep,sampSumm(sample(as.numeric(A),length(A),replace=TRUE)))
+	return(bsreps)
+}
+
+# Get type of interaction (DEPRECATED)
 typemake<-function(row,m){
 	summd<-as.numeric(row['QueryFitnessSummary'])
 	summc<-as.numeric(row['ControlFitnessSummary'])
