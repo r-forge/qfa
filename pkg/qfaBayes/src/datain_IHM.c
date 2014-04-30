@@ -57,7 +57,6 @@ int datadouble_IHM(char filename[],char filename2[],struct_data_IHM *D,double *Q
 	for (i=D->SHIFTmn;i<D->MAXmn;i++){
 		D->y[i]=(r_lm[i]/log(2*fmax(0,K_lm[i]-P_b)/fmax(0,K_lm[i]-2*P_b)))*(log(K_lm[i]/P_b)/log(2));
 	}
-D->y[0]=exp(QFADyA[42943]);
 return 0;
 }
 
