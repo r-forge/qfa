@@ -3,7 +3,7 @@
 #include "functions_JHM.h"
 #include "print_JHM.h"
 
-int main_JHM(int *arga,int *argb,int *argc,int *argd,double *OUT,
+int main_JHM(int *arga,int *argb,int *argc,int *argd,int *arge,double *OUT,
   char **HEADER,int *QFAIA,double *QFADyA,double *QFADxA,int *QFADNoORFA,
   int *QFANoTIMEA,int *QFAIB,double *QFADyB,double *QFADxB,
   int *QFADNoORFB,int *QFANoTIMEB,double *PRIORS,double *TUNING)
@@ -16,21 +16,22 @@ int main_JHM(int *arga,int *argb,int *argc,int *argd,double *OUT,
   struct_tuning_JHM *tuning = malloc(sizeof(struct_tuning_JHM));
   struct_adaptive_JHM *adaptive = malloc(sizeof(struct_tuning_JHM));
 
-  int burn,iters,thin,adaptive_phase;
+  int burn,iters,thin,adaptive_phase,adaptive_period;
   
   burn=*arga;   /*burn in*/
   iters=*argb;    /*iterations*/
   thin=*argc;        /*thinning*/
   adaptive_phase=*argd; /*adaptive phase length within burn in*/
-
+  adaptive_period=*arge; /*period to calculate adaptive statistic over*/
+  
   inzstruct_data_JHM(data,QFAIA,QFADyA,QFADxA,QFADNoORFA,QFANoTIMEA,QFAIB,QFADyB,QFADxB,QFADNoORFB,QFANoTIMEB);
   inzstruct_tuning_JHM(tuning,TUNING);
   inzstruct_adaptive_JHM(adaptive);
   inzstruct_priors_JHM(priors,PRIORS);
   inzstruct_para_JHM(para,data,priors);
 
-  gibbsandMHloop_JHM(burn,1,data,para,priors,tuning,adaptive,0,adaptive_phase,OUT,HEADER);
-  gibbsandMHloop_JHM(iters,thin,data,para,priors,tuning,adaptive,1,0,OUT,HEADER);
+  gibbsandMHloop_JHM(burn,1,data,para,priors,tuning,adaptive,0,adaptive_phase,adaptive_period,OUT,HEADER);
+  gibbsandMHloop_JHM(iters,thin,data,para,priors,tuning,adaptive,1,0,0,OUT,HEADER);
 
   PutRNGstate();
   
