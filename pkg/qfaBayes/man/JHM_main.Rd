@@ -6,12 +6,13 @@ For use with JHM post processed Colonyzer output.
 Runs JHM C code
 }
 \usage{
-JHM_main(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS,TUNING)
-}
+JHM_main(burn,iters,thin,adaptive,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,
+  QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS,TUNING)}
 \arguments{
   \item{burn}{Burn in period}
   \item{iters}{Number of iterations in final sample}
-  \item{thin}{Amount of thinning}
+  \item{thin}{Amount of thinning (after burn-in)}
+  \item{adaptive}{length of adaptive phase in burn in period}
   \item{QFA.IA}{QFA.IA}
   \item{QFA.yA}{QFA.yA}
   \item{QFA.xA}{QFA.xA}

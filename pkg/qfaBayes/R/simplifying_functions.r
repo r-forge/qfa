@@ -412,7 +412,10 @@ JHM_postpro<-function(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,
 }
 
 ### Calls the C code for running the JHM MCMC ###
-JHM_main<- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS,TUNING) {
+JHM_main<- function(burn,iters,thin,adaptive,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS,TUNING) {
+  if(adaptive>burn){
+    stop()
+  }
   aa<-QFA.NoORFA
   bb<-QFA.NoORFB
   if(!(length(aa)==length(bb))){
@@ -423,7 +426,8 @@ JHM_main<- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,
   LMb<-sum(bb)
   NCOL=LMa+LMb+2*L+L+1+1+1+LMa+LMb+2*L+L+1+1+2*L+1+1+1+1+L+L+1+L+1+2*2+2*2
   tmp <- .C("main_JHM", as.integer(burn),as.integer(iters),as.integer(thin),
-    OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
+    as.integer(adaptive),OUT=as.double(1:(NCOL*iters)),
+    HEADER=as.character(rep("NULLNULL",NCOL)),
     QFAIA=as.integer(QFA.IA),QFAy=as.double(QFA.yA),QFAxA=as.double(QFA.xA),
     QFANoORFA=as.integer(QFA.NoORFA),QFANoTIMEA=as.integer(QFA.NoTIMEA),
     QFAIB=as.integer(QFA.IB),QFAy=as.double(QFA.yB),QFAxB=as.double(QFA.xB),

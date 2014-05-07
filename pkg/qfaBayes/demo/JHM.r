@@ -42,10 +42,12 @@ TUNING<-tuning_JHM[[1]]
 burn<-800000
 iters<-50000
 thin<-10
+adaptive<-1000
 
 ## run MCMC code to produce posterior samples from the JHM
-JHM_output<-JHM_main(burn=burn,iters=iters,thin=thin,QFA.IA=JHM$QFA.IA,
-  QFA.yA=JHM$QFA.yA,QFA.xA=JHM$QFA.xA,QFA.NoORFA=JHM$QFA.NoORFA,
+JHM_output<-JHM_main(burn=burn,iters=iters,thin=thin,adaptive=adaptive,
+  QFA.IA=JHM$QFA.IA,QFA.yA=JHM$QFA.yA,
+  QFA.xA=JHM$QFA.xA,QFA.NoORFA=JHM$QFA.NoORFA,
   QFA.NoTIMEA=JHM$QFA.NoTIMEA,QFA.IB=JHM$QFA.IB,QFA.yB=JHM$QFA.yB,
   QFA.xB=JHM$QFA.xB,QFA.NoORFB=JHM$QFA.NoORFB,QFA.NoTIMEB=JHM$QFA.NoTIMEB,
   PRIORS=PRIORS,TUNING=TUNING)
