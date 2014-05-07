@@ -67,7 +67,6 @@ typedef struct struct_tuning_JHM {
   double 
    alpha_c,
     beta_c,
-    delta_l,
     gamma_cl,	        sigma_gamma,
     omega_cl,           sigma_omega,
      
@@ -80,7 +79,6 @@ typedef struct struct_tuning_JHM {
 
     K_p,
     r_p,
-    nu_p,
     P,
     tau_K_p,tau_r_p,sigma_tau_K,sigma_tau_r;
 } struct_tuning_JHM;
@@ -89,7 +87,6 @@ typedef struct struct_adaptive_JHM {
   double 
    alpha_c,
     beta_c,
-    delta_l,
     gamma_cl,	        sigma_gamma,
     omega_cl,           sigma_omega,
      
@@ -102,7 +99,6 @@ typedef struct struct_adaptive_JHM {
 
     K_p,
     r_p,
-    nu_p,
     P,
     tau_K_p,tau_r_p,sigma_tau_K,sigma_tau_r;
 } struct_adaptive_JHM;

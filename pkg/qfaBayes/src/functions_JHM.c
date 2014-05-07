@@ -434,7 +434,7 @@ double MCMC_sigma_tau_r_JHM(struct_data_JHM *D,struct_para_JHM *D_para,struct_pr
 int gibbsandMHloop_JHM(int iter,int thin,struct_data_JHM *D,
   struct_para_JHM *D_para,struct_priors_JHM *D_priors,
   struct_tuning_JHM *D_tuning,struct_adaptive_JHM *D_adaptive,
-  int print,int adaptive_phase,double *OUT,char **HEADER){
+  int print,int adaptive_phase,int adaptive_period,double *OUT,char **HEADER){
 int i,j,l,m,mm,c,ll,*T,t;
 T=&t;
 *T=0;
@@ -491,7 +491,15 @@ T=&t;
 					}
 				}
 			}
-			adaptive_phase_process(D_tuning,D_adaptive,adaptive_phase,print,iter);
+			
+			if (print==0){
+				if (iter<adaptive_phase){
+					if (iter % adaptive_period == 0){
+						adaptive_phase_process(D_tuning,D_adaptive,adaptive_period,print,iter);
+					}
+				}
+			}
+			
 		}	
 		if (print==1){
 			printdata_JHM(D,D_para,OUT,T);
@@ -501,13 +509,164 @@ T=&t;
 return 0;
 }
 
-double adaptive_phase_process(struct_tuning_JHM *D_tuning,
-  struct_adaptive_JHM *D_adaptive,int adaptive_phase,int print,int iter){
-	if (print==0){
-		if(iter<adaptive_phase){
-			D_adaptive->K_p=D_adaptive->K_p+0;/*EG*/
+int adaptive_phase_process(struct_tuning_JHM *tuning,
+  struct_adaptive_JHM *adaptive,int adaptive_period,int print,int iter){
+		if (adaptive->K_clm/adaptive_period<0.5){
+			tuning->K_clm=adaptive->K_clm*1.1;
+		} else {
+			tuning->K_clm=adaptive->K_clm*0.9;
 		}
-	}
+		
+		if (adaptive->tau_K_cl/adaptive_period<0.5){
+			tuning->tau_K_cl=adaptive->tau_K_cl*1.1;
+		} else {
+			tuning->tau_K_cl=adaptive->tau_K_cl*0.9;
+		}
+		
+		if (adaptive->r_clm/adaptive_period<0.5){
+			tuning->r_clm=adaptive->r_clm*1.1;
+		} else {
+			tuning->r_clm=adaptive->r_clm*0.9;
+		}
+		
+		if (adaptive->tau_r_cl/adaptive_period<0.5){
+			tuning->tau_r_cl=adaptive->tau_r_cl*1.1;
+		} else {
+			tuning->tau_r_cl=adaptive->tau_r_cl*0.9;
+		}
+
+		if (adaptive->K_o_l/adaptive_period<0.5){
+			tuning->K_o_l=adaptive->K_o_l*1.1;
+		} else {
+			tuning->K_o_l=adaptive->K_o_l*0.9;
+		}
+		
+		if (adaptive->sigma_K_o/adaptive_period<0.5){
+			tuning->sigma_K_o=adaptive->sigma_K_o*1.1;
+		} else {
+			tuning->sigma_K_o=adaptive->sigma_K_o*0.9;
+		}
+
+		if (adaptive->r_o_l/adaptive_period<0.5){
+			tuning->r_o_l=adaptive->r_o_l*1.1;
+		} else {
+			tuning->r_o_l=adaptive->r_o_l*0.9;
+		}
+		
+		if (adaptive->sigma_r_o/adaptive_period<0.5){
+			tuning->sigma_r_o=adaptive->sigma_r_o*1.1;
+		} else {
+			tuning->sigma_r_o=adaptive->sigma_r_o*0.9;
+		}		
+ 
+ 		if (adaptive->nu_l/adaptive_period<0.5){
+			tuning->nu_l=adaptive->nu_l*1.1;
+		} else {
+			tuning->nu_l=adaptive->nu_l*0.9;
+		}
+		
+		if (adaptive->sigma_nu/adaptive_period<0.5){
+			tuning->sigma_nu=adaptive->sigma_nu*1.1;
+		} else {
+			tuning->sigma_nu=adaptive->sigma_nu*0.9;
+		}		
+
+ 		if (adaptive->gamma_cl/adaptive_period<0.5){
+			tuning->gamma_cl=adaptive->gamma_cl*1.1;
+		} else {
+			tuning->gamma_cl=adaptive->gamma_cl*0.9;
+		}
+		
+		if (adaptive->sigma_gamma/adaptive_period<0.5){
+			tuning->sigma_gamma=adaptive->sigma_gamma*1.1;
+		} else {
+			tuning->sigma_gamma=adaptive->sigma_gamma*0.9;
+		}		
+		
+	 	if (adaptive->omega_cl/adaptive_period<0.5){
+			tuning->omega_cl=adaptive->omega_cl*1.1;
+		} else {
+			tuning->omega_cl=adaptive->omega_cl*0.9;
+		}
+		
+		if (adaptive->sigma_omega/adaptive_period<0.5){
+			tuning->sigma_omega=adaptive->sigma_omega*1.1;
+		} else {
+			tuning->sigma_omega=adaptive->sigma_omega*0.9;
+		}		
+
+		if (adaptive->alpha_c/adaptive_period<0.5){
+			tuning->alpha_c=adaptive->alpha_c*1.1;
+		} else {
+			tuning->alpha_c=adaptive->alpha_c*0.9;
+		}
+		
+		if (adaptive->beta_c/adaptive_period<0.5){
+			tuning->beta_c=adaptive->beta_c*1.1;
+		} else {
+			tuning->beta_c=adaptive->beta_c*0.9;
+		}
+
+		if (adaptive->tau_K_p/adaptive_period<0.5){
+			tuning->tau_K_p=adaptive->tau_K_p*1.1;
+		} else {
+			tuning->tau_K_p=adaptive->tau_K_p*0.9;
+		}
+		
+		if (adaptive->sigma_tau_K/adaptive_period<0.5){
+			tuning->sigma_tau_K=adaptive->sigma_tau_K*1.1;
+		} else {
+			tuning->sigma_tau_K=adaptive->sigma_tau_K*0.9;
+		}		
+		
+		if (adaptive->tau_r_p/adaptive_period<0.5){
+			tuning->tau_r_p=adaptive->tau_r_p*1.1;
+		} else {
+			tuning->tau_r_p=adaptive->tau_r_p*0.9;
+		}
+		
+		if (adaptive->sigma_tau_r/adaptive_period<0.5){
+			tuning->sigma_tau_r=adaptive->sigma_tau_r*1.1;
+		} else {
+			tuning->sigma_tau_r=adaptive->sigma_tau_r*0.9;
+		}	
+
+		if (adaptive->K_p/adaptive_period<0.5){
+			tuning->K_p=adaptive->K_p*1.1;
+		} else {
+			tuning->K_p=adaptive->K_p*0.9;
+		}
+
+		if (adaptive->r_p/adaptive_period<0.5){
+			tuning->r_p=adaptive->r_p*1.1;
+		} else {
+			tuning->r_p=adaptive->r_p*0.9;
+		}
+
+		if (adaptive->P/adaptive_period<0.5){
+			tuning->P=adaptive->P*1.1;
+		} else {
+			tuning->P=adaptive->P*0.9;
+		}
+	
+    adaptive->K_clm=0,            adaptive->tau_K_cl=0,
+    adaptive->r_clm=0,            adaptive->tau_r_cl=0,
+
+    adaptive->K_o_l=0,            adaptive->sigma_K_o=0,
+    adaptive->r_o_l=0,            adaptive->sigma_r_o=0,
+    adaptive->nu_l=0,             adaptive->sigma_nu=0,
+   
+    adaptive->gamma_cl=0,	      adaptive->sigma_gamma=0,
+    adaptive->omega_cl=0,         adaptive->sigma_omega=0,
+    
+	adaptive->alpha_c=0,		  adaptive->beta_c=0,
+	
+	adaptive->tau_K_p=0,		  adaptive->sigma_tau_K=0,
+	adaptive->tau_r_p=0,		  adaptive->sigma_tau_r=0,
+	
+    adaptive->K_p=0,			  adaptive->r_p=0,
+    adaptive->P=0;
+	
 return 0;
 }
 
