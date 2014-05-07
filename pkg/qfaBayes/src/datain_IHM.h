@@ -3,9 +3,7 @@
 
 int testargc_IHM(int argc);
 
-int datadouble_IHM(char filename[],char filename2[],struct_data_IHM *D,double *QFADyA,double *QFADyB);
-int dataint_IHM(char filename[],char filename2[], int datavec[] ,int length);
-int dataLMN_IHM(char filename[],char filename2[], int *datavecL);
+int datadouble_IHM(struct_data_IHM *D,double *QFADyA,double *QFADyB);
 
 int inzstruct_MH_IHM(struct_MH_IHM *MH,double *TUNING);
 int inzstruct_priors_IHM(struct_priors_IHM *D_priors,double *PRIORS);
