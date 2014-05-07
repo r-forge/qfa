@@ -1,9 +1,9 @@
 \name{JHM_postpro}
 \alias{JHM_postpro}
-\title{Proforms post processing for JHM}
+\title{Performs post processing for JHM}
 \description{
 For use with Colonyzer output.
-Proforms post processing for JHM.
+Performs post-processing for JHM.
 }
 \usage{
 JHM_postpro(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,
@@ -24,6 +24,6 @@ JHM_postpro(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,
   \item{remove_col_b}{plate columns to remove for query}
 }
 \value{
-Post processed Colonyzer output for JHM.
+Post-processed Colonyzer output for JHM.
 }
 \keyword{qfaBayes}
