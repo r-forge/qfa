@@ -249,7 +249,7 @@ for (c=0;c<2;c++){
       }
   }
  D_para->alpha_c[1]=log((SUMb/(D->NoORF[D->L-1]+D->NoSUM[2*D->L-1]-D->NoSUM[D->L]))/(SUMa/D->NoSUM[D->L]));
- D_para->beta_c[1]=D_para->alpha_c[1];
+ D_para->beta_c[1]=log((exp(D_para->alpha_c[1])+1)/2);
  SUM=0;
  for (l=0;l<(D->L);l++){SUM+=D_para->K_o_l[l];}
  D_para->K_p=SUM/D->L;		
