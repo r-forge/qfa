@@ -1,9 +1,9 @@
 \name{SHM_postpro}
 \alias{SHM_postpro}
-\title{Proforms post processing for SHM}
+\title{Performs post processing for SHM}
 \description{
 For use with Colonyzer output.
-Proforms post processing for SHM.
+Performs post-processing for SHM.
 }
 \usage{
 SHM_postpro(a,Treatment,Screen,MPlate,remove_row,remove_col)
@@ -17,6 +17,6 @@ SHM_postpro(a,Treatment,Screen,MPlate,remove_row,remove_col)
   \item{remove_col}{plate columns to remove}
 }
 \value{
-Post processed Colonyzer output for SHM.
+Post-processed Colonyzer output for SHM.
 }
 \keyword{qfaBayes}
