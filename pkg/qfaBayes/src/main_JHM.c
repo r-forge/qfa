@@ -17,7 +17,7 @@ int main_JHM(int *arga,int *argb,int *argc,int *argd,double *OUT,
   struct_adaptive_JHM *adaptive = malloc(sizeof(struct_tuning_JHM));
 
   int burn,iters,thin,adaptive_phase;
-/*ADD ADAPTIVE 1,0*/
+  
   burn=*arga;   /*burn in*/
   iters=*argb;    /*iterations*/
   thin=*argc;        /*thinning*/

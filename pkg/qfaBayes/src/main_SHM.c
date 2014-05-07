@@ -13,7 +13,7 @@ int main_SHM(int *arga,int *argb,int *argc,double *OUT,
   struct_priors *priors= malloc(sizeof(struct_priors));
   struct_MH *MH = malloc(sizeof(struct_MH));
 
-  int burn,iters,thin, CAPL;
+  int burn,iters,thin;
   
   burn=*arga;    /*Burn in*/
   iters=*argb;    /*iterations*/
