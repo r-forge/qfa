@@ -2,60 +2,15 @@
 #include "datain_IHM.h"
 
 
-int datadouble_IHM(char filename[],char filename2[],struct_data_IHM *D,double *QFADyA,double *QFADyB)
+int datadouble_IHM(struct_data_IHM *D,double *QFADyA,double *QFADyB)
 {
-	int i,t=0;
-       	double *K_lm,*r_lm,P_a,P_b,size;
-	
-	size=D->MAXmn;
-	K_lm=malloc(size*sizeof(double)); 
-	r_lm=malloc(size*sizeof(double)); 
-	
-	t=-1;
-
-
-		for (i=0;i<D->SHIFTmn;i++){
-			t+=1;
-			K_lm[i]=exp(QFADyA[t]); 
-		}
-		for (i=0;i<2*D->L+3;i++){
-			t+=1;
-		}
-		P_a=exp(QFADyA[t]);  
-		for (i=0;i<D->SHIFTmn;i++){
-			t+=1;
-			r_lm[i]=exp(QFADyA[t]); 
-		}
-
-        for (i=0;i<D->SHIFTmn;i++){
-	  if(K_lm[i]<=2*P_a){K_lm[i]=2*P_a;r_lm[i]=0;}
-        }
-
+	int i;
 	for (i=0;i<D->SHIFTmn;i++){
-		D->y[i]=(r_lm[i]/log(2*fmax(0,K_lm[i]-P_a)/fmax(0,K_lm[i]-2*P_a)))*(log(K_lm[i]/P_a)/log(2));
+		D->y[i]=QFADyA[i];
 	}
-		t=-1;
-
-		for (i=D->SHIFTmn;i<D->MAXmn;i++){
-			t+=1;
-			K_lm[i]=exp(QFADyB[t]);   	
-		}
-		for (i=0;i<2*D->L+3;i++){
-			t+=1;
-		}
-		P_b=exp(QFADyB[t]);  
-		for (i=D->SHIFTmn;i<D->MAXmn;i++){
-			t+=1;
-			r_lm[i]=exp(QFADyB[t]);   
-		}
-
 
 	for (i=D->SHIFTmn;i<D->MAXmn;i++){
-          if(K_lm[i]<=2*P_b){K_lm[i]=2*P_b;r_lm[i]=0;}
-        }
-
-	for (i=D->SHIFTmn;i<D->MAXmn;i++){
-		D->y[i]=(r_lm[i]/log(2*fmax(0,K_lm[i]-P_b)/fmax(0,K_lm[i]-2*P_b)))*(log(K_lm[i]/P_b)/log(2));
+		D->y[i]=QFADyB[i];
 	}
 return 0;
 }
@@ -123,7 +78,7 @@ data->NoORF[i+data->L]=QFADNoORFB[i];
 	size=data->MAXmn;
 	data->y=malloc(size*sizeof(double));  
 
-	datadouble_IHM("dataA2.txt","dataB2.txt",data,QFADyA,QFADyB);
+	datadouble_IHM(data,QFADyA,QFADyB);
 return 0;
 }
 

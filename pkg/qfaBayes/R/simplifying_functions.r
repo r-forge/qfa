@@ -64,12 +64,12 @@ SHM_postpro<-function(a,Treatment,Screen,MPlate,remove_row,remove_col)
 }
 
 ### Calls the C code for running the SHM MCMC ###
-SHM_main <- function(burn,iters,thin,CAPL,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS,TUNING){
-  L=min(CAPL,length(QFA.NoORF))
+SHM_main <- function(burn,iters,thin,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS,TUNING){
+  L=length(QFA.NoORF)
   LM<-sum(QFA.NoORF[1:L])
   NCOL=LM+L+L+1+1+1+LM+L+L+1+1+L+1+1+1+1+1+1
   tmp <- .C("main_SHM", as.integer(burn),as.integer(iters),as.integer(thin),
-    as.integer(L),OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
+    OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
     QFAI=as.integer(QFA.I),QFAy=as.double(QFA.y),QFAx=as.double(QFA.x),
 	QFANoORF=as.integer(QFA.NoORF),QFANoTIME=as.integer(QFA.NoTIME),
     PRIORS=as.double(PRIORS),TUNING=as.double(TUNING),PACKAGE="qfaBayes")
@@ -223,6 +223,73 @@ plot_SHM_simple<-function(SHM_output,SHM){
     r=exp(r_o_l[i])
     curve((K*P*exp(r*x))/(K+P*(exp(r*x)-1)),lwd=3,col="red",add=T)
   }
+}
+
+
+
+### Creates univariate MDRxMDP fitnesses measures from SHM output (x2) for input to the IHM ###
+IHM_MDRxMDP_postpro<-function(SHM_a,SHM_output_a,SHM_b,SHM_output_b){
+  QFA.yA=colMeans(SHM_output_a)
+  L=SHM_a$QFA.I[1]
+  SHIFTmn=SHM_a$QFA.NoSUM[L+1]
+  t=0;
+  K_lm=r_lm=P=numeric()
+  
+  for (i in 1:(SHIFTmn)){
+   	t=t+1
+	K_lm[i]=exp(QFA.yA[t])
+  }
+	
+  t=t+2*L+3
+  P=exp(QFA.yA[t])
+ 
+  for (i in 1:SHIFTmn){
+	t=t+1
+	r_lm[i]=exp(QFA.yA[t])
+  }
+        
+  for (i in 1:SHIFTmn){
+	if(K_lm[i]<=2*P){
+		K_lm[i]=2*P
+		r_lm[i]=0
+    }
+  }
+		
+  for (i in 1:SHIFTmn){
+	QFA.yA[i]=(r_lm[i]/log(2*max(0,K_lm[i]-P)/max(0,K_lm[i]-2*P)))*(log(K_lm[i]/P)/log(2));
+  }
+
+  QFA.yB=colMeans(SHM_output_b)
+  L=SHM_b$QFA.I[1]
+  SHIFTmn=SHM_b$QFA.NoSUM[L+1]
+  t=0
+  K_lm=r_lm=P=numeric()
+  
+  for (i in 1:(SHIFTmn)){
+	t=t+1
+	K_lm[i]=exp(QFA.yA[t])
+  }
+	
+  t=t+2*L+3
+  P=exp(QFA.yA[t])
+ 
+  for (i in 1:SHIFTmn){
+	t=t+1
+	r_lm[i]=exp(QFA.yA[t])
+  }
+        
+  for (i in 1:SHIFTmn){
+	if(K_lm[i]<=2*P){
+		K_lm[i]=2*P
+		r_lm[i]=0
+    }
+  }
+		
+  for (i in 1:SHIFTmn){
+	QFA.yB[i]=(r_lm[i]/log(2*max(0,K_lm[i]-P)/max(0,K_lm[i]-2*P)))*(log(K_lm[i]/P)/log(2));
+  }
+
+  list(QFA.yA=QFA.yA,QFA.yB=QFA.yB)
 }
 
 ### Calls the C code for running the IHM MCMC ###
