@@ -511,7 +511,7 @@ return 0;
 
 int adaptive_phase_process(struct_tuning_JHM *tuning,
   struct_adaptive_JHM *adaptive,int adaptive_period,int print,int iter){
-  int explore=1.4,exploredown=1/explore,ideal_accept_rate=0.25;
+  int explore=1.3,exploredown=0.3,ideal_accept_rate=0.25;
   
   explore=explore+runif(-0.15,0.15);
   
