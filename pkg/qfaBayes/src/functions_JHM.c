@@ -433,9 +433,8 @@ double MCMC_sigma_tau_r_JHM(struct_data_JHM *D,struct_para_JHM *D_para,struct_pr
 /*Gibbs and MH steps*/
 int gibbsandMHloop_JHM(int iter,int thin,struct_data_JHM *D,
   struct_para_JHM *D_para,struct_priors_JHM *D_priors,
-  struct_MH_JHM *D_MH,struct_tuning_JHM *D_tuning,
-  struct_adaptive_JHM *D_adaptive,int print,int adaptive_phase,double *OUT,
-  char **HEADER){
+  struct_tuning_JHM *D_tuning,struct_adaptive_JHM *D_adaptive,
+  int print,int adaptive_phase,double *OUT,char **HEADER){
 int i,j,l,m,mm,c,ll,*T,t;
 T=&t;
 *T=0;
@@ -445,81 +444,72 @@ T=&t;
 	for (i=0;i<iter;i++){
   for (j=0;j<thin;j++){
    
-    D_MH->hP=0.5; 
-			D_para->P=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->P,&D_MH->hP,D_para->P,MCMC_P_JHM,-999,-999,-999);
-			D_MH->hP=0.2; 
-			D_para->alpha_c[1]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->alpha_c,&D_MH->halpha,D_para->alpha_c[1],MCMC_alpha_c_JHM,-999,-999,-999);
-			D_para->beta_c[1]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->beta_c,&D_MH->halpha,D_para->beta_c[1],MCMC_beta_c_JHM,-999,-999,-999);
-			D_para->sigma_gamma=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_gamma,&D_MH->hK,D_para->sigma_gamma,MCMC_sigma_gamma_JHM,-999,-999,-999);
-			D_para->sigma_omega=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_omega,&D_MH->hK,D_para->sigma_omega,MCMC_sigma_omega_JHM,-999,-999,-999);
-			
-			D_para->sigma_nu=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_nu,&D_MH->hP,D_para->sigma_nu,MCMC_sigma_nu_JHM,-999,-999,-999);
-			D_para->sigma_K_o=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_K_o,&D_MH->hK,D_para->sigma_K_o,MCMC_sigma_K_o_JHM,-999,-999,-999);
-			D_para->sigma_r_o=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_r_o,&D_MH->hK,D_para->sigma_r_o,MCMC_sigma_r_o_JHM,-999,-999,-999);
-			D_para->K_p=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->K_p,&D_MH->hK,D_para->K_p,MCMC_K_p_JHM,-999,-999,-999);
-			D_para->r_p=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->r_p,&D_MH->hr,D_para->r_p,MCMC_r_p_JHM,-999,-999,-999);
+     
+			D_para->P=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->P,&D_tuning->P,D_para->P,MCMC_P_JHM,-999,-999,-999);
+			D_para->alpha_c[1]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->alpha_c,&D_tuning->alpha_c,D_para->alpha_c[1],MCMC_alpha_c_JHM,-999,-999,-999);
+			D_para->beta_c[1]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->beta_c,&D_tuning->beta_c,D_para->beta_c[1],MCMC_beta_c_JHM,-999,-999,-999);
+			D_para->sigma_gamma=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_gamma,&D_tuning->sigma_gamma,D_para->sigma_gamma,MCMC_sigma_gamma_JHM,-999,-999,-999);
+			D_para->sigma_omega=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_omega,&D_tuning->sigma_omega,D_para->sigma_omega,MCMC_sigma_omega_JHM,-999,-999,-999);
+			D_para->sigma_nu=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_nu,&D_tuning->sigma_nu,D_para->sigma_nu,MCMC_sigma_nu_JHM,-999,-999,-999);
+			D_para->sigma_K_o=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_K_o,&D_tuning->sigma_K_o,D_para->sigma_K_o,MCMC_sigma_K_o_JHM,-999,-999,-999);
+			D_para->sigma_r_o=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_r_o,&D_tuning->sigma_r_o,D_para->sigma_r_o,MCMC_sigma_r_o_JHM,-999,-999,-999);
+			D_para->K_p=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->K_p,&D_tuning->K_p,D_para->K_p,MCMC_K_p_JHM,-999,-999,-999);
+			D_para->r_p=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->r_p,&D_tuning->r_p,D_para->r_p,MCMC_r_p_JHM,-999,-999,-999);
 			D_para->nu_p=gauss_sample_JHM(D,0,2*D->L,D_para->nu_l,exp(D_para->sigma_nu),D_priors->nu_mu,D_priors->eta_nu_p);
 			   																     						     
-
-		       
 			for (c=0;c<2;c++){
-			  D_MH->hK=0.01;
-			  D_para->tau_K_p[c]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->tau_K_p,&D_MH->hK,D_para->tau_K_p[c],MCMC_tau_K_p_JHM,c,-999,-999);
-			  D_para->tau_r_p[c]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->tau_r_p,&D_MH->hK,D_para->tau_r_p[c],MCMC_tau_r_p_JHM,c,-999,-999);
-			  D_MH->hK=0.1;		
-			  D_para->sigma_tau_K[c]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_tau_K,&D_MH->hK,D_para->sigma_tau_K[c],MCMC_sigma_tau_K_JHM,c,-999,-999);
-			  D_para->sigma_tau_r[c]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_tau_r,&D_MH->hr,D_para->sigma_tau_r[c],MCMC_sigma_tau_r_JHM,c,-999,-999);
+
+			  D_para->tau_K_p[c]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->tau_K_p,&D_tuning->tau_K_p,D_para->tau_K_p[c],MCMC_tau_K_p_JHM,c,-999,-999);
+			  D_para->tau_r_p[c]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->tau_r_p,&D_tuning->tau_r_p,D_para->tau_r_p[c],MCMC_tau_r_p_JHM,c,-999,-999);
+			  D_para->sigma_tau_K[c]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_tau_K,&D_tuning->sigma_tau_K,D_para->sigma_tau_K[c],MCMC_sigma_tau_K_JHM,c,-999,-999);
+			  D_para->sigma_tau_r[c]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->sigma_tau_r,&D_tuning->sigma_tau_r,D_para->sigma_tau_r[c],MCMC_sigma_tau_r_JHM,c,-999,-999);
 			}
 
 			for (l=0;l<D->L;l++){
-			  D_MH->hK=0.02;			       
-			  D_para->K_o_l[l]=MCMC_base_truncate_low_JHM(0,D,D_para,D_priors,&D_adaptive->K_o_l,&D_MH->hK,exp(D_para->K_o_l[l]),MCMC_K_o_l_JHM,-999,l,-999);
-			  D_MH->hK=0.1;
+		       
+			  D_para->K_o_l[l]=MCMC_base_truncate_low_JHM(0,D,D_para,D_priors,&D_adaptive->K_o_l,&D_tuning->K_o_l,exp(D_para->K_o_l[l]),MCMC_K_o_l_JHM,-999,l,-999);
 			  D_para->K_o_l[l]=log(D_para->K_o_l[l]);
-			  D_para->r_o_l[l]=MCMC_base_truncate_low_JHM(0,D,D_para,D_priors,&D_adaptive->r_o_l,&D_MH->hK,exp(D_para->r_o_l[l]),MCMC_r_o_l_JHM,-999,l,-999);
+			  D_para->r_o_l[l]=MCMC_base_truncate_low_JHM(0,D,D_para,D_priors,&D_adaptive->r_o_l,&D_tuning->r_o_l,exp(D_para->r_o_l[l]),MCMC_r_o_l_JHM,-999,l,-999);
 			  D_para->r_o_l[l]=log(D_para->r_o_l[l]);
-			
-
-			  D_para->gamma_cl[l]=MCMC_base_truncate_low_JHM(0,D,D_para,D_priors,&D_adaptive->gamma_cl,&D_MH->hnu,exp(D_para->gamma_cl[l]),MCMC_gamma_cl_JHM,-999,l,-999);
+			  D_para->gamma_cl[l]=MCMC_base_truncate_low_JHM(0,D,D_para,D_priors,&D_adaptive->gamma_cl,&D_tuning->gamma_cl,exp(D_para->gamma_cl[l]),MCMC_gamma_cl_JHM,-999,l,-999);
 			  D_para->gamma_cl[l]=log(D_para->gamma_cl[l]);
-			  D_para->omega_cl[l]=MCMC_base_truncate_low_JHM(0,D,D_para,D_priors,&D_adaptive->omega_cl,&D_MH->hnu,exp(D_para->omega_cl[l]),MCMC_omega_cl_JHM,-999,l,-999);
+			  D_para->omega_cl[l]=MCMC_base_truncate_low_JHM(0,D,D_para,D_priors,&D_adaptive->omega_cl,&D_tuning->omega_cl,exp(D_para->omega_cl[l]),MCMC_omega_cl_JHM,-999,l,-999);
 			  D_para->omega_cl[l]=log(D_para->omega_cl[l]);
 			  D_para->delta_l[l]=aug_delta_l_JHM(D,D_para,D_priors,l);
 			  
 			  for (c=0;c<2;c++){
 	    
 			    ll=c*D->L+l;
-			    D_para->nu_l[ll]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->nu_l,&D_MH->hnu,D_para->nu_l[ll],MCMC_nu_l_JHM,c,l,-999);
-			    D_MH->hK=0.2;
-			    D_para->tau_K_cl[ll]=MCMC_base_truncate_low_JHM(0,D,D_para,D_priors,&D_adaptive->tau_K_cl,&D_MH->hK,D_para->tau_K_cl[ll],MCMC_tau_K_cl_JHM,c,l,-999);
-			    D_MH->hK=0.1;
-			    D_para->tau_r_cl[ll]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->tau_r_cl,&D_MH->hnu,D_para->tau_r_cl[ll],MCMC_tau_r_cl_JHM,c,l,-999);
+			    D_para->nu_l[ll]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->nu_l,&D_tuning->nu_l,D_para->nu_l[ll],MCMC_nu_l_JHM,c,l,-999);
+			    D_para->tau_K_cl[ll]=MCMC_base_truncate_low_JHM(0,D,D_para,D_priors,&D_adaptive->tau_K_cl,&D_tuning->tau_K_cl,D_para->tau_K_cl[ll],MCMC_tau_K_cl_JHM,c,l,-999);
+			    D_para->tau_r_cl[ll]=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->tau_r_cl,&D_tuning->tau_r_cl,D_para->tau_r_cl[ll],MCMC_tau_r_cl_JHM,c,l,-999);
 
 			    for (m=0;m<D->NoORF[ll];m++){ 
-			      mm=D->NoSUM[ll]+m;
-			      D_MH->hK=0.05;				
-			      D_para->K_clm[mm]=MCMC_base_truncate_high_JHM(0,D,D_para,D_priors,&D_adaptive->K_clm,&D_MH->hK,D_para->K_clm[mm],MCMC_K_clm_JHM,c,l,m);
-			      D_MH->hK=0.1;
-			      D_para->r_clm[mm]=MCMC_base_truncate_high_JHM(3.5,D,D_para,D_priors,&D_adaptive->r_clm,&D_MH->hr,D_para->r_clm[mm],MCMC_r_clm_JHM,c,l,m);
+			      mm=D->NoSUM[ll]+m;			
+			      D_para->K_clm[mm]=MCMC_base_truncate_high_JHM(0,D,D_para,D_priors,&D_adaptive->K_clm,&D_tuning->K_clm,D_para->K_clm[mm],MCMC_K_clm_JHM,c,l,m);
+			      D_para->r_clm[mm]=MCMC_base_truncate_high_JHM(3.5,D,D_para,D_priors,&D_adaptive->r_clm,&D_tuning->r_clm,D_para->r_clm[mm],MCMC_r_clm_JHM,c,l,m);
 					}
 				}
 			}
-			/*adaptive_phase_process(D_tuning,D_adaptive,adaptive_phase,print,iter)*/
+			adaptive_phase_process(D_tuning,D_adaptive,adaptive_phase,print,iter);
 		}	
 		if (print==1){
-			printdata_JHM(D,D_para,D_MH,OUT,T);
+			printdata_JHM(D,D_para,OUT,T);
 		}
 	}
 	
 return 0;
 }
 
-
-/*double adaptive_phase_process(struct_tuning_JHM *D_tuning,
-  struct_adaptive_JHM *D_adaptive,int adaptive_phase,int print,int iter)
-  {
-  is alpha>iter*0.05
-  }*/
+double adaptive_phase_process(struct_tuning_JHM *D_tuning,
+  struct_adaptive_JHM *D_adaptive,int adaptive_phase,int print,int iter){
+	if (print==0){
+		if(iter<adaptive_phase){
+			D_adaptive->K_p=D_adaptive->K_p+0;/*EG*/
+		}
+	}
+return 0;
+}
 
 
 

@@ -63,16 +63,6 @@ typedef struct struct_priors_JHM {
     psi_tau_K,psi_tau_r;
 } struct_priors_JHM;
 
-typedef struct struct_MH_JHM {
-  double 
-    hP,
-    hnu,
-    hK,
-    hr,
-    halpha,
-accept_P,accept_nu,accept_K,accept_r;
-} struct_MH_JHM;
-
 typedef struct struct_tuning_JHM {
   double 
    alpha_c,
