@@ -413,7 +413,7 @@ JHM_postpro<-function(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,
 
 ### Calls the C code for running the JHM MCMC ###
 JHM_main<- function(burn,iters,thin,adaptive_phase,adaptive_period,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS,TUNING) {
-  if(adaptive>burn){
+  if(adaptive_phase>burn){
     stop()
   }
   if(adaptive_period>adaptive_phase){
