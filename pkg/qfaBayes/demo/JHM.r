@@ -17,23 +17,26 @@ qfa.variables(a)
 qfa.variables(b)
 
 ## choose experimental variables of interest and filter by them
-Treatment_a=27
+Treatment_a<-27
 Screen_a<-unique(a$Screen.Name)
 MPlate_a<-15
-Treatment_b=27
+Treatment_b<-27
 Screen_b<-unique(b$Screen.Name)
 MPlate_b<-15
-remove_row<-c(1,16)
-remove_col<-c(1,24) 
-JHM<-JHM_postpro(a,Treatment_a=Treatment_a,Screen_a=Screen_a,MPlate_a,b,
-  Treatment_b=Treatment_b,Screen_b=Screen_b,MPlate_b=MPlate_b,
-  remove_row=remove_row,remove_col=remove_col)
+remove_row_a<-c(1,16)
+remove_col_a<-c(1,24)
+remove_row_b<-c(1,16)
+remove_col_b<-c(1,24)
+JHM<-JHM_postpro(a=a,Treatment_a=Treatment_a,Screen_a=Screen_a,
+  MPlate_a=MPlate_a,b=b,Treatment_b=Treatment_b,Screen_b=Screen_b,
+  MPlate_b=MPlate_b,remove_row_a=remove_row_a,remove_col_a=remove_col_a,
+  remove_row_b=remove_row_b,remove_col_b=remove_col_b)
 
 ## load JHM specific priors and tuning parameters
 data("priors_JHM")
-PRIORS=priors_JHM[[1]]
+PRIORS<-priors_JHM[[1]]
 data("tuning_JHM")
-TUNING=tuning_JHM[[1]]
+TUNING<-tuning_JHM[[1]]
 
 ## select lengths for burn-in, posterior sample and thinning
 burn<-800000

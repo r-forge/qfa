@@ -18,10 +18,10 @@ qfa.variables(b)
 
 ## choose experimental variables of interest and filter by them
 ## for the control and query screen
-Treatment_a=27
+Treatment_a<-27
 Screen_a<-unique(a$Screen.Name)
 MPlate_a<-15
-Treatment_b=27
+Treatment_b<-27
 Screen_b<-unique(b$Screen.Name)
 MPlate_b<-15
 SHM_a<-SHM_postpro(a=a,Treatment=Treatment_a,Screen=Screen_a,MPlate=MPlate_a)
@@ -29,9 +29,9 @@ SHM_b<-SHM_postpro(a=b,Treatment=Treatment_b,Screen=Screen_b,MPlate=MPlate_b)
 
 ## load SHM specific priors and tuning parameters
 data("priors_SHM")
-PRIORS=priors_SHM[[1]]
+PRIORS<-priors_SHM[[1]]
 data("tuning_SHM")
-TUNING=tuning_SHM[[1]]
+TUNING<-tuning_SHM[[1]]
 
 ## select lengths for burn-in, posterior sample and thinning 
 ## for SHM control and query MCMC

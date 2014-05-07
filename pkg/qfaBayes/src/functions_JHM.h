@@ -7,7 +7,7 @@ double logistic_function_E_JHM(double t,double K, double r, double P);
 
 double gauss_sample_JHM(struct_data_JHM *D ,int start, int N,double x[],double tau,double mu_0,double tau_0);
 
-double MCMC_base_JHM(struct_data_JHM *D,struct_para_JHM *D_para,struct_priors_JHM *D_priors,double *accept,double *h,double para,double (*foo)(struct struct_data_JHM *D,struct struct_para_JHM *D_para,struct struct_priors_JHM *D_priors,double,int,int,int),int c,int l, int m);
+double MCMC_base_JHM(struct_data_JHM *D,struct_para_JHM *D_para,struct_priors_JHM *D_priors,double *a,double *h,double para,double (*foo)(struct struct_data_JHM *D,struct struct_para_JHM *D_para,struct struct_priors_JHM *D_priors,double,int,int,int),int c,int l, int m);
 
 double MCMC_P_JHM(struct_data_JHM *D,struct_para_JHM *D_para,struct_priors_JHM *D_priors,double para,int c,int l, int m);
 double MCMC_nu_l_JHM(struct_data_JHM *D,struct_para_JHM *D_para,struct_priors_JHM *D_priors,double para,int c,int l, int m);
@@ -27,6 +27,13 @@ double MCMC_sigma_r_o_JHM(struct_data_JHM *D,struct_para_JHM *D_para,struct_prio
 double MCMC_tau_K_cl_JHM(struct_data_JHM *D,struct_para_JHM *D_para,struct_priors_JHM *D_priors,double para,int c,int l, int m);
 double MCMC_tau_r_cl_JHM(struct_data_JHM *D,struct_para_JHM *D_para,struct_priors_JHM *D_priors,double para,int c,int l, int m);
 
-int gibbsandMHloop_JHM(int iter,int thin,struct_data_JHM *D,struct_para_JHM *D_para,struct_priors_JHM *D_priors,struct_MH_JHM *D_MH, int print,double *OUT,char **HEADER);
+int gibbsandMHloop_JHM(int iter,int thin,struct_data_JHM *D,
+  struct_para_JHM *D_para,struct_priors_JHM *D_priors,
+  struct_MH_JHM *D_MH,struct_tuning_JHM *D_tuning,
+  struct_adaptive_JHM *D_adaptive,int print,int adaptive_phase,double *OUT,
+  char **HEADER);
+  
+/*double adaptive_phase_process(struct_tuning_JHM *D_tuning,
+  struct_adaptive_JHM *D_adaptive,int adaptive_phase,int print,int iter)*/
 
 #endif

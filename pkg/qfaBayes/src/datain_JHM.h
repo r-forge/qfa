@@ -19,4 +19,6 @@ int filldata_JHM(struct_data_JHM *D);
 int fillpara_JHM(struct_para_JHM *D_para,struct_data_JHM *D,struct_priors_JHM *D_priors);
 int fillpriors_JHM(struct_priors_JHM *D_priors);
 
+int  inzstruct_tuning_JHM(struct_tuning_JHM *tuning,double *TUNING);
+int  inzstruct_adaptive_JHM(struct_adaptive_JHM *adaptive);
 #endif

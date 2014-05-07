@@ -176,10 +176,6 @@ int fillMH_JHM(struct_MH_JHM *MH,double *TUNING)
 	MH->hnu=TUNING[2];	
 	MH->hP=TUNING[3];	
 	MH->halpha=TUNING[4];
-	MH->accept_K=0;
-	MH->accept_r=0;
-	MH->accept_nu=0;
-	MH->accept_P=0; 
 	
 /*HARDCODED VER
 	MH->hK=0.1;	MH->accept_K=0;
@@ -187,6 +183,54 @@ int fillMH_JHM(struct_MH_JHM *MH,double *TUNING)
 	MH->hnu=0.4;	MH->accept_nu=0;
 	MH->hP=0.2;	MH->accept_P=0; 
 	MH->halpha=0.01;*/
+return 0;
+}
+
+int  inzstruct_tuning_JHM(struct_tuning_JHM *tuning,double *TUNING)
+{
+    tuning->alpha_c=TUNING[0],
+    tuning->beta_c=TUNING[0],
+    tuning->delta_l=TUNING[0],
+    tuning->gamma_cl=TUNING[0],	      tuning->sigma_gamma=TUNING[0],
+    tuning->omega_cl=TUNING[0],       tuning->sigma_omega=TUNING[0],
+     
+    tuning->K_clm=TUNING[0],            tuning->tau_K_cl=TUNING[0],
+    tuning->r_clm=TUNING[0],            tuning->tau_r_cl=TUNING[0],
+
+    tuning->K_o_l=TUNING[0],            tuning->sigma_K_o=TUNING[0],
+    tuning->r_o_l=TUNING[0],            tuning->sigma_r_o=TUNING[0],
+    tuning->nu_l=TUNING[0],             tuning->sigma_nu=TUNING[0],
+
+    tuning->K_p=TUNING[0],
+    tuning->r_p=TUNING[0],
+    tuning->nu_p=TUNING[0],
+    tuning->P=TUNING[0],
+    tuning->tau_K_p=TUNING[0],tuning->tau_r_p=TUNING[0],
+	tuning->sigma_tau_K=TUNING[0],tuning->sigma_tau_r=TUNING[0];
+return 0;
+}
+
+int  inzstruct_adaptive_JHM(struct_adaptive_JHM *adaptive)
+{
+    adaptive->alpha_c=0,
+    adaptive->beta_c=0,
+    adaptive->delta_l=0,
+    adaptive->gamma_cl=0,	      adaptive->sigma_gamma=0,
+    adaptive->omega_cl=0,         adaptive->sigma_omega=0,
+     
+    adaptive->K_clm=0,            adaptive->tau_K_cl=0,
+    adaptive->r_clm=0,            adaptive->tau_r_cl=0,
+
+    adaptive->K_o_l=0,            adaptive->sigma_K_o=0,
+    adaptive->r_o_l=0,            adaptive->sigma_r_o=0,
+    adaptive->nu_l=0,             adaptive->sigma_nu=0,
+
+    adaptive->K_p=0,
+    adaptive->r_p=0,
+    adaptive->nu_p=0,
+    adaptive->P=0,
+    adaptive->tau_K_p=0,adaptive->tau_r_p=0,
+	adaptive->sigma_tau_K=0,adaptive->sigma_tau_r=0;
 return 0;
 }
 

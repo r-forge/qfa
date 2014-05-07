@@ -73,3 +73,46 @@ typedef struct struct_MH_JHM {
 accept_P,accept_nu,accept_K,accept_r;
 } struct_MH_JHM;
 
+typedef struct struct_tuning_JHM {
+  double 
+   alpha_c,
+    beta_c,
+    delta_l,
+    gamma_cl,	        sigma_gamma,
+    omega_cl,           sigma_omega,
+     
+    K_clm,            tau_K_cl,
+    r_clm,            tau_r_cl,
+
+    K_o_l,            sigma_K_o,
+    r_o_l,            sigma_r_o,
+    nu_l,             sigma_nu,
+
+    K_p,
+    r_p,
+    nu_p,
+    P,
+    tau_K_p,tau_r_p,sigma_tau_K,sigma_tau_r;
+} struct_tuning_JHM;
+
+typedef struct struct_adaptive_JHM {
+  double 
+   alpha_c,
+    beta_c,
+    delta_l,
+    gamma_cl,	        sigma_gamma,
+    omega_cl,           sigma_omega,
+     
+    K_clm,            tau_K_cl,
+    r_clm,            tau_r_cl,
+
+    K_o_l,            sigma_K_o,
+    r_o_l,            sigma_r_o,
+    nu_l,             sigma_nu,
+
+    K_p,
+    r_p,
+    nu_p,
+    P,
+    tau_K_p,tau_r_p,sigma_tau_K,sigma_tau_r;
+} struct_adaptive_JHM;
