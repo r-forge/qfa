@@ -813,15 +813,15 @@ plot_JHM_simple<-function(JHM_output,JHM){
 ### Gives a trace plot for one of every parameter type to check convergence of SHM output ###
 visual_convergence_simple_check_SHM<-function(SHM_output){
   list=c(
-    "K_lm[0]",            "tau_K_l[0]",
-    "r_lm[0]",           "tau_r_l[0]",
-    "K_o_l[0]",        "sigma_K_o",
-    "r_o_l[0]",            "sigma_r_o",
-    "nu_l[0]",             "sigma_nu",
-    "tau_K_p"		        "sigma_tau_K",
-    "tau_r_p",		    "sigma_tau_r"
+    "K_lm[0]",          "tau_K_l[0]",
+    "r_lm[0]",          "tau_r_l[0]",
+    "K_o_l[0]",         "sigma_K_o",
+    "r_o_l[0]",         "sigma_r_o",
+    "nu_l[0]",          "sigma_nu",
+    "tau_K_p",		    "sigma_tau_K",
+    "tau_r_p",		    "sigma_tau_r",
     "K_p",			    "r_p",
-    "nu_p"
+    "nu_p",
     "P"
     )
   for (i in 1:length(list)){
@@ -832,12 +832,12 @@ visual_convergence_simple_check_SHM<-function(SHM_output){
 ### Gives a trace plot for one of every parameter type to check convergence IHM output ###
 visual_convergence_simple_check_IHM<-function(IHM_output){
   list=c(
-    "Z_l[0]",			"sigma_Z"
-    "nu_cl[0]",			"sigma_nu"
+    "Z_l[0]",			"sigma_Z",
+    "nu_cl[0]",			"sigma_nu",
 	"delta_l[0]",
-    "gamma_cl[0]",		"sigma_gamma"
+    "gamma_cl[0]",		"sigma_gamma",
 	"alpha_c",	
-	"Z_p",				"nu_p"
+	"Z_p",				"nu_p",
     )
   for (i in 1:length(list)){
     plot(IHM_output[colnames(IHM_output)==list[i]],type="l")
@@ -847,19 +847,19 @@ visual_convergence_simple_check_IHM<-function(IHM_output){
 ### Gives a trace plot for one of every parameter type to check convergence JHM output ###
 visual_convergence_simple_check_JHM<-function(JHM_output){
   list=c(
-    "K_clm[0]",            "tau_K_cl[0]",
-    "r_clm[0]",           "tau_r_cl[0]",
+    "K_clm[0]",        "tau_K_cl[0]",
+    "r_clm[0]",        "tau_r_cl[0]",
     "K_o_l[0]",        "sigma_K_o",
-    "r_o_l[0]",            "sigma_r_o",
-    "nu_l[0]",             "sigma_nu",
+    "r_o_l[0]",        "sigma_r_o",
+    "nu_l[0]",         "sigma_nu",
     "delta_l[0]",
-    "gamma_cl[0]",	     "sigma_gamma",
-    "omega_cl[0]",         "sigma_omega",
-    "alpha_c",		    "beta_c",
-    "tau_K_p"		        "sigma_tau_K",
-    "tau_r_p",		    "sigma_tau_r"
-    "K_p",			    "r_p",
-    "nu_p"
+    "gamma_cl[0]",	   "sigma_gamma",
+    "omega_cl[0]",     "sigma_omega",
+    "alpha_c",		   "beta_c",
+    "tau_K_p",		   "sigma_tau_K",
+    "tau_r_p",		   "sigma_tau_r",
+    "K_p",			   "r_p",
+    "nu_p",
     "P"
     )
   for (i in 1:length(list)){
