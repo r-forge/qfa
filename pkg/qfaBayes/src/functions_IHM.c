@@ -229,56 +229,56 @@ T=&t;
 
 int adaptive_phase_process_IHM(struct_tuning_IHM *tuning,
   struct_adaptive_IHM *adaptive,int adaptive_period,int print,int iter){
-  int explore=1.7,exploredown=0.8,ideal_accept_rate=0.25;
+  int explore=1.2,exploredown=1/1.2,ideal_accept_rate=0.5;
   
   explore=explore+runif(-0.15,0.15);
 
 		if (adaptive->Z_l/adaptive_period>ideal_accept_rate){
-			tuning->Z_l=adaptive->Z_l*explore;
+			tuning->Z_l=tuning->Z_l*explore;
 		} else {
-			tuning->Z_l=adaptive->Z_l*exploredown;
+			tuning->Z_l=tuning->Z_l*exploredown;
 		}
 		
 		if (adaptive->sigma_Z/adaptive_period>ideal_accept_rate){
-			tuning->sigma_Z=adaptive->sigma_Z*explore;
+			tuning->sigma_Z=tuning->sigma_Z*explore;
 		} else {
-			tuning->sigma_Z=adaptive->sigma_Z*exploredown;
+			tuning->sigma_Z=tuning->sigma_Z*exploredown;
 		}
 		
 		if (adaptive->nu_cl/adaptive_period>ideal_accept_rate){
-			tuning->nu_cl=adaptive->nu_cl*explore;
+			tuning->nu_cl=tuning->nu_cl*explore;
 		} else {
-			tuning->nu_cl=adaptive->nu_cl*exploredown;
+			tuning->nu_cl=tuning->nu_cl*exploredown;
 		}
 		
 		if (adaptive->sigma_nu/adaptive_period>ideal_accept_rate){
-			tuning->sigma_nu=adaptive->sigma_nu*explore;
+			tuning->sigma_nu=tuning->sigma_nu*explore;
 		} else {
-			tuning->sigma_nu=adaptive->sigma_nu*exploredown;
+			tuning->sigma_nu=tuning->sigma_nu*exploredown;
 		}
 
 		if (adaptive->alpha_c/adaptive_period>ideal_accept_rate){
-			tuning->alpha_c=adaptive->alpha_c*explore;
+			tuning->alpha_c=tuning->alpha_c*explore;
 		} else {
-			tuning->alpha_c=adaptive->alpha_c*exploredown;
+			tuning->alpha_c=tuning->alpha_c*exploredown;
 		}
 		
 		if (adaptive->gamma_cl/adaptive_period>ideal_accept_rate){
-			tuning->gamma_cl=adaptive->gamma_cl*explore;
+			tuning->gamma_cl=tuning->gamma_cl*explore;
 		} else {
-			tuning->gamma_cl=adaptive->gamma_cl*exploredown;
+			tuning->gamma_cl=tuning->gamma_cl*exploredown;
 		}
 
 		if (adaptive->sigma_gamma/adaptive_period>ideal_accept_rate){
-			tuning->sigma_gamma=adaptive->sigma_gamma*explore;
+			tuning->sigma_gamma=tuning->sigma_gamma*explore;
 		} else {
-			tuning->sigma_gamma=adaptive->sigma_gamma*exploredown;
+			tuning->sigma_gamma=tuning->sigma_gamma*exploredown;
 		}
 		
 		if (adaptive->Z_p/adaptive_period>ideal_accept_rate){
-			tuning->Z_p=adaptive->Z_p*explore;
+			tuning->Z_p=tuning->Z_p*explore;
 		} else {
-			tuning->Z_p=adaptive->Z_p*exploredown;
+			tuning->Z_p=tuning->Z_p*exploredown;
 		}		
  
     adaptive->Z_l=0,          	  adaptive->sigma_Z=0, 

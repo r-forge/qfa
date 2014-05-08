@@ -516,144 +516,146 @@ return 0;
 
 int adaptive_phase_process_JHM(struct_tuning_JHM *tuning,
   struct_adaptive_JHM *adaptive,int adaptive_period,int print,int iter){
-  int explore=1.4,exploredown=1/1.4,ideal_accept_rate=0.5;
+  int explore=1.2,exploredown=1/1.2,ideal_accept_rate=0.25;
+  explore=explore+0.2*(1-iter);/*less difficult to accept*/
+  
   
 		if (adaptive->K_clm/adaptive_period>ideal_accept_rate){
-			tuning->K_clm=adaptive->K_clm*explore;/*more difficult to accept*/
+			tuning->K_clm=tuning->K_clm*explore;/*more difficult to accept*/
 		} else {
-			tuning->K_clm=adaptive->K_clm*exploredown;/*less difficult to accept*/
+			tuning->K_clm=tuning->K_clm*exploredown;/*less difficult to accept*/
 		}
 		
 		if (adaptive->tau_K_cl/adaptive_period>ideal_accept_rate){
-			tuning->tau_K_cl=adaptive->tau_K_cl*explore;
+			tuning->tau_K_cl=tuning->tau_K_cl*explore;
 		} else {
-			tuning->tau_K_cl=adaptive->tau_K_cl*exploredown;
+			tuning->tau_K_cl=tuning->tau_K_cl*exploredown;
 		}
 		
 		if (adaptive->r_clm/adaptive_period>ideal_accept_rate){
-			tuning->r_clm=adaptive->r_clm*explore;
+			tuning->r_clm=tuning->r_clm*explore;
 		} else {
-			tuning->r_clm=adaptive->r_clm*exploredown;
+			tuning->r_clm=tuning->r_clm*exploredown;
 		}
 		
 		if (adaptive->tau_r_cl/adaptive_period>ideal_accept_rate){
-			tuning->tau_r_cl=adaptive->tau_r_cl*explore;
+			tuning->tau_r_cl=tuning->tau_r_cl*explore;
 		} else {
-			tuning->tau_r_cl=adaptive->tau_r_cl*exploredown;
+			tuning->tau_r_cl=tuning->tau_r_cl*exploredown;
 		}
 
 		if (adaptive->K_o_l/adaptive_period>ideal_accept_rate){
-			tuning->K_o_l=adaptive->K_o_l*explore;
+			tuning->K_o_l=tuning->K_o_l*explore;
 		} else {
-			tuning->K_o_l=adaptive->K_o_l*exploredown;
+			tuning->K_o_l=tuning->K_o_l*exploredown;
 		}
 		
 		if (adaptive->sigma_K_o/adaptive_period>ideal_accept_rate){
-			tuning->sigma_K_o=adaptive->sigma_K_o*explore;
+			tuning->sigma_K_o=tuning->sigma_K_o*explore;
 		} else {
-			tuning->sigma_K_o=adaptive->sigma_K_o*exploredown;
+			tuning->sigma_K_o=tuning->sigma_K_o*exploredown;
 		}
 
 		if (adaptive->r_o_l/adaptive_period>ideal_accept_rate){
-			tuning->r_o_l=adaptive->r_o_l*explore;
+			tuning->r_o_l=tuning->r_o_l*explore;
 		} else {
-			tuning->r_o_l=adaptive->r_o_l*exploredown;
+			tuning->r_o_l=tuning->r_o_l*exploredown;
 		}
 		
 		if (adaptive->sigma_r_o/adaptive_period>ideal_accept_rate){
-			tuning->sigma_r_o=adaptive->sigma_r_o*explore;
+			tuning->sigma_r_o=tuning->sigma_r_o*explore;
 		} else {
-			tuning->sigma_r_o=adaptive->sigma_r_o*exploredown;
+			tuning->sigma_r_o=tuning->sigma_r_o*exploredown;
 		}		
  
  		if (adaptive->nu_l/adaptive_period>ideal_accept_rate){
-			tuning->nu_l=adaptive->nu_l*explore;
+			tuning->nu_l=tuning->nu_l*explore;
 		} else {
-			tuning->nu_l=adaptive->nu_l*exploredown;
+			tuning->nu_l=tuning->nu_l*exploredown;
 		}
 		
 		if (adaptive->sigma_nu/adaptive_period>ideal_accept_rate){
-			tuning->sigma_nu=adaptive->sigma_nu*explore;
+			tuning->sigma_nu=tuning->sigma_nu*explore;
 		} else {
-			tuning->sigma_nu=adaptive->sigma_nu*exploredown;
+			tuning->sigma_nu=tuning->sigma_nu*exploredown;
 		}		
 
  		if (adaptive->gamma_cl/adaptive_period>ideal_accept_rate){
-			tuning->gamma_cl=adaptive->gamma_cl*explore;
+			tuning->gamma_cl=tuning->gamma_cl*explore;
 		} else {
-			tuning->gamma_cl=adaptive->gamma_cl*exploredown;
+			tuning->gamma_cl=tuning->gamma_cl*exploredown;
 		}
 		
 		if (adaptive->sigma_gamma/adaptive_period>ideal_accept_rate){
-			tuning->sigma_gamma=adaptive->sigma_gamma*explore;
+			tuning->sigma_gamma=tuning->sigma_gamma*explore;
 		} else {
-			tuning->sigma_gamma=adaptive->sigma_gamma*exploredown;
+			tuning->sigma_gamma=tuning->sigma_gamma*exploredown;
 		}		
 		
 	 	if (adaptive->omega_cl/adaptive_period>ideal_accept_rate){
-			tuning->omega_cl=adaptive->omega_cl*explore;
+			tuning->omega_cl=tuning->omega_cl*explore;
 		} else {
-			tuning->omega_cl=adaptive->omega_cl*exploredown;
+			tuning->omega_cl=tuning->omega_cl*exploredown;
 		}
 		
 		if (adaptive->sigma_omega/adaptive_period>ideal_accept_rate){
-			tuning->sigma_omega=adaptive->sigma_omega*explore;
+			tuning->sigma_omega=tuning->sigma_omega*explore;
 		} else {
-			tuning->sigma_omega=adaptive->sigma_omega*exploredown;
+			tuning->sigma_omega=tuning->sigma_omega*exploredown;
 		}		
 
 		if (adaptive->alpha_c/adaptive_period>ideal_accept_rate){
-			tuning->alpha_c=adaptive->alpha_c*explore;
+			tuning->alpha_c=tuning->alpha_c*explore;
 		} else {
-			tuning->alpha_c=adaptive->alpha_c*exploredown;
+			tuning->alpha_c=tuning->alpha_c*exploredown;
 		}
 		
 		if (adaptive->beta_c/adaptive_period>ideal_accept_rate){
-			tuning->beta_c=adaptive->beta_c*explore;
+			tuning->beta_c=tuning->beta_c*explore;
 		} else {
-			tuning->beta_c=adaptive->beta_c*exploredown;
+			tuning->beta_c=tuning->beta_c*exploredown;
 		}
 
 		if (adaptive->tau_K_p/adaptive_period>ideal_accept_rate){
-			tuning->tau_K_p=adaptive->tau_K_p*explore;
+			tuning->tau_K_p=tuning->tau_K_p*explore;
 		} else {
-			tuning->tau_K_p=adaptive->tau_K_p*exploredown;
+			tuning->tau_K_p=tuning->tau_K_p*exploredown;
 		}
 		
 		if (adaptive->sigma_tau_K/adaptive_period>ideal_accept_rate){
-			tuning->sigma_tau_K=adaptive->sigma_tau_K*explore;
+			tuning->sigma_tau_K=tuning->sigma_tau_K*explore;
 		} else {
-			tuning->sigma_tau_K=adaptive->sigma_tau_K*exploredown;
+			tuning->sigma_tau_K=tuning->sigma_tau_K*exploredown;
 		}		
 		
 		if (adaptive->tau_r_p/adaptive_period>ideal_accept_rate){
-			tuning->tau_r_p=adaptive->tau_r_p*explore;
+			tuning->tau_r_p=tuning->tau_r_p*explore;
 		} else {
-			tuning->tau_r_p=adaptive->tau_r_p*exploredown;
+			tuning->tau_r_p=tuning->tau_r_p*exploredown;
 		}
 		
 		if (adaptive->sigma_tau_r/adaptive_period>ideal_accept_rate){
-			tuning->sigma_tau_r=adaptive->sigma_tau_r*explore;
+			tuning->sigma_tau_r=tuning->sigma_tau_r*explore;
 		} else {
-			tuning->sigma_tau_r=adaptive->sigma_tau_r*exploredown;
+			tuning->sigma_tau_r=tuning->sigma_tau_r*exploredown;
 		}	
 
 		if (adaptive->K_p/adaptive_period>ideal_accept_rate){
-			tuning->K_p=adaptive->K_p*explore;
+			tuning->K_p=tuning->K_p*explore;
 		} else {
-			tuning->K_p=adaptive->K_p*exploredown;
+			tuning->K_p=tuning->K_p*exploredown;
 		}
 
 		if (adaptive->r_p/adaptive_period>ideal_accept_rate){
-			tuning->r_p=adaptive->r_p*explore;
+			tuning->r_p=tuning->r_p*explore;
 		} else {
-			tuning->r_p=adaptive->r_p*exploredown;
+			tuning->r_p=tuning->r_p*exploredown;
 		}
 
 		if (adaptive->P/adaptive_period<0.5){
-			tuning->P=adaptive->P*explore;
+			tuning->P=tuning->P*explore;
 		} else {
-			tuning->P=adaptive->P*exploredown;
+			tuning->P=tuning->P*exploredown;
 		}
 	
     adaptive->K_clm=0,            adaptive->tau_K_cl=0,
