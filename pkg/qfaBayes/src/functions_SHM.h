@@ -6,16 +6,28 @@ double logistic_function(double t,double K, double r, double P);
 double logistic_function_E(double t,double K, double r, double P);
 double gauss_sample(struct_data *D ,int start, int N,double x[],double tau,double mu_0,double tau_0);
 double gamma_sample(struct_data *D ,int start, int N, double x[], double mu,double alpha,double beta);
-double MCMC_base(struct_data *D,struct_para *D_para,struct_priors *D_priors,double *accept,double *h,double para,double (*foo)(struct struct_data *D,struct struct_para *D_para,struct struct_priors *D_priors,double,int,int),int l, int m);
+
+double MCMC_base(struct_data *D,struct_para *D_para,struct_priors *D_priors,
+  double *accept,double *h,double para,
+  double (*foo)(struct struct_data *D,struct struct_para *D_para,
+  struct struct_priors *D_priors,double,int,int),int l, int m);
+
 double MCMC_P(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
 double MCMC_nu_l(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
 double MCMC_K_lm(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
 double MCMC_r_lm(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
-int gibbsandMHloop(int iter,int thin,struct_data *D,struct_para *D_para,struct_priors *D_priors ,struct_MH *D_MH,int print,double *OUT,char **HEADER);/*********************/
+
+int gibbsandMHloop(int iter,int thin,struct_data *D,
+  struct_para *D_para,  struct_priors *D_priors,
+  struct_tuning *D_tuning,struct_adaptive *D_adaptive,
+  int print,int adaptive_phase,int adaptive_period,double *OUT,char **HEADER);
 
 double MCMC_sigma_K_o(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
 double MCMC_sigma_r_o(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
 double MCMC_tau_K_l(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
 double MCMC_tau_r_l(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
 double MCMC_sigma_nu(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
+
+int adaptive_phase_process(struct_tuning *tuning,
+  struct_adaptive *adaptive,int adaptive_period,int print,int iter);
 #endif

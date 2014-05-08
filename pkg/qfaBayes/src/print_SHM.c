@@ -59,7 +59,7 @@ sprintf(HEADER[t],"tau_r_p");t+=1;
 sprintf(HEADER[t],"sigma_tau_r");t+=1;
 }
 
-void printdata(struct struct_data *D,struct struct_para *D_para,struct struct_MH *D_MH,double *OUT,int *T){
+void printdata(struct struct_data *D,struct struct_para *D_para,double *OUT,int *T){
 	int l,m,mm;
 	for (l=0;l<D->L;l++){
 		for (m=0;m<D->NoORF[l];m++){

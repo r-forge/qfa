@@ -32,7 +32,7 @@ void printheader_IHM(struct struct_data_IHM *D,char **HEADER){
 
 }
 
-void printdata_IHM(struct struct_data_IHM *D,struct struct_para_IHM *D_para,struct struct_MH_IHM *D_MH,double *OUT,int *T){
+void printdata_IHM(struct struct_data_IHM *D,struct struct_para_IHM *D_para,double *OUT,int *T){
   int l;
 	for (l=0;l<D->L;l++){
 		OUT[*T]=D_para->Z_l[l];*T+=1;

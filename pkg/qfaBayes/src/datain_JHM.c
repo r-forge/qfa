@@ -163,7 +163,7 @@ return 0;
 
 /*FILL*/
 
-int  inzstruct_tuning_JHM(struct_tuning_JHM *tuning,double *TUNING)
+int inzstruct_tuning_JHM(struct_tuning_JHM *tuning,double *TUNING)
 {
     tuning->K_clm=TUNING[0],        tuning->tau_K_cl=TUNING[1],
     tuning->r_clm=TUNING[2],        tuning->tau_r_cl=TUNING[3],
@@ -186,7 +186,7 @@ int  inzstruct_tuning_JHM(struct_tuning_JHM *tuning,double *TUNING)
 return 0;
 }
 
-int  inzstruct_adaptive_JHM(struct_adaptive_JHM *adaptive)
+int inzstruct_adaptive_JHM(struct_adaptive_JHM *adaptive)
 {
     adaptive->K_clm=0,            adaptive->tau_K_cl=0,
     adaptive->r_clm=0,            adaptive->tau_r_cl=0,

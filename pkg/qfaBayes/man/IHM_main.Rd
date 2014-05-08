@@ -6,12 +6,15 @@ For use with control and query SHM output.
 Runs IHM C code
 }
 \usage{
-IHM_main(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.NoORFB,PRIORS,TUNING)
+IHM_main(burn,iters,thin,adaptive_phase,adaptive_period,QFA.IA,QFA.yA,
+  QFA.NoORFA,QFA.IB,QFA.yB,QFA.NoORFB,PRIORS,TUNING)
 }
 \arguments{
-  \item{burn}{Burn in period}
+  \item{burn}{Burn-in period}
   \item{iters}{Number of iterations in final sample}
   \item{thin}{Amount of thinning}
+  \item{adaptive_phase}{Total length of adaptive phase within burn in period}
+  \item{adaptive_period}{Period to calculate adaptive statistic over during adaptive phase}
   \item{QFA.IA}{QFA.IA}
   \item{QFA.yA}{QFA.yA}
   \item{QFA.NoORFA}{QFA.NoORFA}

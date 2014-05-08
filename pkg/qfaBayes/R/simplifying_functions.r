@@ -64,12 +64,20 @@ SHM_postpro<-function(a,Treatment,Screen,MPlate,remove_row,remove_col)
 }
 
 ### Calls the C code for running the SHM MCMC ###
-SHM_main <- function(burn,iters,thin,QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS,TUNING){
+SHM_main <- function(burn,iters,thin,adaptive_phase,adaptive_period,
+  QFA.I,QFA.y,QFA.x,QFA.NoORF,QFA.NoTIME,PRIORS,TUNING){
+  if(adaptive_phase>burn){
+    stop()
+  }
+  if(adaptive_period>adaptive_phase){
+    stop()
+  }
   L=length(QFA.NoORF)
   LM<-sum(QFA.NoORF[1:L])
   NCOL=LM+L+L+1+1+1+LM+L+L+1+1+L+1+1+1+1+1+1
   tmp <- .C("main_SHM", as.integer(burn),as.integer(iters),as.integer(thin),
-    OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
+    as.integer(adaptive_phase),as.integer(adaptive_period),
+	OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
     QFAI=as.integer(QFA.I),QFAy=as.double(QFA.y),QFAx=as.double(QFA.x),
 	QFANoORF=as.integer(QFA.NoORF),QFANoTIME=as.integer(QFA.NoTIME),
     PRIORS=as.double(PRIORS),TUNING=as.double(TUNING),PACKAGE="qfaBayes")
@@ -293,7 +301,14 @@ IHM_MDRxMDP_postpro<-function(SHM_a,SHM_output_a,SHM_b,SHM_output_b){
 }
 
 ### Calls the C code for running the IHM MCMC ###
-IHM_main <- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.NoORFB,PRIORS,TUNING){
+IHM_main <- function(burn,iters,thin,adaptive_phase,adaptive_period,
+  QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.NoORFB,PRIORS,TUNING){
+  if(adaptive_phase>burn){
+    stop()
+  }
+  if(adaptive_period>adaptive_phase){
+    stop()
+  }
   aa<-QFA.NoORFA
   bb<-QFA.NoORFB
   if(!(length(aa)==length(bb))){
@@ -302,6 +317,7 @@ IHM_main <- function(burn,iters,thin,QFA.IA,QFA.yA,QFA.NoORFA,QFA.IB,QFA.yB,QFA.
   L=length(aa)
   NCOL=L+1+1+2*L+1+1+1+L+L+1
   tmp <- .C("main_IHM", as.integer(burn),as.integer(iters),as.integer(thin),
+    as.integer(adaptive_phase),as.integer(adaptive_period),
     OUT=as.double(1:(NCOL*iters)),HEADER=as.character(rep("NULLNULL",NCOL)),
     QFAIA=QFA.IA,QFAyA=as.double(QFA.yA),QFANoORFA=as.integer(QFA.NoORFA),
     QFAIB=as.integer(QFA.IB),QFAyB=as.double(QFA.yB),
