@@ -338,11 +338,15 @@ for (i=0;i<iter;i++){
 		}
 		
 		if (print==0){
-				if (iter<adaptive_phase){
-					if (iter % adaptive_period == 0){
-						adaptive_phase_process(D_tuning,D_adaptive,adaptive_period,print,iter);
+			if (adaptive_phase>0){
+				if (adaptive_period>0){
+					if (i<adaptive_phase){
+						if (i % adaptive_period == 0){
+							adaptive_phase_process(D_tuning,D_adaptive,adaptive_period,print,iter);
+						}
 					}
-				}
+				}	
+			}
 		}
 	}
 	if (print==1){
