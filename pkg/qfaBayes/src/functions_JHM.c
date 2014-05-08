@@ -499,7 +499,7 @@ for (i=0;i<iter;i++){
 						if (i<adaptive_phase){
 							if (i % adaptive_period == 0){
 								adaptive_phase_process_JHM(D_tuning,D_adaptive,
-								  adaptive_period,print,iter);
+								  adaptive_period,print,i/iter);
 							}
 						}
 					}	
@@ -516,14 +516,14 @@ return 0;
 
 int adaptive_phase_process_JHM(struct_tuning_JHM *tuning,
   struct_adaptive_JHM *adaptive,int adaptive_period,int print,int iter){
-  int explore=1.3,exploredown=1/1.3,ideal_accept_rate=0.25;
+  int explore=1.4,exploredown=1/1.4,ideal_accept_rate=0.25;
   
-  explore=explore+runif(-0.15,0);
+  explore=explore+0.2*(1-iter);/*less difficult to accept*/
   
 		if (adaptive->K_clm/adaptive_period>ideal_accept_rate){
-			tuning->K_clm=adaptive->K_clm*explore;
+			tuning->K_clm=adaptive->K_clm*explore;/*more difficult to accept*/
 		} else {
-			tuning->K_clm=adaptive->K_clm*exploredown;
+			tuning->K_clm=adaptive->K_clm*exploredown;/*less difficult to accept*/
 		}
 		
 		if (adaptive->tau_K_cl/adaptive_period>ideal_accept_rate){
