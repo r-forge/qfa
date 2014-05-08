@@ -24,8 +24,8 @@ int main_IHM(int *arga,int *argb,int *argc,int *argd,int *arge,double *OUT,
   adaptive_period=*arge; /*period to calculate adaptive statistic over*/
   
   inzstruct_data_IHM(data,QFAIA,QFADyA,QFADNoORFA,QFAIB,QFADyB,QFADNoORFB);
-  inzstruct_tuning_JHM(tuning,TUNING);
-  inzstruct_adaptive_JHM(adaptive);
+  inzstruct_tuning_IHM(tuning,TUNING);
+  inzstruct_adaptive_IHM(adaptive);
   inzstruct_priors_IHM(priors,PRIORS);
   inzstruct_para_IHM(para,data,priors);
 
