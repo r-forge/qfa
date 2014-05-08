@@ -98,8 +98,8 @@ int inzstruct_tuning_IHM(struct_tuning_IHM *tuning,double *TUNING)
 {
     tuning->Z_l=TUNING[0],          	  tuning->sigma_Z=TUNING[1], 
     tuning->nu_cl=TUNING[2],            tuning->sigma_nu=TUNING[3],
-	tuning->alpha_c=TUNING[4],
-    tuning->gamma_cl=TUNING[5],	      tuning->sigma_gamma=TUNING[6],
+    tuning->gamma_cl=TUNING[4],	      tuning->sigma_gamma=TUNING[5],
+	tuning->alpha_c=TUNING[6],
 	tuning->Z_p=TUNING[7];
 
 return 0;
@@ -109,8 +109,8 @@ int inzstruct_adaptive_IHM(struct_adaptive_IHM *adaptive)
 {
     adaptive->Z_l=0,          	  adaptive->sigma_Z=0, 
     adaptive->nu_cl=0,            adaptive->sigma_nu=0,
-	adaptive->alpha_c=0,
     adaptive->gamma_cl=0,	      adaptive->sigma_gamma=0,
+	adaptive->alpha_c=0,
 	adaptive->Z_p=0;
  
 return 0;
