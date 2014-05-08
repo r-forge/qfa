@@ -6,14 +6,15 @@ For use with JHM post processed Colonyzer output.
 Runs JHM C code
 }
 \usage{
-JHM_main(burn,iters,thin,adaptive_phase,adaptive_period,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,
-  QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS,TUNING)}
+JHM_main(burn,iters,thin,adaptive_phase,adaptive_period,QFA.IA,QFA.yA,
+  QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,
+  QFA.NoTIMEB,PRIORS,TUNING)}
 \arguments{
-  \item{burn}{Burn in period}
+  \item{burn}{Burn-in period}
   \item{iters}{Number of iterations in final sample}
   \item{thin}{Amount of thinning (after burn-in)}
-  \item{adaptive_phase}{total length of adaptive phase within burn in period}
-  \item{adaptive_period}{period to calculate adaptive statistic over during adaptive phase}
+  \item{adaptive_phase}{Total length of adaptive phase within burn in period}
+  \item{adaptive_period}{Period to calculate adaptive statistic over during adaptive phase}
   \item{QFA.IA}{QFA.IA}
   \item{QFA.yA}{QFA.yA}
   \item{QFA.xA}{QFA.xA}

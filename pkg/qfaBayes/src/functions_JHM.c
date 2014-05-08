@@ -438,11 +438,12 @@ int gibbsandMHloop_JHM(int iter,int thin,struct_data_JHM *D,
 int i,j,l,m,mm,c,ll,*T,t;
 T=&t;
 *T=0;
+
 	if (print==0){
 		printheader_JHM(D,HEADER);
 	}
-	for (i=0;i<iter;i++){
-  for (j=0;j<thin;j++){
+for (i=0;i<iter;i++){
+	for (j=0;j<thin;j++){
    
      
 			D_para->P=MCMC_base_JHM(D,D_para,D_priors,&D_adaptive->P,&D_tuning->P,D_para->P,MCMC_P_JHM,-999,-999,-999);
@@ -495,7 +496,7 @@ T=&t;
 			if (print==0){
 				if (iter<adaptive_phase){
 					if (iter % adaptive_period == 0){
-						adaptive_phase_process(D_tuning,D_adaptive,adaptive_period,print,iter);
+						adaptive_phase_process_JHM(D_tuning,D_adaptive,adaptive_period,print,iter);
 					}
 				}
 			}
@@ -504,12 +505,11 @@ T=&t;
 		if (print==1){
 			printdata_JHM(D,D_para,OUT,T);
 		}
-	}
-	
+}	
 return 0;
 }
 
-int adaptive_phase_process(struct_tuning_JHM *tuning,
+int adaptive_phase_process_JHM(struct_tuning_JHM *tuning,
   struct_adaptive_JHM *adaptive,int adaptive_period,int print,int iter){
   int explore=1.7,exploredown=0.8,ideal_accept_rate=0.25;
   

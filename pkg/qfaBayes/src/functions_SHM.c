@@ -296,57 +296,182 @@ double MCMC_sigma_tau_r(struct_data *D,struct_para *D_para,struct_priors *D_prio
 }
 
 /*Gibbs and MH steps*/
-
-
-
-int gibbsandMHloop(int iter,int thin,struct_data *D,struct_para *D_para,struct_priors *D_priors ,struct_MH *D_MH,int print,double *OUT,char **HEADER){/*********************/
+int gibbsandMHloop(int iter,int thin,struct_data *D,struct_para *D_para,
+  struct_priors *D_priors,struct_tuning *D_tuning,
+  struct_adaptive *D_adaptive,int print,int adaptive_phase,
+  int adaptive_period,double *OUT,char **HEADER){
 int i,j,l,m,mm,*T,t;
 T=&t;
 *T=0;
-	if (print==0){printheader(D,HEADER);}	
-	for (i=0;i<iter;i++){
-for (j=0;j<thin;j++){
-  D_MH->hP=0.5;
-  D_para->P=MCMC_base(D,D_para,D_priors,&D_MH->accept_P,&D_MH->hP,D_para->P,MCMC_P,-999,-999);
-D_MH->hP=1;
-		D_para->sigma_K_o=MCMC_base(D,D_para,D_priors,&D_MH->accept_P,&D_MH->hP,D_para->sigma_K_o,MCMC_sigma_K_o,-999,-999);
-D_MH->hP=0.2;
-		D_para->sigma_r_o=MCMC_base(D,D_para,D_priors,&D_MH->accept_P,&D_MH->hP,D_para->sigma_r_o,MCMC_sigma_r_o,-999,-999);
-		D_para->sigma_nu=MCMC_base(D,D_para,D_priors,&D_MH->accept_P,&D_MH->hP,D_para->sigma_nu,MCMC_sigma_nu,-999,-999);
-		D_para->K_p=MCMC_base(D,D_para,D_priors,&D_MH->accept_K,&D_MH->hK,D_para->K_p,MCMC_K_p,-999,-999);
-		D_para->r_p=MCMC_base(D,D_para,D_priors,&D_MH->accept_K,&D_MH->hr,D_para->r_p,MCMC_r_p,-999,-999);
-		
+	
+	if (print==0){
+		printheader(D,HEADER);
+	}	
+for (i=0;i<iter;i++){
+	for (j=0;j<thin;j++){
+		D_para->P=MCMC_base(D,D_para,D_priors,&D_adaptive->P,&D_tuning->P,D_para->P,MCMC_P,-999,-999);
+		D_para->sigma_K_o=MCMC_base(D,D_para,D_priors,&D_adaptive->sigma_K_o,&D_tuning->sigma_K_o,D_para->sigma_K_o,MCMC_sigma_K_o,-999,-999);
+		D_para->sigma_r_o=MCMC_base(D,D_para,D_priors,&D_adaptive->sigma_r_o,&D_tuning->sigma_r_o,D_para->sigma_r_o,MCMC_sigma_r_o,-999,-999);
+		D_para->sigma_nu=MCMC_base(D,D_para,D_priors,&D_adaptive->sigma_nu,&D_tuning->sigma_nu,D_para->sigma_nu,MCMC_sigma_nu,-999,-999);
+		D_para->K_p=MCMC_base(D,D_para,D_priors,&D_adaptive->K_p,&D_tuning->K_p,D_para->K_p,MCMC_K_p,-999,-999);
+		D_para->r_p=MCMC_base(D,D_para,D_priors,&D_adaptive->r_p,&D_tuning->r_p,D_para->r_p,MCMC_r_p,-999,-999);	
 		D_para->nu_p=gauss_sample(D,0,D->L,D_para->nu_l,exp(D_para->sigma_nu),D_priors->nu_mu,D_priors->eta_nu_p);
-
-
-		D_para->tau_K_p=MCMC_base(D,D_para,D_priors,&D_MH->accept_P,&D_MH->hP,D_para->tau_K_p,MCMC_tau_K_p,-999,-999);
-		D_para->sigma_tau_K=MCMC_base(D,D_para,D_priors,&D_MH->accept_P,&D_MH->hP,D_para->sigma_tau_K,MCMC_sigma_tau_K,-999,-999);
-		D_para->tau_r_p=MCMC_base(D,D_para,D_priors,&D_MH->accept_P,&D_MH->hP,D_para->tau_r_p,MCMC_tau_r_p,-999,-999);
-		D_para->sigma_tau_r=MCMC_base(D,D_para,D_priors,&D_MH->accept_P,&D_MH->hP,D_para->sigma_tau_r,MCMC_sigma_tau_r,-999,-999);
+		D_para->tau_K_p=MCMC_base(D,D_para,D_priors,&D_adaptive->tau_K_p,&D_tuning->tau_K_p,D_para->tau_K_p,MCMC_tau_K_p,-999,-999);
+		D_para->sigma_tau_K=MCMC_base(D,D_para,D_priors,&D_adaptive->sigma_tau_K,&D_tuning->sigma_tau_K,D_para->sigma_tau_K,MCMC_sigma_tau_K,-999,-999);
+		D_para->tau_r_p=MCMC_base(D,D_para,D_priors,&D_adaptive->tau_r_p,&D_tuning->tau_r_p,D_para->tau_r_p,MCMC_tau_r_p,-999,-999);
+		D_para->sigma_tau_r=MCMC_base(D,D_para,D_priors,&D_adaptive->sigma_tau_r,&D_tuning->sigma_tau_r,D_para->sigma_tau_r,MCMC_sigma_tau_r,-999,-999);
 		  
 		for (l=0;l<D->L;l++){
-		  D_para->tau_K_l[l]=MCMC_base_truncate_low(0,D,D_para,D_priors,&D_MH->accept_P,&D_MH->hP,D_para->tau_K_l[l],MCMC_tau_K_l,l,-999);
-		  D_para->tau_r_l[l]=MCMC_base(D,D_para,D_priors,&D_MH->accept_P,&D_MH->hP,D_para->tau_r_l[l],MCMC_tau_r_l,l,-999);
-		  D_MH->hK=0.01;		  
-		  D_para->K_o_l[l]=MCMC_base_truncate_low(0,D,D_para,D_priors,&D_MH->accept_K,&D_MH->hK,exp(D_para->K_o_l[l]),MCMC_K_o_l,l,-999);
-		  D_MH->hK=0.1;
-		D_para->K_o_l[l]=log(D_para->K_o_l[l]);
-		
-		D_para->r_o_l[l]=MCMC_base_truncate_low(0,D,D_para,D_priors,&D_MH->accept_K,&D_MH->hr,exp(D_para->r_o_l[l]),MCMC_r_o_l,l,-999);
-		D_para->r_o_l[l]=log(D_para->r_o_l[l]);
+			D_para->tau_K_l[l]=MCMC_base_truncate_low(0,D,D_para,D_priors,&D_adaptive->tau_K_l,&D_tuning->tau_K_l,D_para->tau_K_l[l],MCMC_tau_K_l,l,-999);
+			D_para->tau_r_l[l]=MCMC_base(D,D_para,D_priors,&D_adaptive->tau_r_l,&D_tuning->tau_r_l,D_para->tau_r_l[l],MCMC_tau_r_l,l,-999);	  
+			D_para->K_o_l[l]=MCMC_base_truncate_low(0,D,D_para,D_priors,&D_adaptive->K_o_l,&D_tuning->K_o_l,exp(D_para->K_o_l[l]),MCMC_K_o_l,l,-999);
+			D_para->K_o_l[l]=log(D_para->K_o_l[l]);
+			D_para->r_o_l[l]=MCMC_base_truncate_low(0,D,D_para,D_priors,&D_adaptive->r_o_l,&D_tuning->r_o_l,exp(D_para->r_o_l[l]),MCMC_r_o_l,l,-999);
+			D_para->r_o_l[l]=log(D_para->r_o_l[l]);
+			D_para->nu_l[l]=MCMC_base(D,D_para,D_priors,&D_adaptive->nu_l,&D_tuning->nu_l,D_para->nu_l[l],MCMC_nu_l,l,-999);
 
-			D_para->nu_l[l]=MCMC_base(D,D_para,D_priors,&D_MH->accept_nu,&D_MH->hnu,D_para->nu_l[l],MCMC_nu_l,l,-999);
 			for (m=0;m<D->NoORF[l];m++){ 
 				mm=D->NoSUM[l]+m;
-				D_MH->hK=0.05;
-				D_para->K_lm[mm]=MCMC_base_truncate_high(0,D,D_para,D_priors,&D_MH->accept_K,&D_MH->hK,D_para->K_lm[mm],MCMC_K_lm,l,m);
-				D_MH->hK=0.1;
-				D_para->r_lm[mm]=MCMC_base_truncate_high(3.5,D,D_para,D_priors,&D_MH->accept_r,&D_MH->hr,D_para->r_lm[mm],MCMC_r_lm,l,m);
+				D_para->K_lm[mm]=MCMC_base_truncate_high(0,D,D_para,D_priors,&D_adaptive->K_lm,&D_tuning->K_lm,D_para->K_lm[mm],MCMC_K_lm,l,m);
+				D_para->r_lm[mm]=MCMC_base_truncate_high(3.5,D,D_para,D_priors,&D_adaptive->r_lm,&D_tuning->r_lm,D_para->r_lm[mm],MCMC_r_lm,l,m);
 			}
 		}
+		
+		if (print==0){
+				if (iter<adaptive_phase){
+					if (iter % adaptive_period == 0){
+						adaptive_phase_process(D_tuning,D_adaptive,adaptive_period,print,iter);
+					}
+				}
+		}
 	}
-	if (print==1){printdata(D,D_para,D_MH,OUT,T);}
+	if (print==1){
+		printdata(D,D_para,OUT,T);
 	}
+}
 return 0;
 }
 
+int adaptive_phase_process(struct_tuning *tuning,
+  struct_adaptive *adaptive,int adaptive_period,int print,int iter){
+  int explore=1.7,exploredown=0.8,ideal_accept_rate=0.25;
+  
+  explore=explore+runif(-0.15,0.15);
+  
+		if (adaptive->K_lm/adaptive_period>ideal_accept_rate){
+			tuning->K_lm=adaptive->K_lm*explore;
+		} else {
+			tuning->K_lm=adaptive->K_lm*exploredown;
+		}
+		
+		if (adaptive->tau_K_l/adaptive_period>ideal_accept_rate){
+			tuning->tau_K_l=adaptive->tau_K_l*explore;
+		} else {
+			tuning->tau_K_l=adaptive->tau_K_l*exploredown;
+		}
+		
+		if (adaptive->r_lm/adaptive_period>ideal_accept_rate){
+			tuning->r_lm=adaptive->r_lm*explore;
+		} else {
+			tuning->r_lm=adaptive->r_lm*exploredown;
+		}
+		
+		if (adaptive->tau_r_l/adaptive_period>ideal_accept_rate){
+			tuning->tau_r_l=adaptive->tau_r_l*explore;
+		} else {
+			tuning->tau_r_l=adaptive->tau_r_l*exploredown;
+		}
+
+		if (adaptive->K_o_l/adaptive_period>ideal_accept_rate){
+			tuning->K_o_l=adaptive->K_o_l*explore;
+		} else {
+			tuning->K_o_l=adaptive->K_o_l*exploredown;
+		}
+		
+		if (adaptive->sigma_K_o/adaptive_period>ideal_accept_rate){
+			tuning->sigma_K_o=adaptive->sigma_K_o*explore;
+		} else {
+			tuning->sigma_K_o=adaptive->sigma_K_o*exploredown;
+		}
+
+		if (adaptive->r_o_l/adaptive_period>ideal_accept_rate){
+			tuning->r_o_l=adaptive->r_o_l*explore;
+		} else {
+			tuning->r_o_l=adaptive->r_o_l*exploredown;
+		}
+		
+		if (adaptive->sigma_r_o/adaptive_period>ideal_accept_rate){
+			tuning->sigma_r_o=adaptive->sigma_r_o*explore;
+		} else {
+			tuning->sigma_r_o=adaptive->sigma_r_o*exploredown;
+		}		
+ 
+ 		if (adaptive->nu_l/adaptive_period>ideal_accept_rate){
+			tuning->nu_l=adaptive->nu_l*explore;
+		} else {
+			tuning->nu_l=adaptive->nu_l*exploredown;
+		}
+		
+		if (adaptive->sigma_nu/adaptive_period>ideal_accept_rate){
+			tuning->sigma_nu=adaptive->sigma_nu*explore;
+		} else {
+			tuning->sigma_nu=adaptive->sigma_nu*exploredown;
+		}		
+
+		if (adaptive->tau_K_p/adaptive_period>ideal_accept_rate){
+			tuning->tau_K_p=adaptive->tau_K_p*explore;
+		} else {
+			tuning->tau_K_p=adaptive->tau_K_p*exploredown;
+		}
+		
+		if (adaptive->sigma_tau_K/adaptive_period>ideal_accept_rate){
+			tuning->sigma_tau_K=adaptive->sigma_tau_K*explore;
+		} else {
+			tuning->sigma_tau_K=adaptive->sigma_tau_K*exploredown;
+		}		
+		
+		if (adaptive->tau_r_p/adaptive_period>ideal_accept_rate){
+			tuning->tau_r_p=adaptive->tau_r_p*explore;
+		} else {
+			tuning->tau_r_p=adaptive->tau_r_p*exploredown;
+		}
+		
+		if (adaptive->sigma_tau_r/adaptive_period>ideal_accept_rate){
+			tuning->sigma_tau_r=adaptive->sigma_tau_r*explore;
+		} else {
+			tuning->sigma_tau_r=adaptive->sigma_tau_r*exploredown;
+		}	
+
+		if (adaptive->K_p/adaptive_period>ideal_accept_rate){
+			tuning->K_p=adaptive->K_p*explore;
+		} else {
+			tuning->K_p=adaptive->K_p*exploredown;
+		}
+
+		if (adaptive->r_p/adaptive_period>ideal_accept_rate){
+			tuning->r_p=adaptive->r_p*explore;
+		} else {
+			tuning->r_p=adaptive->r_p*exploredown;
+		}
+
+		if (adaptive->P/adaptive_period<0.5){
+			tuning->P=adaptive->P*explore;
+		} else {
+			tuning->P=adaptive->P*exploredown;
+		}
+	
+    adaptive->K_lm=0,            adaptive->tau_K_l=0,
+    adaptive->r_lm=0,            adaptive->tau_r_l=0,
+
+    adaptive->K_o_l=0,            adaptive->sigma_K_o=0,
+    adaptive->r_o_l=0,            adaptive->sigma_r_o=0,
+    adaptive->nu_l=0,             adaptive->sigma_nu=0,
+   
+	adaptive->tau_K_p=0,		  adaptive->sigma_tau_K=0,
+	adaptive->tau_r_p=0,		  adaptive->sigma_tau_r=0,
+	
+    adaptive->K_p=0,			  adaptive->r_p=0,
+    adaptive->P=0;
+	
+return 0;
+}

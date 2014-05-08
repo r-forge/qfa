@@ -12,19 +12,6 @@ typedef struct struct_data_IHM {
   int L, M,N,*NoORF,*NoSUM,*NoTIME,SHIFTmn,MAXmn;
 } struct_data_IHM;
 
-typedef struct struct_MH_IHM {
-  double 
-halpha_c,
-hsigma_gamma,
-hsigma_nu,
-hsigma_Z,
-hnu_p,
-hgamma_cl,
-hZ_l,
-hnu_cl,
-accept_Z,accept_nu,accept_up;
-} struct_MH_IHM;
-
 typedef struct struct_para_IHM {
   double
     *alpha_c,
@@ -51,4 +38,25 @@ typedef struct struct_priors_IHM {
     df;
 } struct_priors_IHM;
 
+typedef struct struct_tuning_IHM {
+  double 
+    alpha_c,
+    gamma_cl,	        sigma_gamma,
 
+    Z_l,              sigma_Z,         
+    nu_cl,             sigma_nu,
+    Z_p;
+
+} struct_tuning_IHM;
+
+typedef struct struct_adaptive_IHM {
+  double 
+    alpha_c,
+    delta_l,
+    gamma_cl,	        sigma_gamma,
+
+    Z_l,              sigma_Z,         
+    nu_cl,             sigma_nu,
+    Z_p;
+
+} struct_adaptive_IHM;

@@ -17,13 +17,6 @@ return 0;
 
 /*INZ*/
 
-int inzstruct_MH_IHM(struct_MH_IHM *MH,double *TUNING)
-{
-	fillMH_IHM(MH,TUNING);
-return 0;
-}
-
-
 int inzstruct_priors_IHM(struct_priors_IHM *D_priors,double *PRIORS)
 {
     D_priors->Z_mu=PRIORS[0];	
@@ -101,32 +94,25 @@ return 0;
 
 /*FILL*/
 
-int fillMH_IHM(struct_MH_IHM *MH,double *TUNING)
+int inzstruct_tuning_IHM(struct_tuning_IHM *tuning,double *TUNING)
 {
-	MH->halpha_c=TUNING[0];
-	MH->hsigma_gamma=TUNING[1];
-    MH->hsigma_nu=TUNING[2];
-	MH->hsigma_Z=TUNING[3];
-	MH->hnu_p=TUNING[4];
-	MH->hgamma_cl=TUNING[5];
-	MH->hZ_l=TUNING[6];
-	MH->hnu_cl=TUNING[7];
-	MH->accept_Z=0;
-	MH->accept_up=0;
-	MH->accept_nu=0;
-	
-/*HARDCODED VER
-	MH->halpha_c=0.008;
-	MH->hsigma_gamma=0.5;
-    MH->hsigma_nu=0.5;
-	MH->hsigma_Z=0.5;
-	MH->hnu_p=0.5;
-	MH->hgamma_cl=0.5;
-	MH->hZ_l=0.2;
-	MH->hnu_cl=0.5;
-	MH->accept_Z=0;
-	MH->accept_up=0;
-	MH->accept_nu=0; */
+    tuning->Z_l=TUNING[0],          	  tuning->sigma_Z=TUNING[1], 
+    tuning->nu_cl=TUNING[2],            tuning->sigma_nu=TUNING[3],
+	tuning->alpha_c=TUNING[4],
+    tuning->gamma_cl=TUNING[5],	      tuning->sigma_gamma=TUNING[6],
+	tuning->Z_p=TUNING[7];
+
+return 0;
+}
+
+int inzstruct_adaptive_IHM(struct_adaptive_IHM *adaptive)
+{
+    adaptive->Z_l=0,          	  adaptive->sigma_Z=0, 
+    adaptive->nu_cl=0,            adaptive->sigma_nu=0,
+	adaptive->alpha_c=0,
+    adaptive->gamma_cl=0,	      adaptive->sigma_gamma=0,
+	adaptive->Z_p=0;
+ 
 return 0;
 }
 

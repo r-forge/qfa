@@ -11,7 +11,6 @@ typedef struct struct_data_JHM {
   int L, M,N,*NoORF,*NoSUM,*NoTIME,SHIFTlmn,SHIFTmn, maxy,maxTIMEa,maxTIMEb;
 } struct_data_JHM;
 
-
 typedef struct struct_para_JHM {
   double
     *alpha_c,
@@ -33,7 +32,6 @@ typedef struct struct_para_JHM {
     P,
     *tau_K_p,*tau_r_p,*sigma_tau_K,*sigma_tau_r;
 } struct_para_JHM;
-
 
 typedef struct struct_priors_JHM {
   double

@@ -12,10 +12,6 @@ typedef struct struct_data {
   int L, M,N,*NoORF,*NoSUM,*NoTIME,SHIFTlmn,maxy,maxNoTIME;
 } struct_data;
 
-typedef struct struct_MH {
-  double hP,hnu,hK,hr,accept_P,accept_nu,accept_K,accept_r;
-} struct_MH;
-
 typedef struct struct_para {
   double
     *K_lm,            *tau_K_l,
@@ -29,8 +25,7 @@ typedef struct struct_para {
     r_p,
     nu_p,
     P,
-  sigma_K_o_b,
-    tau_K_p, sigma_tau_K,tau_r_p,sigma_tau_r;
+    tau_K_p,tau_r_p,sigma_tau_K,sigma_tau_r;
 } struct_para;
 
 typedef struct struct_priors {
@@ -51,4 +46,33 @@ typedef struct struct_priors {
 
 } struct_priors;
 
+typedef struct struct_tuning {
+  double      
+    K_lm,            tau_K_l,
+    r_lm,            tau_r_l,
 
+    K_o_l,            sigma_K_o,
+    r_o_l,            sigma_r_o,
+    nu_l,             sigma_nu,
+
+    K_p,
+    r_p,
+    P,
+    tau_K_p,tau_r_p,sigma_tau_K,sigma_tau_r;
+} struct_tuning;
+
+typedef struct struct_adaptive {
+  double 
+   
+    K_lm,            tau_K_l,
+    r_lm,            tau_r_l,
+
+    K_o_l,            sigma_K_o,
+    r_o_l,            sigma_r_o,
+    nu_l,             sigma_nu,
+
+    K_p,
+    r_p,
+    P,
+    tau_K_p,tau_r_p,sigma_tau_K,sigma_tau_r;
+} struct_adaptive;
