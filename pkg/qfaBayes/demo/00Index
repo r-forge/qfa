@@ -1,3 +1,4 @@
 SHM C code simple (MPlate 15 Only)
 IHM	C code simple (MPlate 15 Only)
+IHM_parallel C code using parallel package to carry out x2 SHM (MPlate 15 Only)
 JHM	C code simple (MPlate 15 Only)
