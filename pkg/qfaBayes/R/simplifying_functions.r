@@ -275,15 +275,15 @@ IHM_MDRxMDP_postpro<-function(SHM_a,SHM_output_a,SHM_b,SHM_output_b){
   
   for (i in 1:(SHIFTmn)){
 	t=t+1
-	K_lm[i]=exp(QFA.yA[t])
+	K_lm[i]=exp(QFA.yB[t])
   }
 	
   t=t+2*L+3
-  P=exp(QFA.yA[t])
+  P=exp(QFA.yB[t])
  
   for (i in 1:SHIFTmn){
 	t=t+1
-	r_lm[i]=exp(QFA.yA[t])
+	r_lm[i]=exp(QFA.yB[t])
   }
         
   for (i in 1:SHIFTmn){
