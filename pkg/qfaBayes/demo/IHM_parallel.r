@@ -10,8 +10,10 @@ require(parallel)
 ## load control and query qfa datasets
 data("URA3_Raw_extratrim_15")#Control
 a<-a_15
+a$Expt.Time[a$Expt.Time<0]=0
 data("CDC13-1_Raw_extratrim_15")#Query
 b<-b_15
+b$Expt.Time[b$Expt.Time<0]=0
 
 ## display experiment variables: Treatment, Screen name and Master plate number
 qfa.variables(a)
