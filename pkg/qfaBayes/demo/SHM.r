@@ -34,11 +34,10 @@ burn<-800000
 iters<-1000
 thin<-100
 adaptive_phase<-1000
-adaptive_period<-100
 
 ## run MCMC code to produce posterior samples from the SHM
 SHM_output<-SHM_main(burn=burn,iters=iters,thin=thin,
-  adaptive_phase=adaptive_phase,adaptive_period=adaptive_period,
+  adaptive_phase=adaptive_phase,
   QFA.I=SHM$QFA.I,QFA.y=SHM$QFA.y,QFA.x=SHM$QFA.x,
   QFA.NoORF=SHM$QFA.NoORF,QFA.NoTIME=SHM$QFA.NoTIME,
   PRIORS=PRIORS,TUNING=TUNING)

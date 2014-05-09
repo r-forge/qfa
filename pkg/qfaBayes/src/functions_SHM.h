@@ -20,7 +20,7 @@ double MCMC_r_lm(struct_data *D,struct_para *D_para,struct_priors *D_priors,doub
 int gibbsandMHloop(int iter,int thin,struct_data *D,
   struct_para *D_para,  struct_priors *D_priors,
   struct_tuning *D_tuning,struct_adaptive *D_adaptive,
-  int print,int adaptive_phase,int adaptive_period,double *OUT,char **HEADER);
+  int print,int adaptive_phase,double *OUT,char **HEADER);
 
 double MCMC_sigma_K_o(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
 double MCMC_sigma_r_o(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
@@ -29,5 +29,5 @@ double MCMC_tau_r_l(struct_data *D,struct_para *D_para,struct_priors *D_priors,d
 double MCMC_sigma_nu(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m);
 
 int adaptive_phase_process(struct_tuning *tuning,
-  struct_adaptive *adaptive,int adaptive_period,int print,int iter);
+  struct_adaptive *adaptive,int print,int iter);
 #endif

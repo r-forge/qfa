@@ -30,7 +30,7 @@ typedef struct struct_para_JHM {
     r_p,
     nu_p,
     P,
-    *tau_K_p,*tau_r_p,*sigma_tau_K,*sigma_tau_r;
+    *tau_K_p_c,*tau_r_p_c,*sigma_tau_K_c,*sigma_tau_r_c;
 } struct_para_JHM;
 
 typedef struct struct_priors_JHM {
@@ -78,7 +78,7 @@ typedef struct struct_tuning_JHM {
     K_p,
     r_p,
     P,
-    tau_K_p,tau_r_p,sigma_tau_K,sigma_tau_r;
+    tau_K_p_c,tau_r_p_c,sigma_tau_K_c,sigma_tau_r_c;
 } struct_tuning_JHM;
 
 typedef struct struct_adaptive_JHM {
@@ -98,5 +98,5 @@ typedef struct struct_adaptive_JHM {
     K_p,
     r_p,
     P,
-    tau_K_p,tau_r_p,sigma_tau_K,sigma_tau_r;
+    tau_K_p_c,tau_r_p_c,sigma_tau_K_c,sigma_tau_r_c;
 } struct_adaptive_JHM;

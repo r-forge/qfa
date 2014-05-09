@@ -299,7 +299,7 @@ double MCMC_sigma_tau_r(struct_data *D,struct_para *D_para,struct_priors *D_prio
 int gibbsandMHloop(int iter,int thin,struct_data *D,struct_para *D_para,
   struct_priors *D_priors,struct_tuning *D_tuning,
   struct_adaptive *D_adaptive,int print,int adaptive_phase,
-  int adaptive_period,double *OUT,char **HEADER){
+  double *OUT,char **HEADER){
 int i,j,l,m,mm,*T,t;
 T=&t;
 *T=0;
@@ -340,8 +340,9 @@ for (i=0;i<iter;i++){
 		
 		if (print==0){
 			if (adaptive_phase>0){
-				adaptive_phase_process(D_tuning,D_adaptive,
-				  adaptive_period,print,iter);	
+				if (adaptive_phase>i){
+					adaptive_phase_process(D_tuning,D_adaptive,print,iter);	
+				}
 			}
 		}	
 	}
@@ -353,12 +354,10 @@ return 0;
 }
 
 int adaptive_phase_process(struct_tuning *tuning,
-  struct_adaptive *adaptive,int adaptive_period,int print,int iter){
-  double explore=1.01,exploredown=1/1.01,ideal_accept_rate=0.25;
+  struct_adaptive *adaptive,int print,int iter){
+  double explore=1.01,exploredown=1/1.01;
   
-  explore=explore+runif(-0.15,0.15);
-  
-		if (adaptive->K_lm==1){
+	/*	if (adaptive->K_lm==1){
 			tuning->K_lm=tuning->K_lm*explore;
 		} else {
 			tuning->K_lm=tuning->K_lm*exploredown;
@@ -387,31 +386,31 @@ int adaptive_phase_process(struct_tuning *tuning,
 		} else {
 			tuning->K_o_l=tuning->K_o_l*exploredown;
 		}
-		
+		*/
 		if (adaptive->sigma_K_o==1){
 			tuning->sigma_K_o=tuning->sigma_K_o*explore;
 		} else {
 			tuning->sigma_K_o=tuning->sigma_K_o*exploredown;
 		}
-
+/*
 		if (adaptive->r_o_l==1){
 			tuning->r_o_l=tuning->r_o_l*explore;
 		} else {
 			tuning->r_o_l=tuning->r_o_l*exploredown;
 		}
-		
+	*/	
 		if (adaptive->sigma_r_o==1){
 			tuning->sigma_r_o=tuning->sigma_r_o*explore;
 		} else {
 			tuning->sigma_r_o=tuning->sigma_r_o*exploredown;
 		}		
- 
+ /*
  		if (adaptive->nu_l==1){
 			tuning->nu_l=tuning->nu_l*explore;
 		} else {
 			tuning->nu_l=tuning->nu_l*exploredown;
 		}
-		
+	*/	
 		if (adaptive->sigma_nu==1){
 			tuning->sigma_nu=tuning->sigma_nu*explore;
 		} else {
@@ -454,7 +453,7 @@ int adaptive_phase_process(struct_tuning *tuning,
 			tuning->r_p=tuning->r_p*exploredown;
 		}
 
-		if (adaptive->P/adaptive_period<0.5){
+		if (adaptive->P==1){
 			tuning->P=tuning->P*explore;
 		} else {
 			tuning->P=tuning->P*exploredown;

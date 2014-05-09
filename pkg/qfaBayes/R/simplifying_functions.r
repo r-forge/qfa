@@ -495,11 +495,8 @@ JHM_postpro<-function(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,
 }
 
 ### Calls the C code for running the JHM MCMC ###
-JHM_main<- function(burn,iters,thin,adaptive_phase,adaptive_period,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS,TUNING) {
+JHM_main<- function(burn,iters,thin,adaptive_phase,QFA.IA,QFA.yA,QFA.xA,QFA.NoORFA,QFA.NoTIMEA,QFA.IB,QFA.yB,QFA.xB,QFA.NoORFB,QFA.NoTIMEB,PRIORS,TUNING) {
   if(adaptive_phase>burn){
-    stop()
-  }
-  if(adaptive_period>adaptive_phase){
     stop()
   }
   aa<-QFA.NoORFA
@@ -512,7 +509,7 @@ JHM_main<- function(burn,iters,thin,adaptive_phase,adaptive_period,QFA.IA,QFA.yA
   LMb<-sum(bb)
   NCOL=LMa+LMb+2*L+L+1+1+1+LMa+LMb+2*L+L+1+1+2*L+1+1+1+1+L+L+1+L+1+2*2+2*2
   tmp <- .C("main_JHM", as.integer(burn),as.integer(iters),as.integer(thin),
-    as.integer(adaptive_phase),as.integer(adaptive_period),OUT=as.double(1:(NCOL*iters)),
+    as.integer(adaptive_phase),OUT=as.double(1:(NCOL*iters)),
     HEADER=as.character(rep("NULLNULL",NCOL)),
     QFAIA=as.integer(QFA.IA),QFAy=as.double(QFA.yA),QFAxA=as.double(QFA.xA),
     QFANoORFA=as.integer(QFA.NoORFA),QFANoTIMEA=as.integer(QFA.NoTIMEA),
@@ -812,8 +809,7 @@ plot_JHM_simple<-function(JHM_output,JHM){
 
 ### Gives a trace plot for one of every parameter type to check convergence of SHM output ###
 visual_convergence_simple_check_SHM<-function(SHM_output){
-  list=c(
-    "K_lm[0]",          "tau_K_l[0]",
+  list=c("K_lm[0]",          "tau_K_l[0]",
     "r_lm[0]",          "tau_r_l[0]",
     "K_o_l[0]",         "sigma_K_o",
     "r_o_l[0]",         "sigma_r_o",
@@ -831,8 +827,7 @@ visual_convergence_simple_check_SHM<-function(SHM_output){
 
 ### Gives a trace plot for one of every parameter type to check convergence IHM output ###
 visual_convergence_simple_check_IHM<-function(IHM_output){
-  list=c(
-    "Z_l[0]",			"sigma_Z",
+  list=c("Z_l[0]",			"sigma_Z",
     "nu_cl[0]",			"sigma_nu",
 	"delta_l[0]",
     "gamma_cl[0]",		"sigma_gamma",
@@ -846,8 +841,7 @@ visual_convergence_simple_check_IHM<-function(IHM_output){
 
 ### Gives a trace plot for one of every parameter type to check convergence JHM output ###
 visual_convergence_simple_check_JHM<-function(JHM_output){
-  list=c(
-    "K_clm[0]",        "tau_K_cl[0]",
+  list=c("K_clm[0]",        "tau_K_cl[0]",
     "r_clm[0]",        "tau_r_cl[0]",
     "K_o_l[0]",        "sigma_K_o",
     "r_o_l[0]",        "sigma_r_o",
@@ -856,8 +850,8 @@ visual_convergence_simple_check_JHM<-function(JHM_output){
     "gamma_cl[0]",	   "sigma_gamma",
     "omega_cl[0]",     "sigma_omega",
     "alpha_c",		   "beta_c",
-    "tau_K_p",		   "sigma_tau_K",
-    "tau_r_p",		   "sigma_tau_r",
+    "tau_K_p_c[0]",		   "sigma_tau_K[0]",
+    "tau_r_p_c[0]",		   "sigma_tau_r[0]",
     "K_p",			   "r_p",
     "nu_p",
     "P"

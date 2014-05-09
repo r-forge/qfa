@@ -152,10 +152,10 @@ int inzstruct_para_JHM(struct_para_JHM *para,struct_data_JHM *data,struct_priors
 	para->alpha_c=malloc(size*sizeof(double));
 	para->beta_c=malloc(size*sizeof(double));
 
-	para->tau_K_p=malloc(size*sizeof(double));
-	para->tau_r_p=malloc(size*sizeof(double));
-	para->sigma_tau_K=malloc(size*sizeof(double));
-	para->sigma_tau_r=malloc(size*sizeof(double));
+	para->tau_K_p_c=malloc(size*sizeof(double));
+	para->tau_r_p_c=malloc(size*sizeof(double));
+	para->sigma_tau_K_c=malloc(size*sizeof(double));
+	para->sigma_tau_r_c=malloc(size*sizeof(double));
 
 	fillpara_JHM(para,data,priors);
 return 0;
@@ -177,8 +177,8 @@ int inzstruct_tuning_JHM(struct_tuning_JHM *tuning,double *TUNING)
 	
     tuning->alpha_c=TUNING[14],		tuning->beta_c=TUNING[15],
 	
-	tuning->tau_K_p=TUNING[16],  	tuning->sigma_tau_K=TUNING[17],
-	tuning->tau_r_p=TUNING[18],     tuning->sigma_tau_r=TUNING[19],
+	tuning->tau_K_p_c=TUNING[16],  	tuning->sigma_tau_K_c=TUNING[17],
+	tuning->tau_r_p_c=TUNING[18],     tuning->sigma_tau_r_c=TUNING[19],
 	
     tuning->K_p=TUNING[20],			tuning->r_p=TUNING[21],
     tuning->P=TUNING[22];
@@ -200,8 +200,8 @@ int inzstruct_adaptive_JHM(struct_adaptive_JHM *adaptive)
     
 	adaptive->alpha_c=0,		  adaptive->beta_c=0,
 	
-	adaptive->tau_K_p=0,		  adaptive->sigma_tau_K=0,
-	adaptive->tau_r_p=0,		  adaptive->sigma_tau_r=0,
+	adaptive->tau_K_p_c=0,		  adaptive->sigma_tau_K_c=0,
+	adaptive->tau_r_p_c=0,		  adaptive->sigma_tau_r_c=0,
 	
     adaptive->K_p=0,			  adaptive->r_p=0,
     adaptive->P=0;
@@ -294,10 +294,10 @@ for (c=0;c<2;c++){
 	D_para->sigma_omega=D_priors->eta_omega;
  
 	for (c=0;c<2;c++){
-	D_para->tau_K_p[c]=D_priors->tau_K_mu;
-	D_para->sigma_tau_K[c]=D_priors->eta_tau_K;
-	D_para->tau_r_p[c]=D_priors->tau_r_mu;
-	D_para->sigma_tau_r[c]=D_priors->eta_tau_r;
+	D_para->tau_K_p_c[c]=D_priors->tau_K_mu;
+	D_para->sigma_tau_K_c[c]=D_priors->eta_tau_K;
+	D_para->tau_r_p_c[c]=D_priors->tau_r_mu;
+	D_para->sigma_tau_r_c[c]=D_priors->eta_tau_r;
 	}
 return 0;
 }

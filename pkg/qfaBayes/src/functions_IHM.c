@@ -176,7 +176,7 @@ double MCMC_sigma_gamma_IHM(struct_data_IHM *D,struct_para_IHM *D_para,struct_pr
 int gibbsandMHloop_IHM(int iter,int thin,struct_data_IHM *D,
   struct_para_IHM *D_para,struct_priors_IHM *D_priors,
   struct_tuning_IHM *D_tuning,struct_adaptive_IHM *D_adaptive,int print,
-  int adaptive_phase,int adaptive_period,double *OUT,char **HEADER){
+  int adaptive_phase,double *OUT,char **HEADER){
 int i,j,l,*T,t,c,ll;
 T=&t;
 *T=0;
@@ -210,8 +210,9 @@ for (i=0;i<iter;i++){
 	  
 		if (print==0){
 			if (adaptive_phase>0){
-				adaptive_phase_process_IHM(D_tuning,D_adaptive,
-				  adaptive_period,print,iter);	
+				if (adaptive_phase>i){
+					adaptive_phase_process_IHM(D_tuning,D_adaptive,print,iter);	
+				}
 			}
 		}	
     }
@@ -223,14 +224,14 @@ for (i=0;i<iter;i++){
 }
 
 int adaptive_phase_process_IHM(struct_tuning_IHM *tuning,
-  struct_adaptive_IHM *adaptive,int adaptive_period,int print,int iter){
-  double explore=1.01,exploredown=1/1.01,ideal_accept_rate=0.25;
-  
-		if (adaptive->Z_l==1){
+  struct_adaptive_IHM *adaptive,int print,int iter){
+  double explore=1.01,exploredown=1/1.01;
+
+	/*	if (adaptive->Z_l==1){
 			tuning->Z_l=tuning->Z_l*explore;
 		} else {
 			tuning->Z_l=tuning->Z_l*exploredown;
-		}
+		}*/
 		
 		if (adaptive->sigma_Z==1){
 			tuning->sigma_Z=tuning->sigma_Z*explore;
@@ -238,11 +239,11 @@ int adaptive_phase_process_IHM(struct_tuning_IHM *tuning,
 			tuning->sigma_Z=tuning->sigma_Z*exploredown;
 		}
 		
-		if (adaptive->nu_cl==1){
+	/*	if (adaptive->nu_cl==1){
 			tuning->nu_cl=tuning->nu_cl*explore;
 		} else {
 			tuning->nu_cl=tuning->nu_cl*exploredown;
-		}
+		}*/
 		
 		if (adaptive->sigma_nu==1){
 			tuning->sigma_nu=tuning->sigma_nu*explore;
@@ -256,11 +257,11 @@ int adaptive_phase_process_IHM(struct_tuning_IHM *tuning,
 			tuning->alpha_c=tuning->alpha_c*exploredown;
 		}
 		
-		if (adaptive->gamma_cl==1){
+		/*if (adaptive->gamma_cl==1){
 			tuning->gamma_cl=tuning->gamma_cl*explore;
 		} else {
 			tuning->gamma_cl=tuning->gamma_cl*exploredown;
-		}
+		}*/
 
 		if (adaptive->sigma_gamma==1){
 			tuning->sigma_gamma=tuning->sigma_gamma*explore;
