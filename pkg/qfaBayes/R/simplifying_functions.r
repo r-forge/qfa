@@ -812,8 +812,7 @@ visual_convergence_simple_check_SHM<-function(SHM_output){
     "tau_r_p",		    "sigma_tau_r",
     "K_p",			    "r_p",
     "nu_p",
-    "P"
-    )
+    "P")
   for (i in 1:length(list)){
     plot(SHM_output[colnames(SHM_output)==list[i]],type="l")
   }
@@ -826,8 +825,7 @@ visual_convergence_simple_check_IHM<-function(IHM_output){
 	"delta_l[0]",
     "gamma_cl[0]",		"sigma_gamma",
 	"alpha_c",	
-	"Z_p",				"nu_p",
-    )
+	"Z_p",				"nu_p")
   for (i in 1:length(list)){
     plot(IHM_output[colnames(IHM_output)==list[i]],type="l")
   }
@@ -848,8 +846,7 @@ visual_convergence_simple_check_JHM<-function(JHM_output){
     "tau_r_p_c[0]",		   "sigma_tau_r[0]",
     "K_p",			   "r_p",
     "nu_p",
-    "P"
-    )
+    "P")
   for (i in 1:length(list)){
     plot(JHM_output[colnames(JHM_output)==list[i]],type="l")
   }
