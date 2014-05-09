@@ -151,7 +151,6 @@ double MCMC_P(struct_data *D,struct_para *D_para,struct_priors *D_priors,double 
 
 }
 
-
 double MCMC_K_p(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m){
   double density,F,SUM=0;
   for (l=0;l<D->L;l++){
