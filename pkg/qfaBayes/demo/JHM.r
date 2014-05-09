@@ -42,8 +42,8 @@ TUNING<-tuning_JHM[[1]]
 
 ## select lengths for burn-in, posterior sample and thinning
 burn<-800000
-iters<-50000
-thin<-10
+iters<-1000
+thin<-100
 adaptive_phase<-1000
 adaptive_period<-100
 
