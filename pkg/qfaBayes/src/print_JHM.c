@@ -80,12 +80,12 @@ sprintf(HEADER[t],"omega_cl[%i]",l);t+=1;
 sprintf(HEADER[t],"sigma_omega");t+=1;
 
 	for (c=0;c<2;c++){
-sprintf(HEADER[t],"tau_K_p[%i]",c);t+=1;
-sprintf(HEADER[t],"sigma_tau_K[%i]",c);t+=1;
+sprintf(HEADER[t],"tau_K_p_c[%i]",c);t+=1;
+sprintf(HEADER[t],"sigma_tau_K_c[%i]",c);t+=1;
 	}
         for (c=0;c<2;c++){
-sprintf(HEADER[t],"tau_r_p[%i]",c);t+=1;
-sprintf(HEADER[t],"sigma_tau_r[%i]",c);t+=1;
+sprintf(HEADER[t],"tau_r_p_c[%i]",c);t+=1;
+sprintf(HEADER[t],"sigma_tau_r_c[%i]",c);t+=1;
 	}
 }
 
@@ -169,11 +169,11 @@ OUT[*T]=D_para->sigma_gamma;*T+=1;
 OUT[*T]=D_para->sigma_gamma;*T+=1;
 
 	for (c=0;c<2;c++){
-OUT[*T]=D_para->tau_K_p[c];*T+=1;
-OUT[*T]=D_para->sigma_tau_r[c];*T+=1;
+OUT[*T]=D_para->tau_K_p_c[c];*T+=1;
+OUT[*T]=D_para->sigma_tau_r_c[c];*T+=1;
         }
         for (c=0;c<2;c++){
-OUT[*T]=D_para->tau_r_p[c];*T+=1;
-OUT[*T]=D_para->sigma_tau_r[c];*T+=1;
+OUT[*T]=D_para->tau_r_p_c[c];*T+=1;
+OUT[*T]=D_para->sigma_tau_r_c[c];*T+=1;
         }
 }

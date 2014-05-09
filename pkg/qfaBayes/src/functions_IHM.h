@@ -16,8 +16,8 @@ double MCMC_alpha_c_IHM(struct_data_IHM *D,struct_para_IHM *D_para,
 int gibbsandMHloop_IHM(int iter,int thin,struct_data_IHM *D,
   struct_para_IHM *D_para,struct_priors_IHM *D_priors,
   struct_tuning_IHM *D_tuning,struct_adaptive_IHM *D_adaptive,
-  int print,int adaptive_phase,int adaptive_period,double *OUT,char **HEADER);
+  int print,int adaptive_phase,double *OUT,char **HEADER);
   
 int adaptive_phase_process_IHM(struct_tuning_IHM *tuning,
-  struct_adaptive_IHM *adaptive,int adaptive_period,int print,int iter);
+  struct_adaptive_IHM *adaptive,int print,int iter);
 #endif

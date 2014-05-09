@@ -33,9 +33,9 @@ double MCMC_tau_r_cl_JHM(struct_data_JHM *D,struct_para_JHM *D_para,struct_prior
 int gibbsandMHloop_JHM(int iter,int thin,struct_data_JHM *D,
   struct_para_JHM *D_para,struct_priors_JHM *D_priors,
   struct_tuning_JHM *D_tuning,struct_adaptive_JHM *D_adaptive,
-  int print,int adaptive_phase,int adaptive_period,double *OUT,char **HEADER);
+  int print,int adaptive_phase,double *OUT,char **HEADER);
 
 int adaptive_phase_process_JHM(struct_tuning_JHM *tuning,
-  struct_adaptive_JHM *adaptive,int adaptive_period,int print,int iter);
+  struct_adaptive_JHM *adaptive,int print,int iter);
   
 #endif

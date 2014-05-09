@@ -45,11 +45,10 @@ burn<-800000
 iters<-1000
 thin<-100
 adaptive_phase<-1000
-adaptive_period<-100
 
 ## run MCMC code to produce posterior samples from the JHM
 JHM_output<-JHM_main(burn=burn,iters=iters,thin=thin,adaptive_phase=adaptive_phase,
-  adaptive_period=adaptive_period,QFA.IA=JHM$QFA.IA,QFA.yA=JHM$QFA.yA,
+  QFA.IA=JHM$QFA.IA,QFA.yA=JHM$QFA.yA,
   QFA.xA=JHM$QFA.xA,QFA.NoORFA=JHM$QFA.NoORFA,
   QFA.NoTIMEA=JHM$QFA.NoTIMEA,QFA.IB=JHM$QFA.IB,QFA.yB=JHM$QFA.yB,
   QFA.xB=JHM$QFA.xB,QFA.NoORFB=JHM$QFA.NoORFB,QFA.NoTIMEB=JHM$QFA.NoTIMEB,
