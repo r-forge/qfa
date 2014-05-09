@@ -84,7 +84,7 @@ sterr <- function(x) sqrt(var(x)/length(x))
 
 ################################################## Epistasis Function ###########################################################
 qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
-	GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE,bootstrap=NULL){
+	GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE,bootstrap=NULL,Nboot=5000,subSamp=Inf){
 	###### Get ORF median fitnesses for control & double #######
 	print("Calculating median (or mean) fitness for each ORF")
 	## LIK ##
@@ -122,13 +122,22 @@ qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 	cFitDef<-findFit(control)
 	dFitDef<-findFit(double)
 
+	diffFrac=function(GIS,direction=`>`){
+		return(length(GIS[direction(GIS,0)])/length(GIS))
+	}
+	
 	### Fit genetic independence model ###
 	m<-lm.epi(dFms,cFms,modcheck)
 	print(paste("Ratio of background mutant fitness to wildtype fitness =",round(m,4)))
 	###### Estimate probability of interaction #######
 	print("Calculating interaction probabilities")
 	if(!is.null(bootstrap)){
-		pg<-sapply(orfs,pgis_bootstrap,cFstats,dFstats,sampSumm=bootstrap,Nreps=5000)
+		GISlist<-sapply(orfs,pgis_bootstrap,cFstats,dFstats,sampSumm=bootstrap,Nreps=Nboot,subSamp=subSamp)
+		g=apply(GISlist,2,bootstrap)
+		greaterFrac=apply(GISlist,2,diffFrac,`>`)
+		lessFrac=apply(GISlist,2,diffFrac,`<`)
+		p=ifelse(g<0,1-lessFrac,1-greaterFrac)
+		pg=rbind(p,g)
 	}else{
 		pg<-sapply(orfs,pgis,m,cFstats,dFstats,wilcoxon=wctest)
 	}
@@ -188,7 +197,8 @@ qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 	if (plot==TRUE){qfa.epiplot(results,qthresh,m)}
 	final<-list(Results=results,
 	Enhancers=gethits(results,qthresh,type="E",GISthresh=GISthresh),
-	Suppressors=gethits(results,qthresh,type="S",GISthresh=GISthresh))
+	Suppressors=gethits(results,qthresh,type="S",GISthresh=GISthresh),
+	GISsummary=GISlist)
 	return(final)
 }
 
@@ -315,7 +325,7 @@ pgis<-function(orf,m,cFs,dFs,wilcoxon=TRUE){
 }
 
 # Estimates p-value and estimated strength of interaction
-pgis_bootstrap<-function(orf,cFs,dFs,sampSumm=mean,wt="YOR202W",Nreps=10000){
+pgis_bootstrap<-function(orf,cFs,dFs,sampSumm=mean,wt="YOR202W",Nreps=10000,subSamp=Inf){
 	# Need to come up with a good estimate for a minumum non-zero fitness
 	# in order to avoid problems with division by zero later
 	fitMin=median(c(unlist(cFs,use.names=FALSE),unlist(dFs,use.names=FALSE)))/200
@@ -324,28 +334,19 @@ pgis_bootstrap<-function(orf,cFs,dFs,sampSumm=mean,wt="YOR202W",Nreps=10000){
 	if((length(dFs[[orf]])==0)|(length(cFs[[orf]])==0)){return(c(1,0))}
 	
 	# Bootstrap estimates of fitness summary distribution for relevant genotypes
-	obsDoubleMut=bsSamp(dFs[[orf]],Nreps,sampSumm)
-	arrayMut=bsSamp(cFs[[orf]],Nreps,sampSumm)
-	backMut=bsSamp(dFs[[wt]],Nreps,sampSumm)
-	wtMut=bsSamp(cFs[[wt]],Nreps,sampSumm)
+	obsDoubleMut=bsSamp(dFs[[orf]],Nreps,sampSumm,subSamp)
+	arrayMut=bsSamp(cFs[[orf]],Nreps,sampSumm,subSamp)
+	backMut=bsSamp(dFs[[wt]],Nreps,sampSumm,subSamp)
+	wtMut=bsSamp(cFs[[wt]],Nreps,sampSumm,subSamp)
 	
 	# Uncertainty about summary of predicted double mutant fitness
 	predDoubleMut=backMut*arrayMut/pmax(wtMut,fitMin)
-	
-	# Genetic interaction strength is difference between observed and predicted fitnesses
 	GIS=obsDoubleMut-predDoubleMut
-	g=sampSumm(GIS)
-	if(g>0){p=greaterFrac(obsDoubleMut,predDoubleMut)}else{p=greaterFrac(predDoubleMut,obsDoubleMut)}
-	return(c(p,g))
+	return(GIS)
 }
 
-greaterFrac=function(A,B){
-	tst=B-A
-	return(length(tst[tst>0])/length(tst))
-}
-
-bsSamp=function(A,Nrep=100000,sampSumm=mean){
-	bsreps=replicate(Nrep,sampSumm(sample(as.numeric(A),length(A),replace=TRUE)))
+bsSamp=function(A,Nrep=100000,sampSumm=mean,subSamp=Inf){
+	bsreps=replicate(Nrep,sampSumm(sample(as.numeric(A),min(subSamp,length(A)),replace=TRUE)))
 	return(bsreps)
 }
 
@@ -425,7 +426,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		# s=bcfit[,4]
 		barcResults<-data.frame(Barcode=as.character(info$Barcode),Row=rows,Col=cols,
 		ScreenID=as.character(info$ScreenID),Treatment=as.character(info$Treatments),Medium=as.character(info$Medium),ORF=as.character(info$ORF),
-		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],nSTP=bcfit[,8],d0=bcfit[,9],Screen.Name=as.character(info$Screen.Name),Library.Name=as.character(info$Screen.Name),MasterPlate.Number=as.numeric(info$MasterPlate.Number),Timeseries.order=as.numeric(info$Timeseries.order),Inoc.Time=inoctime,TileX=as.numeric(info$Tile.Dimensions.X),TileY=as.numeric(info$Tile.Dimensions.Y),XOffset=as.numeric(info$X.Offset),YOffset=as.numeric(info$Y.Offset),Threshold=as.numeric(info$Threshold),EdgeLength=as.numeric(info$Edge.length),EdgePixels=as.numeric(info$Edge.Pixels),RepQuad=as.numeric(info$RepQuad))
+		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],nSTP=bcfit[,8],d0=bcfit[,9],Screen.Name=as.character(info$Screen.Name),Library.Name=as.character(info$Library.Name),MasterPlate.Number=as.numeric(info$MasterPlate.Number),Timeseries.order=as.numeric(info$Timeseries.order),Inoc.Time=inoctime,TileX=as.numeric(info$Tile.Dimensions.X),TileY=as.numeric(info$Tile.Dimensions.Y),XOffset=as.numeric(info$X.Offset),YOffset=as.numeric(info$Y.Offset),Threshold=as.numeric(info$Threshold),EdgeLength=as.numeric(info$Edge.length),EdgePixels=as.numeric(info$Edge.Pixels),RepQuad=as.numeric(info$RepQuad))
 		if("Client"%in%colnames(info)){barcResults$Client=as.character(info$Client)}
 		if("ExptDate"%in%colnames(info)){barcResults$ExptDate=as.character(info$ExptDate)}
 		if("User"%in%colnames(info)){barcResults$User=as.character(info$User)}
