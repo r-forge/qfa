@@ -229,10 +229,8 @@ T=&t;
 
 int adaptive_phase_process_IHM(struct_tuning_IHM *tuning,
   struct_adaptive_IHM *adaptive,int adaptive_period,int print,int iter){
-  int explore=1.2,exploredown=1/1.2,ideal_accept_rate=0.5;
+  double explore=1.05,exploredown=1/1.05,ideal_accept_rate=0.25;
   
-  explore=explore+runif(-0.15,0.15);
-
 		if (adaptive->Z_l/adaptive_period>ideal_accept_rate){
 			tuning->Z_l=tuning->Z_l*explore;
 		} else {

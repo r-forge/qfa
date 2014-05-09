@@ -358,7 +358,7 @@ return 0;
 
 int adaptive_phase_process(struct_tuning *tuning,
   struct_adaptive *adaptive,int adaptive_period,int print,int iter){
-  int explore=1.2,exploredown=1/1.2,ideal_accept_rate=0.5;
+  double explore=1.05,exploredown=1/1.05,ideal_accept_rate=0.25;
   
   explore=explore+runif(-0.15,0.15);
   
