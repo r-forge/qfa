@@ -8,7 +8,7 @@ void printheader_JHM(struct struct_data_JHM *D,char **HEADER){
 			ll=c*D->L+l;
 			for (m=0;m<D->NoORF[ll];m++){ 
 				mm=D->NoSUM[ll]+m;
-				sprintf(HEADER[t],"K_lm[%i]",mm);t+=1;
+				sprintf(HEADER[t],"K_clm[%i]",mm);t+=1;
 			}
 		}
 	}
