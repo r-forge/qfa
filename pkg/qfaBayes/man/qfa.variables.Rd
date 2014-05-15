@@ -1,9 +1,9 @@
 \name{qfa.variables}
 \alias{qfa.variables}
-\title{Gives experiment variables from Colonyzer output}
+\title{Gives experimental variables from QFA data (colonyzer.read output from the qfa package)}
 \description{
 For use with Colonyzer output.
-Gives experiment variables from Colonyzer output
+Gives experimental variables from QFA data (colonyzer.read output from the qfa package).
 }
 \usage{
 qfa.variables(data)
