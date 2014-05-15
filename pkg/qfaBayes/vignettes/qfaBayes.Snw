@@ -124,7 +124,7 @@ So that all Markov chains reach convergence and our samples are sufficiently lar
 \verb@> thin<-100@\\
 \verb@> adaptive_phase<-1000@\\
 \\
-The typical model computation time of the SHM and the dataset given within the demo is four days with a 2.5GHz dual-core CPU.
+The typical model computation time of the SHM and the dataset given within the demo is four days with a 2.5GHz CPU.
 The MCMC sampler is then called using the \verb$SHM_main$ command. 
 \\
 \\
@@ -199,7 +199,7 @@ So that all Markov chains reach convergence and our samples are sufficiently lar
 \verb@> iters<-1000@\\
 \verb@> thin<-100@\\
 \\
-The typical model computation time of a two applications of the SHM and the dataset given within the demo is eight days with a 2.5GHz dual-core CPU.
+The typical model computation time of a two applications of the SHM and the dataset given within the demo is eight days with a 2.5GHz core CPU.
 Alternatively the \verb$demo(IHM_parrallel)$ script can be used to carry out the two SHM applications simultaneously (reducing the computation time by a half), this requires a multi-core processor and the parallel library, which is a default package in later editions of R.
 The MCMC sampler is then called using the \verb$SHM_main$ command. 
 \\
@@ -243,7 +243,7 @@ So that all Markov chains reach convergence and our samples are sufficiently lar
 \verb@> thin_IHM<-100@\\
 \verb@> adaptive_phase_IHM<-1000@\\
 \\
-The typical model computation time of the IHM and the dataset given within the demo is one day with a 2.5GHz dual-core CPU.
+The typical model computation time of the IHM and the dataset given within the demo is one day with a 2.5GHz CPU.
 The MCMC sampler is then called using the \verb$IHM_main$ command. 
 \\
 \\
@@ -318,7 +318,7 @@ So that all Markov chains reach convergence and our samples are sufficiently lar
 \verb@> thin<-100@\\
 \verb@> adaptive_phase<-1000@\\
 \\
-The typical model computation time of the JHM and the dataset given within the demo is six days with a 2.5GHz dual-core CPU.
+The typical model computation time of the JHM and the dataset given within the demo is six days with a 2.5GHz CPU.
 The MCMC sampler is then called using the \verb$IHM_main$ command.
 \\
 \\
