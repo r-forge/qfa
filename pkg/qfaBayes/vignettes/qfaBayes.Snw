@@ -88,10 +88,10 @@ The \verb$SHM$ demo runs the following commands:
 \\
 \\
 \verb@> data("URA3_Raw_extratrim_15")@\\
-\verb@> a<-a_15@\\
+\verb@> a<-URA3_MPlate15only@\\
 \verb@> a$Expt.Time[a$Expt.Time<0]=0@\\
 \\
-The above commands load the trimmed $\emph{ura3}\Delta$ screen to the object \verb$a_15$ and then stores this data as the object \verb$a$.
+The above commands load the trimmed $\emph{ura3}\Delta$ screen to the object \verb$a_15$ and then stores this data as the object \verb$URA3_MPlate15only$.
 To see the experimental variables treatment, screen number and master plate for the QFA dataset we use the \texttt{qfa.variables} function.
 \\
 \\
@@ -153,13 +153,13 @@ The \verb$IHM$ demo runs the following commands:
 \\
 \\
 \verb@> data("URA3_Raw_extratrim_15")@\\
-\verb@> a<-a_15@\\
+\verb@> a<-URA3_MPlate15only@\\
 \verb@> a$Expt.Time[a$Expt.Time<0]=0@\\
-\verb@> data("CDC13-1_Raw_extratrim_15")@\\
-\verb@> b<-b_15@\\
+\verb@> data("cdc13_1_Raw_extratrim_15")@\\
+\verb@> b<-cdc13_1_MPlate15only@\\
 \verb@> b$Expt.Time[b$Expt.Time<0]=0@\\
 \\
-The above commands load the trimmed $\emph{ura3}\Delta$ screen to the object \verb$a_15$ and then stores this data as the object \verb$a$, and similarly for $\emph{cdc13-1}\Delta$ screen.
+The above commands load the trimmed $\emph{ura3}\Delta$ screen to the object \verb$URA3_MPlate15only$ and then stores this data as the object \verb$a$, and similarly for $\emph{cdc13-1}\Delta$ screen.
 To see the experimental variables treatment, screen number and master plate for the two QFA datasets we use the \texttt{qfa.variables} function.
 \\
 \\
@@ -271,13 +271,13 @@ To see how the \verb$JHM$ demo works the following detailed explanation is provi
 \\
 \\
 \verb@> data("URA3_Raw_extratrim_15")@\\
-\verb@> a<-a_15@\\
+\verb@> a<-URA3_MPlate15only@\\
 \verb@> a$Expt.Time[a$Expt.Time<0]=0@\\
-\verb@> data("CDC13-1_Raw_extratrim_15")@\\
-\verb@> b<-b_15@\\
+\verb@> data("cdc13_1_Raw_extratrim_15")@\\
+\verb@> b<-cdc13_1_MPlate15only@\\
 \verb@> b$Expt.Time[b$Expt.Time<0]=0@\\
 \\
-The above commands load the trimmed $\emph{ura3}\Delta$ screen to the object \verb$a_15$ and then stores this data as the object \verb$a$, and similarly for $\emph{cdc13-1}\Delta$ screen.
+The above commands load the trimmed $\emph{ura3}\Delta$ screen to the object \verb$URA3_MPlate15only$ and then stores this data as the object \verb$a$, and similarly for $\emph{cdc13-1}\Delta$ screen.
 To see the experimental variables treatment, screen number and master plate for the two QFA datasets we use the \texttt{qfa.variables} function.
 \\
 \\
