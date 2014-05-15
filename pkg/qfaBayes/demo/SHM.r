@@ -8,7 +8,7 @@ require(qfaBayes)
 
 ## load qfa dataset
 data("URA3_Raw_extratrim_15")#Control
-a<-a_15
+a<-URA3_MPlate15only
 a$Expt.Time[a$Expt.Time<0]=0
 
 ## display experiment variables: Treatment, Screen name and Master plate number

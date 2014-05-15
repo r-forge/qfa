@@ -1,6 +1,6 @@
 \name{URA3_Raw_trim}
 \docType{data}
-\alias{a}
+\alias{URA3}
 \title{URA3_Raw_trim}
 \description{
 ura3Del Colonyzer data
