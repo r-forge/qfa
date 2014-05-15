@@ -200,7 +200,7 @@ So that all Markov chains reach convergence and our samples are sufficiently lar
 \verb@> thin<-100@\\
 \\
 The typical model computation time of a two applications of the SHM and the dataset given within the demo is eight days with a 2.5GHz core CPU.
-Alternatively the \verb$demo(IHM_parrallel)$ script can be used to carry out the two SHM applications simultaneously (reducing the computation time by a half), this requires a multi-core processor and the parallel library, which is a default package in later editions of R.
+Alternatively the \verb$demo(IHM_parallel)$ script can be used to carry out the two SHM applications simultaneously (reducing the computation time by a half), this requires a multi-core processor and the parallel library, which is a default package in later editions of R.
 The MCMC sampler is then called using the \verb$SHM_main$ command. 
 \\
 \\
