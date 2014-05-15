@@ -313,7 +313,7 @@ A broad set of prior values for the JHM are then loaded and stored in the variab
 So that all Markov chains reach convergence and our samples are sufficiently large enough for inference we set the burn-in, sample size and thinning using the code below.
 \\
 \\
-\verb@> burn<-600000@\\
+\verb@> burn<-800000@\\
 \verb@> iters<-1000@\\
 \verb@> thin<-100@\\
 \verb@> adaptive_phase<-1000@\\
