@@ -47,9 +47,9 @@ vignette("qfaBayes")
 
 \section{General overview}
 
-This R package is intended to fit the three Bayesian Models described in J Heydari, C Lawless, D Lydall and D J Wilkinson. \emph{Bayesian hierarchical modeling for inferring genetic interactions in yeast. Journal of the Royal Statistical Society: Series C (Applied Statistics)}, in submission.
+This R package is intended to fit the three Bayesian Models described in J Heydari, C Lawless, D Lydall and D J Wilkinson, \emph{Bayesian hierarchical modeling for inferring genetic interactions in yeast. Journal of the Royal Statistical Society: Series C (Applied Statistics)}, in submission.
 There are three Bayesian models available in the qfaBayes package: the separate hierarchical model (SHM), interaction hierarchical model (IHM), and joint hierarchical model (JHM).
-There are three demos included in this package (\verb$SHM$, \verb$IHM$ and \verb$JHM$).
+Each of the three models have a corresponding demo within this package (\verb$SHM$, \verb$IHM$ and \verb$JHM$).
 
 Computational time for a typical QFA dataset and the Bayesian models in the qfaBayes package can range from days to weeks.
 Variables \verb$burn$, \verb$iter$ and \verb$thin$ control the burn-in period, output sample size and thinning. Different QFA datasets to those used in the qfaBayes demos may require different values for \verb$burn$, \verb$iter$ and \verb$thin$, typically the variables are increased with the size of the dataset. 
@@ -58,7 +58,6 @@ Variables \verb$burn$, \verb$iter$ and \verb$thin$ control the burn-in period, o
 The separate hierarchical model (SHM) describes the growth of multiple yeast cultures using the logistic function:
 \begin{equation}
   x(t;\theta)=\frac{K P e^{rt}}{K + P \left( e^{rt} - 1\right)} \text{,\:\:where\:\:} P=x(0) \text{\:\:and\:\:} \theta=(K,r,P). 
-  \label{eq:logistic}
   \end{equation}
 This logistic growth function describes yeast populations undergoing approximately exponential growth which slows as nutrient availability becomes limiting. Ultimately the population density saturates at the carrying capacity, $K$, once available nutrients are exhausted.
 
@@ -69,7 +68,7 @@ A detailed work-flow for using the SHM is given in the \verb$SHM$ demo.
 The interaction hierarchical model (IHM) describes fisher's multiplicative model of genetic independence between a control and query QFA screen. 
 Evidence for genetic interaction can then be identified by the IHM as \emph{orf}$\Delta$s that deviate from the line of genetic independence.
 
-A univariate measure of fitness is input to the IHM such as maximum doubling rate (MDP), maximum doubling potential (MDP) or their product ${MDR}\times{MDP}$. Currently the IHM within the qfaBayes package uses ${MDR}\times{MDP}$.
+A univariate measure of fitness is input to the IHM such as maximum doubling rate (MDP), maximum doubling potential (MDP) or their product ${MDR}\times{MDP}$. Currently the IHM demo within the qfaBayes package uses ${MDR}\times{MDP}$.
 The IHM describes the hierarchical structure of two QFA dataset, which consists of four level: population, condition, \emph{orf}$\Delta$ and repeat.
 
 A detailed work-flow for using the IHM is given in the \verb$IHM$ demo.
@@ -90,14 +89,15 @@ The \verb$SHM$ demo runs the following commands:
 \\
 \verb@> data("URA3_Raw_extratrim_15")@\\
 \verb@> a<-a_15@\\
+\verb@> a$Expt.Time[a$Expt.Time<0]=0@\\
 \\
-The above commands load the trimmed $\emph{ura3}\Delta$ to the object \verb$a_15$ and then stores this data as the object \verb$a$.
+The above commands load the trimmed $\emph{ura3}\Delta$ screen to the object \verb$a_15$ and then stores this data as the object \verb$a$.
 To see the experimental variables treatment, screen number and master plate for the QFA dataset we use the \texttt{qfa.variables} function.
 \\
 \\
 \verb@> qfa.variables(a)@\\
 \\
-Next, the dataset is filtered by the experimental variables of interest and stored in a object \verb$SHM$ using the function \ttext{SHM_postpro}.
+Next, the dataset is filtered by the experimental variables of interest and stored in a object \verb$SHM$ using the function \ttext{SHM\_postpro}.
 \\
 \\
 \verb@> Treatment<-27@\\
@@ -108,7 +108,7 @@ Next, the dataset is filtered by the experimental variables of interest and stor
 \verb@> SHM<-SHM_postpro(a=a,Treatment=Treatment,Screen=Screen,MPlate=MPlate,@\\
 \verb@+    remove_row=remove_row,remove_col=remove_col)@\\
 \\
-Next, a broad set of prior values for the SHM are loaded and then stored in the variable \verb$PRIORS$. Similarly a set of tuning parameters is loaded and then stored in the variable \verb$TUNING$.
+Next, a broad set of prior values for the SHM are loaded and then stored in the variable {\verb$PRIORS$}. Similarly a set of tuning parameters is loaded and then stored in the variable {\verb$TUNING$}.
 \\
 \\
 \verb@> data("priors_SHM")@\\
@@ -116,20 +116,23 @@ Next, a broad set of prior values for the SHM are loaded and then stored in the 
 \verb@> data("tuning_SHM")@\\
 \verb@> TUNING<-tuning_SHM[[1]]@\\
 \\
-So that all Markov chains reach convergence and our samples are sufficiently large enough for inference we set the burn-in, sample size and thinning using the code below.
+So that all Markov chains reach convergence and our samples are sufficiently large enough for inference we set the burn-in, sample size and thinning using the code below. Variable {\verb$adaptive_phase$} determines the length of an adaptive phase within the burn-in phase (\verb$adaptive_phase<burn$).
 \\
 \\
-\verb@> burn<-600000@\\
+\verb@> burn<-800000@\\
 \verb@> iters<-1000@\\
 \verb@> thin<-100@\\
+\verb@> adaptive_phase<-1000@\\
 \\
 The typical model computation time of the SHM and the dataset given within the demo is four days with a 2.5GHz dual-core CPU.
 The MCMC sampler is then called using the \verb$SHM_main$ command. 
 \\
 \\
-\verb@> SHM_output<-SHM_main(burn=burn,iters=iters,thin=thin,QFA.I=SHM$QFA.I,@\\
-\verb@+    QFA.y=SHM$QFA.y,QFA.x=SHM$QFA.x,QFA.NoORF=SHM$QFA.NoORF,@\\
-\verb@+    QFA.NoTIME=SHM$QFA.NoTIME,PRIORS=PRIORS,TUNING=TUNING)@\\
+\verb@> SHM_output<-SHM_main(burn=burn,iters=iters,thin=thin,@\\
+\verb@+    adaptive_phase=adaptive_phase,@\\
+\verb@+    QFA.I=SHM$QFA.I,QFA.y=SHM$QFA.y,QFA.x=SHM$QFA.x,@\\
+\verb@+    QFA.NoORF=SHM$QFA.NoORF,QFA.NoTIME=SHM$QFA.NoTIME,@\\
+\verb@+    PRIORS=PRIORS,TUNING=TUNING)@\\
 \\
 The output \verb$SHM_output$ is a table of posterior samples, where each column corresponds to a different model parameter; a table header is included to identify each column.
 \\
@@ -145,22 +148,25 @@ The datasets used are subsets of larger QFA screens, trimmed to only include pla
 
 Firstly, the SHM is fit to the two QFA screen datasets separately. After fitting the SHM, the set of logistic growth parameter estimates for each time course is converted into a univariate summary of fitnesses for to input to the IHM.
 
-To see how the \verb$JHM$ demo works the following detailed explanation is provided and is to be used in conjunction with the R package manual.
+To see how the \verb$IHM$ demo works, the following detailed explanation is provided and is to be used in conjunction with the R package manual.
+The \verb$IHM$ demo runs the following commands:
 \\
 \\
 \verb@> data("URA3_Raw_extratrim_15")@\\
 \verb@> a<-a_15@\\
+\verb@> a$Expt.Time[a$Expt.Time<0]=0@\\
 \verb@> data("CDC13-1_Raw_extratrim_15")@\\
 \verb@> b<-b_15@\\
+\verb@> b$Expt.Time[b$Expt.Time<0]=0@\\
 \\
-The above commands load the trimmed $\emph{ura3}\Delta$ to the object \verb$a_15$ and then stores this data as the object \verb$a$, and similarly for $\emph{cdc13-1}\Delta$.
+The above commands load the trimmed $\emph{ura3}\Delta$ screen to the object \verb$a_15$ and then stores this data as the object \verb$a$, and similarly for $\emph{cdc13-1}\Delta$ screen.
 To see the experimental variables treatment, screen number and master plate for the two QFA datasets we use the \texttt{qfa.variables} function.
 \\
 \\
 \verb@> qfa.variables(a)@\\
 \verb@> qfa.variables(b)@\\
 \\
-Next, the datasets are filtered by the experimental variables of interest and stored in the objects \verb$SHM_a$ and \verb$SHM_b$using the function \ttext{SHM_postpro}.
+Next, the datasets are filtered by the experimental variables of interest and stored in the objects \verb$SHM_a$ and \verb$SHM_b$using the function \ttext{SHM\_postpro}.
 \\
 \\
 \verb@> Treatment_a=27@\\
@@ -169,8 +175,14 @@ Next, the datasets are filtered by the experimental variables of interest and st
 \verb@> Treatment_b=27@\\
 \verb@> Screen_b<-unique(b$Screen.Name)@\\
 \verb@> MPlate_b<-15@\\
-\verb@> SHM_a<-SHM_postpro(a=a,Treatment=Treatment_a,Screen=Screen_a,MPlate=MPlate_a)@\\
-\verb@> SHM_b<-SHM_postpro(a=b,Treatment=Treatment_b,Screen=Screen_b,MPlate=MPlate_b)@\\
+\verb@> remove_row_a<-c(1,16)@\\
+\verb@> remove_col_a<-c(1,24)@\\
+\verb@> remove_row_b<-c(1,16)@\\
+\verb@> remove_col_b<-c(1,24)@\\
+\verb@> SHM_a<-SHM_postpro(a=a,Treatment=Treatment_a,Screen=Screen_a,MPlate=MPlate_a,@\\
+\verb@+    remove_row=remove_row_a,remove_col=remove_col_a)@\\
+\verb@> SHM_b<-SHM_postpro(a=b,Treatment=Treatment_b,Screen=Screen_b,MPlate=MPlate_b,@\\
+\verb@+    remove_row=remove_row_b,remove_col=remove_col_b)@\\
 \\
 Next, a broad set of prior values for the SHM are loaded and then stored in the variable \verb$PRIORS$. Similarly a set of tuning parameters is loaded and then stored in the variable \verb$TUNING$.
 \\
@@ -188,21 +200,32 @@ So that all Markov chains reach convergence and our samples are sufficiently lar
 \verb@> thin<-100@\\
 \\
 The typical model computation time of a two applications of the SHM and the dataset given within the demo is eight days with a 2.5GHz dual-core CPU.
+Alternatively the \verb$demo(IHM_parrallel)$ script can be used to carry out the two SHM applications simultaneously (reducing the computation time by a half), this requires a multi-core processor and the parallel library, which is a default package in later editions of R.
 The MCMC sampler is then called using the \verb$SHM_main$ command. 
 \\
 \\
-\verb@> SHM_output_a<-SHM_main(burn=burn,iters=iters,thin=thin,QFA.I=SHM_a$QFA.I,@\\
-\verb@+    QFA.y=SHM_a$QFA.y,QFA.x=SHM_a$QFA.x,QFA.NoORF=SHM_a$QFA.NoORF,@\\
-\verb@+    QFA.NoTIME=SHM_a$QFA.NoTIME,PRIORS=PRIORS,TUNING=TUNING)@\\
-\verb@> SHM_output_b<-SHM_main(burn=burn,iters=iters,thin=thin,QFA.I=SHM_b$QFA.I,@\\
-\verb@+    QFA.y=SHM_b$QFA.y,QFA.x=SHM_b$QFA.x,QFA.NoORF=SHM_b$QFA.NoORF,@\\
-\verb@+    QFA.NoTIME=SHM_b$QFA.NoTIME,PRIORS=PRIORS,TUNING=TUNING)@\\
+\verb@> SHM_output_a<-SHM_main(burn=burn,iters=iters,thin=thin,@\\
+\verb@+    adaptive_phase=adaptive_phase,@\\
+\verb@+    QFA.I=SHM_a$QFA.I,QFA.y=SHM_a$QFA.y,QFA.x=SHM_a$QFA.x,@\\
+\verb@+    QFA.NoORF=SHM_a$QFA.NoORF,QFA.NoTIME=SHM_a$QFA.NoTIME,@\\
+\verb@+    PRIORS=PRIORS,TUNING=TUNING)@\\
+	
+\verb@> SHM_output_b<-SHM_main(burn=burn,iters=iters,thin=thin,@\\
+\verb@+    adaptive_phase=adaptive_phase,@\\
+\verb@+    QFA.I=SHM_b$QFA.I,QFA.y=SHM_b$QFA.y,QFA.x=SHM_b$QFA.x,@\\
+\verb@+    QFA.NoORF=SHM_b$QFA.NoORF,QFA.NoTIME=SHM_b$QFA.NoTIME,@\\
+\verb@+    PRIORS=PRIORS,TUNING=TUNING)@\\
 \\
 \verb$SHM_output_a$ and \verb$SHM_output_b$ are tables of posterior samples. Posterior means are then calculated to give point estimates.
 \\
 \\
 \verb@> SHM_a$QFA.yA=colMeans(SHM_output_a)@\\
 \verb@> SHM_b$QFA.yB=colMeans(SHM_output_b)@\\
+\\
+Univariate fitness measures are then created. The following command creates MDRxMDP fitness measures in the correct format for the IHM MCMC sampler.
+\\
+\\
+\verb@> IHM_MDRxMDP=IHM_MDRxMDP_postpro(SHM_a,SHM_output_a,SHM_b,SHM_output_b)@\\
 \\
 Next, a broad set of prior values for the IHM are loaded and then stored in the variable \verb$PRIORS$. Similarly a set of tuning parameters is loaded and then stored in the variable \verb$TUNING$.
 \\
@@ -218,6 +241,7 @@ So that all Markov chains reach convergence and our samples are sufficiently lar
 \verb@> burn_IHM<-500000@\\
 \verb@> iters_IHM<-1000@\\
 \verb@> thin_IHM<-100@\\
+\verb@> adaptive_phase_IHM<-1000@\\
 \\
 The typical model computation time of the IHM and the dataset given within the demo is one day with a 2.5GHz dual-core CPU.
 The MCMC sampler is then called using the \verb$IHM_main$ command. 
@@ -234,6 +258,8 @@ The output \verb$IHM_output$ is a table of posterior samples, where each column 
 \verb@> plot_IHM_simple(IHM_output,SHM_a)@\\
 \\
 The above command displays a $MDR\times{MDR}$ fitness plot for the $\emph{cdc13-1}\Delta$ vs $\emph{ura3}\Delta$ QFA comparison.
+\\
+\\
 
 \subsection{\texttt{JHM} demo\label{sec:JHM_demo}}
 This following demo carries out a QFA comparison between a $\emph{cdc13-1}\Delta$ (query) and a $\emph{ura3}\Delta$ (control) screen at $27\,^{\circ}\mathrm{C}$.
@@ -246,17 +272,19 @@ To see how the \verb$JHM$ demo works the following detailed explanation is provi
 \\
 \verb@> data("URA3_Raw_extratrim_15")@\\
 \verb@> a<-a_15@\\
+\verb@> a$Expt.Time[a$Expt.Time<0]=0@\\
 \verb@> data("CDC13-1_Raw_extratrim_15")@\\
 \verb@> b<-b_15@\\
+\verb@> b$Expt.Time[b$Expt.Time<0]=0@\\
 \\
-The above commands load the trimmed $\emph{ura3}\Delta$ to the object \verb$a_15$ and then stores this data as the object \verb$a$, and similarly for $\emph{cdc13-1}\Delta$.
+The above commands load the trimmed $\emph{ura3}\Delta$ screen to the object \verb$a_15$ and then stores this data as the object \verb$a$, and similarly for $\emph{cdc13-1}\Delta$ screen.
 To see the experimental variables treatment, screen number and master plate for the two QFA datasets we use the \texttt{qfa.variables} function.
 \\
 \\
 \verb@> qfa.variables(a)@\\
 \verb@> qfa.variables(b)@\\
 \\
-Next, the datasets are filtered by the experimental variables of interest and stored in the object \verb$JHM$ using the function \ttext{JHM_postpro}.
+Next, the datasets are filtered by the experimental variables of interest and stored in the object \verb$JHM$ using the function \ttext{JHM\_postpro}.
 \\
 \\
 \verb@> Treatment_a=27@\\
@@ -265,13 +293,16 @@ Next, the datasets are filtered by the experimental variables of interest and st
 \verb@> Treatment_b=27@\\
 \verb@> Screen_b<-unique(b$Screen.Name)@\\
 \verb@> MPlate_b<-15@\\
-\verb@> remove_row<-c(1,16)@\\
-\verb@> remove_col<-c(1,24)@\\
-\verb@> JHM<-JHM_postpro(a,Treatment_a=Treatment_a,Screen_a=Screen_a,MPlate_a,b,@\\
-\verb@+    Treatment_b=Treatment_b,Screen_b=Screen_b,MPlate_b=MPlate_b,@\\
-\verb@+    remove_row=remove_row,remove_col=remove_col)@\\
+\verb@> remove_row_a<-c(1,16)@\\
+\verb@> remove_col_a<-c(1,24)@\\
+\verb@> remove_row_b<-c(1,16)@\\
+\verb@> remove_col_b<-c(1,24)@\\
+\verb@> JHM<-JHM_postpro(a=a,Treatment_a=Treatment_a,Screen_a=Screen_a,@\\
+\verb@+    MPlate_a=MPlate_a,b=b,Treatment_b=Treatment_b,Screen_b=Screen_b,@\\
+\verb@+    MPlate_b=MPlate_b,remove_row_a=remove_row_a,remove_col_a=remove_col_a,@\\
+\verb@+    remove_row_b=remove_row_b,remove_col_b=remove_col_b)@\\
 \\
-Next, a broad set of prior values for the JHM are loaded and then stored in the variable \verb$PRIORS$. Similarly a set of tuning parameters is loaded and then stored in the variable \verb$TUNING$.
+A broad set of prior values for the JHM are then loaded and stored in the variable \verb$PRIORS$. Similarly a set of tuning parameters are loaded and stored in the variable \verb$TUNING$.
 \\
 \\
 \verb@> data("priors_JHM")@\\
@@ -282,16 +313,18 @@ Next, a broad set of prior values for the JHM are loaded and then stored in the 
 So that all Markov chains reach convergence and our samples are sufficiently large enough for inference we set the burn-in, sample size and thinning using the code below.
 \\
 \\
-\verb@> burn<-800000@\\
-\verb@> iters<-5000@\\
-\verb@> thin<-10@\\
+\verb@> burn<-600000@\\
+\verb@> iters<-1000@\\
+\verb@> thin<-100@\\
+\verb@> adaptive_phase<-1000@\\
 \\
 The typical model computation time of the JHM and the dataset given within the demo is six days with a 2.5GHz dual-core CPU.
 The MCMC sampler is then called using the \verb$IHM_main$ command.
 \\
 \\
-\verb@> JHM_output<-JHM_main(burn=burn,iters=iters,thin=thin,QFA.IA=JHM$QFA.IA,@\\
-\verb@+    QFA.yA=JHM$QFA.yA,QFA.xA=JHM$QFA.xA,QFA.NoORFA=JHM$QFA.NoORFA,@\\
+\verb@> JHM_output<-JHM_main(burn=burn,iters=iters,thin=thin,adaptive_phase=adaptive_phase,@\\
+\verb@+    QFA.IA=JHM$QFA.IA,QFA.yA=JHM$QFA.yA,@\\
+\verb@+    QFA.xA=JHM$QFA.xA,QFA.NoORFA=JHM$QFA.NoORFA,@\\
 \verb@+    QFA.NoTIMEA=JHM$QFA.NoTIMEA,QFA.IB=JHM$QFA.IB,QFA.yB=JHM$QFA.yB,@\\
 \verb@+    QFA.xB=JHM$QFA.xB,QFA.NoORFB=JHM$QFA.NoORFB,QFA.NoTIMEB=JHM$QFA.NoTIMEB,@\\
 \verb@+    PRIORS=PRIORS,TUNING=TUNING)@\\
