@@ -100,13 +100,18 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	# Create an ORF2Gene dictionary
 	getGene=orf2gene$gene
 	names(getGene)=orf2gene$orf
-
-	# Read in the image analysis output
-	iman=do.call(rbind, lapply(fs, read.delim,header=FALSE,sep="\t",stringsAsFactors=FALSE))
-	# Colonyzer columns
+	
 	#colnames(iman)=c("FILENAME","ROW","COLUMN","TOPLEFTX","TOPLEFTY","WHITEAREA","TRIMMED","THRESHOLD","INTENSITY","EDGEPIXELS","COLR","COLG","COLB","BKR","BKG","BKB","EDGELEN","XDIM","YDIM")
 	# ROD-like columns
-	colnames(iman)=c("Image.Name","Row","Col","X.Offset","Y.Offset","Area","Trimmed","Threshold","Intensity","Edge.Pixels","Colony.Color.R","Colony.Color.G","Colony.Color.B","Background.Color.R","Background.Color.G","Background.Color.B","Edge.length","Tile.Dimensions.X","Tile.Dimensions.Y")
+	colNames=c("Image.Name","Row","Col","X.Offset","Y.Offset","Area","Trimmed","Threshold","Intensity","Edge.Pixels","Colony.Color.R","Colony.Color.G","Colony.Color.B","Background.Color.R","Background.Color.G","Background.Color.B","Edge.length","Tile.Dimensions.X","Tile.Dimensions.Y")
+	colClasses=c("character",rep("numeric",length(colNames)-1))
+
+	# Read in the image analysis output
+	# Have to define colClasses here since from R3.1-10, automatic conversion for string representation of numbers
+	iman=do.call(rbind, lapply(fs, read.delim,header=FALSE,sep="\t",stringsAsFactors=FALSE,colClasses=colClasses))
+	# Colonyzer columns
+	colnames(iman)=colNames
+	
 
 	# Create extra columns
 	iman$Growth=iman$Trimmed/(255*iman$Tile.Dimensions.X*iman$Tile.Dimensions.Y)
