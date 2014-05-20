@@ -637,6 +637,15 @@ buildGO<-function(){
 	return(GO)
 }
 
+buildPombeGO<-function(){
+	# Note we do not recommend that users edit this particular set of functionally related genes
+	fname=file.path(system.file(package = "qfa"),"extdata","pombeGOAnnotation.txt")
+	cat("\nGrouping of genes by GO terms specified in this text file:\n~~~~~~~~~~~~~~~\n")
+	cat(paste(fname,"\n"))
+	GO=read.delim(fname,sep="\t",header=TRUE,stringsAsFactors=FALSE)
+	return(GO)
+}
+
 getText=function(ORFGENE){
 	x=list()
 	cat("Input a list of gene names, separated by spaces & press enter:\n")
