@@ -19,8 +19,10 @@ fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment"){
 	# Summarises mean and median fitnesses for all orfs in an .fit object
 	print(outputfile)
 	fitdf=dataframe[dataframe[[groupcol]]==grp,]
-	fitdf$ExptDate=gsub("'","",fitdf$ExptDate)
-	fitdf$ExptDate=gsub('"',"",fitdf$ExptDate)
+	if("ExptDate"%in%colnames(fitdf)){
+		fitdf$ExptDate=gsub("'","",fitdf$ExptDate)
+		fitdf$ExptDate=gsub('"',"",fitdf$ExptDate)
+	}
 
 	orflst=unique(as.character(fitdf$ORF))
 	orflst=sort(orflst)
