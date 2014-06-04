@@ -108,10 +108,17 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 
 	# Read in the image analysis output
 	# Have to define colClasses here since from R3.1-10, automatic conversion for string representation of numbers
-	iman=do.call(rbind, lapply(fs, read.delim,header=FALSE,sep="\t",stringsAsFactors=FALSE,colClasses=colClasses))
+	if("data.table" %in% rownames(installed.packages())){
+		library(data.table) # Faster version of read.delim...
+		iman=do.call(rbind, lapply(fs, fread,header=FALSE,sep="\t",stringsAsFactors=FALSE,colClasses=colClasses))
+		iman=data.frame(iman)
+	}else{
+		iman=do.call(rbind, lapply(fs, read.delim,header=FALSE,sep="\t",stringsAsFactors=FALSE,colClasses=colClasses))
+	}
+	# Sometimes users include multiple copies of the same image analysis files (e.g. in concatenated collection & separately)
+	iman=unique(iman) 
 	# Colonyzer columns
 	colnames(iman)=colNames
-	
 
 	# Create extra columns
 	iman$Growth=iman$Trimmed/(255*iman$Tile.Dimensions.X*iman$Tile.Dimensions.Y)
