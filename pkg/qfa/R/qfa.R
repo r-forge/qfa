@@ -382,7 +382,8 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 	if(nCores>1){
 		library(parallel)
 		cl=makeCluster(nCores)
-	}
+		clusterCall(cl,function() library(qfa))
+	}else{cl=NULL}
 	
 	# Create orf2gene dictionary
 	if (ORF2gene!=FALSE){gdict<-orf2gdict(ORF2gene)}
@@ -407,8 +408,6 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 			ex <- Filter(function(x) is.function(get(x, .GlobalEnv)), ls(.GlobalEnv))
 			clusterExport(cl, ex)
 			clusterExport(cl, as.vector(lsf.str(envir=.GlobalEnv)))
-			clusterExport(cl, as.vector(lsf.str(envir=environment(DEoptim))))
-			clusterExport(cl, as.vector(lsf.str(envir=environment(DEoptim-methods))))
 			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,...))
 		}else{
 			bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,...))
@@ -560,7 +559,11 @@ growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 	d=obsdat[obsdat$Growth>=detectThresh,]
 	len2=length(d$Growth)
 	# If this has left us with too few points, return "dead colony"
-	if ((len2/len1<0.25)|(len2<3)) return(c(inocguess,0,inocguess,1,Inf))
+	if ((len2/len1<0.25)|(len2<3)) {
+		if(!is.null(iguess)) {pars=c(iguess,0,iguess,1,Inf)}else{pars=c(0,0,0,1,Inf)}
+		names(pars)=c("K","r","g","v","objval")
+		return(pars)
+	}
 	
 	bounds=makeBoundsQFA(iguess,d,minK,fixG,globalOpt)
 	inocguess=bounds$inocguess
