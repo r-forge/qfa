@@ -451,7 +451,13 @@ makeFitness<-function(results,AUCLim=5,dtmax=25){
 	# If doubling time is Inf, set to dtmax
 	results$DT[abs(results$DT)>dtmax]=dtmax
 	# Area under curve
-	AUC<-function(dno,tstar,dat) max(0,integrate(Glogist,lower=0,upper=tstar,K=dat$K[dno],r=dat$r[dno],g=dat$g[dno],v=dat$v[dno],subdivisions=1000)$value - tstar*dat$g[dno])
+	Glog=function(K,r,g,v,t) {
+		# Eliminate problems with division by zero
+		g=max(g,1E-9) 
+		K=max(K,1E-9) 
+		Glogist(K,r,g,v,t) 
+	}
+	AUC<-function(dno,tstar,dat) max(0,integrate(Glog,lower=0,upper=tstar,K=dat$K[dno],r=dat$r[dno],g=dat$g[dno],v=dat$v[dno],subdivisions=1000)$value - tstar*dat$g[dno])
 	results$AUC=sapply(1:length(results[,1]),AUC,tstar=AUCLim,dat=results)
 	return(results)
 }
@@ -515,7 +521,8 @@ makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 	valid=obsdat[obsdat$Growth>=detectThresh,]
 	if(dim(valid)[1]>0) {
 		t0=min(valid$Expt.Time)
-		d0=valid$Growth[valid$Expt.Time==t0]
+		# Calculate mean here in case multiple data for same timepoint...
+		d0=mean(valid$Growth[valid$Expt.Time==t0]) 
 	}else{
 		t0=Inf
 		d0=NA
@@ -557,10 +564,12 @@ growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 	len1=length(obsdat$Growth)
 	# Throw away observations below the detectable threshold
 	d=obsdat[obsdat$Growth>=detectThresh,]
+	# Throw away observations occurring before inoculation date (negative times...)
+	d=d[d$Expt.Time>=0,]
 	len2=length(d$Growth)
 	# If this has left us with too few points, return "dead colony"
 	if ((len2/len1<0.25)|(len2<3)) {
-		if(!is.null(iguess)) {pars=c(iguess,0,iguess,1,Inf)}else{pars=c(0,0,0,1,Inf)}
+		if(!is.null(iguess)) {pars=c(iguess,0,iguess,1,Inf)}else{pars=c(minK,1E-9,1E-9,1,Inf)}
 		names(pars)=c("K","r","g","v","objval")
 		return(pars)
 	}
@@ -609,7 +618,7 @@ growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 	opt=sumsq(pars[1],pars[2],pars[3],pars[4],obsdat$Growth,obsdat$Expt.Time,logTransform=logTransform) # Use all data (not just data below detection thresh)
 	dead=sumsq(inocguess,0,inocguess,1,obsdat$Growth,obsdat$Expt.Time,logTransform=logTransform)
 	if(dead<=opt) pars=c(inocguess,0,inocguess,1,dead); names(pars)=c("K","r","g","v","objval") # Try dead colony
-	if(!is.finite(pars[["K"]])) pars[["K"]]=0
+	if(!is.finite(pars[["K"]])) pars[["K"]]=minK
 	if(!is.finite(pars[["r"]])) pars[["r"]]=0
 	if(!is.finite(pars[["g"]])) pars[["g"]]=0
 	if(!is.finite(pars[["v"]])) pars[["v"]]=1
@@ -777,13 +786,13 @@ guessNEW<-function(tim,growth,inocguess,xybounds,minK=0.025){
 # Sum of squared error
 sumsq<-function(K,r,g,v,growth,tim,logTransform=FALSE){
 	# For generalised logistic function, K/g must be positive to avoid complex cell density estimates
-	K=abs(K)
-	g=abs(g)
+	if((K/g)<0) return(Inf)
 	if(logTransform){
 		#ss=sum(((growth-Glogist(K,r,g,v,tim))/growth)^2)/length(growth)
-		ss=sum((log(growth)-log(Glogist(K,r,g,v,tim)))^2)/length(growth)
+		glog=growth[growth>0]; tlog=tim[growth>0]
+		ss=sqrt(sum((log(glog)-log(Glogist(K,r,g,v,tlog)))^2))/length(glog)
 	}else{
-		ss=sum((growth-Glogist(K,r,g,v,tim))^2)/length(growth)
+		ss=sqrt(sum((growth-Glogist(K,r,g,v,tim))^2))/length(growth)
 	}
 	if(is.na(ss)){
 		print("Problem with squared error!")
