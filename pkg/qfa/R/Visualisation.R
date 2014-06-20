@@ -538,7 +538,7 @@ complexesFromSource<-function(){
 
 buildComplexes<-function(){
 	fname=file.path(system.file(package = "qfa"),"extdata","FunctionalComplexes.txt")
-	cat("\nGroups of functionally related complexes are specified in this file which you can edit with any text editor:\n")
+	cat("\nGroups of functionally related complexes are specified a tab-delimited text file\n which can be found at the path below.  This file can be edited with any text editor.  Please note that under OSX, this path might be hidden.  You can still find and edit the file by copying the path below, opening Finder->Go->Go to File and pasting into the dialogue box.\n")
 	cat(paste(fname,"\n"))
 	ComplexesData=read.delim(fname,sep="\t",header=TRUE,stringsAsFactors=FALSE)
 	return(ComplexesData)

@@ -386,7 +386,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 	}else{cl=NULL}
 	
 	# Create orf2gene dictionary
-	if (ORF2gene!=FALSE){gdict<-orf2gdict(ORF2gene)}
+	#if (ORF2gene!=FALSE){gdict<-orf2gdict(ORF2gene)}
 	# Vector of barcodes
 	barcodes<-unique(d$Barcode); nbc<-length(barcodes)
 	# Get big data frame ready for results
@@ -425,9 +425,10 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		if("PI"%in%colnames(info)){barcResults$PI=as.character(info$PI)}
 		if("Condition"%in%colnames(info)){barcResults$Condition=as.character(info$Condition);barcResults$Condition[is.na(barcResults$Condition)]=""}
 		if("Inoc"%in%colnames(info)){barcResults$Inoc=as.character(info$Inoc)}
+		if("Gene"%in%colnames(info)){barcResults$Gene=as.character(info$Gene)}
 		results=rbind(results,barcResults)
 		} #bcode
-		if (ORF2gene!=FALSE){results$Gene<-sapply(as.character(results$ORF),orf2g,gdict)}
+		#if (ORF2gene!=FALSE){results$Gene<-sapply(as.character(results$ORF),orf2g,gdict)}
 		if(nCores>1){
 			stopCluster(cl)
 		}
@@ -841,7 +842,8 @@ colony.info<-function(position,bcdata){
 	if("User"%in%colnames(d)){cvec$User=as.character(d$User)}
 	if("PI"%in%colnames(d)){cvec$PI=as.character(d$PI)}
 	if("Condition"%in%colnames(d)){cvec$Condition=as.character(d$Condition)}
-	if("Inoc"%in%colnames(d)){cvec$Inoc=as.character(d$Inoc)}		
+	if("Inoc"%in%colnames(d)){cvec$Inoc=as.character(d$Inoc)}
+	if("Gene"%in%colnames(d)){cvec$Gene=as.character(d$Gene)}
 	return(cvec)
 }
 

@@ -100,7 +100,6 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	# Create an ORF2Gene dictionary
 	getGene=orf2gene$gene
 	names(getGene)=orf2gene$orf
-	
 	#colnames(iman)=c("FILENAME","ROW","COLUMN","TOPLEFTX","TOPLEFTY","WHITEAREA","TRIMMED","THRESHOLD","INTENSITY","EDGEPIXELS","COLR","COLG","COLB","BKR","BKG","BKB","EDGELEN","XDIM","YDIM")
 	# ROD-like columns
 	colNames=c("Image.Name","Row","Col","X.Offset","Y.Offset","Area","Trimmed","Threshold","Intensity","Edge.Pixels","Colony.Color.R","Colony.Color.G","Colony.Color.B","Background.Color.R","Background.Color.G","Background.Color.B","Edge.length","Tile.Dimensions.X","Tile.Dimensions.Y")
@@ -116,7 +115,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 		iman=do.call(rbind, lapply(fs, read.delim,header=FALSE,sep="\t",stringsAsFactors=FALSE,colClasses=colClasses))
 	}
 	# Sometimes users include multiple copies of the same image analysis files (e.g. in concatenated collection & separately)
-	iman=unique(iman) 
+	#iman=unique(iman) # This operation is quite time-consuming for large data.frames...
 	# Colonyzer columns
 	colnames(iman)=colNames
 
