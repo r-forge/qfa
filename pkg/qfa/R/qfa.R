@@ -159,10 +159,7 @@ qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 	}
 	
 	# Get genetic interaction scores
-	#meandiff<-mean(dFms-cFms)
-	meandiff=1
-	#gis<-dFms/mean(dFms)-cFms/mean(cFms)
-	gis<-pg$gis/meandiff
+	gis<-pg$gis
 	# Put into data.frame
 	nObs=length(p)
 	if(wctest) {testType="wilcoxon"; sumType="median"}else{testType="t-test"; sumType="mean"}
