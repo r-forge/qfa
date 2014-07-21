@@ -813,10 +813,12 @@ visual_convergence_simple_check<-function(qfaBayes_output){
 		op=par(mfrow=c(2,1))
 		particles=qfaBayes_output[,pname]
 		heidel_welch=heidel.diag(particles)
+		eff=effectiveSize(particles)
 		hpval=formatC(heidel_welch[3],3)
+		effval=formatC(eff,3)
 		print(pname)
 		print(heidel_welch)
-		plot(particles,type="l",ylab=pname,xlab="iter",main=paste("Heidel-Welch p-value:",hpval))
+		plot(particles,type="l",ylab=pname,xlab="iter",main=paste("Heidel-Welch p-value:",hpval,"ESS:",effval))
 		if(var(particles)>0){
 			acf(particles,main=pname)
 		}else{
