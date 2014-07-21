@@ -60,7 +60,7 @@ SHM_postpro<-function(a,Treatment,Screen,MPlate,remove_row,remove_col)
   QFA.NoSUM=NoSum_a
   QFA.I=as.integer(c(N,max(NoORF_a),max(NoTime_a),length(y),length(NoTime_a[-1])))
   list(y=QFA.D$y,x=QFA.D$x,QFA.I=QFA.I,QFA.y=QFA.y,QFA.x=QFA.x,
-    QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME,QFA.NoSUM=QFA.NoSUM,gene=gene)
+    QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME,QFA.NoSUM=QFA.NoSUM,gene=gene,orf=ORFuni)
 }
 
 ### Calls the C code for running the SHM MCMC ###
@@ -485,7 +485,7 @@ JHM_postpro<-function(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,
 	QFA.NoTIMEA=c(NoTime_a)[-1],QFA.NoSUMA=c(NoSum_a),QFA.IB=c(N,max(NoORF_b),
 	max(NoTime_b),length(y)/2,length(NoTime_b[-1])),QFA.yB=c(yy_b),
 	QFA.xB=c(xx_b),QFA.NoORFB=c(NoORF_b),QFA.NoTIMEB=c(NoTime_b)[-1],
-	QFA.NoSUMB=c(NoSum_b),gene=gene)
+	QFA.NoSUMB=c(NoSum_b),gene=gene,orf=ORFuni)
 }
 
 ### Calls the C code for running the JHM MCMC ###
