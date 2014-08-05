@@ -19,6 +19,7 @@ body, td {
 body {
   max-width: 800px;
   margin: auto;
+  padding: 1em;
   line-height: 20px;
 }
 
@@ -26,28 +27,28 @@ tt, code, pre {
    font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
 }
 
-h1 { 
-   font-size:2.2em; 
+h1 {
+   font-size:2.2em;
 }
 
-h2 { 
-   font-size:1.8em; 
+h2 {
+   font-size:1.8em;
 }
 
-h3 { 
-   font-size:1.4em; 
+h3 {
+   font-size:1.4em;
 }
 
-h4 { 
-   font-size:1.0em; 
+h4 {
+   font-size:1.0em;
 }
 
-h5 { 
-   font-size:0.9em; 
+h5 {
+   font-size:0.9em;
 }
 
-h6 { 
-   font-size:0.8em; 
+h6 {
+   font-size:0.8em;
 }
 
 a:visited {
@@ -91,54 +92,54 @@ hr {
 }
 
 @media print {
-   * { 
-      background: transparent !important; 
-      color: black !important; 
-      filter:none !important; 
-      -ms-filter: none !important; 
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
    }
 
-   body { 
-      font-size:12pt; 
-      max-width:100%; 
-   }
-       
-   a, a:visited { 
-      text-decoration: underline; 
+   body {
+      font-size:12pt;
+      max-width:100%;
    }
 
-   hr { 
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
       visibility: hidden;
       page-break-before: always;
    }
 
-   pre, blockquote { 
-      padding-right: 1em; 
-      page-break-inside: avoid; 
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
    }
 
-   tr, img { 
-      page-break-inside: avoid; 
+   tr, img {
+      page-break-inside: avoid;
    }
 
-   img { 
-      max-width: 100% !important; 
+   img {
+      max-width: 100% !important;
    }
 
-   @page :left { 
-      margin: 15mm 20mm 15mm 10mm; 
-   }
-     
-   @page :right { 
-      margin: 15mm 10mm 15mm 20mm; 
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
    }
 
-   p, h2, h3 { 
-      orphans: 3; widows: 3; 
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
    }
 
-   h2, h3 { 
-      page-break-after: avoid; 
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
    }
 }
 </style>
@@ -213,16 +214,16 @@ hr {
 
 <h2>Interacting with plots</h2>
 
-<p>Users can interact with plots in several ways, using the keyboard and mouse. The full set of controls are described separately below. Here is an overview of some of the functionality of iRVis.  Users can:</p>
+<p>Users can interact with plots in several ways, using the keyboard and mouse. The full set of controls are described separately below, but here is an overview of some of the functionality of iRVis.  Users can:</p>
 
 <ul>
-<li>Click on points in a fitness plot highlights them to overlay the relevant gene names (corresponding to the relevant deletion from the yeast deletion collection, for example)</li>
+<li>Click on points in a fitness plot, highlighting them and overlaying the relevant gene names (corresponding to the relevant deletion from the yeast deletion collection, for example)</li>
 <li>Open a relevant online resource for the selected gene (e.g. the Saccharomyces Genome Database web-page for that gene) with the click of a button</li>
-<li>Quickly switch between different fitness plots, keeping a set of genes highlighted</li>
-<li>Quickly switch between highlighting different sets of genes on a given fitness plot</li>
+<li>Quickly switch between different fitness plots (different experiments), keeping a set of genes highlighted</li>
+<li>Quickly switch between highlighting different sets of functionally related genes on a given fitness plot</li>
 <li>Manually specify a list of interesting genes for highlighting</li>
-<li>Quickly switch between different views of the same data, alternating between scatterplots and ordered ratio plots</li>
-<li>Print plots to file in a range of formats (including vector-graphic formats)</li>
+<li>Quickly switch between different views of the same data, alternating between scatterplots and various types of ordered ratio plots</li>
+<li>Print plots to file in a range of formats (including publication quality vector-graphic formats)</li>
 </ul>
 
 <p>There are many different approaches you can take to view your fitness data with iRVis.  We suggest you explore the functionality available and discover what is most useful for you.</p>
@@ -265,7 +266,8 @@ hr {
 
 <ul>
 <li><strong>l</strong>: Toggle plot style between fitness plot (as presented in Addinall et al., 2011) and ratio plot.  Instead of just examining a scatter plot comparing query and control fitness summaries, we can examine the ratio of query to control fitness ranked by gene name for example and look for interesting outliers on this view instead.  See the <strong>Different views of the data</strong> section below.</li>
-<li><strong>i</strong>: Toggle between log ratio plot styles.  After toggling from scatterplot view to ratio view (by pressing &#39;l&#39;), there are several different options available for sorting or ranking the points.  By repeatedly pressing &#39;i&#39; once in ratio mode, the user can toggle between ranking genes as follows: alphabetically by standard gene name, alphabetically by systematic gene name (typically related to chromosome coordinate), numerically by fitness ratio, numerically by control fitness and numerically by query fitness.<br/></li>
+<li><strong>i</strong>: Toggle between ratio plot styles.  After toggling from scatterplot view to ratio view (by pressing &#39;l&#39;), there are several different options available for sorting or ranking the points.  By repeatedly pressing &#39;i&#39; once in ratio mode, the user can toggle between ranking genes as follows: alphabetically by standard gene name, alphabetically by systematic gene name (typically related to chromosome coordinate), numerically by fitness ratio, numerically by control fitness and numerically by query fitness.<br/></li>
+<li><strong>k</strong>: Toggle between variables displayed on y-axis in ratio plot mode.  By repeatedly pressing &#39;k&#39; once in ratio mode, the user can toggle between displaying the following variables on the y-axis as follows: log of query to control fitness ratio, query fitness alone, control fitness alone.</li>
 </ul>
 
 <h4>Saving plots to file</h4>
@@ -274,16 +276,18 @@ hr {
 <li><strong>p,n,m:</strong> Save current plot to image file.  &#39;p&#39;: saves plot as a vector graphic postscript file to QFAVisualisation.ps, suitable for editing in a vector graphics editor (such as Inkscape or Adobe Illustrator) &#39;n&#39;: saves plot in a lossless raster file format .png &#39;m&#39;: saves plot as a vector graphic .pdf format, suitable for immediate viewing with a PDF viewer such as Adobe Reader.  Note that the location of the new image file will be printed to console once the file is written.</li>
 </ul>
 
-<h4>Experimental metadata</h4>
+<h4>Experimental metadata &amp; selected genes</h4>
 
 <ul>
 <li><strong>b</strong>: Print experimental metadata report to console window.  There is a limited amount of information that can be represented on the axes labels of fitness plots.  Considerably more experimental metadata is contained in the tab-delimited text files from which the plots are generated.  Pressing &#39;b&#39; while examining any view of a fitness plot allows the user to see all of the experimental metadata for that pair of QFA experiments.  A full listing of the metadata for all experiment pairs currently loaded is written to file, together with a separate, summary file to help users quickly browse datasets are written to the hard drive when the tool starts up.  File location for metadata and summary reports are also printed to the console when the tool starts.</li>
+<li><strong>v</strong>: Print the systematic and standard names of selected genes to console and also copy a list of standard gene names to the clipboard.  Printing selected gene names to the console can be useful when users wish to preserve an interesting group of highlighted genes for visualisation in a later session.  Gene names can be stored in a separate text file ready to be copied and pasted back into iRVis at a later date.</li>
+<li><strong>x</strong>: Print the systematic and standard names of selected genes to console and also copy a list of systematic gene names to the clipboard.  Printing selected gene names to the console can be useful when users wish to preserve an interesting group of highlighted genes for visualisation in a later session.  Systematic gene names can be input into other bioinformatics tools for further analysis.</li>
 </ul>
 
 <h4>Quitting iRVis</h4>
 
 <ul>
-<li><strong>q</strong>: Quit iRVis and print gene names currently selected to console window.  Note that closing the window in other ways will not print selected genes to console.  Printing selected gene names to the console can be useful when users wish to preserve an interesting group of highlighted genes for visualisation in a later session.  Gene names can be stored in a separate text file ready to be copied and pasted back into iRVis at a later date.</li>
+<li><strong>q</strong>: Quit iRVis and print gene names currently selected to console window.<br/></li>
 </ul>
 
 <h2>Different views of the data (press &#39;l&#39;)</h2>
