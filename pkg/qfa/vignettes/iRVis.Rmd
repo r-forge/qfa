@@ -46,12 +46,14 @@ First start the R application. Once R is running, type the following command at 
 library(qfa)
 ```
 
-To view this documentation, we can examine the iRVis vignette (please note that R commands are case-sensitive):
+To view this documentation, we can examine the iRVis vignette, which is a tutorial document.  The vignettes available in the qfa package can be listed by executing the following command (please note that R commands are case-sensitive):
 ```
-vignette(iRVis)
+browseVignettes("qfa")
 ```
 
-Now that the qfa package is loaded, there are several ways to use the visualisation tool, which will be described later.  The qfa package comes with a set of publically available datasets (from [Addinall et. al 2011] [qfa]) pre-loaded.  To interact with these demo datasets, the simplest thing to do is to type the following at the command prompt (followed by enter):
+Simply click on the iRVis HTML link to access the vignette.
+
+Now that the qfa package is loaded, there are several ways to use the visualisation tool, which will be described later.  The qfa package comes with a set of publically available datasets (from [Addinall et. al 2011] [qfa]) pre-loaded.  To quickly start interacting with these demo datasets, the simplest thing to do is to type the following at the command prompt (followed by enter):
 
 ```
 iRVisDemo()
@@ -71,15 +73,15 @@ It is important to note that iRVis consists of two windows: the text-based conso
 Interacting with plots
 ----------------------
 
-Users can interact with plots in several ways, using the keyboard and mouse. The full set of controls are described separately below. Here is an overview of some of the functionality of iRVis.  Users can:
+Users can interact with plots in several ways, using the keyboard and mouse. The full set of controls are described separately below, but here is an overview of some of the functionality of iRVis.  Users can:
 
-- Click on points in a fitness plot highlights them to overlay the relevant gene names (corresponding to the relevant deletion from the yeast deletion collection, for example)
+- Click on points in a fitness plot, highlighting them and overlaying the relevant gene names (corresponding to the relevant deletion from the yeast deletion collection, for example)
 - Open a relevant online resource for the selected gene (e.g. the Saccharomyces Genome Database web-page for that gene) with the click of a button
-- Quickly switch between different fitness plots, keeping a set of genes highlighted
-- Quickly switch between highlighting different sets of genes on a given fitness plot
+- Quickly switch between different fitness plots (different experiments), keeping a set of genes highlighted
+- Quickly switch between highlighting different sets of functionally related genes on a given fitness plot
 - Manually specify a list of interesting genes for highlighting
-- Quickly switch between different views of the same data, alternating between scatterplots and ordered ratio plots
-- Print plots to file in a range of formats (including vector-graphic formats)
+- Quickly switch between different views of the same data, alternating between scatterplots and various types of ordered rank plots
+- Print plots to file in a range of formats (including publication quality vector-graphic formats)
 
 There are many different approaches you can take to view your fitness data with iRVis.  We suggest you explore the functionality available and discover what is most useful for you.
 
@@ -106,44 +108,60 @@ There are many different approaches you can take to view your fitness data with 
 - **t**: Toggle significance colours (red/green) indicating positive and negative interaction.  Most fitness plots include coloured points indicating genes for which there is evidence that their fitness in the query QFA experiment deviates significantly from that predicted by the multiplicative model for genetic independence.  By default, positive interactions (enhancers) are coloured green and negative interactions (suppressors) are coloured red.
 
 #### Switching between plot styles
-- **l**: Toggle plot style between fitness plot (as presented in Addinall et al., 2011) and ratio plot.  Instead of just examining a scatter plot comparing query and control fitness summaries, we can examine the ratio of query to control fitness ranked by gene name for example and look for interesting outliers on this view instead.  See the **Different views of the data** section below.
-- **i**: Toggle between log ratio plot styles.  After toggling from scatterplot view to ratio view (by pressing 'l'), there are several different options available for sorting or ranking the points.  By repeatedly pressing 'i' once in ratio mode, the user can toggle between ranking genes as follows: alphabetically by standard gene name, alphabetically by systematic gene name (typically related to chromosome coordinate), numerically by fitness ratio, numerically by control fitness and numerically by query fitness.  
+- **l**: Toggle plot style between fitness plot (as presented in Addinall et al., 2011) and rank plot.  Instead of just examining a scatter plot comparing query and control fitness summaries, we can examine the ratio of query to control fitness ranked by gene name for example and look for interesting outliers on this view instead.  See the **Different views of the data** section below.
+- **i**: Toggle between ratio plot styles.  After toggling from scatterplot view to ratio view (by pressing 'l'), there are several different options available for sorting or ranking the points.  By repeatedly pressing 'i' once in ratio mode, the user can toggle between ranking genes as follows: alphabetically by standard gene name, alphabetically by systematic gene name (typically related to chromosome coordinate), numerically by fitness ratio, numerically by control fitness and numerically by query fitness.  
+- **k**: Toggle between variables displayed on y-axis in ratio plot mode.  By repeatedly pressing 'k' once in ratio mode, the user can toggle between displaying the following variables on the y-axis as follows: log of query to control fitness ratio, query fitness alone, control fitness alone.
 
 #### Saving plots to file 
 - **p,n,m:** Save current plot to image file.  'p': saves plot as a vector graphic postscript file to QFAVisualisation.ps, suitable for editing in a vector graphics editor (such as Inkscape or Adobe Illustrator) 'n': saves plot in a lossless raster file format .png 'm': saves plot as a vector graphic .pdf format, suitable for immediate viewing with a PDF viewer such as Adobe Reader.  Note that the location of the new image file will be printed to console once the file is written.
 
-#### Experimental metadata
+#### Experimental metadata & selected genes
 - **b**: Print experimental metadata report to console window.  There is a limited amount of information that can be represented on the axes labels of fitness plots.  Considerably more experimental metadata is contained in the tab-delimited text files from which the plots are generated.  Pressing 'b' while examining any view of a fitness plot allows the user to see all of the experimental metadata for that pair of QFA experiments.  A full listing of the metadata for all experiment pairs currently loaded is written to file, together with a separate, summary file to help users quickly browse datasets are written to the hard drive when the tool starts up.  File location for metadata and summary reports are also printed to the console when the tool starts.
+- **v**: Print the systematic and standard names of selected genes to console and also copy a list of standard gene names to the clipboard.  Printing selected gene names to the console can be useful when users wish to preserve an interesting group of highlighted genes for visualisation in a later session.  Gene names can be stored in a separate text file ready to be copied and pasted back into iRVis at a later date.
+- **x**: Print the systematic and standard names of selected genes to console and also copy a list of systematic gene names to the clipboard.  Printing selected gene names to the console can be useful when users wish to preserve an interesting group of highlighted genes for visualisation in a later session.  Systematic gene names can be input into other bioinformatics tools for further analysis.
 
 #### Quitting iRVis
-- **q**: Quit iRVis and print gene names currently selected to console window.  Note that closing the window in other ways will not print selected genes to console.  Printing selected gene names to the console can be useful when users wish to preserve an interesting group of highlighted genes for visualisation in a later session.  Gene names can be stored in a separate text file ready to be copied and pasted back into iRVis at a later date.
+- **q**: Quit iRVis and print gene names currently selected to console window.  
 
 Different views of the data (press 'l')
 ---------------------------------------
-Pressing 'l' toggles between fitness scatterplot and ratio plot views of the data.  In these views we plot the ratio of query fitness to control fitness (on a log scale) against some ranking of the genes on the x-axis.  There are several different options available for sorting or ranking the points.  By repeatedly pressing 'i' in ratio mode, the user can toggle between ranking genes as follows:
+Pressing 'l' toggles between the standard view of QFA data: the fitness scatterplot and alternative rank plot views.  In rank plots we plot various measures of interaction or fitness against some ranking of the genes on the x-axis.  There are several different options available for sorting or ranking the points.  
+
+By repeatedly pressing 'i' in rank mode, the user can toggle between ranking genes as follows:
 - Ranked alphabetically by standard gene name
 - Ranked alphabetically by systematic gene name (typically related to chromosome coordinate)
 - Ranked numerically by fitness ratio
 - numerically by control fitness
 - numerically by query fitness
-The current ranking is listed in the x-axis label of ratio plots.
+
+By repeatedly pressing 'k' in rank mode, the user can toggle between y-axis variables as follows:
+- Query/control fitness ratio (log scale)
+- Strength of genetic interaction (GIS) between query and array gene
+- Query fitness (linear scale)
+- Control fitness (linear scale)
+
+The current ranking is listed in the x-axis label of rank plots.
 
 <a href="RatioPlot0001.png"><img src="RatioPlot0001.png" width=250px></a>
 <a href="RatioPlot0002.png"><img src="RatioPlot0002.png" width=250px></a>
+<a href="RatioPlot0002.png"><img src="RatioPlot0002a.png" width=250px></a>
 <a href="RatioPlot0003.png"><img src="RatioPlot0003.png" width=250px></a>
 <a href="RatioPlot0004.png"><img src="RatioPlot0004.png" width=250px></a>
 <a href="RatioPlot0005.png"><img src="RatioPlot0005.png" width=250px></a>
 <a href="RatioPlot0006.png"><img src="RatioPlot0006.png" width=250px></a>
+<a href="RatioPlot0005.png"><img src="RatioPlot0007.png" width=250px></a>
+<a href="RatioPlot0006.png"><img src="RatioPlot0008.png" width=250px></a>
 
-**Figure 3: Static versions of six different iRVis views of a single dataset**  Fitness plot and five ratio plots of the *cdc13-1* vs. *ura3&Delta;* experiment presented in panel A of Figure 2.
+**Figure 3: Static versions of nine different iRVis views of a single dataset**  Fitness plot and eight (of a possible 20) rank plots of the *cdc13-1* vs. *ura3&Delta;* experiment presented in panel A of Figure 2.
 
 Highlighting other groups of genes
 ----------------------------------
 
-Two default lists of functionally related gene complexes are presented within the qfa package:
+Three default lists of functionally related gene complexes are presented within the qfa package:
  
-1.	**buildComplexes**  A list of about 500 groups of genes including telomere-related genes that are of interest to the Lydall lab together with hits from telomere-length screens by Askree et al. (2004) & Meng et al. (2009), replicative senescence screens by Chang et al.(2010), a chromosome instability screen by Stirling et al. (2011) and a manually curated list of functionally related complexes by Benschop et al. (2010) 
-2.	**buildGO**  A list of all genes co-annotated with about 4,000 GO terms from the gene ontology database. 
+1.	**buildComplexes**  A list of about 500 related groups of *S. cerevisiae* genes including telomere-related genes that are of interest to the Lydall lab together with hits from telomere-length screens by Askree et al. (2004) & Meng et al. (2009), replicative senescence screens by Chang et al.(2010), a chromosome instability screen by Stirling et al. (2011) and a manually curated list of functionally related complexes by Benschop et al. (2010) 
+2.	**buildGO**  A list of all *S. cerevisiae* genes that are co-annotated with each of about 4,000 GO terms from [SGD](http://www.yeastgenome.org/).
+3.  **buildPombeGO**  A list of all *S. pombe* genes that are co-annotated with each of about 400 GO terms from the [pombase](http://www.pombase.org/) database. 
 
 Executing ```iRVisDemo(buildComplexes)``` allows highlighting of groups of genes from list 1 above. We imagine that this list will be the most useful for users and so we have allowed the following shorthand for starting iRVis with this list loaded (please note that R commands are case-sensitive):
 ```
@@ -154,7 +172,13 @@ If you would like to use a version of iRVis with genes co-annotated by specific 
 ```
 iRVisDemo(buildGO)
 ```
-However, note that there are about 4,000 GO terms to browse through...
+
+Similarly, if you would like to highlight genes co-annotated with GO terms in a *S. pombe* dataset, you can use the following command:
+```
+iRVisDemo(buildPombeGO)
+```
+
+Note that there are about 4,000 GO terms to browse through in *S. cerevisiae* datasets...
 
 Loading other datasets
 ----------------------

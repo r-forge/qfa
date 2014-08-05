@@ -79,7 +79,11 @@ makeVisTool=function(){
 		maintitle=paste(globs$datlist[[datno]]$datname,compnm,sep="\n")
 		xlab=paste(globs$datlist[[datno]]$cScrID)
 		ylab=paste(globs$datlist[[datno]]$qScrID)
-		axislab=paste("Fit ",ylab,"/Fit ",xlab,sep="") 
+		
+		if(globs$ratploty=="ratio") {axislab=paste("Fit ",ylab,"/Fit ",xlab," (log scale)",sep=""); ratlog="y"}
+		if(globs$ratploty=="GIS") {axislab=paste("GIS ",ylab," vs. ",xlab," (linear scale)",sep=""); ratlog=""}
+		if(globs$ratploty=="QueryFitnessSummary") {axislab=paste("Query Fit ",ylab," (linear scale)",sep=""); ratlog=""}
+		if(globs$ratploty=="ControlFitnessSummary") {axislab=paste("Control Fit ",xlab," (linear scale)",sep=""); ratlog=""} 
 		
 		globs$orftargs=globs$dat$ORF[globs$targs]
 		if(globs$ind=="gindex") ratlab="Ranked by standard gene name (alphabetical order)"
@@ -87,27 +91,32 @@ makeVisTool=function(){
 		if(globs$ind=="cindex") ratlab="Ranked by control fitness"
 		if(globs$ind=="qindex") ratlab="Ranked by query fitness"
 		if(globs$ind=="rindex") ratlab="Ranked by query/control fitness ratio"
+	
 		globs$dat=globs$datlist[[datno]]$res
 		globs$targs=match(globs$orftargs,globs$dat$ORF)
-		plot(globs$dat[[globs$ind]],globs$dat$ratio,xlab=ratlab,log="y",ylab=axislab,main=maintitle,col="grey",cex=0.5,pch=19)
+		plot(globs$dat[[globs$ind]],globs$dat[[globs$ratploty]],xlab=ratlab,log=ratlog,ylab=axislab,main=maintitle,col="grey",cex=0.5,pch=19)
 		if(globs$compno>0){
 			lst=strsplit(globs$GROUPS$GroupORFs[globs$compno]," ")[[1]]
 			globs$dcomp=globs$dat[globs$dat$ORF%in%lst,]
 			if(length(globs$dcomp$ORF)>0){
-				points(globs$dcomp[[globs$ind]],globs$dcomp$ratio,col="purple",pch=16,cex=1)
-				text(globs$dcomp[[globs$ind]],globs$dcomp$ratio,globs$dcomp$Gene,pos=1,cex=0.75)
+				points(globs$dcomp[[globs$ind]],globs$dcomp[[globs$ratploty]],col="purple",pch=16,cex=1)
+				text(globs$dcomp[[globs$ind]],globs$dcomp[[globs$ratploty]],globs$dcomp$Gene,pos=1,cex=0.75)
 			}	
 		}
 		if(length(globs$targs)>0){
-			points(globs$dat[[globs$ind]][globs$targs],globs$dat$ratio[globs$targs],col="blue",pch=16,cex=0.2)
-			text(globs$dat[[globs$ind]][globs$targs],globs$dat$ratio[globs$targs],globs$dat$Gene[globs$targs],pos=globs$posits,cex=0.75)
+			points(globs$dat[[globs$ind]][globs$targs],globs$dat[[globs$ratploty]][globs$targs],col="blue",pch=16,cex=0.2)
+			text(globs$dat[[globs$ind]][globs$targs],globs$dat[[globs$ratploty]][globs$targs],globs$dat$Gene[globs$targs],pos=globs$posits,cex=0.75)
 		}
 		if ((Sys.info()['sysname']=="Windows")&focusPlot) bringToTop()
 	}
 
 	targFun=function(x,y,datobj){
 		if(globs$ratioPlot){
-			d=((x-datobj[[globs$ind]])/max(datobj[[globs$ind]]))^2+(y-datobj$ratio)^2
+			if(globs$ratploty=="ratio"){
+				d=((x-datobj[[globs$ind]])/max(datobj[[globs$ind]]))^2+(y-datobj[[globs$ratploty]])^2
+			}else{
+				d=(x/max(datobj[[globs$ind]])-datobj[[globs$ind]]/max(datobj[[globs$ind]]))^2+(y/max(datobj[[globs$ratploty]])-datobj[[globs$ratploty]]/max(datobj[[globs$ratploty]]))^2
+			}
 		}else{
 			d=(x-datobj$ControlFitnessSummary)^2+(y-datobj$QueryFitnessSummary)^2
 		}
@@ -193,7 +202,17 @@ makeVisTool=function(){
 	}
 
 	keybd=function(key){
-		if(key=="q") return(invisible(1))
+		if(key=="b") {
+			# Print data to console
+			cat("\nExperimental metadata: plot",globs$datno,"\n~~~~~~~~~~~~~~~\n")
+			# Split report string and patch in replicate numbers for Query and Control
+			rept=globs$datlist[[globs$datno]]$rept
+			fcont=grep("Control",rept)
+			if (length(fcont)==0) fcont=grep("x-axis",rept)
+			findx=tail(fcont,1)
+			rept2=c(rept[1:findx],paste("x-axis number of replicates:",globs$datlist[[globs$datno]]$cRep),rept[(findx+1):length(rept)],paste("y-axis number of replicates:",globs$datlist[[globs$datno]]$qRep))
+			cat(rept2,sep="\n")
+		}
 		if(key=="c") {
 			# Clear highlighted/selected points
 			globs$targs=c()
@@ -214,6 +233,130 @@ makeVisTool=function(){
 				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
 			}
 		}
+		if(key=="i") {
+			# Change index for ratio plot
+			globs$indNo=globs$indNo+1
+			globs$ind=globs$indPoss[globs$indNo%%length(globs$indPoss)+1]
+			if(globs$ratioPlot){ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)}
+		}
+		if(key=="k"){
+			# Change value plotted on y-axis in ratio plot
+			globs$ratplotIndNo=globs$ratplotIndNo+1
+			globs$ratploty=globs$ratplotyPoss[globs$ratplotIndNo%%length(globs$ratplotyPoss)+1]
+			if(globs$ratioPlot){ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)}
+		}
+		if(key=="l") {
+			# Log ratio plot
+			globs$ratioPlot=!globs$ratioPlot
+			if(globs$ratioPlot){
+				ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+			}else{
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+			}
+		}
+		if(key=="m") {
+			pdfname=sprintf("QFAVisualisation%04d.pdf",globs$plotno)
+			cat("Printing plot to file:",file.path(getwd(),pdfname),"\n")
+			pdf(pdfname)
+				if(globs$ratioPlot){
+					ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
+				}else{
+					makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
+				}
+			dev.off()
+			globs$plotno=globs$plotno+1
+			if ((Sys.info()['sysname']=="Windows")) bringToTop()
+		}
+		if(key=="n") {
+			pngname=sprintf("QFAVisualisation%04d.png",globs$plotno)
+			cat("Printing plot to file:",file.path(getwd(),pngname),"\n")
+			png(pngname,width=480*2,height=480*2,pointsize=12*2)
+			if(globs$ratioPlot){
+				ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
+			}else{
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
+			}
+			dev.off()
+			globs$plotno=globs$plotno+1
+			if ((Sys.info()['sysname']=="Windows")) bringToTop()
+		}
+		if(key=="o"){
+			printSelected(globs)
+		}
+		if(key=="p") {
+			psname=sprintf("QFAVisualisation%04d.ps",globs$plotno)
+			cat("Printing plot to file:",file.path(getwd(),psname),"\n")
+			cairo_ps(psname)
+				if(globs$ratioPlot){
+					ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
+				}else{
+					makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
+				}
+			dev.off()
+			globs$plotno=globs$plotno+1
+			if ((Sys.info()['sysname']=="Windows")) bringToTop()
+		}
+		if(key=="q") return(invisible(1))
+		if(key=="r") {
+		# Zoom mode (click on TL and BR)
+			globs$zooming=TRUE
+			globs$zoomTL=c(-99,-99)
+			globs$zoomBR=c(-99,-99)
+		}
+		if((key=="s")&(length(globs$selx)>0)){
+		# Highlight genes encircled with select tool
+			if(globs$ratioPlot){
+				ptsind=point.in.polygon(globs$dat[[globs$ind]],globs$dat$ratio,globs$selx,globs$sely)
+			}else{
+				ptsind=point.in.polygon(globs$dat$ControlFitnessSummary,globs$dat$QueryFitnessSummary,globs$selx,globs$sely)
+			}
+			globs$tsel=which(ptsind==1)
+			globs$targs=c(globs$targs,globs$tsel)
+			globs$posits=c(globs$posits,rep(1,length(globs$tsel)))
+			globs$selx=c()
+			globs$sely=c()
+			globs$sel=0
+			if(globs$ratioPlot){
+				ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+			}else{
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+			}
+		}
+		if(key=="t") {
+		# Toggle suppressor and enhancer colours
+			ENH=globs$Ecol
+			SUP=globs$Scol
+			globs$Scol=ENH
+			globs$Ecol=SUP
+			if(globs$ratioPlot){
+				ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+			}else{
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+			}
+		}
+		if(key=="u") {
+		# Get user input for a new list of genes
+			if (Sys.info()['sysname']=="Windows") bringToTop(which=-1)
+			newgrp=getText(globs$ORFGENE)
+			newdf=data.frame(Notes="Generated interactively by user",GroupName=newgrp[["Label"]],GroupID="VisTool")
+			newdf$GroupORFs=paste(newgrp[["ORFs"]],collapse=" ")
+			globs$GROUPS=rbind(globs$GROUPS,newdf)
+			globs$compno=length(globs$GROUPS$GroupORFs)
+			if(globs$ratioPlot){
+				ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+			}else{
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+			}
+		}
+		if(key=="v"){
+		# Print selected genes to terminal and copy standard gene names to clipboard
+			printSelected(globs)
+			if(length(globs$targs)==0){
+				writeClipboard("")
+			}else{
+				writeClipboard(globs$dat$Gene[globs$targs])
+			}
+		}
 		if(key=="w"){
 			globs$targ=globs$targs[length(globs$targs)]
 			#browseURL(paste("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus=",globs$dat$ORF[globs$targ],sep=""))
@@ -221,6 +364,34 @@ makeVisTool=function(){
 			if(!is.na(pmatch("Y",globs$dat$ORF[globs$targ]))) directurl=paste("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus=",globs$dat$ORF[globs$targ],sep="")
 			if(!is.na(pmatch("SP",globs$dat$ORF[globs$targ]))) directurl=paste("http://www.pombase.org/spombe/result/",globs$dat$ORF[globs$targ],sep="")
 			browseURL(directurl)
+		}
+		if(key=="x"){
+		# Print selected genes to terminal and copy systematic gene names to clipboard
+			printSelected(globs)
+			if(length(globs$targs)==0){
+				writeClipboard("")
+			}else{
+				writeClipboard(globs$dat$ORF[globs$targs])
+			}
+		}
+		if(key=="z") {
+			if(globs$sel==0){
+				globs$selx=c()
+				globs$sely=c()
+			}
+			globs$sel=(globs$sel+1)%%3
+			if(globs$sel==2){
+				# Close polygon
+				globs$selx=c(globs$selx,globs$selx[1])
+				globs$sely=c(globs$sely,globs$sely[1])
+				if(globs$ratioPlot){
+					ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				}else{
+					makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				}
+				drawSel(globs$selx,globs$sely)
+				globs$sel=0
+			}
 		}
 		if(key=="Right") {
 			globs$datno<<-(globs$datno%%length(globs$datlist))+1
@@ -261,143 +432,6 @@ makeVisTool=function(){
 			}else{
 				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
 			}
-		}
-		if(key=="z") {
-			if(globs$sel==0){
-				globs$selx=c()
-				globs$sely=c()
-			}
-			globs$sel=(globs$sel+1)%%3
-			if(globs$sel==2){
-				# Close polygon
-				globs$selx=c(globs$selx,globs$selx[1])
-				globs$sely=c(globs$sely,globs$sely[1])
-				if(globs$ratioPlot){
-					ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
-				}else{
-					makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
-				}
-				drawSel(globs$selx,globs$sely)
-				globs$sel=0
-			}
-		}
-		if((key=="s")&(length(globs$selx)>0)){
-			if(globs$ratioPlot){
-				ptsind=point.in.polygon(globs$dat[[globs$ind]],globs$dat$ratio,globs$selx,globs$sely)
-			}else{
-				ptsind=point.in.polygon(globs$dat$ControlFitnessSummary,globs$dat$QueryFitnessSummary,globs$selx,globs$sely)
-			}
-			globs$tsel=which(ptsind==1)
-			globs$targs=c(globs$targs,globs$tsel)
-			globs$posits=c(globs$posits,rep(1,length(globs$tsel)))
-			globs$selx=c()
-			globs$sely=c()
-			globs$sel=0
-			if(globs$ratioPlot){
-				ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
-			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
-			}
-		}
-		if(key=="p") {
-			psname=sprintf("QFAVisualisation%04d.ps",globs$plotno)
-			cat("Printing plot to file:",file.path(getwd(),psname),"\n")
-			cairo_ps(psname)
-				if(globs$ratioPlot){
-					ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
-				}else{
-					makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
-				}
-			dev.off()
-			globs$plotno=globs$plotno+1
-			if ((Sys.info()['sysname']=="Windows")) bringToTop()
-		}
-		if(key=="n") {
-			pngname=sprintf("QFAVisualisation%04d.png",globs$plotno)
-			cat("Printing plot to file:",file.path(getwd(),pngname),"\n")
-			png(pngname,width=480*2,height=480*2,pointsize=12*2)
-			if(globs$ratioPlot){
-				ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
-			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
-			}
-			dev.off()
-			globs$plotno=globs$plotno+1
-			if ((Sys.info()['sysname']=="Windows")) bringToTop()
-		}
-		if(key=="o"){
-			printSelected(globs)
-		}
-		
-		if(key=="m") {
-			pdfname=sprintf("QFAVisualisation%04d.pdf",globs$plotno)
-			cat("Printing plot to file:",file.path(getwd(),pdfname),"\n")
-			pdf(pdfname)
-				if(globs$ratioPlot){
-					ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
-				}else{
-					makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
-				}
-			dev.off()
-			globs$plotno=globs$plotno+1
-			if ((Sys.info()['sysname']=="Windows")) bringToTop()
-		}
-		if(key=="t") {
-			ENH=globs$Ecol
-			SUP=globs$Scol
-			globs$Scol=ENH
-			globs$Ecol=SUP
-			if(globs$ratioPlot){
-				ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
-			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
-			}
-		}
-		if(key=="r") {
-		# Zoom mode (click on TL and BR)
-			globs$zooming=TRUE
-			globs$zoomTL=c(-99,-99)
-			globs$zoomBR=c(-99,-99)
-		}
-		if(key=="u") {
-		# Get user input for a new list of genes
-			if (Sys.info()['sysname']=="Windows") bringToTop(which=-1)
-			newgrp=getText(globs$ORFGENE)
-			newdf=data.frame(Notes="Generated interactively by user",GroupName=newgrp[["Label"]],GroupID="VisTool")
-			newdf$GroupORFs=paste(newgrp[["ORFs"]],collapse=" ")
-			globs$GROUPS=rbind(globs$GROUPS,newdf)
-			globs$compno=length(globs$GROUPS$GroupORFs)
-			if(globs$ratioPlot){
-				ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
-			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
-			}
-		}
-		if(key=="l") {
-		# Log ratio plot
-		globs$ratioPlot=!globs$ratioPlot
-		if(globs$ratioPlot){
-			ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
-		}else{
-			makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
-		}
-		}
-		if(key=="i") {
-		# Change index for ratio plot
-		globs$indNo=globs$indNo+1
-		globs$ind=globs$indPoss[globs$indNo%%length(globs$indPoss)+1]
-		if(globs$ratioPlot){ratPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)}
-		}
-		if(key=="b") {
-		# Print data to console
-		cat("\nExperimental metadata: plot",globs$datno,"\n~~~~~~~~~~~~~~~\n")
-		# Split report string and patch in replicate numbers for Query and Control
-		rept=globs$datlist[[globs$datno]]$rept
-		fcont=grep("Control",rept)
-		if (length(fcont)==0) fcont=grep("x-axis",rept)
-		findx=tail(fcont,1)
-		rept2=c(rept[1:findx],paste("x-axis number of replicates:",globs$datlist[[globs$datno]]$cRep),rept[(findx+1):length(rept)],paste("y-axis number of replicates:",globs$datlist[[globs$datno]]$qRep))
-		cat(rept2,sep="\n")
 		}
 		return(NULL)
 	}
@@ -479,6 +513,7 @@ makeVisTool=function(){
 		cat("c: Clear highlighting from currently selected genes.\n") 
 		cat("d: Remove highlighting from last gene highlighted.\n")
 		cat("i: Toggle between log ratio plot styles.\n")
+		cat("k: Toggle between fitness ratio, GIS, query fitness and control fitness in ratio plot mode.\n")
 		cat("l: Toggle plot style between fitness plot and log ratio plot.\n")
 		cat("o: Print list of manually selected genes currently highlighted to console.\n")
 		cat("p: Save current plot as vector graphic to QFAVisualisation.ps.  Other filetypes can also be generated - 'n': .png and 'm': .pdf\n")
@@ -487,7 +522,9 @@ makeVisTool=function(){
 		cat("s: Highlight genes encircled using select tool ('z').\n") 
 		cat("t: Toggle colours (red/green) indicating positive and negative interaction.\n")
 		cat("u: Add new group of genes to list of highlightable groups.\n")
+		cat("v: Print list of currently selected genes to console and copy standard gene names to clipboard")
 		cat("w: Open SGD web-page for last gene highlighted.\n")
+		cat("x: Print list of currently selected genes to console and copy systematic gene names to clipboard")
 		cat("z: Toggle select tool on/off. Select genes for highlighting by drawing a polygon on plot.  Press 's' to add selection when finished.\n") 
 
 		globs$datno=1
@@ -498,6 +535,9 @@ makeVisTool=function(){
 		globs$zoomTL=c(-99,-99)
 		globs$zoomBR=c(-99,-99)
 		globs$ratioPlot=FALSE
+		globs$ratplotyPoss=c("ratio","GIS","QueryFitnessSummary","ControlFitnessSummary")
+		globs$ratplotIndNo=0
+		globs$ratploty=globs$ratplotyPoss[globs$ratplotIndNo%%length(globs$ratplotyPoss)+1]
 
 		globs$dat=globs$datlist[[globs$datno]]$res
 

@@ -375,7 +375,14 @@ varposget<-function(var,orfn,norfs){
 ############################### Likelihood Functions ################################
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
-qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,nCores=1,...){
+qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,nCores=1,glog=TRUE,...){
+	if(!is.null(inocguess)){
+		if(length(inocguess)==0) {
+			print("ERROR: must specify an inoculum density guess (or NULL)")
+			return()
+		}
+	}
+
 	if(nCores>1){
 		library(parallel)
 		cl=makeCluster(nCores)
@@ -405,9 +412,9 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 			ex <- Filter(function(x) is.function(get(x, .GlobalEnv)), ls(.GlobalEnv))
 			clusterExport(cl, ex)
 			clusterExport(cl, as.vector(lsf.str(envir=.GlobalEnv)))
-			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,...))
+			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog...))
 		}else{
-			bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,...))
+			bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,...))
 		}
 		info<-data.frame(t(sapply(positions,colony.info,dbc)))
 		rows<-sapply(positions,rcget,"row")
@@ -498,23 +505,23 @@ numericalfitness<-function(obsdat,AUCLim,STP){
 }
 
 ### Growth model fitting for one colony ###
-colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,...){
+colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,...){
 	# Get row & column to restrict data
 	row<-position[1]; col<-position[2]
 	print(paste(bcdata$Barcode[1],"Row:",row,"Col:",col))
 	do<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
 	obsdat=data.frame(Expt.Time=as.numeric(do$Expt.Time),Growth=as.numeric(do$Growth))
-	pars=makefits(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP)
+	pars=makefits(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog)
 	#print(pars)
 	return(as.numeric(pars))
 }
 
-makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,...){
+makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,...){
 	numfit=numericalfitness(obsdat,AUCLim,STP)
 	nAUC=numfit[["nAUC"]]
 	nSTP=numfit[["nSTP"]]
 	
-	pars=growthcurve(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform)
+	pars=growthcurve(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,glog)
 	# Add on time of first valid obs. and numerical AUC, STP
 	valid=obsdat[obsdat$Growth>=detectThresh,]
 	if(dim(valid)[1]>0) {
@@ -529,11 +536,11 @@ makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 	names(parsadd)=c("t0","nAUC","nSTP","d0")
 	
 	pars=c(pars,parsadd)
-	if(length(pars)!=9)	{dput(pars); dput(obsdat)}
+	#if(length(pars)!=9)	{dput(pars); dput(obsdat)}
 	return(pars)
 }
 
-makeBoundsQFA<-function(inocguess,d,minK=0,fixG=FALSE,globalOpt=FALSE){
+makeBoundsQFA<-function(inocguess,d,minK=0,fixG=FALSE,globalOpt=FALSE,glog=TRUE){
 
 	if(is.null(inocguess)){
 		# Without a sensible independent estimate for inoculum density, the best we can do is to estimate it based on observed data.
@@ -546,7 +553,11 @@ makeBoundsQFA<-function(inocguess,d,minK=0,fixG=FALSE,globalOpt=FALSE){
 	
 	# Define optimization bounds based on inocguess #
 	lowr<-0; upr<-25
-	lowv<-0.1; upv<-10.0
+	if(glog){
+		lowv<-0.1; upv<-10.0
+	}else{
+		lowv<-1; upv<-1
+	}
 	lowK<-max(0.9*inocguess,minK); upK<-1.0
 		
 	# We often fix inoculation density, but users might prefer to infer it from growth curves
@@ -558,7 +569,7 @@ makeBoundsQFA<-function(inocguess,d,minK=0,fixG=FALSE,globalOpt=FALSE){
 	return(list(K=c(lowK,upK),r=c(lowr,upr),g=c(lowg,upg),v=c(lowv,upv),inocguess=inocguess))
 }
 
-growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,...){
+growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,glog=TRUE,...){
 	len1=length(obsdat$Growth)
 	# Throw away observations below the detectable threshold
 	d=obsdat[obsdat$Growth>=detectThresh,]
@@ -572,7 +583,7 @@ growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 		return(pars)
 	}
 	
-	bounds=makeBoundsQFA(iguess,d,minK,fixG,globalOpt)
+	bounds=makeBoundsQFA(iguess,d,minK,fixG,globalOpt,glog)
 	inocguess=bounds$inocguess
 	bounds$inocguess=NULL
 	xybounds=bounds	
@@ -615,12 +626,15 @@ growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 	}
 	opt=sumsq(pars[1],pars[2],pars[3],pars[4],obsdat$Growth,obsdat$Expt.Time,logTransform=logTransform) # Use all data (not just data below detection thresh)
 	dead=sumsq(inocguess,0,inocguess,1,obsdat$Growth,obsdat$Expt.Time,logTransform=logTransform)
-	if(dead<=opt) pars=c(inocguess,0,inocguess,1,dead); names(pars)=c("K","r","g","v","objval") # Try dead colony
+	if(dead<=opt) {
+		pars=c(inocguess,0,inocguess,1,dead)
+		names(pars)=c("K","r","g","v","objval") # Try dead colony
+	}
 	if(!is.finite(pars[["K"]])) pars[["K"]]=minK
 	if(!is.finite(pars[["r"]])) pars[["r"]]=0
 	if(!is.finite(pars[["g"]])) pars[["g"]]=0
-	if(!is.finite(pars[["v"]])) pars[["v"]]=1
-	if(length(pars)!=5) dput(pars)
+	if("v"%in%names(pars)) if(!is.finite(pars[["v"]])) pars[["v"]]=1
+	#if(length(pars)!=5) dput(pars)
 	return(pars)
 }
 
@@ -683,6 +697,7 @@ data.fit<-function(tim,growth,inocguess,xybounds,inits=list(),logTransform=FALSE
 	if(length(inits)==0){
 		# Get initial guess for parameters
 		init<-guess(tim,growth,inocguess,xybounds)
+		if(xybounds$v[1]==xybounds$v[2]) init$v=NULL
 	}else{init=inits}
 	#xybounds$r=c(0.75*init$r,1.25*init$r)
 	#xybounds$r=c(0.1*init$r,10.0*init$r)
@@ -691,22 +706,39 @@ data.fit<-function(tim,growth,inocguess,xybounds,inits=list(),logTransform=FALSE
 	# Try to stop L-BFGS-B errors by moving away from minK
 	xybounds$K[1]=1.01*xybounds$K[1]
 	# Function to be optimized
-	objf<-function(modpars){
-		K<-modpars[1]; r<-modpars[2]
-		g<-modpars[3]; v<-abs(modpars[4])
-		return(sumsq(K,r,g,v,growth,tim,logTransform=logTransform))
+	# Logistic only will have same upper and lower bounds for v...
+	if(xybounds$v[1]==xybounds$v[2]){
+		objf<-function(modpars){
+			K<-modpars[1]; r<-modpars[2]
+			g<-modpars[3]; 
+			return(sumsq(K,r,g,xybounds$v[1],growth,tim,logTransform=logTransform))
+		}
+		lbounds=c(xybounds$K[1],xybounds$r[1],xybounds$g[1])
+		ubounds=c(xybounds$K[2],xybounds$r[2],xybounds$g[2])
+		pscl=c(0.2,10,inocguess)
+	}else{
+		objf<-function(modpars){
+			K<-modpars[1]; r<-modpars[2]
+			g<-modpars[3]; v<-abs(modpars[4])
+			return(sumsq(K,r,g,v,growth,tim,logTransform=logTransform))
+		}
+		lbounds=c(xybounds$K[1],xybounds$r[1],xybounds$g[1],xybounds$v[1])
+		ubounds=c(xybounds$K[2],xybounds$r[2],xybounds$g[2],xybounds$v[2])
+		pscl=c(0.2,10,inocguess,1)
 	}
 	# Perform optimization
 	optsol<-optim(par=unlist(init),fn=objf,gr=NULL,method="L-BFGS-B",
-	lower=c(xybounds$K[1],xybounds$r[1],xybounds$g[1],xybounds$v[1]),
-	upper=c(xybounds$K[2],xybounds$r[2],xybounds$g[2],xybounds$v[2]),
-	control=list(maxit=1000,factr=1e7,trace=0,parscale=c(0.2,10,inocguess,1)))
+	lower=lbounds,
+	upper=ubounds,
+	control=list(maxit=1000,factr=1e7,trace=0,parscale=pscl))
 	pars=abs(as.numeric(optsol$par))
 	objval=objf(pars)
 	# Sanity check for fitted parameters (no negative growth)
 	if (pars[1]<pars[3]){
-		pars[1]=pars[3]; pars[2]=0; pars[4]=1
+		pars[1]=pars[3]; pars[2]=0; 
+		if(length(pars)==4) pars[4]=1
 		objval=objf(pars)}
+	if(length(pars)==3) pars=c(pars,xybounds$v[1])
 	pars=c(pars,objval)
 	if(verbose) {if(optsol$message!="CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH") print(optsol$message)}
 	names(pars)=c("K","r","g","v","objval")
@@ -723,7 +755,7 @@ guess<-function(tim,growth,inocguess,xybounds,minK=0.025){
 	# Enforce positivity and monotonic increasing behaviour in growth
 	#growth[1]=max(c(growth[1],0.000000001))
 	#for (x in 2:length(growth)) growth[x]=max(c(max(growth[1:(x-1)]),growth[x],0.00000001))
-	G0g<-inocguess
+	if(is.null(inocguess)){G0g<-max(min(growth),0.0000001)}else{G0g<-inocguess}
 	Kg<-max(max(growth),minK)
 	vg=1 # Assume logistic model is adequate
 	rg=0
