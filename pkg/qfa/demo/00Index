@@ -1,1 +1,2 @@
 telomereCap	Inferring which genes interact with the defective telomere-capping mutation cdc13-1 in S. cerevisiae.
+fittingGrowthCurves Comparing log-scale and linear-scale logistic model fits to synthetic datasets

@@ -9,6 +9,8 @@ Uses the optim function to carry out least squares fit of logistic model to grow
 }
 \arguments{
 
+}
+
 \value{
 
 }

@@ -14,6 +14,7 @@ pars=growthcurve(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform)
   \item{globalOpt}{Boolean specifying whether curve fitting algorithm should search for inoculum density parameter g across a wide search space. Default FALSE.}
   \item{detectThresh}{Minimimum cell density that is reliably detectable by this combination of plate, imager and image analysis software.  Default 0.}
    \item{minK}{Lowest allowable value of K (stationary phase cell density) allowable for a culture which is not classed as dead or missing.  Default 0.}
+}
 \value{
 A list of generalised logistic model parameters (K, r, g, v) which give the best fit to the observed data in obsdat, together with objval, the objective value (squared error).
 }
