@@ -182,7 +182,7 @@ Note that there are about 4,000 GO terms to browse through in *S. cerevisiae* da
 
 Loading other datasets
 ----------------------
-You might receive different datasets in the form of R packages from the Newcastle University High-Throughput Service or from the Lydall lab.  We find that grouping QFA experimental results together in separate, data-only R packages is a useful way to distribute datasets separately and privately.  In order to browse the QFA data within a data-only R package, you will need to install the data package (in addition to the qfa package you have already installed).  For example, you may receive a package file named ```qfaDAL_0.0-9.zip``` (Windows) or ```qfaDAL_0.0-9.zip``` (OSX and Linux). Some installation instructions for Microsoft Windows and OSX users can be found [here] [install].
+You might receive different datasets in the form of R packages from the Newcastle University High-Throughput Service or from the Lydall lab.  We find that grouping QFA experimental results together in separate, data-only R packages is a useful way to distribute datasets separately and privately.  In order to browse the QFA data within a data-only R package, you will need to install the data package (in addition to the qfa package you have already installed).  For example, you may receive a package file named ```qfaDAL_0.0-9.zip``` (Windows) or ```qfaDAL_0.0-9.tar.gz``` (OSX and Linux). Some installation instructions for Microsoft Windows and OSX users can be found [here] [install].
 
 [install]: http://outmodedbonsai.sourceforge.net/InstallingLocalRPackages.html "Installing R packages"
 
