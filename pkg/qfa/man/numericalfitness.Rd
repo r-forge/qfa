@@ -13,6 +13,7 @@ numfit=numericalfitness(obsdat,AUCLim,STP)
   \item{obsdat}{A data frame containing a numeric Expt.Time column (time since culture inoculation, typically in days) and a numeric Growth column (typically cell density estimates estimated from a timeseries of culture photographs, quantified by software such as Colonyzer: http://research.ncl.ac.uk/colonyzer/)}
   \item{AUCLim}{Upper limit of integration for calculating area under growth curve as a measure of culture fitness}
   \item{STP}{Single time point at which to estimate cell density (measure of fitness, as used in SGA for example: http://en.wikipedia.org/wiki/Synthetic_genetic_array)}
+}
 \value{
 A named vector specifying nAUC and nSTP.
 }

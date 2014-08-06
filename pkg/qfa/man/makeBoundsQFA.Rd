@@ -15,6 +15,7 @@ bounds=makeBoundsQFA(inocguess,d,minK,fixG,globalOpt)
   \item{minK}{Lowest allowable value of K (stationary phase cell density) allowable for a culture which is not classed as dead or missing.}
   \item{fixG}{Boolean specifying whether inoculum density parameter g should be constrained to lie within a narrow region around inocguess.}
   \item{globalOpt}{Boolean specifying whether curve fitting algorithm should search for inoculum density parameter g across a wide search space.}
+}
 \value{
 A named list of vectors (each of length 2) specifying the lower and upper bounds for the space in which each of the generalised logistic model parameters K, r, g and v will be searched for, together with an updated version of the best inoculum density guess (inocguess).
 }

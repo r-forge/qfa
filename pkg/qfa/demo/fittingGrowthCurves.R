@@ -14,11 +14,10 @@ xybounds=list(K=c(0,1),r=c(0,15),g=c(5E-7,0.1),v=c(0.01,10))
 fastfit=data.fit(times,simobs,0.01,xybounds)
 fastfitlog=data.fit(times,simobs,0.01,xybounds,logTransform=TRUE)
 
-ylim=c(0,max(simobs)),
-
 # Draw some plots comparing fits to data
 fitfn=function(t,obj) Glogist(K=obj[["K"]],r=obj[["r"]],g=obj[["g"]],v=obj[["v"]],t)
 mkplot=function(logscale=NULL){
+	ylim=c(0,1.1*max(simobs))
 	if(is.null(logscale)){mlab="Cell density on linear scale"}else{mlab="Cell density on log scale"}
 	curve(modelfn,from=min(times),to=max(times),xlab="Time (d)",ylab="Cell density (AU)",col="pink",lwd=2,log=logscale,main=mlab)
 	points(times,simobs,type="b")
