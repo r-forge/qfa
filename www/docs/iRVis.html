@@ -267,15 +267,37 @@ hr {
 <h4>Switching between plot styles</h4>
 
 <ul>
-<li><strong>l</strong>: Toggle plot style between fitness plot (as presented in Addinall et al., 2011) and rank plot.  Instead of just examining a scatter plot comparing query and control fitness summaries, we can examine the ratio of query to control fitness ranked by gene name for example and look for interesting outliers on this view instead.  See the <strong>Different views of the data</strong> section below.</li>
-<li><strong>i</strong>: Toggle between ratio plot styles.  After toggling from scatterplot view to ratio view (by pressing &#39;l&#39;), there are several different options available for sorting or ranking the points.  By repeatedly pressing &#39;i&#39; once in ratio mode, the user can toggle between ranking genes as follows: alphabetically by standard gene name, alphabetically by systematic gene name (typically related to chromosome coordinate), numerically by fitness ratio, numerically by control fitness and numerically by query fitness.<br/></li>
-<li><strong>k</strong>: Toggle between variables displayed on y-axis in ratio plot mode.  By repeatedly pressing &#39;k&#39; once in ratio mode, the user can toggle between displaying the following variables on the y-axis as follows: log of query to control fitness ratio, query fitness alone, control fitness alone.</li>
+<li><strong>l</strong>: Toggle plot style between fitness plot (as presented in Addinall et al., 2011) and rank plot.  Instead of examining a scatter plot comparing fitness summaries from two screens, we can examine the ratio of fitness from the y-axis of the fitness plot to fitness from the x-axis of the fitness plot, ranked by gene name for example.  This view is useful for highlighting interesting outliers.  See the <strong>Different views of the data</strong> section below for an overview of rank plots.</li>
+<li><strong>i</strong>: Toggle between rank plot styles, while in rank plot mode.  After toggling from scatterplot view to rank plot mode (by pressing &#39;l&#39;), there are several different options available for ranking fitness summaries.  By repeatedly pressing &#39;i&#39; in rank mode, the user can toggle between ranking genes as follows:
+
+<ul>
+<li>alphabetically by standard gene name</li>
+<li>alphabetically by systematic gene name (typically related to chromosome coordinate)</li>
+<li>numerically by log fitness ratio (the log of the ratio of fitness from the y-axis of the fitness plot to the fitness from the x-axis of the  fitness plot)</li>
+<li>numerically by fitness of strains found on x-axis of fitness plot</li>
+<li>numerically by fitness of strains found on y-axis of query plot<br/></li>
+</ul></li>
+<li><strong>k</strong>: Toggle between variables displayed on y-axis in rank plot mode.  By repeatedly pressing &#39;k&#39; in rank plot mode, the user can toggle between plotting the following variables on the y-axis:
+
+<ul>
+<li>the log of the ratio of fitness from the y-axis of the fitness plot to the fitness from the x-axis of the fitness plot</li>
+<li>the strength of interaction (GIS) between query condition (typically a mutation, drug or treatment) and mutations in an arrayed library</li>
+<li>the fitness found on the x-axis of fitness plot</li>
+<li>the fitness found on the y-axis of fitness plot</li>
+</ul></li>
 </ul>
 
 <h4>Saving plots to file</h4>
 
 <ul>
-<li><strong>p,n,m:</strong> Save current plot to image file.  &#39;p&#39;: saves plot as a vector graphic postscript file to QFAVisualisation.ps, suitable for editing in a vector graphics editor (such as Inkscape or Adobe Illustrator) &#39;n&#39;: saves plot in a lossless raster file format .png &#39;m&#39;: saves plot as a vector graphic .pdf format, suitable for immediate viewing with a PDF viewer such as Adobe Reader.  Note that the location of the new image file will be printed to console once the file is written.</li>
+<li><strong>p,n,m:</strong> Save current plot to image file.<br/>
+
+<ul>
+<li>&#39;p&#39;: saves plot as a vector graphic postscript file to QFAVisualisation.ps, suitable for editing in a vector graphics editor (such as Inkscape or Adobe Illustrator) </li>
+<li>&#39;n&#39;: saves plot in a lossless raster file format .png </li>
+<li>&#39;m&#39;: saves plot as a vector graphic .pdf format, suitable for immediate viewing with a PDF viewer such as Adobe Reader.<br/>
+Note that the location of the new image file will be printed to console once the file is written.</li>
+</ul></li>
 </ul>
 
 <h4>Experimental metadata &amp; selected genes</h4>
@@ -358,7 +380,7 @@ hr {
 
 <h2>Loading other datasets</h2>
 
-<p>You might receive different datasets in the form of R packages from the Newcastle University High-Throughput Service or from the Lydall lab.  We find that grouping QFA experimental results together in separate, data-only R packages is a useful way to distribute datasets separately and privately.  In order to browse the QFA data within a data-only R package, you will need to install the data package (in addition to the qfa package you have already installed).  For example, you may receive a package file named <code>qfaDAL_0.0-9.zip</code> (Windows) or <code>qfaDAL_0.0-9.zip</code> (OSX and Linux). Some installation instructions for Microsoft Windows and OSX users can be found <a href="http://outmodedbonsai.sourceforge.net/InstallingLocalRPackages.html" title="Installing R packages">here</a>.</p>
+<p>You might receive different datasets in the form of R packages from the Newcastle University High-Throughput Service or from the Lydall lab.  We find that grouping QFA experimental results together in separate, data-only R packages is a useful way to distribute datasets separately and privately.  In order to browse the QFA data within a data-only R package, you will need to install the data package (in addition to the qfa package you have already installed).  For example, you may receive a package file named <code>qfaDAL_0.0-9.zip</code> (Windows) or <code>qfaDAL_0.0-9.tar.gz</code> (OSX and Linux). Some installation instructions for Microsoft Windows and OSX users can be found <a href="http://outmodedbonsai.sourceforge.net/InstallingLocalRPackages.html" title="Installing R packages">here</a>.</p>
 
 <p>Once the data package is installed, you will need to load it.  By loading the data package, R will automatically load the qfa package (and therefore iRVis).  In order to load the data package, note its name: the part of the package filename before the underscore: <code>qfaDAL</code> in the example above.  To load a package named <code>qfaDAL</code>, start the R application and type the following into the terminal, followed by enter (please note that R commands are case-sensitive):</p>
 

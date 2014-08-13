@@ -108,12 +108,25 @@ There are many different approaches you can take to view your fitness data with 
 - **t**: Toggle significance colours (red/green) indicating positive and negative interaction.  Most fitness plots include coloured points indicating genes for which there is evidence that their fitness in the query QFA experiment deviates significantly from that predicted by the multiplicative model for genetic independence.  By default, positive interactions (enhancers) are coloured green and negative interactions (suppressors) are coloured red.
 
 #### Switching between plot styles
-- **l**: Toggle plot style between fitness plot (as presented in Addinall et al., 2011) and rank plot.  Instead of just examining a scatter plot comparing query and control fitness summaries, we can examine the ratio of query to control fitness ranked by gene name for example and look for interesting outliers on this view instead.  See the **Different views of the data** section below.
-- **i**: Toggle between ratio plot styles.  After toggling from scatterplot view to ratio view (by pressing 'l'), there are several different options available for sorting or ranking the points.  By repeatedly pressing 'i' once in ratio mode, the user can toggle between ranking genes as follows: alphabetically by standard gene name, alphabetically by systematic gene name (typically related to chromosome coordinate), numerically by fitness ratio, numerically by control fitness and numerically by query fitness.  
-- **k**: Toggle between variables displayed on y-axis in ratio plot mode.  By repeatedly pressing 'k' once in ratio mode, the user can toggle between displaying the following variables on the y-axis as follows: log of query to control fitness ratio, query fitness alone, control fitness alone.
+- **l**: Toggle plot style between fitness plot (as presented in Addinall et al., 2011) and rank plot.  Instead of examining a scatter plot comparing fitness summaries from two screens, we can examine the ratio of fitness from the y-axis of the fitness plot to fitness from the x-axis of the fitness plot, ranked by gene name for example.  This view is useful for highlighting interesting outliers.  See the **Different views of the data** section below for an overview of rank plots.
+- **i**: Toggle between rank plot styles, while in rank plot mode.  After toggling from scatterplot view to rank plot mode (by pressing 'l'), there are several different options available for ranking fitness summaries.  By repeatedly pressing 'i' in rank mode, the user can toggle between ranking genes as follows:
+ - alphabetically by standard gene name
+ - alphabetically by systematic gene name (typically related to chromosome coordinate)
+ - numerically by log fitness ratio (the log of the ratio of fitness from the y-axis of the fitness plot to the fitness from the x-axis of the  fitness plot)
+ - numerically by fitness of strains found on x-axis of fitness plot
+ - numerically by fitness of strains found on y-axis of query plot  
+- **k**: Toggle between variables displayed on y-axis in rank plot mode.  By repeatedly pressing 'k' in rank plot mode, the user can toggle between plotting the following variables on the y-axis:
+ - the log of the ratio of fitness from the y-axis of the fitness plot to the fitness from the x-axis of the fitness plot
+ - the strength of interaction (GIS) between query condition (typically a mutation, drug or treatment) and mutations in an arrayed library
+ - the fitness found on the x-axis of fitness plot
+ - the fitness found on the y-axis of fitness plot
 
 #### Saving plots to file 
-- **p,n,m:** Save current plot to image file.  'p': saves plot as a vector graphic postscript file to QFAVisualisation.ps, suitable for editing in a vector graphics editor (such as Inkscape or Adobe Illustrator) 'n': saves plot in a lossless raster file format .png 'm': saves plot as a vector graphic .pdf format, suitable for immediate viewing with a PDF viewer such as Adobe Reader.  Note that the location of the new image file will be printed to console once the file is written.
+- **p,n,m:** Save current plot to image file.  
+ - 'p': saves plot as a vector graphic postscript file to QFAVisualisation.ps, suitable for editing in a vector graphics editor (such as Inkscape or Adobe Illustrator) 
+ - 'n': saves plot in a lossless raster file format .png 
+ - 'm': saves plot as a vector graphic .pdf format, suitable for immediate viewing with a PDF viewer such as Adobe Reader.  
+Note that the location of the new image file will be printed to console once the file is written.
 
 #### Experimental metadata & selected genes
 - **b**: Print experimental metadata report to console window.  There is a limited amount of information that can be represented on the axes labels of fitness plots.  Considerably more experimental metadata is contained in the tab-delimited text files from which the plots are generated.  Pressing 'b' while examining any view of a fitness plot allows the user to see all of the experimental metadata for that pair of QFA experiments.  A full listing of the metadata for all experiment pairs currently loaded is written to file, together with a separate, summary file to help users quickly browse datasets are written to the hard drive when the tool starts up.  File location for metadata and summary reports are also printed to the console when the tool starts.
