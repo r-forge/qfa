@@ -818,18 +818,12 @@ sumsq<-function(K,r,g,v,growth,tim,logTransform=FALSE){
 	# For generalised logistic function, K/g must be positive to avoid complex cell density estimates
 	if((K/g)<0) return(Inf)
 	if(logTransform){
-		#ss=sum(((growth-Glogist(K,r,g,v,tim))/growth)^2)/length(growth)
 		glog=growth[growth>0]; tlog=tim[growth>0]
 		ss=sqrt(sum((log(glog)-log(Glogist(K,r,g,v,tlog)))^2))/length(glog)
 	}else{
 		ss=sqrt(sum((growth-Glogist(K,r,g,v,tim))^2))/length(growth)
 	}
 	if(is.na(ss)){
-		print("Problem with squared error!")
-		dput(c(K,r,g,v))
-		dput(tim)
-		dput(growth)
-		print(Glogist(K,r,g,v,tim))
 		return(Inf)
 	}else{return(ss)}
 }
