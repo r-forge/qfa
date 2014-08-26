@@ -5,10 +5,7 @@
 
 ### Filter by Screen Name, Temprature and Master Plate Number ###
 funcREMOVE<-function(data,Screen,Treat,MPlate){
-  data=data[data$Screen.Name%in%Screen,]
-  data=data[data$Treatments%in%Treat,]
-  data=data[data$MasterPlate.Number%in%MPlate,]
-  data
+  return(data[(data$Screen.Name%in%Screen)&(data$Treatments%in%Treat)&(data$MasterPlate.Number%in%MPlate),])
 }
 
 ### Orders dataset ###
