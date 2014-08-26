@@ -380,84 +380,52 @@ plot_IHM_simple<-function(IHM_output,SHM){
 ### Creates an object with information in the format for running the JHM ###
 JHM_postpro<-function(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,b,Treatment_b,Screen_b,MPlate_b,remove_row_b,remove_col_b)
 {
+  # Discard any superfluous data from a
   a<-funcREMOVE(a,Screen_a,Treatment_a,MPlate_a)
-  if (length(remove_row_a)>=1){
-    for (i in 1:length(remove_row_a)){
-      a<-a[!a$Row%in%remove_row_a[i],]
-    a<-a[!a$Row%in%remove_row_a[i],]
-	}
-  }
-  if (length(remove_col_a)>=1){
-    for (i in 1:length(remove_col_a)){
-      a<-a[!a$Col%in%remove_col_a[i],]
-      a<-a[!a$Col%in%remove_col_a[i],]
-	}
-  }
+  if (length(remove_row_a)>=1) a=a[!a$Row%in%remove_row_a,]
+  if (length(remove_col_a)>=1) a=a[!a$Col%in%remove_col_a,]
 
-  Row<-a$Row
-  Col<-a$Col
-  for (i in 1:nrow(a)){
-    if (nchar(Row[i])<2){
-      Row[i]=paste(0,Row[i],sep="")
-    }
-    if (nchar(Col[i])<2){
-	  Col[i]=paste(0,Col[i],sep="")
-	}
-  }
-
-  a$ID<-paste(a$Barcode,a$MasterPlate.Number,Row,Col,sep="")
-
+  # Sort a by plate, row, col, time
+  aRow<-sprintf("%02d",a$Row)
+  aCol<-sprintf("%02d",a$Col)
+  aPlate<-sprintf("%02d",a$MasterPlate.Number)
+  a$ID<-paste(a$Barcode,aPlate,aRow,aCol,sep="")
   a<-a[order(a$ORF,a$ID,a$Expt.Time), ]
-  ORFuni=unique(a$ORF)########
-  ORFuni_a<-unique(a$ORF)
 
+  # Discard any superfluous data from b
   b<-funcREMOVE(b,Screen_b,Treatment_b,MPlate_b)
-  if (length(remove_row_b)>=1){
-    for (i in 1:length(remove_row_b)){
-      b<-b[!b$Row%in%remove_row_b[i],]
-      b<-b[!b$Row%in%remove_row_b[i],]
-	}
-  }
-  if (length(remove_col_b)>=1){
-    for (i in 1:length(remove_col_b)){
-      b<-b[!b$Col%in%remove_col_b[i],]
-      b<-b[!b$Col%in%remove_col_b[i],]
-	}
-  }
+  if (length(remove_row_b)>=1) b=b[!b$Row%in%remove_row_b,]
+  if (length(remove_col_b)>=1) b=b[!b$Col%in%remove_col_b,]
 
-  Row<-b$Row
-  Col<-b$Col
-  for (i in 1:nrow(b)){
-    if (nchar(Row[i])<2){
-	  Row[i]=paste(0,Row[i],sep="")
-	}
-    if (nchar(Col[i])<2){
-	  Col[i]=paste(0,Col[i],sep="")
-	}
-  }
-
-  b$ID<-paste(b$Barcode,b$MasterPlate.Number,Row,Col,sep="")
+  # Sort b by plate, row, col, time
+  bRow<-sprintf("%02d",b$Row)
+  bCol<-sprintf("%02d",b$Col)
+  bPlate<-sprintf("%02d",b$MasterPlate.Number)
+  b$ID<-paste(b$Barcode,bPlate,bRow,bCol,sep="")
   b<-b[order(b$ORF,b$ID,b$Expt.Time), ]
+  
+  # Only analyse ORFs common to both screens
+  ORFuni_a<-unique(a$ORF)
   ORFuni_b<-unique(b$ORF)
-
-  ORFuni<-unique(b$ORF)
-
-  IDuni<-unique(a$ID)
+  ORFuni<-intersect(ORFuni_a,ORFuni_b)
+  N<-length(ORFuni)
+  a=a[a$ORF%in%ORFuni,]
+  b=b[b$ORF%in%ORFuni,]
+  
+  # Map from ORF to gene name
   gene<-a$Gene[match(ORFuni,a$ORF)]
 
-  N<-length(ORFuni)
-  M=Ma=length(IDuni)
+  M=Ma=length(unique(a$ID))
   NoORF_a<-as.numeric(lapply(split(a,a$ORF),funcNoORF))#no of repeats each orf
   NoTime_a<-c(0,as.numeric(lapply(split(a,a$ID),nrow)))# 0+ no of time each repeat
-  NoSum_a<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_a)))
+  #NoSum_a<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_a)))
+  NoSum_a<-c(0,cumsum(NoORF_a))
 
-  IDuni<-unique(b$ID)
-
-  N<-length(ORFuni)
-  M=Mb=length(IDuni)
+  M=Mb=length(unique(b$ID))
   NoORF_b<-as.numeric(lapply(split(b,b$ORF),funcNoORF))#no of repeats each orf
   NoTime_b<-c(0,as.numeric(lapply(split(b,b$ID),nrow)))# 0+ no of time each repeat
-  NoSum_b<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_b)))
+  #NoSum_b<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_b)))
+  NoSum_b<-c(0,cumsum(NoORF_b))
 
   dimr<-max(NoORF_a,NoORF_b)
   dimc<-max(NoTime_a,NoTime_b)
@@ -467,9 +435,9 @@ JHM_postpro<-function(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,
   x<-funcXY_J(a$Expt.Time,b$Expt.Time,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,
     NoSum_b,dimr,dimc)
 
-  QFA.I<-list("NoORF"=cbind(NoORF_a,NoORF_b),"NoTime_a"=NoTime_a[-1],
-    "NoTime_b"=NoTime_b[-1],"NoSum"=cbind(NoSum_a,NoSum_b),"N"=N,"Ma"=Ma,
-	"Mb"=Mb,"gene"=gene,SHIFT=c(0,max(NoSum_a,NoSum_b)))
+  #QFA.I<-list("NoORF"=cbind(NoORF_a,NoORF_b),"NoTime_a"=NoTime_a[-1],
+  #  "NoTime_b"=NoTime_b[-1],"NoSum"=cbind(NoSum_a,NoSum_b),"N"=N,"Ma"=Ma,
+  #	 "Mb"=Mb,"gene"=gene,SHIFT=c(0,max(NoSum_a,NoSum_b)))
   QFA.D<-list(x=x,y=y)
 
   x[is.na(x)]=-999
