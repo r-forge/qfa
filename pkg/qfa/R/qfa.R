@@ -971,9 +971,35 @@ logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0
 	}
 	legend("topright",sprintf("R%02dC%02d",row,col),box.lty=0,cex=0.5*scaleT)
 }
+
+plotAllReps=function(df,target,mlab="",returnDat=FALSE){
+	# Plot growth curves for all available replicates of gene/ORF target in colonyzer.read dataframe df
+	if(target%in%df$Gene){
+		gdf=df[df$Gene==target,]
+	}else{
+		gdf=df[df$ORF==target,]
+	}
+	gdf$ID=paste(gdf$Barcode,sprintf("%02d",gdf$MasterPlate.Number),sprintf("%02d",gdf$Row),sprintf("%02d",gdf$Col))
+	gdf=gdf[order(gdf$ORF,gdf$ID,gdf$Expt.Time),]
+	clist=rainbow(length(unique(gdf$ID)))
+	names(clist)=unique(gdf$ID)
+	plot(gdf$Expt.Time,gdf$Growth,type="n",xlab="time(d)",ylab="Growth (AU)",main=paste(target,mlab))
+	rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col = "grey")
+	for(id in unique(gdf$ID))points(gdf$Expt.Time[gdf$ID==id],gdf$Growth[gdf$ID==id],type="b",col=clist[[id]],lwd=2)
+	if(returnDat) return(gdf)
+
+	#gname="SPE1"
+	#op=par(mfrow=c(1,2))
+	#ares=plotAllReps(a,gname,"Control")
+	#bres=plotAllReps(b,gname,"Query")
+	#par(op)
+}
+
 ### Get the mode of a vector (why isn't there such a function in base?)
 getMode <- function(x) {
   ux = unique(x)
   return(ux[which.max(tabulate(match(x, ux)))])
 }
+
+
 
