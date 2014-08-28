@@ -380,6 +380,7 @@ plot_IHM_simple<-function(IHM_output,SHM){
 ### Creates an object with information in the format for running the JHM ###
 JHM_postpro<-function(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,b,Treatment_b,Screen_b,MPlate_b,remove_row_b,remove_col_b)
 {
+  print("Stripping extra data and sorting...")
   # Discard any superfluous data from a
   a<-funcREMOVE(a,Screen_a,Treatment_a,MPlate_a)
   if (length(remove_row_a)>=1) a=a[!a$Row%in%remove_row_a,]
@@ -389,7 +390,7 @@ JHM_postpro<-function(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,
   aRow<-sprintf("%02d",a$Row)
   aCol<-sprintf("%02d",a$Col)
   aPlate<-sprintf("%02d",a$MasterPlate.Number)
-  a$ID<-paste(a$Barcode,aPlate,aRow,aCol,sep="")
+  a$ID<-paste(a$Barcode,aPlate,aRow,aCol,sep="_")
   a<-a[order(a$ORF,a$ID,a$Expt.Time), ]
 
   # Discard any superfluous data from b
@@ -401,13 +402,13 @@ JHM_postpro<-function(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,
   bRow<-sprintf("%02d",b$Row)
   bCol<-sprintf("%02d",b$Col)
   bPlate<-sprintf("%02d",b$MasterPlate.Number)
-  b$ID<-paste(b$Barcode,bPlate,bRow,bCol,sep="")
+  b$ID<-paste(b$Barcode,bPlate,bRow,bCol,sep="_")
   b<-b[order(b$ORF,b$ID,b$Expt.Time), ]
   
   # Only analyse ORFs common to both screens
   ORFuni_a<-unique(a$ORF)
   ORFuni_b<-unique(b$ORF)
-  ORFuni<-intersect(ORFuni_a,ORFuni_b)
+  ORFuni<-sort(intersect(ORFuni_a,ORFuni_b))
   N<-length(ORFuni)
   a=a[a$ORF%in%ORFuni,]
   b=b[b$ORF%in%ORFuni,]
@@ -415,29 +416,57 @@ JHM_postpro<-function(a,Treatment_a,Screen_a,MPlate_a,remove_row_a,remove_col_a,
   # Map from ORF to gene name
   gene<-a$Gene[match(ORFuni,a$ORF)]
 
-  M=Ma=length(unique(a$ID))
+  print("Calculating number of repeats, times etc. for each orf...")
+  Ma=length(unique(a$ID))
   NoORF_a<-as.numeric(lapply(split(a,a$ORF),funcNoORF))#no of repeats each orf
   NoTime_a<-c(0,as.numeric(lapply(split(a,a$ID),nrow)))# 0+ no of time each repeat
-  #NoSum_a<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_a)))
   NoSum_a<-c(0,cumsum(NoORF_a))
 
-  M=Mb=length(unique(b$ID))
+  Mb=length(unique(b$ID))
   NoORF_b<-as.numeric(lapply(split(b,b$ORF),funcNoORF))#no of repeats each orf
   NoTime_b<-c(0,as.numeric(lapply(split(b,b$ID),nrow)))# 0+ no of time each repeat
-  #NoSum_b<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_b)))
   NoSum_b<-c(0,cumsum(NoORF_b))
 
   dimr<-max(NoORF_a,NoORF_b)
   dimc<-max(NoTime_a,NoTime_b)
 
-  y<-funcXY_J(a$Growth,b$Growth,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,
-    dimr,dimc)
-  x<-funcXY_J(a$Expt.Time,b$Expt.Time,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,
-    NoSum_b,dimr,dimc)
+  # This code results in stray data points being added to the start of each timeseries
+  # I don't understand how it is supposed to work, so can't fix, so replacing it instead CONOR Aug 2014
+  #y<-funcXY_J(a$Growth,b$Growth,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
+  #x<-funcXY_J(a$Expt.Time,b$Expt.Time,Ma,Mb,N,NoTime_a,NoSum_a,NoTime_b,NoSum_b,dimr,dimc)
+  
+  print("Filling data arrays...")
+  # Initialise 4D arrays for observation times (x) and colony sizes (y) 
+  x=array(NA,dim=c(dimr,dimc,N,2))
+  y=array(NA,dim=c(dimr,dimc,N,2))
+  pb <- txtProgressBar(min = 1, max = N, style = 3)
+  for(orfno in seq_along(ORFuni)){
+	orf=ORFuni[orfno]
+	setTxtProgressBar(pb, orfno)
+	orfa=a[a$ORF==orf,]; orfb=b[b$ORF==orf,]
+	orfa=split(orfa,orfa$ID); orfb=split(orfb,orfb$ID)
+	# For each available replicate of each orf in the control and query condition, add data to arrays
+	repind=1
+	for(repl in orfa){
+		tim=repl$Expt.Time
+		siz=repl$Growth
+		len=length(tim)
+		x[repind,1:len,orfno,1]=tim
+		y[repind,1:len,orfno,1]=siz
+		repind=repind+1
+	}
+	repind=1
+	for(repl in orfb){
+		tim=repl$Expt.Time
+		siz=repl$Growth
+		len=length(tim)
+		x[repind,1:len,orfno,2]=tim
+		y[repind,1:len,orfno,2]=siz
+		repind=repind+1
+	}
+  }
+  close(pb)
 
-  #QFA.I<-list("NoORF"=cbind(NoORF_a,NoORF_b),"NoTime_a"=NoTime_a[-1],
-  #  "NoTime_b"=NoTime_b[-1],"NoSum"=cbind(NoSum_a,NoSum_b),"N"=N,"Ma"=Ma,
-  #	 "Mb"=Mb,"gene"=gene,SHIFT=c(0,max(NoSum_a,NoSum_b)))
   QFA.D<-list(x=x,y=y)
 
   x[is.na(x)]=-999
