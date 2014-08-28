@@ -82,53 +82,53 @@ int inzstruct_data_JHM(struct_data_JHM *data,int *QFAIA,double *QFADyA,double *Q
 	int i;
 	long size;
 
-		data->L=QFAIA[0];     
-
-		data->M=QFAIA[1];
-		data->N=QFAIA[2];
-		data->maxTIMEa=QFAIA[4];
-		data->L=QFAIB[0];
-		data->M=QFAIB[1];
-		data->N=QFAIB[2];
-		data->maxy=QFAIA[3]+QFAIB[3];
-		data->maxTIMEb=QFAIB[4];
+	data->L=QFAIA[0];     
+	data->M=QFAIA[1];
+	data->N=QFAIA[2];
+	data->maxTIMEa=QFAIA[4];
+	data->L=QFAIB[0];
+	data->M=QFAIB[1];
+	data->N=QFAIB[2];
+	data->maxy=QFAIA[3]+QFAIB[3];
+	data->maxTIMEb=QFAIB[4];
 
 	data->SHIFTlmn=QFAIA[3];
 	size=data->maxy;
   	data->y=malloc(size*sizeof(double));  
-        data->x=malloc(size*sizeof(double));  
+	data->x=malloc(size*sizeof(double));  
 	size=data->L*2;
 	data->NoORF=malloc(size*sizeof(double));  
 	data->NoSUM=malloc(size*sizeof(double));
 	size=data->maxTIMEa+data->maxTIMEb;
 	data->NoTIME=malloc(size*sizeof(double));  
-/**/
- for (i=0;i<(data->maxy-data->SHIFTlmn);i++){
-data->y[i]=QFADyA[i];
-data->x[i]=QFADxA[i];
-data->y[i+data->SHIFTlmn]=QFADyB[i];
-data->x[i+data->SHIFTlmn]=QFADxB[i];
-}
+	/**/
+	for (i=0;i<(data->maxy-data->SHIFTlmn);i++){
+		data->y[i]=QFADyA[i];
+		data->x[i]=QFADxA[i];
+		data->y[i+data->SHIFTlmn]=QFADyB[i];
+		data->x[i+data->SHIFTlmn]=QFADxB[i];
+	}
 
 	for (i=0;i<data->maxy;i++){
-          if(data->y[i]<0){ data->y[i]=0;}
-	  if(data->x[i]<0){ data->x[i]=0;}
-        }
+		if(data->y[i]<0){ data->y[i]=0;}
+		if(data->x[i]<0){ data->x[i]=0;}
+	}
 
-
- for (i=0;i<(data->L);i++){
-data->NoORF[i]=QFADNoORFA[i];
-data->NoORF[i+data->L]=QFADNoORFB[i];
-}
- for (i=0;i<(data->maxTIMEa);i++){
-data->NoTIME[i]=QFADNoTIMEA[i];
-}
- for (i=0;i<(data->maxTIMEb);i++){
-data->NoTIME[i+data->maxTIMEa]=QFADNoTIMEB[i];
-}
-/**/
+	for (i=0;i<(data->L);i++){
+		data->NoORF[i]=QFADNoORFA[i];
+		data->NoORF[i+data->L]=QFADNoORFB[i];
+	}
+	
+	for (i=0;i<(data->maxTIMEa);i++){
+		data->NoTIME[i]=QFADNoTIMEA[i];
+	}
+	
+	for (i=0;i<(data->maxTIMEb);i++){
+		data->NoTIME[i+data->maxTIMEa]=QFADNoTIMEB[i];
+	}
+	/**/
 	filldata_JHM(data);
-return 0;
+	return 0;
 }
 
 int inzstruct_para_JHM(struct_para_JHM *para,struct_data_JHM *data,struct_priors_JHM *priors)
