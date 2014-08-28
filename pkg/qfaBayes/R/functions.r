@@ -65,16 +65,13 @@ funcARRAYTRANS_J<-function(data_vec,dim){
 
 ### Sorts data into array with correct dimensions (Joint Model Specific) ###
 funcXY_J<-function(data,data_b,Ma,Mb,N,NoTime_vec,NoSum_vec,NoTime_vec_b,NoSum_vec_b,dimr,dimc){
-  XY<-unlist(lapply(1:Ma,funcRowRep,NoTime_vec=NoTime_vec,data_vec=data,
-    dimr,dimc))
+  XY<-unlist(lapply(1:Ma,funcRowRep,NoTime_vec=NoTime_vec,data_vec=data,dimr,dimc))
   XY<-unlist(lapply(1:N,funcColORF,NoSum_vec=NoSum_vec,data_vec=XY,dimr,dimc))
-  XY_b<-unlist(lapply(1:Mb,funcRowRep,NoTime_vec=NoTime_vec_b,data_vec=data_b,
-    dimr,dimc))
-  XY_b<-unlist(lapply(1:N,funcColORF,NoSum_vec=NoSum_vec_b,data_vec=XY_b,dimr,
-    dimc))
+  XY_b<-unlist(lapply(1:Mb,funcRowRep,NoTime_vec=NoTime_vec_b,data_vec=data_b,dimr,dimc))
+  XY_b<-unlist(lapply(1:N,funcColORF,NoSum_vec=NoSum_vec_b,data_vec=XY_b,dimr,dimc))
   dim<-c(dimc,dimr,N,2)
   XY<-funcARRAYTRANS_J(c(XY,XY_b),dim)
-  XY
+  return(XY)
 }
 
 ### Scales data by maximum theroetical value for IOD ###
