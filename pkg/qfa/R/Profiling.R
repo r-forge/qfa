@@ -1,5 +1,5 @@
 makeProfiles=function(flist,genChar){
-	# Read fitnessReport or GIS files from flist (defined elsewhere)
+	# Read fitnessReport or GIS files from flist
 	# Check if file valid output from qfa R packages
 	# Check how many rows to skip before reading data (lskip)
 	# Assume same filetype for all files in list
@@ -44,11 +44,12 @@ fastPwMahal = function(x1_raw,invCovMat) {
 
 # Generate correlation, distance and Mahalanobis matrices
 similarities=function(prof){
-	invCovMat = solve(cov(prof[,1:length(flist)]))
+	nExp=dim(prof)[2]-2
+	invCovMat = solve(cov(prof[,1:nExp]))
 	res=list(
-	corMat=cor(t(as.matrix(prof[,1:length(flist)])),use="complete.obs"),
-	distMat=as.matrix(dist(prof[,1:length(flist)])),
-	mahMat=fastPwMahal(prof[,1:length(flist)],invCovMat)
+	corMat=cor(t(as.matrix(prof[,1:nExp])),use="complete.obs"),
+	distMat=as.matrix(dist(prof[,1:nExp])),
+	mahMat=fastPwMahal(prof[,1:nExp],invCovMat)
 	)
 	return(res)
 }
@@ -70,7 +71,7 @@ plotSimilarFit=function(targ,prof,sims,cutoff=50,ylim=c()){
 	# Number of experiments
 	nExp=dim(prof)[2]-2
 
-	if(length(ylim)==0) ylim=quantile(as.numeric(unlist(prof[,1:length(flist)])),c(0,1))
+	if(length(ylim)==0) ylim=quantile(as.numeric(unlist(prof[,1:nExp])),c(0,1))
 	sim=findSimilar(targ,sims)
 	corrs=head(sim$Corr,cutoff)
 	dists=head(sim$Dist,cutoff)
@@ -125,8 +126,8 @@ plotGroupFits=function(glists,prof,clist=c(),mtitle="",ylim=c()){
 	for(k in 1:length(names(glists))){	
 		glist=glists[[names(glists)[k]]]
 		cprof=prof[rownames(prof)%in%glist,]
-		for(i in 1:dim(cprof)[1]) points(1:length(flist),cprof[i,1:length(flist)],type="l",col=clist[k],lwd=3,lty=2)
-		text(length(flist),cprof[,length(flist)],tolower(rownames(cprof)),cex=0.5,pos=4,col=clist[k])
+		for(i in 1:dim(cprof)[1]) points(1:nExp,cprof[i,1:nExp],type="l",col=clist[k],lwd=3,lty=2)
+		text(nExp,cprof[,nExp],tolower(rownames(cprof)),cex=0.5,pos=4,col=clist[k])
 		text(1,cprof[,1],tolower(rownames(cprof)),cex=0.5,pos=2,col=clist[k])
 	}
 	legend("topright",names(glists),text.col=clist,col=clist,lty=2,lwd=2)
@@ -161,7 +162,7 @@ plotFitsPoints=function(targlist,prof,pindex,colour="black",textleft=FALSE,alpha
 			pindex=pindex+1
 		}
 		text(1,cprof[,1],tolower(rownames(cprof)),cex=1,pos=2,col=colour[(1:dim(cprof)[1]-1)%%(length(colour))+1])
-		text(length(flist),cprof[,length(flist)],tolower(rownames(cprof)),cex=1,pos=4,col=colour[(1:dim(cprof)[1]-1)%%(length(colour))+1])
+		text(nExp,cprof[,nExp],tolower(rownames(cprof)),cex=1,pos=4,col=colour[(1:dim(cprof)[1]-1)%%(length(colour))+1])
 	}
 	if(!textleft) legend("topright",tolower(rownames(cprof)),pch=pchlist,col=colour[(1:dim(cprof)[1]-1)%%(length(colour))+1],cex=1,pt.lwd=2,pt.cex=2)
 	return(pindex)

@@ -433,7 +433,7 @@ makeVisTool=function(){
 		return(NULL)
 	}
 
-	visTool<-function(groups,orf2gene,GISfiles,metaRep="MetaReport.txt"){
+	visTool<-function(groups,orf2gene,GISfiles,metaRep="MetaReport.txt",fitmax=0){
 		# Function for generating interactive plot
 		globs$GROUPS=groups()
 		globs$ORFGENE=orf2gene
@@ -474,8 +474,13 @@ makeVisTool=function(){
 		globs$fxmin=c();globs$fymin=c()
 
 		for(d in globs$datlist){
-			globs$fxmax=c(globs$fxmax,d$fMax)
-			globs$fymax=c(globs$fymax,d$fMax)
+			if(fitmax==0){
+				globs$fxmax=c(globs$fxmax,d$fMax)
+				globs$fymax=c(globs$fymax,d$fMax)
+			}else{
+				globs$fxmax=c(globs$fxmax,fitmax)
+				globs$fymax=c(globs$fymax,fitmax)			
+			}
 			globs$fxmin=c(0,globs$fxmin)
 			globs$fymin=c(0,globs$fymin)
 		}
@@ -582,7 +587,7 @@ buildComplexes<-function(){
 
 buildBenschop<-function() buildComplexes()
 
-iRVisDemo<-function(groupFun=buildComplexes){
+iRVisDemo<-function(groupFun=buildComplexes,fitmax=0){
 	orfile=file.path(file.path(system.file(package = "qfa"),"extdata","ORF2GENE.txt.gz"))
 	ORFGENE=read.delim(orfile,stringsAsFactors=FALSE,sep="\t",header=FALSE)
 	colnames(ORFGENE)=c("ORF","Gene")
@@ -591,7 +596,7 @@ iRVisDemo<-function(groupFun=buildComplexes){
 	# Read in GIS files
 	filenames=list.files(file.path(system.file(package = "qfa"),"extdata"),pattern="*GIS.txt.gz",full.names=TRUE)
 	visTool=makeVisTool()
-	visTool(groupFun,ORFGENE,filenames,"MetaReport.txt")
+	visTool(groupFun,ORFGENE,filenames,"MetaReport.txt",fitmax=fitmax)
 }
 
 NAtoBlank=function(x){
