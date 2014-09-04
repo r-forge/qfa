@@ -384,7 +384,6 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 	}
 
 	if(nCores>1){
-		library(parallel)
 		cl=makeCluster(nCores)
 		clusterCall(cl,function() library(qfa))
 	}else{cl=NULL}
@@ -412,7 +411,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 			ex <- Filter(function(x) is.function(get(x, .GlobalEnv)), ls(.GlobalEnv))
 			clusterExport(cl, ex)
 			clusterExport(cl, as.vector(lsf.str(envir=.GlobalEnv)))
-			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog...))
+			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,...))
 		}else{
 			bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,...))
 		}
