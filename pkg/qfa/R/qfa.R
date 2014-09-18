@@ -568,7 +568,7 @@ makeBoundsQFA<-function(inocguess,d,minK=0,fixG=FALSE,globalOpt=FALSE,glog=TRUE)
 	return(list(K=c(lowK,upK),r=c(lowr,upr),g=c(lowg,upg),v=c(lowv,upv),inocguess=inocguess))
 }
 
-growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,glog=TRUE,...){
+growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,glog=TRUE){
 	len1=length(obsdat$Growth)
 	# Throw away observations below the detectable threshold
 	d=obsdat[obsdat$Growth>=detectThresh,]

@@ -7,7 +7,7 @@ Generates numerical area under curve (nAUC) and numerical single time point (nST
 nAUC is the area under the interpolating function, and is estimated by integrating between limits 0 and AUCLim.  nSTP is the interpolated cell density estimate at t=STP.    
 }
 \usage{
-numfit=numericalfitness(obsdat,AUCLim,STP)
+numericalfitness(obsdat,AUCLim,STP)
 }
 \arguments{
   \item{obsdat}{A data frame containing a numeric Expt.Time column (time since culture inoculation, typically in days) and a numeric Growth column (typically cell density estimates estimated from a timeseries of culture photographs, quantified by software such as Colonyzer: http://research.ncl.ac.uk/colonyzer/)}

@@ -5,7 +5,7 @@
 Generates constraints on allowable values of generalised logistic model parameters appropriate for studying microbial growth curves using Quantitative Fitness Analysis (QFA): http://research.ncl.ac.uk/qfa/.  Biologically plausible growth rates limit parameter r and scaling of cell density (between values of 0.0 and 1.0) limit parameters g and K.  The lower limit for K is set to about the best guess for the inoculum density (inocguess). To ensure that fitted generalised logistic models do not deviate drastically from Verhulst's original logistic model, v is constrained to lie between 0.1 and 10.0.  Finally, the inoculum density parameter g is required to be non-negative and less than or equal to the upper allowable limit for K (since real microbial population densities must not decrease from their inoculum density).
 }
 \usage{
-bounds=makeBoundsQFA(inocguess,d,minK,fixG,globalOpt)
+makeBoundsQFA(inocguess,d,minK=0,fixG=FALSE,globalOpt=FALSE,glog=TRUE)
 }
 \arguments{
   \item{inocguess}{Either a numeric value representing an initial guess at the inoculum density (cell density estimate at t=0) or NULL.  If inocguess is set to NULL, then the initial guess for the inoculum density will be estimated from the observed dataset where possible. }
@@ -15,6 +15,7 @@ bounds=makeBoundsQFA(inocguess,d,minK,fixG,globalOpt)
   \item{minK}{Lowest allowable value of K (stationary phase cell density) allowable for a culture which is not classed as dead or missing.}
   \item{fixG}{Boolean specifying whether inoculum density parameter g should be constrained to lie within a narrow region around inocguess.}
   \item{globalOpt}{Boolean specifying whether curve fitting algorithm should search for inoculum density parameter g across a wide search space.}
+  \item{glog}{Set to TRUE when carrying out generalised (asymmetric) logistic model fit to growth curve data.  Set to FALSE when carrying out simpler logistic model fit (as in Addinall et al. 2011)}
 }
 \value{
 A named list of vectors (each of length 2) specifying the lower and upper bounds for the space in which each of the generalised logistic model parameters K, r, g and v will be searched for, together with an updated version of the best inoculum density guess (inocguess).
