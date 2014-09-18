@@ -5,8 +5,8 @@
 Fits a genetic independence model between control strains and double mutant strains, either using rjags and a Bayesian linear regression model, or lm and maximum likelihood. For each ORF, the probability that it is a false discovery of a suppressor or enhancer is calculated. These probabilities are then fdr corrected and returned along with genetic interaction scores.
 }
 \usage{
-qfa.epi(double,control,qthresh,orfdict="ORF2GENE.txt",
-GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE)
+qfa.epi(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",GISthresh=0.0,plot=TRUE,
+modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE,bootstrap=NULL,Nboot=5000,subSamp=Inf)
 }
 \arguments{
   \item{double}{Either a qfa.posterior or the results of qfa.fit for the double mutants}
@@ -16,9 +16,13 @@ GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE)
   \item{GISthresh}{When returning interaction hitlists, this variable determines the cutoff for strength of genetic interaction.}
   \item{plot}{If TRUE, then a 2-way fitness plot is made.}
   \item{modcheck}{If TRUE then diagnostic residual plots are output to \dQuote{ModelCheck.pdf}}
-  \item{fitfunct}{The name of a fitness function whose arguments are, in order, (K,r,g,v) (carrying capacity, rate and initial size of population and shape parameter for generalised logistic growth model).}
+  \item{fitfunct}{The name of a fitness function whose arguments are, in order, (K,r,g,v) (carrying capacity, rate and initial size of population and shape parameter for generalised logistic growth model).  DEPRECATED.  Please manually add a column named \dQuote{fit} to double and control instead.}
   \item{wctest}{If TRUE, then use the Wilcoxon test for differences in medians as a measure of statistical significance of genetic interaction.  This is the default.  If FALSE, then use a t-test for difference in mean fitnesses instead.}
+  \item{bootstrap}{If TRUE, then use bootstrapping procedure to check if genetic interactions are significant.  If false, then use linear regression and t-test or wilcoxon test.}
+  \item{Nboot}{Number of bootstrap samples to generate if using bootstrapping procedure}
+  \item{subSamp}{Number of subsamples of available replicates to sample when bootstrapping (default, Inf, uses all available replicates, i.e. each summary (each bootstrap sample) is based on sampling subSamp from N with replacement.  If subSamp==Inf, then subSamp is set equal to N.}  
 }
+
 \value{
 Returns an R list containing three data frames: Results, Enhancers and Suppressors.  Each data frame has the following columns:
 \itemize{

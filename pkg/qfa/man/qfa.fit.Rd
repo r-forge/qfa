@@ -5,8 +5,9 @@
 Given a series of culture density observations from colonyzer.read, this function will fit the generalised logistic growth model to timecourse observations for all colonies by least squares using either the L-BFGS-B algorithm in R's optim function, or the differential evolution, stochastic global optimisation package DEoptim.  It will also calculate a numerical Area Under Curve (nAUC) fitness measure by integrating under a loess smooothed version of the dataset if there are sufficient observations or under a linear interpolation between observations if observations are too infrequent. 
 }
 \usage{
-qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt,minK=0.025,detectThresh=0.0005,
-globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,modelFit=TRUE,...)
+qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="\%Y-\%m-\%d_\%H-\%M-\%S",minK=0.025,
+detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,
+nCores=1,glog=TRUE,...)
 }
 \arguments{
   \item{d}{The data.frame containing the timecourse data for each colony (returned from colonyzer.read).}
@@ -19,8 +20,10 @@ globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,modelFit=TRUE,...)
   \item{logTransform}{Experimental flag signalling use of different objective function for optimisation.  You should probably ignore this or set it to FALSE}
   \item{fixG}{Flag indicating whether to allow g parameter to vary over a wide or narrow range during optimisation.  fixG=TRUE corresponds to narrow constraints on g.}
   \item{AUCLim}{Numerical AUC (nAUC) is calculated as the integral of an approximation of the growth curve between time 0 and AUCLim}
-  \item{STP}{Time to use for "Single Time Point" fitness estimate.  Defaults to 20 days (very late in growth curve) which is like carrying capacity.}
-  \item{modelFit}{Boolean indicating whether to generate growth curve model parameters (Generalised logistic model).  Model-free fitnesses (nAUC and nSTP) are generated in any case, but setting this value to FALSE disables model fitting (and can save a little time).}
+  \item{STP}{Time to use for \dQuote{Single Time Point} fitness estimate.  Defaults to 20 days (very late in growth curve) which is like carrying capacity.}
+
+  \item{nCores}{Can attempt to split model fitting load across multiple parallel cores.  Experimental, probably best to leave this value set to default (1)}
+  \item{glog}{When set to TRUE, carry out generalised (asymmetric) logistic model fit to growth curve data.  When set to FALSE, carry out simpler logistic model fit (as in Addinall et al. 2011)}
   \item{...}{Extra arguments passed to optim} 
 }
 \value{
