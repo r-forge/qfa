@@ -177,22 +177,43 @@ correlationReport<-function(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185){
 }
 
 plateBoxplots<-function(dataframe,outputfile,fitmax=185,groupcol="Treatment"){
-# Generates plate by plate boxplots of culture fitnesses
-# Useful for identifying plates with medium problems
-grps=unique(dataframe[[groupcol]])
-scrns=unique(dataframe$Screen.Name)
-grps=grps[order(grps)]
-scrns=scrns[order(scrns)]
-pdf(outputfile)
-for (grp in grps){
-	for (scr in scrns){
-		dt=dataframe[(dataframe$Screen.Name==scr)&(dataframe[[groupcol]]==grp),]
-		dt=dt[order(as.numeric(as.character(dt$MasterPlate.Number))),]
-		plateNums=unique(as.numeric(as.character(dt$MasterPlate.Number)))
-		plateNums=as.character(plateNums)
-		dt$MasterPlate.Number<-factor(dt$MasterPlate.Number,levels=plateNums)
-		boxplot(dt$fit~dt$MasterPlate.Number,notch=TRUE,xlab="Plate Number",ylab="Fitness",col=rainbow(23),main=paste(grp,scr),ylim=c(0,fitmax),cex.axis=0.5)
+	# Generates plate by plate boxplots of culture fitnesses
+	# Useful for identifying plates with medium problems
+	dataframe$ScreenRepQuad=paste(dataframe$Screen.Name,"RQ",sprintf("%02d",dataframe$RepQuad),sep="_")
+	grps=unique(dataframe[[groupcol]])
+	scrns=unique(dataframe$ScreenRepQuad)
+
+	grps=grps[order(grps)]
+	scrns=scrns[order(scrns)]
+	pdf(outputfile,width=16,height=6)
+	for (grp in grps){
+		for (scr in scrns){
+			dt=dataframe[(dataframe$ScreenRepQuad==scr)&(dataframe[[groupcol]]==grp),]
+			dt=dt[order(as.numeric(as.character(dt$MasterPlate.Number))),]
+			plateNums=unique(as.numeric(as.character(dt$MasterPlate.Number)))
+			plateNums=as.character(plateNums)
+			dt$MasterPlate.Number<-factor(dt$MasterPlate.Number,levels=plateNums)
+			boxplot(dt$fit~dt$MasterPlate.Number,notch=TRUE,xlab="Plate Number",ylab="Fitness",col=rainbow(23),main=paste(grp,scr),ylim=c(0,fitmax),cex.axis=1)
+		}
+	}
+	fitdef=findFit(dataframe)
+	by(dataframe,dataframe$Barcode,summaryPlots,fdef=fitdef,fdef2="MDRMDP",label="")
+	dev.off()
 }
-}
-dev.off()
+
+summaryPlots=function(datFit,fdef="nAUC",fdef2="MDRMDP",label=""){
+	datFit$Quad=(((datFit$Row-1)%%2)*2+(datFit$Col-1)%%2)+1
+	bc=unique(datFit$Barcode)
+	print(paste("Summary plot for",bc))
+	op=par(mfrow=c(2,3))
+	hist(datFit[[fdef]],breaks=100,xlab=fdef,main="",freq=TRUE)
+	boxplot(datFit[[fdef]]~datFit$Row,xlab="Row",ylab=fdef)
+	boxplot(datFit[[fdef]]~datFit$Col,xlab="Column",ylab=fdef)
+	# Only really useful for plates with several replicate of a few genotypes
+	#boxplot(datFit[[fdef]]~datFit$Gene,las=2,xlab="",ylab=fdef,cex.axis=0.5) 
+	boxplot(datFit[["d0"]]~datFit$Quad,notch=TRUE,xlab="Quadrant",ylab="Inoculum Density")
+	boxplot(datFit[[fdef]]~datFit$Quad,notch=TRUE,xlab="Quadrant",ylab=fdef)
+	boxplot(datFit[[fdef2]]~datFit$Quad,notch=TRUE,xlab="Quadrant",ylab=fdef2)
+	title(paste(bc,label))
+	par(op)
 }
