@@ -376,6 +376,9 @@ varposget<-function(var,orfn,norfs){
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
 qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,nCores=1,glog=TRUE,...){
+
+	# ORF2gene argument is now deprecated, this link should be made with colony.read function instead
+
 	if(!is.null(inocguess)){
 		if(length(inocguess)==0) {
 			print("ERROR: must specify an inoculum density guess (or NULL)")
@@ -388,8 +391,6 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		clusterCall(cl,function() library(qfa))
 	}else{cl=NULL}
 	
-	# Create orf2gene dictionary
-	#if (ORF2gene!=FALSE){gdict<-orf2gdict(ORF2gene)}
 	# Vector of barcodes
 	barcodes<-unique(d$Barcode); nbc<-length(barcodes)
 	# Get big data frame ready for results
@@ -421,7 +422,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		# Bind Data frame of barcode results to overall results
 		barcResults<-data.frame(Barcode=as.character(info$Barcode),Row=rows,Col=cols,
 		ScreenID=as.character(info$ScreenID),Treatment=as.character(info$Treatments),Medium=as.character(info$Medium),ORF=as.character(info$ORF),
-		K=bcfit[,1],r=bcfit[,2],g=bcfit[,3],v=bcfit[,4],obj=bcfit[,5],t0=bcfit[,6],nAUC=bcfit[,7],nSTP=bcfit[,8],d0=bcfit[,9],Screen.Name=as.character(info$Screen.Name),Library.Name=as.character(info$Library.Name),MasterPlate.Number=as.numeric(info$MasterPlate.Number),Timeseries.order=as.numeric(info$Timeseries.order),Inoc.Time=inoctime,TileX=as.numeric(info$Tile.Dimensions.X),TileY=as.numeric(info$Tile.Dimensions.Y),XOffset=as.numeric(info$X.Offset),YOffset=as.numeric(info$Y.Offset),Threshold=as.numeric(info$Threshold),EdgeLength=as.numeric(info$Edge.length),EdgePixels=as.numeric(info$Edge.Pixels),RepQuad=as.numeric(info$RepQuad))
+		K=bcfit[,"K"],r=bcfit[,"r"],g=bcfit[,"g"],v=bcfit[,"v"],obj=bcfit[,"objval"],t0=bcfit[,"t0"],tshift=bcfit[,"tshift"],nAUC=bcfit[,"nAUC"],nSTP=bcfit[,"nSTP"],d0=bcfit[,"d0"],Screen.Name=as.character(info$Screen.Name),Library.Name=as.character(info$Library.Name),MasterPlate.Number=as.numeric(info$MasterPlate.Number),Timeseries.order=as.numeric(info$Timeseries.order),Inoc.Time=inoctime,TileX=as.numeric(info$Tile.Dimensions.X),TileY=as.numeric(info$Tile.Dimensions.Y),XOffset=as.numeric(info$X.Offset),YOffset=as.numeric(info$Y.Offset),Threshold=as.numeric(info$Threshold),EdgeLength=as.numeric(info$Edge.length),EdgePixels=as.numeric(info$Edge.Pixels),RepQuad=as.numeric(info$RepQuad))
 		if("Client"%in%colnames(info)){barcResults$Client=as.character(info$Client)}
 		if("ExptDate"%in%colnames(info)){barcResults$ExptDate=as.character(info$ExptDate)}
 		if("User"%in%colnames(info)){barcResults$User=as.character(info$User)}
@@ -431,7 +432,6 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		if("Gene"%in%colnames(info)){barcResults$Gene=as.character(info$Gene)}
 		results=rbind(results,barcResults)
 		} #bcode
-		#if (ORF2gene!=FALSE){results$Gene<-sapply(as.character(results$ORF),orf2g,gdict)}
 		if(nCores>1){
 			stopCluster(cl)
 		}
@@ -512,7 +512,7 @@ colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectT
 	obsdat=data.frame(Expt.Time=as.numeric(do$Expt.Time),Growth=as.numeric(do$Growth))
 	pars=makefits(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog)
 	#print(pars)
-	return(as.numeric(pars))
+	return(pars)
 }
 
 makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,...){
@@ -540,15 +540,6 @@ makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 }
 
 makeBoundsQFA<-function(inocguess,d,minK=0,fixG=FALSE,globalOpt=FALSE,glog=TRUE){
-
-	if(is.null(inocguess)){
-		# Without a sensible independent estimate for inoculum density, the best we can do is to estimate it based on observed data.
-		# This strategy will only work well if the inoculum density is high enough to be measurable (e.g. pinned cultures or 
-		# conc. spotted) and is clearly observed.  Clearly observed means: no condensation on plates immediately after they are 
-		# placed in incubator for example.
-		if(length(d$Growth)>0) {candidate=min(d$Growth)}else{candidate=0}
-		inocguess=max(0.001,candidate)
-	}
 	
 	# Define optimization bounds based on inocguess #
 	lowr<-0; upr<-25
@@ -574,13 +565,31 @@ growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 	d=obsdat[obsdat$Growth>=detectThresh,]
 	# Throw away observations occurring before inoculation date (negative times...)
 	d=d[d$Expt.Time>=0,]
+	d=d[!is.na(d$Growth),]
 	len2=length(d$Growth)
 	# If this has left us with too few points, return "dead colony"
 	if ((len2/len1<0.25)|(len2<3)) {
-		if(!is.null(iguess)) {pars=c(iguess,0,iguess,1,Inf)}else{pars=c(minK,1E-9,1E-9,1,Inf)}
-		names(pars)=c("K","r","g","v","objval")
+		if(!is.null(iguess)) {pars=c(iguess,0,iguess,1,Inf,0)}else{pars=c(minK,1E-9,1E-9,1,Inf,0)}
+		names(pars)=c("K","r","g","v","objval","tshift")
 		return(pars)
 	}
+	
+	# Deal with situation where no inoculum guess specified
+	tshift=0
+	if(is.null(iguess)){
+		# Without a sensible independent estimate for inoculum density, the best we can do is to estimate it based on observed data.
+		# This strategy will only work well if the inoculum density is high enough to be measurable (e.g. pinned cultures or 
+		# conc. spotted) and is clearly observed.  Clearly observed means: no condensation on plates immediately after they are 
+		# placed in incubator for example.
+		# If we are making an independent estimate of inoculum density, then we should also reset the time at which the experiment "begins".
+		# This experiment start time should be the time at which the inoculum density is observed.
+		if(length(d$Growth)>0) {
+			candidate=min(d$Growth)
+			tshift=d$Expt.Time[match(candidate,d$Growth)]
+		}else{candidate=0}
+		iguess=max(0.0001,candidate)
+	}
+	d$Expt.Time=d$Expt.Time-tshift
 	
 	bounds=makeBoundsQFA(iguess,d,minK,fixG,globalOpt,glog)
 	inocguess=bounds$inocguess
@@ -633,6 +642,7 @@ growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 	if(!is.finite(pars[["r"]])) pars[["r"]]=0
 	if(!is.finite(pars[["g"]])) pars[["g"]]=0
 	if("v"%in%names(pars)) if(!is.finite(pars[["v"]])) pars[["v"]]=1
+	pars[["tshift"]]=tshift
 	#if(length(pars)!=5) dput(pars)
 	return(pars)
 }
@@ -940,15 +950,16 @@ rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify,densityCol="Growth",c
 	dcol<-dbc[(dbc$Row==row)&(dbc$Col==col),]
 	growth<-sapply(dcol[[densityCol]],nozero)
 	tim<-dcol$Expt.Time
+	if("tshift"%in%names(resrow)){tshift<-unique(as.numeric(resrow[["tshift"]]))[1]}else{tshift=0}
 	# Draw the curves and data
-	logdraw(row,col,resrow,tim,growth,gene,maxg,maxt=maxt,logify=logify,densityCol=densityCol,curves=curves,ptype=ptype)
+	logdraw(row,col,resrow,tim,growth,gene,maxg,maxt=maxt,logify=logify,densityCol=densityCol,curves=curves,ptype=ptype,tshift=tshift)
 }
 
 ### Converts row no. to position vector ###	
 index2pos<-function(index,dbc) c(dbc[index,'Row'],dbc[index,'Col'])
 
 ### Do individual timecourse plot given parameters & data ###
-logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0,logify=FALSE,densityCol="Growth",curves=TRUE,ptype="p"){
+logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0,logify=FALSE,densityCol="Growth",curves=TRUE,ptype="p",tshift=0){
 	if(logify) {ylog="y"}else{ylog=""}
 	plot(NULL,type="n",xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg),log=ylog,xlab="",ylab="",main=gene,frame.plot=0,cex.main=3*scaleT,cex.axis=1*scaleT)
 	if(curves){
@@ -959,7 +970,7 @@ logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0
 		# Add logistic curve
 		if(maxt==0) maxt=ceiling(max(tim))
 		x=0
-		curve(Glogist(K,r,g,v,x),n=31,lwd=2.5,add=TRUE,from=0,to=maxt,xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg))
+		curve(Glogist(K,r,g,v,x-tshift),n=31,lwd=2.5,add=TRUE,from=tshift,to=maxt,xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg))
 	}
 	# Add data points
 	points(tim,growth,col="red",cex=2*scaleT,pch=4,lwd=2,type=ptype,xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg))
