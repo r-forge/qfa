@@ -1,4 +1,5 @@
 exportPattern("^[^\\.]")
+import(parallel)
 import(DEoptim)
 import(knitr)
 import(sp)

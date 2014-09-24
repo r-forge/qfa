@@ -109,7 +109,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	# Have to define colClasses here since from R3.1-10, automatic conversion for string representation of numbers
 	if("data.table" %in% rownames(installed.packages())){
 		library(data.table) # Faster version of read.delim...
-		iman=do.call(rbind, lapply(fs, fread,header=FALSE,sep="\t",stringsAsFactors=FALSE,colClasses=colClasses))
+		iman=do.call(rbind, lapply(fs, data.table::fread,header=FALSE,sep="\t",stringsAsFactors=FALSE,colClasses=colClasses))
 		iman=data.frame(iman)
 	}else{
 		iman=do.call(rbind, lapply(fs, read.delim,header=FALSE,sep="\t",stringsAsFactors=FALSE,colClasses=colClasses))
