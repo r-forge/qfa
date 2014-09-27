@@ -185,7 +185,7 @@ plateBoxplots<-function(dataframe,outputfile,fitmax=185,groupcol="Treatment"){
 
 	grps=grps[order(grps)]
 	scrns=scrns[order(scrns)]
-	pdf(outputfile,width=16,height=6)
+	pdf(outputfile,width=12,height=8)
 	for (grp in grps){
 		for (scr in scrns){
 			dt=dataframe[(dataframe$ScreenRepQuad==scr)&(dataframe[[groupcol]]==grp),]
@@ -206,14 +206,14 @@ summaryPlots=function(datFit,fdef="nAUC",fdef2="MDRMDP",label=""){
 	bc=unique(datFit$Barcode)
 	print(paste("Summary plot for",bc))
 	op=par(mfrow=c(2,3))
-	hist(datFit[[fdef]],breaks=100,xlab=fdef,main="",freq=TRUE)
-	boxplot(datFit[[fdef]]~datFit$Row,xlab="Row",ylab=fdef)
-	boxplot(datFit[[fdef]]~datFit$Col,xlab="Column",ylab=fdef)
+	hist(datFit[[fdef]],breaks=100,xlab=fdef,main="",freq=TRUE, cex=1.75)
+	boxplot(datFit[[fdef]]~datFit$Row,xlab="Row",ylab=fdef, cex=1.75)
+	boxplot(datFit[[fdef]]~datFit$Col,xlab="Column",ylab=fdef, cex=1.75)
 	# Only really useful for plates with several replicate of a few genotypes
-	#boxplot(datFit[[fdef]]~datFit$Gene,las=2,xlab="",ylab=fdef,cex.axis=0.5) 
-	boxplot(datFit[["d0"]]~datFit$Quad,notch=TRUE,xlab="Quadrant",ylab="Inoculum Density")
-	boxplot(datFit[[fdef]]~datFit$Quad,notch=TRUE,xlab="Quadrant",ylab=fdef)
-	boxplot(datFit[[fdef2]]~datFit$Quad,notch=TRUE,xlab="Quadrant",ylab=fdef2)
+	#boxplot(datFit[[fdef]]~datFit$Gene,las=2,xlab="",ylab=fdef,cex.axis=0.5, cex=1.75) 
+	boxplot(datFit[["d0"]]~datFit$Quad,notch=TRUE,xlab="Quadrant",ylab="Inoculum Density", cex=1.75)
+	boxplot(datFit[[fdef]]~datFit$Quad,notch=TRUE,xlab="Quadrant",ylab=fdef, cex=1.75)
+	boxplot(datFit[[fdef2]]~datFit$Quad,notch=TRUE,xlab="Quadrant",ylab=fdef2, cex=1.75)
 	title(paste(bc,label))
 	par(op)
 }

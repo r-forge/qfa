@@ -440,9 +440,11 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 
 makeFitness<-function(results,AUCLim=5,dtmax=25){
 	# Fitness definitions from Addinall et al. 2011
-	results$MDRMDP=mdrmdp(results$K,results$r,results$g,results$v)	
+	# Update the inoculum density parameter in the case where tshift!=0
+	#if("tshift"%in%names(results))	results$g=Glogist(results$K,results$r,results$g,results$v,0-results$tshift)
 	results$MDP=mdp(results$K,results$r,results$g,results$v)
 	results$MDR=mdr(results$K,results$r,results$g,results$v)
+	results$MDRMDP=mdrmdp(results$K,results$r,results$g,results$v)
 	# Set spurious fitnesses to zero
 	results$MDR[(results$r>7)&(results$K<0.0275)]=0
 	results$MDRMDP[(results$r>7)&(results$K<0.0275)]=0
