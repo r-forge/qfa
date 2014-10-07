@@ -378,7 +378,6 @@ varposget<-function(var,orfn,norfs){
 qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,nCores=1,glog=TRUE,...){
 
 	# ORF2gene argument is now deprecated, this link should be made with colony.read function instead
-
 	if(!is.null(inocguess)){
 		if(length(inocguess)==0) {
 			print("ERROR: must specify an inoculum density guess (or NULL)")
@@ -553,7 +552,7 @@ makeBoundsQFA<-function(inocguess,d,minK=0,fixG=FALSE,globalOpt=FALSE,glog=TRUE)
 	lowK<-max(0.9*inocguess,minK); upK<-1.0
 		
 	# We often fix inoculation density, but users might prefer to infer it from growth curves
-	if(fixG) {lowg<-0.9*inocguess; upg<-1.1*inocguess}else{lowg<-0.01*inocguess; upg<-100.0*inocguess}
+	if(fixG) {lowg<-1.0*inocguess; upg<-1.0*inocguess}else{lowg<-0.01*inocguess; upg<-100.0*inocguess}
 	if(globalOpt) {lowg<-1e-6*inocguess; upg<-1e6*inocguess}
 	
 	lowg<-max(0,lowg); upg<-min(upK,upg) 
