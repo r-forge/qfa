@@ -552,8 +552,8 @@ makeBoundsQFA<-function(inocguess,d,minK=0,fixG=FALSE,globalOpt=FALSE,glog=TRUE)
 	lowK<-max(0.9*inocguess,minK); upK<-1.0
 		
 	# We often fix inoculation density, but users might prefer to infer it from growth curves
-	if(fixG) {lowg<-1.0*inocguess; upg<-1.0*inocguess}else{lowg<-0.01*inocguess; upg<-100.0*inocguess}
-	if(globalOpt) {lowg<-1e-6*inocguess; upg<-1e6*inocguess}
+	if(fixG) {lowg<-0.9*inocguess; upg<-1.1*inocguess}else{lowg<-0.01*inocguess; upg<-100.0*inocguess}
+	if(globalOpt) {lowg<-1e-3*inocguess; upg<-1e3*inocguess}
 	
 	lowg<-max(0,lowg); upg<-min(upK,upg) 
 	
