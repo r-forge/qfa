@@ -1,5 +1,3 @@
-source("F:\\QFA\\pkg\\qfa\\R\\qfa.R")
-
 # Simulations using parameter values representing a typical conc. spotted growth curve
 times=seq(0,5,0.25)
 modelfn=function(t) Glogist(K=0.25,r=7.5,g=9e-4,v=0.3,t)
