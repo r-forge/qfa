@@ -375,7 +375,7 @@ varposget<-function(var,orfn,norfs){
 ############################### Likelihood Functions ################################
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
-qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,nCores=1,glog=TRUE,...){
+qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,nCores=1,glog=TRUE,modelFit=TRUE,...){
 
 	# ORF2gene argument is now deprecated, this link should be made with colony.read function instead
 	if(!is.null(inocguess)){
@@ -411,9 +411,9 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 			ex <- Filter(function(x) is.function(get(x, .GlobalEnv)), ls(.GlobalEnv))
 			clusterExport(cl, ex)
 			clusterExport(cl, as.vector(lsf.str(envir=.GlobalEnv)))
-			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,...))
+			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,...))
 		}else{
-			bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,...))
+			bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,...))
 		}
 		info<-data.frame(t(sapply(positions,colony.info,dbc)))
 		rows<-sapply(positions,rcget,"row")
@@ -505,23 +505,28 @@ numericalfitness<-function(obsdat,AUCLim,STP){
 }
 
 ### Growth model fitting for one colony ###
-colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,...){
+colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,...){
 	# Get row & column to restrict data
 	row<-position[1]; col<-position[2]
 	print(paste(bcdata$Barcode[1],"Row:",row,"Col:",col))
 	do<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
 	obsdat=data.frame(Expt.Time=as.numeric(do$Expt.Time),Growth=as.numeric(do$Growth))
-	pars=makefits(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog)
+	pars=makefits(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit)
 	#print(pars)
 	return(pars)
 }
 
-makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,...){
+makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,...){
 	numfit=numericalfitness(obsdat,AUCLim,STP)
 	nAUC=numfit[["nAUC"]]
 	nSTP=numfit[["nSTP"]]
 	
-	pars=growthcurve(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,glog)
+	if(modelFit){
+		pars=growthcurve(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,glog)
+	}else{
+		pars=c(max(obsdat$Growth),NA,NA,NA,NA,NA)
+		names(pars)=c("K","r","g","v","objval","tshift")
+	}
 	# Add on time of first valid obs. and numerical AUC, STP
 	valid=obsdat[obsdat$Growth>=detectThresh,]
 	if(dim(valid)[1]>0) {
@@ -708,6 +713,7 @@ data.fit<-function(tim,growth,inocguess,xybounds,inits=list(),logTransform=FALSE
 		# Get initial guess for parameters
 		init<-guess(tim,growth,inocguess,xybounds)
 		if(xybounds$v[1]==xybounds$v[2]) init$v=NULL
+		if(xybounds$g[1]==xybounds$g[2]) init$g=NULL
 	}else{init=inits}
 	#xybounds$r=c(0.75*init$r,1.25*init$r)
 	#xybounds$r=c(0.1*init$r,10.0*init$r)
@@ -717,41 +723,58 @@ data.fit<-function(tim,growth,inocguess,xybounds,inits=list(),logTransform=FALSE
 	xybounds$K[1]=1.01*xybounds$K[1]
 	# Function to be optimized
 	# Logistic only will have same upper and lower bounds for v...
+	paramscale=c(0.2,10,inocguess,1)
+	names(paramscale)=c("K","r","g","v")
 	if(xybounds$v[1]==xybounds$v[2]){
-		objf<-function(modpars){
-			K<-modpars[1]; r<-modpars[2]
-			g<-modpars[3]; 
-			return(sumsq(K,r,g,xybounds$v[1],growth,tim,logTransform=logTransform))
+		if(xybounds$g[1]==xybounds$g[2]){
+			objf<-function(modpars){
+				return(sumsq(modpars[["K"]],modpars[["r"]],xybounds$g[1],xybounds$v[1],growth,tim,logTransform=logTransform))
+			}
+			lbounds=c(xybounds$K[1],xybounds$r[1])
+			ubounds=c(xybounds$K[2],xybounds$r[2])
+			pscl=as.numeric(paramscale[c("K","r")])	
+		}else{
+			objf<-function(modpars){
+				return(sumsq(modpars[["K"]],modpars[["r"]],modpars[["g"]],xybounds$v[1],growth,tim,logTransform=logTransform))
+			}
+			lbounds=c(xybounds$K[1],xybounds$r[1],xybounds$g[1])
+			ubounds=c(xybounds$K[2],xybounds$r[2],xybounds$g[2])
+			pscl=as.numeric(paramscale[c("K","r","g")])	
 		}
-		lbounds=c(xybounds$K[1],xybounds$r[1],xybounds$g[1])
-		ubounds=c(xybounds$K[2],xybounds$r[2],xybounds$g[2])
-		pscl=c(0.2,10,inocguess)
 	}else{
-		objf<-function(modpars){
-			K<-modpars[1]; r<-modpars[2]
-			g<-modpars[3]; v<-abs(modpars[4])
-			return(sumsq(K,r,g,v,growth,tim,logTransform=logTransform))
+		if(xybounds$g[1]==xybounds$g[2]){
+			objf<-function(modpars){
+				return(sumsq(modpars[["K"]],modpars[["r"]],xybounds$g[1],modpars[["v"]],growth,tim,logTransform=logTransform))
+			}
+			lbounds=c(xybounds$K[1],xybounds$r[1],xybounds$v[1])
+			ubounds=c(xybounds$K[2],xybounds$r[2],xybounds$v[2])
+			pscl=as.numeric(paramscale[c("K","r","v")])				
+		}else{
+			objf<-function(modpars){
+				return(sumsq(modpars[["K"]],modpars[["r"]],modpars[["g"]],modpars[["v"]],growth,tim,logTransform=logTransform))
+			}
+			lbounds=c(xybounds$K[1],xybounds$r[1],xybounds$g[1],xybounds$v[1])
+			ubounds=c(xybounds$K[2],xybounds$r[2],xybounds$g[2],xybounds$v[2])
+			pscl=as.numeric(paramscale[c("K","r","g","v")])	
 		}
-		lbounds=c(xybounds$K[1],xybounds$r[1],xybounds$g[1],xybounds$v[1])
-		ubounds=c(xybounds$K[2],xybounds$r[2],xybounds$g[2],xybounds$v[2])
-		pscl=c(0.2,10,inocguess,1)
 	}
 	# Perform optimization
 	optsol<-optim(par=unlist(init),fn=objf,gr=NULL,method="L-BFGS-B",
 	lower=lbounds,
 	upper=ubounds,
 	control=list(maxit=1000,factr=1e7,trace=0,parscale=pscl))
-	pars=abs(as.numeric(optsol$par))
+	pars=abs(optsol$par)
 	objval=objf(pars)
+	if(!"g"%in%names(pars)) pars[["g"]]=xybounds$g[1]
+	if(!"v"%in%names(pars)) pars[["v"]]=xybounds$v[1]
 	# Sanity check for fitted parameters (no negative growth)
-	if (pars[1]<pars[3]){
-		pars[1]=pars[3]; pars[2]=0; 
-		if(length(pars)==4) pars[4]=1
-		objval=objf(pars)}
-	if(length(pars)==3) pars=c(pars,xybounds$v[1])
-	pars=c(pars,objval)
+	if (pars[["K"]]<pars[["g"]]){
+		pars[["K"]]=pars[["g"]]; pars[["r"]]=0; pars[["v"]]=1
+		objval=objf(pars)
+	}
+	pars[["objval"]]=objval
+	pars=pars[c("K","r","g","v","objval")]
 	if(verbose) {if(optsol$message!="CONVERGENCE: REL_REDUCTION_OF_F <= FACTR*EPSMCH") print(optsol$message)}
-	names(pars)=c("K","r","g","v","objval")
 	return(pars)
 }
 
@@ -981,29 +1004,6 @@ logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0
 		if(logify){legend("bottomright",legt1,box.lty=0,cex=scaleT)}else{legend("topleft",legt1,box.lty=0,cex=scaleT)}
 	}
 	legend("topright",sprintf("R%02dC%02d",row,col),box.lty=0,cex=0.5*scaleT)
-}
-
-plotAllReps=function(df,target,mlab="",returnDat=FALSE){
-	# Plot growth curves for all available replicates of gene/ORF target in colonyzer.read dataframe df
-	if(target%in%df$Gene){
-		gdf=df[df$Gene==target,]
-	}else{
-		gdf=df[df$ORF==target,]
-	}
-	gdf$ID=paste(gdf$Barcode,sprintf("%02d",gdf$MasterPlate.Number),sprintf("%02d",gdf$Row),sprintf("%02d",gdf$Col))
-	gdf=gdf[order(gdf$ORF,gdf$ID,gdf$Expt.Time),]
-	clist=rainbow(length(unique(gdf$ID)))
-	names(clist)=unique(gdf$ID)
-	plot(gdf$Expt.Time,gdf$Growth,type="n",xlab="time(d)",ylab="Growth (AU)",main=paste(target,mlab))
-	rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col = "grey")
-	for(id in unique(gdf$ID))points(gdf$Expt.Time[gdf$ID==id],gdf$Growth[gdf$ID==id],type="b",col=clist[[id]],lwd=2)
-	if(returnDat) return(gdf)
-
-	#gname="SPE1"
-	#op=par(mfrow=c(1,2))
-	#ares=plotAllReps(a,gname,"Control")
-	#bres=plotAllReps(b,gname,"Query")
-	#par(op)
 }
 
 ### Get the mode of a vector (why isn't there such a function in base?)
