@@ -460,7 +460,7 @@ makeFitness<-function(results,AUCLim=5,dtmax=25){
 		# Eliminate problems with division by zero
 		g=max(g,1E-9) 
 		K=max(K,1E-9) 
-		Glogist(K,r,g,v,t) 
+		ifelse(is.na(Glogist(K,r,g,v,t)),0,Glogist(K,r,g,v,t)) # Temporarily replace NA with zero here to allow integrate function below to handle modelFit=FALSE
 	}
 	AUC<-function(dno,tstar,dat) max(0,integrate(Glog,lower=0,upper=tstar,K=dat$K[dno],r=dat$r[dno],g=dat$g[dno],v=dat$v[dno],subdivisions=1000)$value - tstar*dat$g[dno])
 	results$AUC=sapply(1:length(results[,1]),AUC,tstar=AUCLim,dat=results)
@@ -508,7 +508,7 @@ numericalfitness<-function(obsdat,AUCLim,STP){
 colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,...){
 	# Get row & column to restrict data
 	row<-position[1]; col<-position[2]
-	print(paste(bcdata$Barcode[1],"Row:",row,"Col:",col))
+	#print(paste(bcdata$Barcode[1],"Row:",row,"Col:",col))
 	do<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
 	obsdat=data.frame(Expt.Time=as.numeric(do$Expt.Time),Growth=as.numeric(do$Growth))
 	pars=makefits(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit)
