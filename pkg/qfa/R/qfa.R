@@ -506,8 +506,8 @@ numericalfitness<-function(obsdat,AUCLim,STP){
 	if(length(AUCLim)==1) {nAUCnames=c("nAUC")}else{nAUCnames=paste("nAUC",round(AUCLim*24*60),sep="")}
 	if(length(STP)==1) {nSTPnames=c("nSTP")}else{nSTPnames=paste("nSTP",round(STP*24*60),sep="")}
 	names(res)=c(nAUCnames,nSTPnames)
-	if(length(AUCLim)>1) res["nAUC"]=res[nAUCnames[1]]
-	if(length(STP)>1) res["nSTP"]=res[nSTPnames[1]]
+	if(length(AUCLim)>1) res["nAUC"]=res[nAUCnames[length(nAUCnames)]]
+	if(length(STP)>1) res["nSTP"]=res[nSTPnames[length(nSTPnames)]]
 	return(res)
 }
 
