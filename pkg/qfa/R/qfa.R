@@ -419,9 +419,10 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		rows<-sapply(positions,rcget,"row")
 		cols<-sapply(positions,rcget,"col")
 		# Bind Data frame of barcode results to overall results
-		barcResults<-data.frame(Barcode=as.character(info$Barcode),Row=rows,Col=cols,
-		ScreenID=as.character(info$ScreenID),Treatment=as.character(info$Treatments),Medium=as.character(info$Medium),ORF=as.character(info$ORF),
-		K=bcfit[,"K"],r=bcfit[,"r"],g=bcfit[,"g"],v=bcfit[,"v"],obj=bcfit[,"objval"],t0=bcfit[,"t0"],tshift=bcfit[,"tshift"],nAUC=bcfit[,"nAUC"],nSTP=bcfit[,"nSTP"],d0=bcfit[,"d0"],Screen.Name=as.character(info$Screen.Name),Library.Name=as.character(info$Library.Name),MasterPlate.Number=as.numeric(info$MasterPlate.Number),Timeseries.order=as.numeric(info$Timeseries.order),Inoc.Time=inoctime,TileX=as.numeric(info$Tile.Dimensions.X),TileY=as.numeric(info$Tile.Dimensions.Y),XOffset=as.numeric(info$X.Offset),YOffset=as.numeric(info$Y.Offset),Threshold=as.numeric(info$Threshold),EdgeLength=as.numeric(info$Edge.length),EdgePixels=as.numeric(info$Edge.Pixels),RepQuad=as.numeric(info$RepQuad))
+		barcMetadata<-data.frame(Barcode=as.character(info$Barcode),Row=rows,Col=cols,
+		ScreenID=as.character(info$ScreenID),Treatment=as.character(info$Treatments),Medium=as.character(info$Medium),ORF=as.character(info$ORF),Screen.Name=as.character(info$Screen.Name),Library.Name=as.character(info$Library.Name),MasterPlate.Number=as.numeric(info$MasterPlate.Number),Timeseries.order=as.numeric(info$Timeseries.order),Inoc.Time=inoctime,TileX=as.numeric(info$Tile.Dimensions.X),TileY=as.numeric(info$Tile.Dimensions.Y),XOffset=as.numeric(info$X.Offset),YOffset=as.numeric(info$Y.Offset),Threshold=as.numeric(info$Threshold),EdgeLength=as.numeric(info$Edge.length),EdgePixels=as.numeric(info$Edge.Pixels),RepQuad=as.numeric(info$RepQuad))
+		barcFitness<-data.frame(bcfit)
+		barcResults=cbind(barcMetadata,barcFitness)
 		if("Client"%in%colnames(info)){barcResults$Client=as.character(info$Client)}
 		if("ExptDate"%in%colnames(info)){barcResults$ExptDate=as.character(info$ExptDate)}
 		if("User"%in%colnames(info)){barcResults$User=as.character(info$User)}
@@ -492,15 +493,21 @@ numericalfitness<-function(obsdat,AUCLim,STP){
 	if(length(obsdat$Growth)>1){
 			loapproxfree=loapproxfun(obsdat$Expt.Time,obsdat$Growth,span=0.5)
 			loapprox=function(x) pmax(0,loapproxfree(x))
-			nAUC=as.numeric(integrate(loapprox,0,AUCLim)$value)
-			nSTP=as.numeric(loapprox(STP))
+			nAUCfn=function(AUCLim) as.numeric(integrate(loapprox,0,AUCLim)$value)
+			nSTPfn=function(STP) as.numeric(loapprox(STP))
+			nAUC=sapply(AUCLim,nAUCfn)
+			nSTP=sapply(STP,nSTPfn)
 	}else{
 			# If there's only one photograph (e.g. single time point 1536 assay)
-			nAUC=NA
-			nSTP=obsdat$Growth[1]
+			nAUC=rep(NA,length(AUCLim))
+			nSTP=rep(obsdat$Growth[1],length(STP))
 	}
 	res=c(nAUC,nSTP)
-	names(res)=c("nAUC","nSTP")
+	if(length(AUCLim)==1) {nAUCnames=c("nAUC")}else{nAUCnames=paste("nAUC",round(AUCLim*24*60),sep="")}
+	if(length(STP)==1) {nSTPnames=c("nSTP")}else{nSTPnames=paste("nSTP",round(STP*24*60),sep="")}
+	names(res)=c(nAUCnames,nSTPnames)
+	if(length(AUCLim)>1) res["nAUC"]=res[nAUCnames[1]]
+	if(length(STP)>1) res["nSTP"]=res[nSTPnames[1]]
 	return(res)
 }
 
@@ -518,8 +525,6 @@ colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectT
 
 makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,...){
 	numfit=numericalfitness(obsdat,AUCLim,STP)
-	nAUC=numfit[["nAUC"]]
-	nSTP=numfit[["nSTP"]]
 	
 	if(modelFit){
 		pars=growthcurve(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,glog)
@@ -537,10 +542,9 @@ makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 		t0=Inf
 		d0=NA
 	}
-	parsadd=c(t0,nAUC,nSTP,d0)
-	names(parsadd)=c("t0","nAUC","nSTP","d0")
-	
-	pars=c(pars,parsadd)
+	parsadd=c(t0,d0)
+	names(parsadd)=c("t0","d0")
+	pars=c(pars,parsadd,numfit)
 	#if(length(pars)!=9)	{dput(pars); dput(obsdat)}
 	return(pars)
 }
