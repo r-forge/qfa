@@ -604,6 +604,7 @@ NAtoBlank=function(x){
 }
 
 getResults<-function(filename){
+	#print(filename)
 	# Need to detect at least two different kinds of header now...
 	fopen=file(filename,"rt")
 	i=1
