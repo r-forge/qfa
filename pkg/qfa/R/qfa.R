@@ -502,13 +502,81 @@ numericalfitness<-function(obsdat,AUCLim,STP){
 			nAUC=rep(NA,length(AUCLim))
 			nSTP=rep(obsdat$Growth[1],length(STP))
 	}
+	nr=numerical_r(obsdat)$objective
 	res=c(nAUC,nSTP)
 	if(length(AUCLim)==1) {nAUCnames=c("nAUC")}else{nAUCnames=paste("nAUC",sprintf("%04d",round(AUCLim*24*60)),sep="")}
 	if(length(STP)==1) {nSTPnames=c("nSTP")}else{nSTPnames=paste("nSTP",sprintf("%04d",round(STP*24*60)),sep="")}
 	names(res)=c(nAUCnames,nSTPnames)
 	if(length(AUCLim)>1) res["nAUC"]=res[nAUCnames[length(nAUCnames)]]
 	if(length(STP)>1) res["nSTP"]=res[nSTPnames[length(nSTPnames)]]
+	res["nr"]=nr
 	return(res)
+}
+
+numerical_r=function(obsdat,mkPlots=FALSE,span=0.5,nBrute=1000,cDiffDelta=0.0001){
+	# Generate numerical (model-free) estimate for maximum intrinsic growth rate
+	tims=obsdat$Expt.Time
+	gdat=obsdat$Growth
+	tmax=max(tims)
+
+	# Smooth data, find slope as function of time and maximum slope
+	gdat=log(gdat)
+	tims=tims[!is.na(gdat)]
+	gdat=gdat[!is.na(gdat)]
+	la=NA
+	try(la<-loapproxfun(tims,gdat,span=span),silent=TRUE)
+	if(!is.function(la)) return(list(objective=0,maximum=NA))
+	centralDiff=function(f,delta) return(function(x) (f(x+delta/2.0)-f(x-delta/2.0))/delta)
+	slp=centralDiff(la,cDiffDelta)
+	# Brute force optimization
+	stimes=seq(min(tims),max(tims),length.out=nBrute)
+	vals=la(stimes)
+	slps=slp(stimes)
+	opt=which.max(slps)
+	maxval=list(objective=slps[opt],maximum=stimes[opt])
+	#maxval=optimize(slp,lower=min(tims),upper=max(tims),maximum=TRUE)
+	maxslope=maxval$objective
+	
+	if(mkPlots){
+		mainlab=paste("Max. intrinsic growth rate =",formatC(maxslope,3),"(estimated on log scale)")
+		# Plot synthetic data, Loess approximation and estimated slope
+		op=par(mar=c(5,4,4,5)+.1,mfrow=c(1,2))
+		plot(NULL,xlab="Time (d)",ylab="",xlim=c(-0.1*tmax,tmax),ylim=range(gdat),main=mainlab)
+		abline(v=maxval$maximum,lwd=3,col="green",lty=2)
+		slope=maxval$objective
+		intercept=la(maxval$maximum)-slope*maxval$maximum
+		abline(a=intercept,b=slope,lwd=3,col="green")
+		points(tims,gdat)
+		mtext("Log Cell density (AU)",side=2,line=3,col="red")
+		curve(la,from=-0.1*tmax,to=tmax,add=TRUE,col="red",lwd=2,xlim=c(-0.1*tmax,tmax))
+		par(new=TRUE)
+		
+		curve(slp(x),from=-0.1*tmax,to=tmax,col="blue",xlab="",ylab="",xaxt="n",yaxt="n",lwd=2,xlim=c(-0.1*tmax,tmax))
+		axis(4)
+		mtext("Slope of Log Cell Density",side=4,line=3,col="blue")
+
+		mainlab=paste("Max. intrinsic growth rate =",formatC(maxslope,3),"(estimated on log scale)")
+		# Plot synthetic data, Loess approximation and estimated slope
+		op=par(mar=c(5,4,4,5)+.1)
+		plot(NULL,xlab="Time (d)",ylab="",xlim=c(-0.1*tmax,tmax),ylim=range(obsdat$Growth),main=mainlab)
+		abline(v=maxval$maximum,lwd=3,col="green",lty=2)
+		slope=exp(la(maxval$maximum))*maxval$objective
+		intercept=exp(la(maxval$maximum))-slope*maxval$maximum
+		abline(a=intercept,b=slope,lwd=3,col="green",untf=FALSE)
+		abline(a=5e-3,b=0.0001,col="red")
+		points(obsdat$Expt.Time,obsdat$Growth)
+		mtext("Cell density (AU)",side=2,line=3,col="red")
+		curve(exp(la(x)),from=-0.1*tmax,to=tmax,add=TRUE,col="red",lwd=2,xlim=c(-0.1*tmax,tmax))
+		par(new=TRUE)
+		
+		curve(x*slp(x),from=-0.1*tmax,to=tmax,col="blue",xlab="",ylab="",xaxt="n",yaxt="n",lwd=2,xlim=c(-0.1*tmax,tmax))
+		axis(4)
+		mtext("Slope of Cell Density",side=4,line=3,col="blue")
+
+		par(op)
+	}
+	maxval$objective=maxslope
+	return(maxval)
 }
 
 ### Growth model fitting for one colony ###
