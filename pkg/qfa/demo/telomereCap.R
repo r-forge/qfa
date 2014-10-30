@@ -33,12 +33,8 @@ control.fit<-qfa.fit(control,inocguess=1.4e-05,ORF2gene="ORF2GENE.txt",fixG=TRUE
 query.fit<-qfa.fit(query,inocguess=1.4e-05,ORF2gene="ORF2GENE.txt",fixG=TRUE,detectThresh=0.001,AUCLim=4,STP=4)
 
 # Construct QFA fitness measures
-control.fit=makeFitness(control.fit,AUCLim=4)
-query.fit=makeFitness(query.fit,AUCLim=4)
-
-# Choose a fitness measure to use for analysis
-control.fit$fit=control.fit$MDRMDP
-query.fit$fit=query.fit$MDRMDP
+control.fit=makeFitness(control.fit,AUCLim=1:4)
+query.fit=makeFitness(query.fit,AUCLim=1:4)
 
 # Revert to original working directory to prepare for outputting some files
 # Also not necessary for a regular workflow
@@ -48,6 +44,10 @@ paste("Output files will be generated in this directory:",current)
 # Produce pdfs of fitted curves & data
 qfa.plot("URA3_GrowthCurves.pdf",query.fit,query,maxg=0.25,maxt=7)
 qfa.plot("cdc13-1_GrowthCurves.pdf",control.fit,control,maxg=0.25,maxt=7)
+
+# Choose a fitness measure to use for analysis
+control.fit$fit=control.fit$MDRMDP
+query.fit$fit=query.fit$MDRMDP
 
 # Write summarised fitnesses to file
 qresults=fitnessReport("27","URA3_Fitnesses.txt",query.fit)
