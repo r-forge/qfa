@@ -60,10 +60,11 @@ fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment"){
 	header=c(QFAversion,
 	rTreat,rMed,rScrID,rGen,rLib,rClient,rUser,rPI,rDate,rFit,rCond,
 	spacer)
+	tmpfname=paste(outputfile,"tmp",sep="_")
 	write.table(header,outputfile,sep="\t",quote=FALSE,row.names=FALSE,col.names=FALSE)
-	write.table(results,"tmp.txt",sep="\t",quote=FALSE,row.names=FALSE)
-	file.append(outputfile,"tmp.txt")
-	file.remove("tmp.txt")	
+	write.table(results,tmpfname,sep="\t",quote=FALSE,row.names=FALSE)
+	file.append(outputfile,tmpfname)
+	file.remove(tmpfname)	
 	return(results)
 }
 
@@ -116,9 +117,10 @@ report.epi<-function(results,filename){
 	results$SummaryType=results$testType=NULL
 	results$cTreat=results$cMed=results$cScrID=results$cGen=results$cLib=results$cClient=results$cUser=results$cDate=results$cPI=results$cCond=results$cInoc=results$ControlFit=NULL
 	results$qTreat=results$qMed=results$qScrID=results$qGen=results$qLib=results$qClient=results$qUser=results$qDate=results$qPI=results$qCond=results$qInoc=results$QueryFit=NULL
-	write.table(results,"tmp.txt",sep="\t",quote=FALSE,row.names=FALSE)
-	file.append(filename,"tmp.txt")
-	file.remove("tmp.txt")	
+	tmpfname=paste(filename,"tmp",sep="_")
+	write.table(results,tmpfname,sep="\t",quote=FALSE,row.names=FALSE)
+	file.append(filename,tmpfname)
+	file.remove(tmpfname)	
 }
 
 correlationReport<-function(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185){
