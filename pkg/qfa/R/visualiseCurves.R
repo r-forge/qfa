@@ -1,11 +1,12 @@
 plotRepsDF=function(gdf,target,type="l",lwd=2,mlab="",dmax=0.3,tmax=3){
-	gdf$ID=paste(gdf$Barcode,sprintf("%02d",gdf$MasterPlate.Number),sprintf("%02d",gdf$Row),sprintf("%02d",gdf$Col))
+	gdf$ID=paste(gdf$Barcode,sprintf("%02d",gdf$MasterPlate.Number),sprintf("%02d",gdf$Row),sprintf("%02d",gdf$Col),sep="_")
 	gdf=gdf[order(gdf$ORF,gdf$ID,gdf$Expt.Time),]
 	clist=rainbow(length(unique(gdf$ID)))
 	names(clist)=unique(gdf$ID)
 	plot(gdf$Expt.Time,gdf$Growth,type="n",xlab="time(d)",ylab="Growth (AU)",main=paste(target,mlab),ylim=c(0,dmax),xlim=c(0,min(tmax,max(gdf$Expt.Time))))
 	rect(par("usr")[1], par("usr")[3], par("usr")[2], par("usr")[4], col = "grey")
 	for(id in unique(gdf$ID))points(gdf$Expt.Time[gdf$ID==id],gdf$Growth[gdf$ID==id],type=type,col=clist[[id]],lwd=lwd)
+	legend("topleft",lwd=1,legend=unique(gdf$ID),col=clist)
 }
 
 plotAllReps=function(df,target,mlab="",type="l",lwd=2,returnDat=FALSE,dmax=0.3,tmax=3){
