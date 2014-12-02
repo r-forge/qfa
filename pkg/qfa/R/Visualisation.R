@@ -594,7 +594,7 @@ iRVisDemo<-function(groupFun=buildComplexes,fitmax=0){
 	ORFGENE=ORFGENE[!duplicated(ORFGENE$ORF),]
 
 	# Read in GIS files
-	filenames=list.files(file.path(system.file(package = "qfa"),"extdata"),pattern="*GIS.txt.gz",full.names=TRUE)
+	filenames=list.files(file.path(system.file(package = "qfa"),"extdata"),pattern=""\\GIS.txt$"",full.names=TRUE)
 	visTool=makeVisTool()
 	visTool(groupFun,ORFGENE,filenames,"MetaReport.txt",fitmax=fitmax)
 }

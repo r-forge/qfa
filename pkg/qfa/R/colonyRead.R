@@ -8,7 +8,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	# Are we reading all files in a folder?
 	if (length(strsplit(path,".")[[1]])>1){pathT=TRUE}else{pathT=FALSE}
 	# If no Colonyzer files specified, use all .dat in working directory
-	if (length(files)==0){fs<-list.files(path=path,pattern=".dat")} else {fs<-files}
+	if (length(files)==0){fs<-list.files(path=path,pattern="\\.dat$")} else {fs<-files}
 	# If we're using a path, then add path to filenames
 	if (pathT==TRUE) fs<-paste(path,fs,sep="/")
 	print("List of data files to read:")
