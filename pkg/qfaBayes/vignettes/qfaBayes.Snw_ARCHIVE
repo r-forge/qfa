@@ -57,7 +57,7 @@ Variables \verb$burn$, \verb$iter$ and \verb$thin$ control the burn-in period, o
 \subsection{Separate hierarchical model\label{sec:SHM}}
 The separate hierarchical model (SHM) describes the growth of multiple yeast cultures using the logistic function:
 \begin{equation}
-  x(t;\theta)=\frac{K P e^{rt}}{K + P \left( e^{rt} - 1\right)} \text{,\:\:where\:\:} P=x(0) \text{\:\:and\:\:} \theta=(K,r,P). 
+  x(t;\theta)=\frac{K P e^{rt}}{K + P \left( e^{rt} - 1\right)} where P=x(0) and \theta=(K,r,P). 
   \end{equation}
 This logistic growth function describes yeast populations undergoing approximately exponential growth which slows as nutrient availability becomes limiting. Ultimately the population density saturates at the carrying capacity, $K$, once available nutrients are exhausted.
 
@@ -97,7 +97,7 @@ To see the experimental variables treatment, screen number and master plate for 
 \\
 \verb@> qfa.variables(a)@\\
 \\
-Next, the dataset is filtered by the experimental variables of interest and stored in a object \verb$SHM$ using the function \ttext{SHM\_postpro}.
+Next, the dataset is filtered by the experimental variables of interest and stored in a object \verb$SHM$ using the function SHM_postpro.
 \\
 \\
 \verb@> Treatment<-27@\\
@@ -166,7 +166,7 @@ To see the experimental variables treatment, screen number and master plate for 
 \verb@> qfa.variables(a)@\\
 \verb@> qfa.variables(b)@\\
 \\
-Next, the datasets are filtered by the experimental variables of interest and stored in the objects \verb$SHM_a$ and \verb$SHM_b$using the function \ttext{SHM\_postpro}.
+Next, the datasets are filtered by the experimental variables of interest and stored in the objects \verb$SHM_a$ and \verb$SHM_b$using the function SHM_postpro.
 \\
 \\
 \verb@> Treatment_a=27@\\
@@ -284,7 +284,7 @@ To see the experimental variables treatment, screen number and master plate for 
 \verb@> qfa.variables(a)@\\
 \verb@> qfa.variables(b)@\\
 \\
-Next, the datasets are filtered by the experimental variables of interest and stored in the object \verb$JHM$ using the function \ttext{JHM\_postpro}.
+Next, the datasets are filtered by the experimental variables of interest and stored in the object \verb$JHM$ using the function JHM\_postpro.
 \\
 \\
 \verb@> Treatment_a=27@\\
