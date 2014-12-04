@@ -588,13 +588,13 @@ buildComplexes<-function(){
 buildBenschop<-function() buildComplexes()
 
 iRVisDemo<-function(groupFun=buildComplexes,fitmax=0){
-	orfile=file.path(file.path(system.file(package = "qfa"),"extdata","ORF2GENE.txt.gz"))
+	orfile=file.path(file.path(system.file(package = "qfa"),"extdata","ORF2GENE.txt"))
 	ORFGENE=read.delim(orfile,stringsAsFactors=FALSE,sep="\t",header=FALSE)
 	colnames(ORFGENE)=c("ORF","Gene")
 	ORFGENE=ORFGENE[!duplicated(ORFGENE$ORF),]
 
 	# Read in GIS files
-	filenames=list.files(file.path(system.file(package = "qfa"),"extdata"),pattern=""\\GIS.txt$"",full.names=TRUE)
+	filenames=list.files(file.path(system.file(package = "qfa"),"extdata"),pattern="\\GIS.txt$",full.names=TRUE)
 	visTool=makeVisTool()
 	visTool(groupFun,ORFGENE,filenames,"MetaReport.txt",fitmax=fitmax)
 }
