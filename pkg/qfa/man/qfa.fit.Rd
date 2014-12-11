@@ -7,7 +7,7 @@ Given a series of culture density observations from colonyzer.read, this functio
 \usage{
 qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="\%Y-\%m-\%d_\%H-\%M-\%S",minK=0.025,
 detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,
-nCores=1,glog=TRUE,...)
+nCores=1,glog=TRUE,modelFit=TRUE...)
 }
 \arguments{
   \item{d}{The data.frame containing the timecourse data for each colony (returned from colonyzer.read).}
@@ -23,43 +23,53 @@ nCores=1,glog=TRUE,...)
   \item{STP}{Time to use for \dQuote{Single Time Point} fitness estimate.  Defaults to 20 days (very late in growth curve) which is like carrying capacity.}
 
   \item{nCores}{Can attempt to split model fitting load across multiple parallel cores.  Experimental, probably best to leave this value set to default (1)}
-  \item{glog}{When set to TRUE, carry out generalised (asymmetric) logistic model fit to growth curve data.  When set to FALSE, carry out simpler logistic model fit (as in Addinall et al. 2011)}
+  \item{glog}{Boolean (TRUE or FALSE) specifying whether to carry out generalised (asymmetric) logistic model fit to growth curve data.  When set to FALSE, carry out simpler logistic model fit (as in Addinall et al. 2011)}
+  \item{modelFit}{Boolean (TRUE or FALSE) specifying whether to carry out any model fitting at all.  When set to FALSE, only numerical fitness estimates such as nr, nMDP, nAUC are generated}
   \item{...}{Extra arguments passed to optim} 
 }
 \value{
-R data.frame, similar to that returned by the colonyzer.read function.  The major difference is that instead of a row for every cell density observation for every culture, this object summarises all timecourse density observations for each culture with fitted generalised logistic parameters and nAUC.
+R data.frame, similar to that returned by the colonyzer.read function.  The major difference is that instead of a row for every cell density observation for every culture, this object summarises all timecourse density observations for each culture with fitted generalised logistic parameters and numerical fitness estimates.
 
 \itemize{
-\item Barcode - See colonyzer.read
-\item Row - See colonyzer.read
-\item Col - See colonyzer.read
-\item Background - See colonyzer.read
-\item Treatment - See colonyzer.read
-\item Medium - See colonyzer.read
-\item ORF - See colonyzer.read
+\item Barcode - Unique plate identifier
+\item Row - Row number (counting from top of image) of culture in rectangular gridded array
+\item Col - Column number (counting from left of image) of culture in rectangular gridded array
+\item ScreenID - Unique identifier for this QFA screen
+\item Treatment  - Conditions applied externally to plates (e.g. temperature(s) at which cultures were grown, UV irradiation applied, etc.)
+\item Medium - Nutrients/drugs in plate agar
+\item ORF - Systematic, unique identifier for genotype in this position in arrayed library
+\item Screen.Name - Name of screen (identifies biological repeats, and experiment)
+\item Library.Name	- Name of library, specifying particular culture location
+\item MasterPlate Number - Library plate identifier
+\item Timeseries order - Sequential photograph number
+\item Inoc.Time - User specified date and time of inoculation (specified in ExptDescription.txt file)
+\item TileX - Culture tile width (pixels)
+\item TileY - Culture tile height (pixels)
+\item XOffset - x-coordinate of top left corner of rectangular tile bounding culture (number of pixels from left of image)
+\item YOffset - y-coordinate of top left corner of rectangular tile bounding culture (number of pixels from top of image)
+\item Threshold - Global pixel intensity threshold used for image segmentation (after lighting correction)
+\item EdgeLength - Number of culture pixels classified as being microcolony edge pixels (useful for classifying contaminants in cultures grown from dilute inoculum)
+\item EdgePixels - Number of pixels classified as culture on edge of square tile
+\item RepQuad - Integer identifying which of the quadrants of a 1536 plate were used to inoculate the current 384 plate (set equal to 1 for all cultures for 1536 format for example)
 \item K - Generalised logistic model carrying capacity
 \item r - Generalised logistic model rate parameter
 \item g - Generalised logistic model inoculum density (referred to in vignette as $g_0$)
 \item v - Generalised logistic model shape parameter (set to 1 to recover logistic model)
-\item obj - Objective function value at selected optimum
-\item t0 - Time of first detectable cell density observation (i.e. above detectThresh)
+\item objval - Objective function value at selected optimum
 \item tshift - Shift applied to observation times before fitting logistic model (need to apply same shift before overlaying curve on expt. obs.).  Default is zero (expt. starts at inoculation time specified in experimental description file), but if qfa.fit function is called with inocguess=NULL, then the start of experiment is redefined as the time of the first reliable density observation.
+\item t0 - Time of first detectable cell density observation (i.e. above detectThresh)
+\item d0 - Normalised cell density of first observation (be careful about condensation on plates when using this).  Note this is not necessarily the density at t0.
 \item nAUC - Numerical Area Under Curve.  This is a model-free fitness estimate.
 \item nSTP - Single Time Point fitness.  Cell density at time STP, as estimated with approximating function.  This is a model-free fitness estimate.
-\item d0 - Normalised cell density of first observation (be careful about condensation on plates when using this).  Note this is not necessarily the density at t0.
-\item Screen.Name - See colonyzer.read
-\item Library.Name - See colonyzer.read
-\item MasterPlate.Number - See colonyzer.read
-\item Timeseries.order - See colonyzer.read
-\item Inoc.Time - See colonyzer.read
-\item TileX - See colonyzer.read
-\item TileY - See colonyzer.read
-\item XOffset - See colonyzer.read
-\item YOffset - See colonyzer.read
-\item Threshold - See colonyzer.read
-\item EdgeLength - See colonyzer.read
-\item EdgePixels - See colonyzer.read
-\item RepQuad - See colonyzer.read
+\item nr - Numerical estimate of intrinsic growth rate.  Growth rate estimated by fitting smoothing function to data, calculating numerical slope estimate across range of data and selecting the maximum estimate (should occur during exponential phase).
+\item Client - Client for whom screen was carried out
+\item ExptDate - A representative/approximate date for the experiment (note that genome-wide QFA screens typically take weeks to complete)
+\item User - Person who actually carried out screen
+\item PI - Principal investigator leading project that screen is part of
+\item Condition - The most important defining characteristic of screen, as specified by user (e.g. the temperature screen was carried out at if screen is part of multi-temperature set of screens, or the query mutation if part of a set of screens comparing query mutations, or the drugs present in the medium if part of a set of drug screens)
+\item Inoc - Qualitative identifier of inoculation type (e.g. "DIL" for dilute inoculum, "CONC" for concentrated).  Used to distinguish between experiments carried out with different methods of inoculation.
+\item Gene - Identifier for genotype at a particular location on an agar plate.  Typically prefer unambiguous, systematic gene names here.
+\item TrtMed - Combination of treatment and medium identifiers, specifying the environment in which the cells have grown
 }
 
 }
