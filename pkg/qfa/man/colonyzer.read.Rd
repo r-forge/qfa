@@ -14,34 +14,48 @@ ORF2gene="",libraries="LibraryDescriptions.csv",screenID="")
   \item{files}{Character vector giving locations of Colonyzer .dat files to be read - overrides path}
   \item{experiment}{Name of text file describing the inoculation times, library and plate number for unique plates.  Taken relative to path if specified.  File must be a tab-delimited text file with no header containing the following columns:
   \itemize{
-\item Barcode - Plate identifier
+
+\item Image.Name - Full name at image capture (includes barcode and date-time) of image from which data are derived
+\item Row - Row number (counting from top of image) of culture in rectangular gridded array
+\item Col - Column number (counting from left of image) of culture in rectangular gridded array
+\item X.Offset - x-coordinate of top left corner of rectangular tile bounding culture (number of pixels from left of image)
+\item Y.Offset - y-coordinate of top left corner of rectangular tile bounding culture (number of pixels from top of image)
 \item Area - Culture area (pixels)
-\item Spot Row - Plate row number for culture
-\item Trimmed Area - Integrated Optical Density, sum of pixel intensities in culture area
-\item Spot Column - Plate column number for culture
+\item Trimmed - Integrated Optical Density, sum of pixel intensities within culture area
+\item Threshold - Global pixel intensity threshold used for image segmentation (after lighting correction)
 \item Intensity - Total pixel intensity for square tile containing culture
 \item Edge Pixels - Number of pixels classified as culture on edge of square tile
-\item Threshold - Pixel intensity threshold used for image segmentation (after lighting correction)
-\item X Offset - x-oordinate of top left hand corner of culture tile (pixels)
-\item Y Offset - y-coordinate of top left hand corner of culture tile (pixels)
-\item Treatments - Temperature(s) at which cultures were grown
-\item Medium - Nutrients in plate agar
-\item Image Name - Full name at image capture (includes barcode and date-time)
-\item ORF Name - Array deletion y-number
-\item Date of Image	- Date of image capture
-\item Screen Name - Name of screen (identifies biological repeats, and experiment)
-\item Library Name	- Identifier for library configuration (identifies particular culture location)
+\item Colony.Color.R - Culture red channel intensity
+\item Colony.Color.G - Culture green channel intensity
+\item Colony.Color.B - Culture blue channel intensity
+\item Background.Color.R - Background red channel intensity (for current tile)
+\item Background.Color.G - Background green channel intensity (for current tile)
+\item Background.Color.B - Background blue channel intensity (for current tile)
+\item Edge.length - Number of culture pixels classified as being microcolony edge pixels (useful for classifying contaminants in cultures grown from dilute inoculum)
+\item Tile.Dimensions.X - Culture tile width (pixels)
+\item Tile.Dimensions.Y - Culture tile height (pixels)
+\item Growth - Default measure of cell density (direct copy of one of Trimmed, Threshold or Intensity)
+\item Barcode - Unique plate identifier
+\item Date.Time - Timestamp of image capture (extracted from image filename)
+\item Inoc.Time - User specified date and time of inoculation (specified in ExptDescription.txt file)
+\item Treatments - Conditions applied externally to plates (e.g. temperature(s) at which cultures were grown, UV irradiation applied, etc.)
+\item Medium - Nutrients/drugs in plate agar
+\item Screen.Name - Name of screen (identifies biological repeats, and experiment)
+\item RepQuad - Integer identifying which of the quadrants of a 1536 plate were used to inoculate the current 384 plate (set equal to 1 for all cultures for 1536 format for example)
 \item MasterPlate Number - Library plate identifier
-\item Timeseries order - Photograph number
-\item Colony Color R - Culture red channel intensity
-\item Colony Color G - Culture green channel intensity
-\item Colony Color B - Culture blue channel intensity
-\item Background Color R	- Background red channel intensity (for current tile)
-\item Background Color G	- Background green channel intensity (for current tile)
-\item Background Color B	- Background blue channel intensity (for current tile)
-\item Edge length - Number of culture pixels classified as being microcolony edge pixels (useful for classifying contaminants)
-\item Tile Dimensions X - Culture tile width (pixels)
-\item Tile Dimensions Y - Culture tile height (pixels)
+\item Timeseries order - Sequential photograph number
+\item Library.Name	- Name of library, specifying particular culture location
+\item ORF - Systematic, unique identifier for genotype in this position in arrayed library
+\item Gene - Standard gene name for genotype in this position in arrayed library.  Note that this can be set equal to ORF for example
+\item ScreenID - Unique identifier for this QFA screen
+\item Client - Client for whom screen was carried out
+\item ExptDate - A representative/approximate date for the experiment (note that genome-wide QFA screens typically take weeks to complete)
+\item User - Person who actually carried out screen
+\item PI - Principal investigator leading project that screen is part of
+\item Condition - The most important defining characteristic of screen, as specified by user (e.g. the temperature screen was carried out at if screen is part of multi-temperature set of screens, or the query mutation if part of a set of screens comparing query mutations, or the drugs present in the medium if part of a set of drug screens)
+\item Inoc - Qualitative identifier of inoculation type (e.g. "DIL" for dilute inoculum, "CONC" for concentrated).  Used to distinguish between experiments carried out with different methods of inoculation.
+\item Expt.Time - Time (days) since user-specified inoculation date (Inoc.Time) that current image was captured
+
 }
 }
   \item{ORF2gene}{Path to a tab-delimited text file containing two columns (with no headers) associating unique, systematic strain identifiers (e.g. yeast ORF Y-numbers) with human readable gene names (e.g. standard names from SGD).}
