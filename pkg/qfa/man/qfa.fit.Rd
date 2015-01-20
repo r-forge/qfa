@@ -25,6 +25,7 @@ nCores=1,glog=TRUE,modelFit=TRUE...)
   \item{nCores}{Can attempt to split model fitting load across multiple parallel cores.  Experimental, probably best to leave this value set to default (1)}
   \item{glog}{Boolean (TRUE or FALSE) specifying whether to carry out generalised (asymmetric) logistic model fit to growth curve data.  When set to FALSE, carry out simpler logistic model fit (as in Addinall et al. 2011)}
   \item{modelFit}{Boolean (TRUE or FALSE) specifying whether to carry out any model fitting at all.  When set to FALSE, only numerical fitness estimates such as nr, nMDP, nAUC are generated}
+  \item{checkSlow}{Boolean (TRUE or FALSE) specifying whether to re-optimise curve-fitting for slow-growing strains.  If TRUE, slow-growing or dead strains are identified heuristically and a second round of curve fitting using global (but slower) optimisation is carried out.  Heuristic identification of slow-growing strains is currently experimental, it seems we have over-tuned these to datasets we capture at Newcastle.  If you notice a banding pattern in your MDR or r fitnesses, please set checkSlow to FALSE.}
   \item{...}{Extra arguments passed to optim} 
 }
 \value{
@@ -61,7 +62,10 @@ R data.frame, similar to that returned by the colonyzer.read function.  The majo
 \item d0 - Normalised cell density of first observation (be careful about condensation on plates when using this).  Note this is not necessarily the density at t0.
 \item nAUC - Numerical Area Under Curve.  This is a model-free fitness estimate.
 \item nSTP - Single Time Point fitness.  Cell density at time STP, as estimated with approximating function.  This is a model-free fitness estimate.
-\item nr - Numerical estimate of intrinsic growth rate.  Growth rate estimated by fitting smoothing function to data, calculating numerical slope estimate across range of data and selecting the maximum estimate (should occur during exponential phase).
+\item nr - Numerical estimate of intrinsic growth rate.  Growth rate estimated by fitting smoothing function to log of data, calculating numerical slope estimate across range of data and selecting the maximum estimate (should occur during exponential phase).
+\item nr_t - Time at which maximum slope of log observations occurs
+\item maxslp - Numerical estimate of maximum slope of growth curve.  Slope estimated by fitting smoothing function to untransformed data and calculating numerical slope estimate of smoothed version of data and selecting the maximum estimate (should occur approximately half way through growth).  This fitness measure will be affected by both rate of growth and final colony size.  Final colony size is expected to be strongly affected by competition between cultures.
+\item maxslp_t - Time at which maximum slope of observations occurs
 \item Client - Client for whom screen was carried out
 \item ExptDate - A representative/approximate date for the experiment (note that genome-wide QFA screens typically take weeks to complete)
 \item User - Person who actually carried out screen
