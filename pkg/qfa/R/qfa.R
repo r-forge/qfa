@@ -375,7 +375,7 @@ varposget<-function(var,orfn,norfs){
 ############################### Likelihood Functions ################################
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
-qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,nCores=1,glog=TRUE,modelFit=TRUE,...){
+qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,nCores=1,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,...){
 
 	# ORF2gene argument is now deprecated, this link should be made with colony.read function instead
 	if(!is.null(inocguess)){
@@ -411,9 +411,9 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 			ex <- Filter(function(x) is.function(get(x, .GlobalEnv)), ls(.GlobalEnv))
 			clusterExport(cl, ex)
 			clusterExport(cl, as.vector(lsf.str(envir=.GlobalEnv)))
-			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,...))
+			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow,...))
 		}else{
-			bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,...))
+			bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow,...))
 		}
 		info<-data.frame(t(sapply(positions,colony.info,dbc)))
 		rows<-sapply(positions,rcget,"row")
@@ -502,100 +502,110 @@ numericalfitness<-function(obsdat,AUCLim,STP){
 			nAUC=rep(NA,length(AUCLim))
 			nSTP=rep(obsdat$Growth[1],length(STP))
 	}
-	nr=numerical_r(obsdat)$objective
 	res=c(nAUC,nSTP)
 	if(length(AUCLim)==1) {nAUCnames=c("nAUC")}else{nAUCnames=paste("nAUC",sprintf("%04d",round(AUCLim*24*60)),sep="")}
 	if(length(STP)==1) {nSTPnames=c("nSTP")}else{nSTPnames=paste("nSTP",sprintf("%04d",round(STP*24*60)),sep="")}
 	names(res)=c(nAUCnames,nSTPnames)
 	if(length(AUCLim)>1) res["nAUC"]=res[nAUCnames[length(nAUCnames)]]
 	if(length(STP)>1) res["nSTP"]=res[nSTPnames[length(nSTPnames)]]
-	res["nr"]=nr
+	numr_lst=numerical_r(obsdat)
+	res["nr"]=numr_lst$nr
+	res["nr_t"]=numr_lst$nr_t
+	res["maxslp"]=numr_lst$mslp
+	res["maxslp_t"]=numr_lst$mslp_t	
 	return(res)
 }
 
-numerical_r=function(obsdat,mkPlots=FALSE,span=0.5,nBrute=1000,cDiffDelta=0.0001){
-	# Generate numerical (model-free) estimate for maximum intrinsic growth rate
+numerical_r=function(obsdat,mkPlots=FALSE,span=0.3,nBrute=1000,cDiffDelta=0.0001,mlab=""){
+	# Generate numerical (model-free) estimate for nr_t intrinsic growth rate
 	tims=obsdat$Expt.Time
 	gdat=obsdat$Growth
 	tmax=max(tims)
 
-	# Smooth data, find slope as function of time and maximum slope
-	gdat=log(gdat)
-	tims=tims[!is.na(gdat)]
-	gdat=gdat[!is.na(gdat)]
+	# Smooth data, find slope as function of time and nr_t slope
+	lgdat=log(gdat)
+	ltims=tims[!is.na(lgdat)]
+	lgdat=lgdat[!is.na(lgdat)]
 	la=NA
-	try(la<-loapproxfun(tims,gdat,span=span),silent=TRUE)
-	if(!is.function(la)) return(list(objective=0,maximum=NA))
+	try(a<-loapproxfun(tims,gdat,span=span),silent=TRUE)
+	try(la<-loapproxfun(ltims,lgdat,span=span),silent=TRUE)
+	if(!is.function(la)|!is.function(a)) return(list(nr=0,nr_t=NA,mslp=0,mslp_t=NA))
 	centralDiff=function(f,delta) return(function(x) (f(x+delta/2.0)-f(x-delta/2.0))/delta)
-	slp=centralDiff(la,cDiffDelta)
+	lslp=centralDiff(la,cDiffDelta)
+	slp=centralDiff(a,cDiffDelta)
 	# Brute force optimization
-	stimes=seq(min(tims),max(tims),length.out=nBrute)
-	vals=la(stimes)
+	stimes=seq(min(ltims),max(ltims),length.out=nBrute)
+	vals=a(stimes)
 	slps=slp(stimes)
+	lvals=la(stimes)
+	lslps=lslp(stimes)
+	# Discard points too close to t=0 to avoid artificially high slopes
 	opt=which.max(slps)
-	maxval=list(objective=slps[opt],maximum=stimes[opt])
-	#maxval=optimize(slp,lower=min(tims),upper=max(tims),maximum=TRUE)
-	maxslope=maxval$objective
+	lopt=which.max(lslps)
+	res=list(nr=lslps[lopt],nr_t=stimes[lopt],mslp=slps[opt],mslp_t=stimes[opt])
+	#maxlslp=optimize(lslp,lower=min(ltims),upper=max(ltims),nr_t=TRUE)
+	#res$nr=maxlslp$objective
+	#res$nr_t=maxlslp$maximum
+	maxslope=res$nr
 	
 	if(mkPlots){
-		mainlab=paste("Max. intrinsic growth rate =",formatC(maxslope,3),"(estimated on log scale)")
+		mainlab=paste("Max. intrinsic growth rate =",formatC(res$nr,3),"(estimated on log scale)",mlab)
 		# Plot synthetic data, Loess approximation and estimated slope
 		op=par(mar=c(5,4,4,5)+.1,mfrow=c(1,2))
-		plot(NULL,xlab="Time (d)",ylab="",xlim=c(-0.1*tmax,tmax),ylim=range(gdat),main=mainlab)
-		abline(v=maxval$maximum,lwd=3,col="green",lty=2)
-		slope=maxval$objective
-		intercept=la(maxval$maximum)-slope*maxval$maximum
+		plot(NULL,xlab="Time (d)",ylab="",xlim=c(-0.1*tmax,tmax),ylim=range(lgdat),main=mainlab)
+		abline(v=res$nr_t,lwd=3,col="green",lty=2)
+		slope=res$nr
+		intercept=la(res$nr_t)-slope*res$nr_t
 		abline(a=intercept,b=slope,lwd=3,col="green")
-		points(tims,gdat)
+		points(ltims,lgdat)
 		mtext("Log Cell density (AU)",side=2,line=3,col="red")
 		curve(la,from=-0.1*tmax,to=tmax,add=TRUE,col="red",lwd=2,xlim=c(-0.1*tmax,tmax))
 		par(new=TRUE)
 		
-		curve(slp(x),from=-0.1*tmax,to=tmax,col="blue",xlab="",ylab="",xaxt="n",yaxt="n",lwd=2,xlim=c(-0.1*tmax,tmax))
+		curve(lslp(x),from=-0.1*tmax,to=tmax,col="blue",xlab="",ylab="",xaxt="n",yaxt="n",lwd=2,xlim=c(-0.1*tmax,tmax))
 		axis(4)
 		mtext("Slope of Log Cell Density",side=4,line=3,col="blue")
 
-		mainlab=paste("Max. intrinsic growth rate =",formatC(maxslope,3),"(estimated on log scale)")
+		mainlab=paste("Max. slope =",formatC(res$mslp,3),"(estimated on linear scale)",mlab)
 		# Plot synthetic data, Loess approximation and estimated slope
 		op=par(mar=c(5,4,4,5)+.1)
 		plot(NULL,xlab="Time (d)",ylab="",xlim=c(-0.1*tmax,tmax),ylim=range(obsdat$Growth),main=mainlab)
-		abline(v=maxval$maximum,lwd=3,col="green",lty=2)
-		slope=exp(la(maxval$maximum))*maxval$objective
-		intercept=exp(la(maxval$maximum))-slope*maxval$maximum
+		abline(v=res$mslp_t,lwd=3,col="green",lty=2)
+		slope=slp(res$mslp_t)
+		intercept=a(res$mslp_t)-slope*res$mslp_t
 		abline(a=intercept,b=slope,lwd=3,col="green",untf=FALSE)
-		abline(a=5e-3,b=0.0001,col="red")
 		points(obsdat$Expt.Time,obsdat$Growth)
 		mtext("Cell density (AU)",side=2,line=3,col="red")
-		curve(exp(la(x)),from=-0.1*tmax,to=tmax,add=TRUE,col="red",lwd=2,xlim=c(-0.1*tmax,tmax))
+		curve(a(x),from=-0.1*tmax,to=tmax,add=TRUE,col="red",lwd=2,xlim=c(-0.1*tmax,tmax))
 		par(new=TRUE)
 		
-		curve(x*slp(x),from=-0.1*tmax,to=tmax,col="blue",xlab="",ylab="",xaxt="n",yaxt="n",lwd=2,xlim=c(-0.1*tmax,tmax))
+		curve(slp(x),from=-0.1*tmax,to=tmax,col="blue",xlab="",ylab="",xaxt="n",yaxt="n",lwd=2,xlim=c(-0.1*tmax,tmax))
 		axis(4)
 		mtext("Slope of Cell Density",side=4,line=3,col="blue")
 
 		par(op)
 	}
-	maxval$objective=maxslope
-	return(maxval)
+	return(res)
 }
 
+
 ### Growth model fitting for one colony ###
-colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,...){
+colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,...){
 	# Get row & column to restrict data
 	row<-position[1]; col<-position[2]
 	#print(paste(bcdata$Barcode[1],"Row:",row,"Col:",col))
 	do<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
 	obsdat=data.frame(Expt.Time=as.numeric(do$Expt.Time),Growth=as.numeric(do$Growth))
-	pars=makefits(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit)
+	pars=makefits(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow)
 	#print(pars)
 	return(pars)
 }
 
-makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,...){
+makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,...){
 	numfit=numericalfitness(obsdat,AUCLim,STP)
 	
 	if(modelFit){
-		pars=growthcurve(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,glog)
+		pars=growthcurve(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,glog,checkSlow)
 	}else{
 		pars=c(max(obsdat$Growth),NA,NA,NA,NA,NA)
 		names(pars)=c("K","r","g","v","objval","tshift")
@@ -618,7 +628,6 @@ makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 }
 
 makeBoundsQFA<-function(inocguess,d,minK=0,fixG=FALSE,globalOpt=FALSE,glog=TRUE){
-	
 	# Define optimization bounds based on inocguess #
 	lowr<-0; upr<-25
 	if(glog){
@@ -637,7 +646,7 @@ makeBoundsQFA<-function(inocguess,d,minK=0,fixG=FALSE,globalOpt=FALSE,glog=TRUE)
 	return(list(K=c(lowK,upK),r=c(lowr,upr),g=c(lowg,upg),v=c(lowv,upv),inocguess=inocguess))
 }
 
-growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,glog=TRUE){
+growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,glog=TRUE,checkSlow=TRUE){
 	len1=length(obsdat$Growth)
 	# Throw away observations below the detectable threshold
 	d=obsdat[obsdat$Growth>=detectThresh,]
@@ -701,15 +710,15 @@ growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 		}
 	}
 	# Check for spurious combination of relatively high r, low K, spend more time optimising...
-	if((mdr(pars[1],pars[2],pars[3],pars[4])>1.0)&((pars[1]<0.05)|(max(d$Growth)<0.05)|(tail(d$Growth,1)<0.05))){ # Try optimising with sick colony as guess
-		#print("Attempting to do global fit alternative sick colony growth curve")
-		Kmin=max(0.9*inocguess,minK); Kmax=1.5*max(pars[1],minK); xybounds$K=c(Kmin,Kmax); 
-		xybounds$r=c(0,3) # Slow growth
-		xybounds$v=c(0.75,1.5) # More logistic growth
-		inits=list(K=pars[1],r=0.6,g=inocguess,v=1)
-		newpars=de.fit(d$Expt.Time,d$Growth,inocguess,xybounds,inits=inits,initPop=TRUE,widenr=FALSE,logTransform=logTransform)			
-		if(newpars[5]<=pars[5]) pars=newpars				
-	}
+	if(checkSlow&(mdr(pars[1],pars[2],pars[3],pars[4])>1.0)&((pars[1]<0.05)|(max(d$Growth)<0.05)|(tail(d$Growth,1)<0.05))){ # Try optimising with sick colony as guess
+		 #print("Attempting to do global fit alternative sick colony growth curve")
+		 Kmin=max(0.9*inocguess,minK); Kmax=1.5*max(pars[1],minK); xybounds$K=c(Kmin,Kmax); 
+		 xybounds$r=c(0,3) # Slow growth
+		 xybounds$v=c(0.75,1.5) # More logistic growth
+		 inits=list(K=pars[1],r=0.6,g=inocguess,v=1)
+		 newpars=de.fit(d$Expt.Time,d$Growth,inocguess,xybounds,inits=inits,initPop=TRUE,widenr=FALSE,logTransform=logTransform)			
+		 if(newpars[5]<=pars[5]) pars=newpars				
+	 }
 	opt=sumsq(pars[1],pars[2],pars[3],pars[4],obsdat$Growth,obsdat$Expt.Time,logTransform=logTransform) # Use all data (not just data below detection thresh)
 	dead=sumsq(inocguess,0,inocguess,1,obsdat$Growth,obsdat$Expt.Time,logTransform=logTransform)
 	if(dead<=opt) {
@@ -1059,6 +1068,8 @@ logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0
 	if(logify) {ylog="y"}else{ylog=""}
 	plot(NULL,type="n",xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg),log=ylog,xlab="",ylab="",main=gene,frame.plot=0,cex.main=3*scaleT,cex.axis=1*scaleT)
 	if(curves){
+		if("nr_t"%in%names(resrow)) abline(v=resrow['nr_t'],col="blue")
+		if("maxslp_t"%in%names(resrow)) abline(v=resrow['maxslp_t'],col="blue",lty=2)
 		# Get logistic parameters, gene name and position
 		K<-as.numeric(resrow['K']); r<-as.numeric(resrow['r']); g<-as.numeric(resrow['g']); v<-as.numeric(resrow['v']);
 		MDR<-as.numeric(resrow['MDR']); MDP<-as.numeric(resrow['MDP']); AUC<-as.numeric(resrow['AUC']); DT<-as.numeric(resrow['DT']);

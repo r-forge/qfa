@@ -2,7 +2,7 @@
 \alias{qfa.plot}
 \title{Plots fitted model and data for all the colonies in results of qfa.fit}
 \description{
-Produces a multipage pdf of growth curves.  Each page corresponds to a single plate and growth curves are arrayed on the page according to their position on the plate.  Both observations and the fitted growth curve from qfa.fit are shown for each culture.  Where available, various fitness estimates are displayed for each culture, together with culture genotype.  These .pdfs are useful for visually checking quality of model fit & data.
+Produces a multipage pdf of growth curves.  Each page corresponds to a single plate and growth curves are arrayed on the page according to their position on the plate.  Both observations (red crosses) and the fitted growth curve from qfa.fit (solid black curves) are shown for each culture.  The time at which the maximum slope of the observed growth curve on the log scale occurs (solid blue line) and the time at which the maximum slope of the raw observed data occurs (dashed blue line) are also indicated.  Where available, various fitness estimates are displayed for each culture, together with culture genotype.  These .pdfs are useful for visually checking quality of model fit & data.
 }
 \usage{
 qfa.plot(file,results,d,fmt="\%Y-\%m-\%d_\%H-\%M-\%S",barcodes=c(),
