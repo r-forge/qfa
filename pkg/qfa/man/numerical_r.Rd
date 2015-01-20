@@ -19,7 +19,7 @@ A list containing four values:
 \itemize{
 \item nr - Numerical estimate of intrinsic growth rate (1/time)
 \item nr_t - Time at which maximum slope of log experimental observations occurs
-\item mslp - Numerical estimate of maximum slope of growth curve (cell density/time)
+\item mslp - Numerical estimate of maximum slope of growth curve (cell density/time).  Note that this phenotype is not the same as intrinsic growth rate (or exponential growth rate) and so it might not be what you are looking for.
 \item mslp_t - Time at which maximum slope of growth curve is observed
 }
 Optionally (if mkPlot==TRUE) a two-panel figure showing data, smoothed version of data, numerical estimates of slope on both log and linear scale is displayed.  Linearisation of curves about solutions also shown.
