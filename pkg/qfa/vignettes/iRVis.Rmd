@@ -105,7 +105,7 @@ There are many different approaches you can take to view your fitness data with 
 - **d**: Remove highlighting from last gene highlighted (de-select last gene highlighted).
 
 #### Highlighting significant interactions
-- **t**: Toggle significance colours (red/green) indicating positive and negative interaction.  Most fitness plots include coloured points indicating genes for which there is evidence that their fitness in the query QFA experiment deviates significantly from that predicted by the multiplicative model for genetic independence.  By default, positive interactions (enhancers) are coloured green and negative interactions (suppressors) are coloured red.
+- **t**: Toggle significance colours (red/green) indicating positive and negative interaction.  Most fitness plots include coloured points indicating genes for which there is evidence that their fitness in the query QFA experiment deviates significantly from that predicted by the multiplicative model for genetic independence.  By default, positive interactions (enhancers) are coloured green and negative interactions (suppressors) are coloured red.  Repeatedly pressing 't' toggles between the two possible colour orderings and no colouring (all points grey).
 
 #### Switching between plot styles
 - **l**: Toggle plot style between fitness plot (as presented in Addinall et al., 2011) and rank plot.  Instead of examining a scatter plot comparing fitness summaries from two screens, we can examine the ratio of fitness from the y-axis of the fitness plot to fitness from the x-axis of the fitness plot, ranked by gene name for example.  This view is useful for highlighting interesting outliers.  See the **Different views of the data** section below for an overview of rank plots.

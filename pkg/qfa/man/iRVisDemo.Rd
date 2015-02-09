@@ -16,32 +16,36 @@ Returns an interactive plot for comparing control and query fitnesses and visual
 
 More detailed description and instructions can be found here: http://qfa.r-forge.r-project.org/visTool
 
-Interaction controls:
-
-Windows mouse
+Controls: Windows mouse
 ~~~~~~~~~~~~~~~
-L click: Highlight gene/Rotate text position
-R click: SGD (or press 'w' on keyboard)
-M click: Remove last gene (or press 'd' on keyboard)
+Left click: Highlight gene/Rotate text position
+Right click: Open SGD page for gene (alternatively, press 'w' on keyboard)
+Middle click: Remove last gene (alternatively, press 'd' on keyboard)
 
-Mac mouse
+Controls: OSX mouse
 ~~~~~~~~~~~~~~~
 Click: Highlight gene/Rotate text position
 
-Keyboard
+Controls: Keyboard
 ~~~~~~~~~~~~~~~
-Left/Right arrow: change plot
-Up/Down arrow: change functional complex highlighted
-u: add new genes to list of functional complexes
-z: select tool (toggle on and off)
-s: add selection 
-c: clear selection
-w: open last gene highlighted in SGD
-d: unhighlight last gene highlighted
-t: toggle colours indicating positive and negative interaction
-r: begin zoom (now click on top left and bottom right of new zoomed plot)
-p: print current plot to QFAVisualisation.pdf
-q: quit
+Left/Right arrow: Switch to next/previous fitness plot (comparison between different pair of experiments).
+Up/Down arrow: Change group of genes currently highlighted (in purple).
+b: Print experimental metadata report to console window
+c: Clear highlighting from currently selected genes.
+d: Remove highlighting from last gene highlighted.
+i: In rank plot mode, toggle between x-axis rank order.
+k: In rank plot mode, toggle between fitness ratio, GIS, query fitness and control fitness on y-axis.
+l: Toggle plot style between fitness plot (default) and rank plot mode.
+p: Save current plot as vector graphic to QFAVisualisation.ps.  Other filetypes can also be generated - 'n': .png and 'm': .pdf
+q: Quit tool and print gene names currently selected to console window.
+r: Enter zoom mode.  Click on top left and bottom right of area to inspect (experimental, may have to quit to zoom out...).
+s: Highlight genes encircled using select tool ('z').
+t: Toggle between colours (red/green) indicating positive & negative interaction & no colouring.
+u: Add new group of genes to list of highlightable groups.
+v: Print list of currently selected genes to console and copy standard gene names to clipboard
+w: Open SGD web-page for last gene highlighted.
+x: Print list of currently selected genes to console and copy systematic gene names to clipboard
+z: Toggle select tool on/off. Select genes for highlighting by drawing a polygon on plot.  Press 's' to add selection when finished.
 }
 \examples{
 \dontrun{visToolDemo()}

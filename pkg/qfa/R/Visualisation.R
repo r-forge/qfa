@@ -320,11 +320,20 @@ makeVisTool=function(){
 			}
 		}
 		if(key=="t") {
-		# Toggle suppressor and enhancer colours
-			ENH=globs$Ecol
-			SUP=globs$Scol
-			globs$Scol=ENH
-			globs$Ecol=SUP
+			globs$ColourScheme=(globs$ColourScheme+1)%%3
+			# Toggle suppressor and enhancer colours
+			if(globs$ColourScheme==0){
+				globs$Ecol="green"
+				globs$Scol="red"
+			}
+			if(globs$ColourScheme==1){
+				globs$Ecol="red"
+				globs$Scol="green"
+			}
+			if(globs$ColourScheme==2){
+				globs$Ecol="grey"
+				globs$Scol="grey"
+			}
 			if(globs$rankPlot){
 				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
 			}else{
@@ -496,6 +505,7 @@ makeVisTool=function(){
 		globs$ind=globs$indPoss[globs$indNo%%length(globs$indPoss)+1]
 		
 		# Toggling between colour of suppressors and enhancers
+		globs$ColourScheme=0
 		globs$Ecol="green"
 		globs$Scol="red"
 
@@ -521,7 +531,7 @@ makeVisTool=function(){
 		cat("q: Quit tool and print gene names currently selected to console window.\n")
 		cat("r: Enter zoom mode.  Click on top left and bottom right of area to inspect (experimental, may have to quit to zoom out...).\n")
 		cat("s: Highlight genes encircled using select tool ('z').\n") 
-		cat("t: Toggle colours (red/green) indicating positive and negative interaction.\n")
+		cat("t: Toggle between colours (red/green) indicating positive & negative interaction & no colouring.\n")
 		cat("u: Add new group of genes to list of highlightable groups.\n")
 		cat("v: Print list of currently selected genes to console and copy standard gene names to clipboard\n")
 		cat("w: Open SGD web-page for last gene highlighted.\n")
@@ -556,7 +566,7 @@ makeVisTool=function(){
 			makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
 		}
 
-		getGraphicsEvent(prompt="Left/Right: Change plot, b: Expt. metadta, L-click: Highlight, M-click: Remove, q: quit", onMouseDown=mouse, onKeybd=keybd)
+		getGraphicsEvent(prompt="Left/Right: Change plot, b: Expt. metadata, L-click: Highlight, M-click: Remove, q: quit", onMouseDown=mouse, onKeybd=keybd)
 		printSelected(globs)
 		#if( sysinf["sysname"]!="Windows") dev.off()
 		dev.off()
