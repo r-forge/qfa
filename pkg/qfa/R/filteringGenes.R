@@ -52,8 +52,7 @@ readMer=function(fname="CommonAuxiliary/QFA_Database.mer"){
 	return(mer)
 }
 
-getMissingGenotypes=function(QFAs,threshfrac,mer){
-	SGAnums=mer$SGA.Number[mer$Screen.Number%in%QFAs]
+getMissingSGA=function(SGAs,threshfrac){
 	SGAs=sprintf("SGA%04d",SGAnums)
 	findFirst=function(SGA,threshfrac){
 		# Want YPD_G fitness report, but can't rely on client or temperature (also in file name)
@@ -84,12 +83,23 @@ getMissingGenotypes=function(QFAs,threshfrac,mer){
 	return(res)
 }
 
+getMissingGenotypes=function(QFAs,threshfrac,mer){
+	SGAnums=mer$SGA.Number[mer$Screen.Number%in%QFAs]
+	res=getMissingSGA(SGAnums,threshfrac)
+	return(res)
+}
+
+
 ## DEMO Stripping genes that were observed to be dead in starting libraries
 # Parse .mer file
 # Find SGA screen corresponding to QFA
 # Find strains whose median fitness lie below a threshold (what about genotypes with many replicate strains?)
 # Alternatively find pinIDs whose median fitnesses lie below threshold...
 #mer=readMer("CommonAuxiliary/QFA_Database.mer")
-#dead=getDeadGenotypes(c(136,60),0.25,mer)
+#dead=getMissingGenotypes(c(136,60),0.25,mer)
 #print(dead$ORF)
 #print(dead$Gene)
+
+
+QFAs=c(136,60)
+threshfrac=0.25

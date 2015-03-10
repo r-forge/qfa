@@ -1,6 +1,6 @@
 Package: qfa
-Version: 0.0-35
-Date: 2015-03-09
+Version: 0.0-36
+Date: 2015-03-10
 Title: Tools for Quantitative Fitness Analysis (QFA) of Arrayed Microbial Cultures Growing on Solid Agar Surfaces
 Author: Conor Lawless <conor.lawless@ncl.ac.uk>, with contributions from Alexander Young <alextisyoung@gmail.com> and Darren Wilkinson <d.j.wilkinson@ncl.ac.uk>
 Maintainer: Conor Lawless <conor.lawless@ncl.ac.uk>
