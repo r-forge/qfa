@@ -53,7 +53,7 @@ readMer=function(fname="CommonAuxiliary/QFA_Database.mer"){
 }
 
 getMissingSGA=function(SGAs,threshfrac){
-	SGAs=sprintf("SGA%04d",SGAnums)
+	SGAs=sprintf("SGA%04d",SGAs)
 	findFirst=function(SGA,threshfrac){
 		# Want YPD_G fitness report, but can't rely on client or temperature (also in file name)
 		SGAfiles=list.files(file.path("SGA_EXPERIMENTS",SGA,"ANALYSISOUT"))
@@ -99,7 +99,3 @@ getMissingGenotypes=function(QFAs,threshfrac,mer){
 #dead=getMissingGenotypes(c(136,60),0.25,mer)
 #print(dead$ORF)
 #print(dead$Gene)
-
-
-QFAs=c(136,60)
-threshfrac=0.25
