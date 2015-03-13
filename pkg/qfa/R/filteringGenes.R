@@ -24,12 +24,26 @@ checkTarg=function(targ,sgd){
 	}
 }
 
-getNeighbours=function(gvec,kb,sgd){
+getNeighbours=function(gvec,kb,sgd,geneCoord="Mid",geneDist="Mid",geneDir="All"){
+	# Can specify geneCoord = "Start", "Mid" or "Stop" for the definition of the position of target genes
+	# Can specity geneDist = "Start", "Stop", "Mid" or "Min" (smallest of all alternatives) for definition of distance between genes
+	# Can specify geneDir = "All", "Up" or "Down"
+	geneDist=paste("d",geneDist,sep="")
 	gvec=sapply(gvec,checkTarg,sgd)
 	res=head(sgd,0)
+	res=data.frame()
+	
 	for(g in gvec){
 		targ=sgd[sgd$FName==g,]
-		near=sgd[(sgd$Chr==targ$Chr)&(abs(sgd$Mid-targ$Mid)<kb*1000)&(sgd$FType=="ORF"),]
+		sgdChr=sgd[(sgd$Chr==targ$Chr),]
+		sgdChr$dStart=sgdChr$Start-targ[[geneCoord]]
+		sgdChr$dStop=sgdChr$Stop-targ[[geneCoord]]
+		sgdChr$dMid=sgdChr$Mid-targ[[geneCoord]]
+		sgdChr$dMin=sign(sgdChr$dMid)*pmin(abs(sgdChr$dStart),abs(sgdChr$dStop))
+		sgdChr$All=abs(sgdChr[[geneDist]])
+		sgdChr$Up=if(targ$Stop>targ$Start){sgdChr[[geneDist]]}else{-sgdChr[[geneDist]]}
+		sgdChr$Down=if(targ$Stop>targ$Start){-sgdChr[[geneDist]]}else{sgdChr[[geneDist]]}
+		near=sgdChr[(sgdChr[[geneDir]]>=0)&(sgdChr[[geneDir]]<kb*1000)&(sgdChr$FType=="ORF"),]
 		res=rbind(res,near)
 	}
 	return(res)
