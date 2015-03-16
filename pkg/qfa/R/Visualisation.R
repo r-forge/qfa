@@ -4,7 +4,7 @@ makeVisTool=function(){
 	globs<-new.env()
 
 	# Plotting function
-	epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot",ymin=0,ymax=0,xmin=0,xmax=0,ecol="green",scol="red"){
+	epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot",ymin=0,ymax=0,xmin=0,xmax=0,ecol="green",scol="red",esym=19,ssym=19){
 		enhancers<-gethits(results,qthresh,type="E")
 		suppressors<-gethits(results,qthresh,type="S")
 		others<-results[(!results$ORF%in%enhancers$ORF)&(!results$ORF%in%suppressors$ORF),]
@@ -22,15 +22,15 @@ makeVisTool=function(){
 			abline(v=reforf$ControlFitnessSummary,col="lightblue",lwd=2)
 			abline(h=reforf$QueryFitnessSummary,col="lightblue",lwd=2)}
 		# Add points for non-suppressors & non-enhancers
-		points(others$ControlFitnessSummary,others$QueryFitnessSummary,col="grey",cex=0.5,pch=19)
+		points(others$ControlFitnessSummary,others$QueryFitnessSummary,col="grey",cex=0.75,pch=19)
 		#text(others$ControlFitnessSummary,others$QueryFitnessSummary,others$Gene,col="grey",pos=4,offset=0.1,cex=0.4)
 		# Add suppressors & enhancers
 		if(length(enhancers$ORF)>0){
-			points(enhancers$ControlFitnessSummary,enhancers$QueryFitnessSummary,col=ecol,pch=19,cex=0.5)
+			points(enhancers$ControlFitnessSummary,enhancers$QueryFitnessSummary,col=ecol,bg=ecol,pch=esym,cex=0.75)
 			#text(enhancers$ControlFitnessSummary,enhancers$QueryFitnessSummary,enhancers$Gene,col=1,pos=4,offset=0.1,cex=0.4)
 		}
 		if(length(suppressors$ORF)>0){
-			points(suppressors$ControlFitnessSummary,suppressors$QueryFitnessSummary,col=scol,pch=19,cex=0.5)
+			points(suppressors$ControlFitnessSummary,suppressors$QueryFitnessSummary,col=scol,bg=scol,pch=ssym,cex=0.75)
 			#text(suppressors$ControlFitnessSummary,suppressors$QueryFitnessSummary,suppressors$Gene,col=1,pos=4,offset=0.1,cex=0.4)
 		}
 	}
@@ -70,7 +70,7 @@ makeVisTool=function(){
 		if ((Sys.info()['sysname']=="Windows")&focusPlot) bringToTop()
 	}
 
-	rnkPlot=function(datno,focusPlot=TRUE,qthresh=0.05,ecol="green",scol="red"){
+	rnkPlot=function(datno,focusPlot=TRUE,qthresh=0.05,ecol="green",scol="red",esym=19,ssym=19){
 		if(globs$compno>0){
 			compnm=paste(globs$compno,globs$GROUPS$GroupName[globs$compno],"\t",globs$GROUPS$GroupID[globs$compno])
 		}else{
@@ -84,6 +84,8 @@ makeVisTool=function(){
 		if(globs$ratploty=="GIS") {axislab=paste("GIS ",ylab," vs. ",xlab," (linear scale)",sep=""); ratlog=""}
 		if(globs$ratploty=="QueryFitnessSummary") {axislab=paste("Query Fit ",ylab," (linear scale)",sep=""); ratlog=""}
 		if(globs$ratploty=="ControlFitnessSummary") {axislab=paste("Control Fit ",xlab," (linear scale)",sep=""); ratlog=""} 
+		if(globs$ratploty=="QueryFitnessSummaryLOG") {axislab=paste("Query Fit ",ylab," (log scale)",sep=""); ratlog="y"}
+		if(globs$ratploty=="ControlFitnessSummaryLOG") {axislab=paste("Control Fit ",xlab," (log scale)",sep=""); ratlog="y"} 
 		
 		globs$orftargs=globs$dat$ORF[globs$targs]
 		if(globs$ind=="gindex") ratlab="Ranked by standard gene name (alphabetical order)"
@@ -94,28 +96,30 @@ makeVisTool=function(){
 	
 		globs$dat=globs$datlist[[datno]]$res
 		globs$targs=match(globs$orftargs,globs$dat$ORF)
-		plot(globs$dat[[globs$ind]],globs$dat[[globs$ratploty]],xlab=ratlab,log=ratlog,ylab=axislab,main=maintitle,col="grey",cex=0.5,pch=19)
+		rply=gsub("LOG","",globs$ratploty)
+		plot(globs$dat[[globs$ind]],globs$dat[[rply]],xlab=ratlab,log=ratlog,ylab=axislab,main=maintitle,col="grey",cex=0.5,pch=19)
 		if(globs$compno>0){
 			lst=strsplit(globs$GROUPS$GroupORFs[globs$compno]," ")[[1]]
 			globs$dcomp=globs$dat[globs$dat$ORF%in%lst,]
 			if(length(globs$dcomp$ORF)>0){
-				points(globs$dcomp[[globs$ind]],globs$dcomp[[globs$ratploty]],col="purple",pch=16,cex=1)
-				text(globs$dcomp[[globs$ind]],globs$dcomp[[globs$ratploty]],globs$dcomp$Gene,pos=1,cex=0.75)
+				points(globs$dcomp[[globs$ind]],globs$dcomp[[rply]],col="purple",pch=16,cex=1)
+				text(globs$dcomp[[globs$ind]],globs$dcomp[[rply]],globs$dcomp$Gene,pos=1,cex=0.75)
 			}	
 		}
 		if(length(globs$targs)>0){
-			points(globs$dat[[globs$ind]][globs$targs],globs$dat[[globs$ratploty]][globs$targs],col="blue",pch=16,cex=0.2)
-			text(globs$dat[[globs$ind]][globs$targs],globs$dat[[globs$ratploty]][globs$targs],globs$dat$Gene[globs$targs],pos=globs$posits,cex=0.75)
+			points(globs$dat[[globs$ind]][globs$targs],globs$dat[[rply]][globs$targs],col="blue",pch=16,cex=0.2)
+			text(globs$dat[[globs$ind]][globs$targs],globs$dat[[rply]][globs$targs],globs$dat$Gene[globs$targs],pos=globs$posits,cex=0.75)
 		}
 		if ((Sys.info()['sysname']=="Windows")&focusPlot) bringToTop()
 	}
 
 	targFun=function(x,y,datobj){
 		if(globs$rankPlot){
+			rply=gsub("LOG","",globs$ratploty)
 			if(globs$ratploty=="ratio"){
-				d=((x-datobj[[globs$ind]])/max(datobj[[globs$ind]]))^2+(y-datobj[[globs$ratploty]])^2
+				d=((x-datobj[[globs$ind]])/max(datobj[[globs$ind]]))^2+(y-datobj[[rply]])^2
 			}else{
-				d=(x/max(datobj[[globs$ind]])-datobj[[globs$ind]]/max(datobj[[globs$ind]]))^2+(y/max(datobj[[globs$ratploty]])-datobj[[globs$ratploty]]/max(datobj[[globs$ratploty]]))^2
+				d=(x/max(datobj[[globs$ind]])-datobj[[globs$ind]]/max(datobj[[globs$ind]]))^2+(y/max(datobj[[rply]])-datobj[[rply]]/max(datobj[[rply]]))^2
 			}
 		}else{
 			d=(x-datobj$ControlFitnessSummary)^2+(y-datobj$QueryFitnessSummary)^2
@@ -140,9 +144,9 @@ makeVisTool=function(){
 					globs$fymin[globs$datno]=globs$zoomBR[2]
 					globs$fymax[globs$datno]=globs$zoomTL[2]
 					if(globs$rankPlot){
-						rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+						rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 					}else{
-						makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+						makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 					}
 					# Reset zooming parameters
 					globs$zooming=FALSE
@@ -162,18 +166,18 @@ makeVisTool=function(){
 						globs$posits[globs$targ]=(globs$pnew%%4)+1
 					}
 					if(globs$rankPlot){
-						rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+						rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 					}else{
-						makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+						makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 					}
 					if(length(globs$selx)>0) drawSel(globs$selx,globs$sely)
 				}else{
 					globs$selx=c(globs$selx,globs$xf)
 					globs$sely=c(globs$sely,globs$yf)
 					if(globs$rankPlot){
-						rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+						rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 					}else{
-						makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+						makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 					}
 					drawSel(globs$selx,globs$sely)
 				}
@@ -184,9 +188,9 @@ makeVisTool=function(){
 			globs$targs=globs$targs[-length(globs$targs)]
 			globs$posits=globs$posits[-length(globs$posits)]
 			if(globs$rankPlot){
-				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}
 		}
 		if(2%in%buttons) {
@@ -202,6 +206,7 @@ makeVisTool=function(){
 	}
 
 	keybd=function(key){
+		key=tolower(key)
 		if(key=="b") {
 			# Print data to console
 			cat("\nExperimental metadata: plot",globs$datno,"\n~~~~~~~~~~~~~~~\n")
@@ -218,9 +223,9 @@ makeVisTool=function(){
 			globs$targs=c()
 			globs$posits=c()
 			if(globs$rankPlot){
-				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}
 		}
 		if(key=="d"){
@@ -228,30 +233,30 @@ makeVisTool=function(){
 			globs$targs=globs$targs[-length(globs$targs)]
 			globs$posits=globs$posits[-length(globs$posits)]
 			if(globs$rankPlot){
-				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}
 		}
 		if(key=="i") {
 			# Change index for ratio plot
 			globs$indNo=globs$indNo+1
 			globs$ind=globs$indPoss[globs$indNo%%length(globs$indPoss)+1]
-			if(globs$rankPlot){rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)}
+			if(globs$rankPlot){rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)}
 		}
 		if(key=="k"){
 			# Change value plotted on y-axis in ratio plot
 			globs$ratplotIndNo=globs$ratplotIndNo+1
 			globs$ratploty=globs$ratplotyPoss[globs$ratplotIndNo%%length(globs$ratplotyPoss)+1]
-			if(globs$rankPlot){rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)}
+			if(globs$rankPlot){rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)}
 		}
 		if(key=="l") {
 			# Log ratio plot
 			globs$rankPlot=!globs$rankPlot
 			if(globs$rankPlot){
-				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}
 		}
 		if(key=="m") {
@@ -259,9 +264,9 @@ makeVisTool=function(){
 			cat("Printing plot to file:",file.path(getwd(),pdfname),"\n")
 			pdf(pdfname)
 				if(globs$rankPlot){
-					rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
+					rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol,focusPlot=FALSE)
 				}else{
-					makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
+					makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol,focusPlot=FALSE)
 				}
 			dev.off()
 			globs$plotno=globs$plotno+1
@@ -272,9 +277,9 @@ makeVisTool=function(){
 			cat("Printing plot to file:",file.path(getwd(),pngname),"\n")
 			png(pngname,width=480*2,height=480*2,pointsize=12*2)
 			if(globs$rankPlot){
-				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
+				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol,focusPlot=FALSE)
 			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol,focusPlot=FALSE)
 			}
 			dev.off()
 			globs$plotno=globs$plotno+1
@@ -285,9 +290,9 @@ makeVisTool=function(){
 			cat("Printing plot to file:",file.path(getwd(),psname),"\n")
 			cairo_ps(psname)
 				if(globs$rankPlot){
-					rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
+					rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol,focusPlot=FALSE)
 				}else{
-					makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,focusPlot=FALSE)
+					makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol,focusPlot=FALSE)
 				}
 			dev.off()
 			globs$plotno=globs$plotno+1
@@ -314,30 +319,36 @@ makeVisTool=function(){
 			globs$sely=c()
 			globs$sel=0
 			if(globs$rankPlot){
-				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}
 		}
 		if(key=="t") {
 			globs$ColourScheme=(globs$ColourScheme+1)%%3
 			# Toggle suppressor and enhancer colours
 			if(globs$ColourScheme==0){
-				globs$Ecol="green"
+				globs$Ecol="blue"
 				globs$Scol="red"
+				globs$ESymbol=25
+				globs$SSymbol=24
 			}
 			if(globs$ColourScheme==1){
 				globs$Ecol="red"
-				globs$Scol="green"
+				globs$Scol="blue"
+				globs$ESymbol=25
+				globs$SSymbol=24
 			}
 			if(globs$ColourScheme==2){
 				globs$Ecol="grey"
 				globs$Scol="grey"
+				globs$ESymbol=19
+				globs$SSymbol=19
 			}
 			if(globs$rankPlot){
-				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}
 		}
 		if(key=="u") {
@@ -349,9 +360,9 @@ makeVisTool=function(){
 			globs$GROUPS=rbind(globs$GROUPS,newdf)
 			globs$compno=length(globs$GROUPS$GroupORFs)
 			if(globs$rankPlot){
-				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}
 		}
 		if(key=="v"){
@@ -391,52 +402,52 @@ makeVisTool=function(){
 				globs$selx=c(globs$selx,globs$selx[1])
 				globs$sely=c(globs$sely,globs$sely[1])
 				if(globs$rankPlot){
-					rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+					rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 				}else{
-					makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+					makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 				}
 				drawSel(globs$selx,globs$sely)
 				globs$sel=0
 			}
 		}
-		if(key=="Right") {
+		if(key=="right") {
 			globs$datno<<-(globs$datno%%length(globs$datlist))+1
 			if(globs$rankPlot){
-				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}
 			globs$orftargs=globs$dat$ORF[globs$targs]
 			globs$dat=globs$datlist[[globs$datno]]$res
 			globs$targs=match(globs$orftargs,globs$dat$ORF)
 		}
-		if(key=="Left") {
+		if(key=="left") {
 			globs$datno=((globs$datno-2)%%length(globs$datlist))+1
 			if(globs$rankPlot){
-				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}
 			orftargs=globs$dat$ORF[globs$targs]
 			globs$dat=globs$datlist[[globs$datno]]$res
 			globs$targs=match(globs$orftargs,globs$dat$ORF)
 		}
-		if(key=="Up") {
+		if(key=="up") {
 			globs$compno=(globs$compno+1)%%(length(globs$GROUPS$GroupORFs)+1)
 			#if(globs$compno>length(globs$GROUPS$GroupORFs)) globs$compno=1
 			if(globs$rankPlot){
-				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}
 		}
-		if(key=="Down") {
+		if(key=="down") {
 			globs$compno=(globs$compno-1)%%(length(globs$GROUPS$GroupORFs)+1)
 			#if(globs$compno<=0) globs$compno=length(globs$GROUPS$GroupORFs)
 			if(globs$rankPlot){
-				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}else{
-				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+				makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 			}
 		}
 		return(NULL)
@@ -506,8 +517,10 @@ makeVisTool=function(){
 		
 		# Toggling between colour of suppressors and enhancers
 		globs$ColourScheme=0
-		globs$Ecol="green"
+		globs$Ecol="blue"
 		globs$Scol="red"
+		globs$ESymbol=25
+		globs$SSymbol=24
 
 		cat("\nControls: Windows mouse\n")
 		cat("~~~~~~~~~~~~~~~\n")
@@ -546,7 +559,7 @@ makeVisTool=function(){
 		globs$zoomTL=c(-99,-99)
 		globs$zoomBR=c(-99,-99)
 		globs$rankPlot=FALSE
-		globs$ratplotyPoss=c("ratio","GIS","QueryFitnessSummary","ControlFitnessSummary")
+		globs$ratplotyPoss=c("ratio","GIS","QueryFitnessSummary","QueryFitnessSummaryLOG","ControlFitnessSummary","ControlFitnessSummaryLOG")
 		globs$ratplotIndNo=0
 		globs$ratploty=globs$ratplotyPoss[globs$ratplotIndNo%%length(globs$ratplotyPoss)+1]
 
@@ -561,9 +574,9 @@ makeVisTool=function(){
 		#dev.new()
 
 		if(globs$rankPlot){
-			rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+			rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 		}else{
-			makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol)
+			makePlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol)
 		}
 
 		getGraphicsEvent(prompt="Left/Right: Change plot, b: Expt. metadata, L-click: Highlight, M-click: Remove, q: quit", onMouseDown=mouse, onKeybd=keybd)
