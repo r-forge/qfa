@@ -544,7 +544,7 @@ makeVisTool=function(){
 		cat("q: Quit tool and print gene names currently selected to console window.\n")
 		cat("r: Enter zoom mode.  Click on top left and bottom right of area to inspect (experimental, may have to quit to zoom out...).\n")
 		cat("s: Highlight genes encircled using select tool ('z').\n") 
-		cat("t: Toggle between colours (red/green) indicating positive & negative interaction & no colouring.\n")
+		cat("t: Toggle between colours (blue/red) highlighting positive/negative interactions, and no highlighting.\n")
 		cat("u: Add new group of genes to list of highlightable groups.\n")
 		cat("v: Print list of currently selected genes to console and copy standard gene names to clipboard\n")
 		cat("w: Open SGD web-page for last gene highlighted.\n")
