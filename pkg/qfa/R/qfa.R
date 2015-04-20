@@ -677,6 +677,8 @@ growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 		iguess=max(0.0001,candidate)
 	}
 	d$Expt.Time=d$Expt.Time-tshift
+	# In the unlikely event that the smallest cell density did not occur at the earliest timepoint, need to delete earlier timepoints
+	d=d[d$Expt.Time>=0,]
 	
 	bounds=makeBoundsQFA(iguess,d,minK,fixG,globalOpt,glog)
 	inocguess=bounds$inocguess
