@@ -3,6 +3,7 @@
 mdr<-function(K,r,g,v) sapply((r*v)/log(1-(2^v-1)/((2^v)*(g/K)^v-1)),na2zero)
 mdp<-function(K,r,g,v) sapply(log(K/g)/log(2),na2zero)
 mdrmdp<-function(K,r,g,v) mdr(K,r,g,v)*mdp(K,r,g,v)
+
 # Doubling time for generalised logistic function, as a function of time t
 dtl<-function(K,r,g,v,t) sapply((-(r*t*v) + log((2**v*(1 - (K/g)**v)*((1 + (-1 + (K/g)**v)/exp(r*t*v))**(-1/v))**v)/(-1 + 2**v*((1 + (-1 + (K/g)**v)/exp(r*t*v))**(-1/v))**v)))/(r*v),na2zero)
 
@@ -10,7 +11,11 @@ dtl<-function(K,r,g,v,t) sapply((-(r*t*v) + log((2**v*(1 - (K/g)**v)*((1 + (-1 +
 logist<-function(K,r,g,t) (K*g*exp(r*t))/(K+g*(exp(r*t)-1))
 
 # Generalised logistic growth model #
+# Solution of dx/dt = r*x*(1-(x/K)^v)
 Glogist<-function(K,r,g,v,t) K/(1+(-1+(K/g)^v)*exp(-r*v*t))^(1/v)
+
+# Maximum slope of generalised logistic growth curve (on linear scale)
+gen_logistic_maxslp<-function(K,r,g,v) r*v*K/(v+1)**((v+1)/v)
 
 ####### Normalise a column in a data frame by plate, grouping by the groupcol column (e.g. Treatment, Medium, or some combination)...
 ####### This function eradicates any plate effect within the group specified by groupcol
@@ -84,7 +89,7 @@ sterr <- function(x) sqrt(var(x)/length(x))
 
 ################################################## Epistasis Function ###########################################################
 qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
-	GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE,bootstrap=NULL,Nboot=5000,subSamp=Inf){
+	GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE,bootstrap=NULL,Nboot=5000,subSamp=Inf,quantreg=FALSE){
 	###### Get ORF median fitnesses for control & double #######
 	print("Calculating median (or mean) fitness for each ORF")
 	## LIK ##
@@ -127,7 +132,7 @@ qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 	}
 	
 	### Fit genetic independence model ###
-	m<-lm.epi(dFms,cFms,modcheck)
+	m<-lm.epi(dFms,cFms,modcheck,quantreg)
 	print(paste("Ratio of background mutant fitness to wildtype fitness =",round(m,4)))
 	###### Estimate probability of interaction #######
 	print("Calculating interaction probabilities")
@@ -191,7 +196,7 @@ qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 	orflist<-unique(as.character(results$ORF))
 	results<-results[match(orflist,results$ORF),]
 	# Plot results
-	if (plot==TRUE){qfa.epiplot(results,qthresh,m)}
+	if (plot==TRUE){qfa.epiplot(results,qthresh,m,quantreg=quantreg)}
 	final<-list(Results=results,
 	Enhancers=gethits(results,qthresh,type="E",GISthresh=GISthresh),
 	Suppressors=gethits(results,qthresh,type="S",GISthresh=GISthresh))
@@ -202,7 +207,7 @@ qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 
 ############### Epistasis Functions ##################
 # Makes epistasis plot for a given fdr level #
-qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot",fmax=0){
+qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot",fmax=0,quantreg=FALSE){
 	enhancers<-gethits(results,qthresh,type="E")
 	suppressors<-gethits(results,qthresh,type="S")
 	others<-results[(!results$ORF%in%enhancers$ORF)&(!results$ORF%in%suppressors$ORF),]
@@ -219,7 +224,7 @@ qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Co
 	col=8,pch=19,cex=0.5)
 	# Add line for genetic independence
 	if (fitratio!=FALSE){abline(0,fitratio,lwd=2,col=8)} else {
-		slope=lm.epi(results$QueryFitnessSummary,results$ControlFitnessSummary,modcheck=FALSE)
+		slope=lm.epi(results$QueryFitnessSummary,results$ControlFitnessSummary,modcheck=FALSE,quantreg=quantreg)
 		abline(0,slope,lwd=2,col=8)}
 	# Add 1:1 fitness line
 	abline(0,1,lwd=2,lty=4,col=8)
@@ -267,9 +272,12 @@ orffit<-function(orf,fitframe){
 }
 
 # Linear regression genetic ind. model fit
-lm.epi<-function(doubles,controls,modcheck){
-	#indmod<-lm(doubles~controls)
-	indmod<-lm(doubles~0+controls)
+lm.epi<-function(doubles,controls,modcheck=FALSE,quantreg=FALSE){
+	if(quantreg){
+		indmod<-rq(doubles~0+controls)
+	}else{
+		indmod<-lm(doubles~0+controls)
+	}
 	m<-as.numeric(indmod$coefficients)
 	# Check if linear regression OK
 	if (modcheck==TRUE){
@@ -445,6 +453,7 @@ makeFitness<-function(results,AUCLim=5,dtmax=25){
 	results$MDP=mdp(results$K,results$r,results$g,results$v)
 	results$MDR=mdr(results$K,results$r,results$g,results$v)
 	results$MDRMDP=mdrmdp(results$K,results$r,results$g,results$v)
+	results$glog_maxslp=gen_logistic_maxslp(results$K,results$r,results$g,results$v)
 	# Set spurious fitnesses to zero
 	results$MDR[(results$r>7)&(results$K<0.0275)]=0
 	results$MDRMDP[(results$r>7)&(results$K<0.0275)]=0
@@ -587,7 +596,6 @@ numerical_r=function(obsdat,mkPlots=FALSE,span=0.3,nBrute=1000,cDiffDelta=0.0001
 	}
 	return(res)
 }
-
 
 ### Growth model fitting for one colony ###
 colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,...){
