@@ -87,42 +87,44 @@ orf2g<-function(orf,dictenv){get(orf,envir=dictenv)}
 ## Standard error of mean
 sterr <- function(x) sqrt(var(x)/length(x))
 
+summarise <- function(df,fdef="fit",summarystat=mean){
+	summ=aggregate(formula(paste(fdef,"ORF",sep="~")),df,summarystat)
+	return(setNames(summ[[fdef]],summ$ORF))
+}
+
 ################################################## Epistasis Function ###########################################################
 qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
-	GISthresh=0.0,plot=TRUE,modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE,bootstrap=NULL,Nboot=5000,subSamp=Inf,quantreg=FALSE){
+	GISthresh=0.0,plot=TRUE,modcheck=TRUE,wctest=TRUE,bootstrap=NULL,Nboot=5000,subSamp=Inf,quantreg=FALSE,fdef="fit"){
 	###### Get ORF median fitnesses for control & double #######
 	print("Calculating median (or mean) fitness for each ORF")
 	## LIK ##
 	# Get orfs in question
-	orfs<-as.character(double$ORF)
-	orfs<-orfs[orfs%in%as.character(control$ORF)]
-	orfs<-unique(orfs)
+	dorfs<-unique(as.character(double$ORF))
+	corfs<-unique(as.character(control$ORF))
+	orfs<-sort(intersect(dorfs,corfs))
+	control=control[control$ORF%in%orfs,]
+	double=double[double$ORF%in%orfs,]
+	
 	# Get lists with fitnesses for each repeat
-	#cFstats<-lapply(orfs,orfstat,control,fitfunct)
-	cFstats<-lapply(orfs,orffit,control)
-	names(cFstats)<-orfs
-	#dFstats<-lapply(orfs,orfstat,double,fitfunct)
-	dFstats<-lapply(orfs,orffit,double)
-	names(dFstats)<-orfs
+	cFstats<-split(control[[fdef]],control$ORF)
+	dFstats<-split(double[[fdef]],double$ORF)
 	# Get means or medians for each ORF
 	if(!is.null(bootstrap)){
 		cFms<-sapply(cFstats,bootstrap)
 		dFms<-sapply(dFstats,bootstrap)	
 	}else{
 		if(wctest){
-			cFms<-sapply(cFstats,median)
-			dFms<-sapply(dFstats,median)
+			cFms<-summarise(control,fdef,median)
+			dFms<-summarise(double,fdef,median)
 		}else{
-			cFms<-sapply(cFstats,mean)
-			dFms<-sapply(dFstats,mean)
+			cFms<-summarise(control,fdef,mean)
+			dFms<-summarise(double,fdef,mean)
 		}
 	}
-	names(cFms)<-orfs
-	names(dFms)<-orfs
-	cSe<-sapply(cFstats,sterr)
-	dSe<-sapply(dFstats,sterr)
-	cCount<-sapply(cFstats,length)
-	dCount<-sapply(dFstats,length)
+	cSe<-summarise(control,fdef,sterr)
+	dSe<-summarise(double,fdef,sterr)
+	cCount<-summarise(control,fdef,length)
+	dCount<-summarise(double,fdef,length)
 	
 	cFitDef<-findFit(control)
 	dFitDef<-findFit(double)
@@ -263,12 +265,6 @@ gethits<-function(results,qthresh,type="S",all.types=FALSE,GISthresh=0){
 orfstat<-function(orf,fitframe,fitfunct){
 	orfd<-fitframe[fitframe$ORF==orf,]
 	return(fitfunct(orfd$K,orfd$r,orfd$g,orfd$v))
-}
-
-# Function to extract fitnesses from data frame with "fit" column
-orffit<-function(orf,fitframe){
-	orfd<-fitframe[fitframe$ORF==orf,]
-	return(orfd$fit)
 }
 
 # Linear regression genetic ind. model fit
