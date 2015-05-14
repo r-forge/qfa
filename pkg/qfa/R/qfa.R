@@ -301,25 +301,36 @@ pgis<-function(orf,m,cFs,dFs,wilcoxon=TRUE){
 		return(c(1,0))
 	}else{
 		if (wilcoxon){
+			valdiff=0
+			p=1
 			# Returns p-value for significance of difference, and estimate of difference between medians
-			ctest<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)
-			p<-as.numeric(ctest$p.value)
-			diff<-as.numeric(ctest$estimate)
-			return(c(p,diff))
+			tryCatch({
+				ctest<-wilcox.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)
+				valdiff<-as.numeric(ctest$estimate)
+				p<-as.numeric(ctest$p.value)
+			},error=function(e) {
+				print(paste("Wilcox test failed for",orf,", using t-test instead for this gene"))
+				ctest<-t.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)
+				valdiff<-as.numeric(ctest$estimate)
+				valdiff<<-valdiff[1]-valdiff[2]
+				p<<-as.numeric(ctest$p.value)
+			})
+			
+			return(c(p,valdiff))
 		}else{
 			# t-test fails if only one element in either list, do one sample test
 			if((ldFS<=1)|(lcFS<=1)){
 				ctest<-t.test(dFs[[orf]]-m*cFs[[orf]])
 				p<-as.numeric(ctest$p.value)
-				diff<-as.numeric(ctest$estimate)
-				return(c(p,diff))
+				valdiff<-as.numeric(ctest$estimate)
+				return(c(p,valdiff))
 			}else{
 				# Returns p-value for significance of difference, and the difference between the means
 				ctest<-t.test(dFs[[orf]],m*cFs[[orf]],alternative="two.sided",conf.int=TRUE)
 				p<-as.numeric(ctest$p.value)
-				diff<-as.numeric(ctest$estimate)
-				diff<-diff[1]-diff[2]
-				return(c(p,diff))
+				valdiff<-as.numeric(ctest$estimate)
+				valdiff<-valdiff[1]-valdiff[2]
+				return(c(p,valdiff))
 			}
 		}
 	}
