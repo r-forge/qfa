@@ -77,14 +77,14 @@
 
 <ol>
 <li>Make sure you have the latest version of R installed on your computer.  If not, <a href="http://cran.r-project.org/bin/windows/base/">download</a> the latest .exe file to your hard drive and install.</li>
-<li>If they are not present on your system, you may need to install some extra R packages that the qfa package uses.  To install these:
+<li>If they are not present on your system, you may need to install some extra R packages that the qfa package uses.  To install these, make sure you have a working internet connection and:
 	<ol type="a">
 		<li>Start the R application (e.g. Start->All Programs->R->R x64 3.0.1)</li>
-		<li>Paste the following line of code after the command line prompt (followed by Enter):</li>
+		<li>Paste the following line of code after the command line prompt, press enter, and follow the on-screen instructions:</li>
 	</ol>
 </li>
 <code>
-install.packages(c("knitr","DEoptim","sp"))
+install.packages(c("knitr","DEoptim","sp","quantreg"))
 </code>
 </li>
 <li>Install the qfa package containing the visualisation tool and the <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> QFA datasets:
@@ -114,7 +114,7 @@ install.packages("qfa", repos="http://R-Forge.R-project.org")
 	</ol>
 </li>
 <code>
-install.packages(c("knitr","DEoptim","sp"))
+install.packages(c("knitr","DEoptim","sp","quantreg"))
 </code>
 </li>
 	<li>Install the qfa package containing the visualisation tool and the <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> QFA datasets:
@@ -158,7 +158,7 @@ Note that the first time that you install the QFA package, depending on the vers
 	</ol>
 </li>
 <code>
-install.packages(c("knitr","DEoptim","sp"))
+install.packages(c("knitr","DEoptim","sp","quantreg"))
 </code>
 </li>
 <li>Install the qfa package containing the visualisation tool and the <a href="http://www.plosgenetics.org/doi/pgen.1001362">Addinall et al., 2011</a> QFA datasets:
