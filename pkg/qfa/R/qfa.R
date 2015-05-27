@@ -94,7 +94,7 @@ summarise <- function(df,fdef="fit",summarystat=mean){
 
 ################################################## Epistasis Function ###########################################################
 qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
-	GISthresh=0.0,plot=TRUE,modcheck=TRUE,wctest=TRUE,bootstrap=NULL,Nboot=5000,subSamp=Inf,quantreg=FALSE,fdef="fit"){
+	GISthresh=0.0,plot=TRUE,modcheck=FALSE,wctest=TRUE,bootstrap=NULL,Nboot=5000,subSamp=Inf,quantreg=FALSE,fdef="fit"){
 	###### Get ORF median fitnesses for control & double #######
 	print("Calculating median (or mean) fitness for each ORF")
 	## LIK ##
@@ -881,13 +881,13 @@ guess<-function(tim,growth,inocguess,xybounds,minK=0.025){
 	# Sort time and growth
 	growth=growth[order(tim)]
 	tim=tim[order(tim)]
-	n=length(tim)
+	n=sum((!is.na(tim))&(!is.na(growth)))
 
 	# Enforce positivity and monotonic increasing behaviour in growth
 	#growth[1]=max(c(growth[1],0.000000001))
 	#for (x in 2:length(growth)) growth[x]=max(c(max(growth[1:(x-1)]),growth[x],0.00000001))
-	if(is.null(inocguess)){G0g<-max(min(growth),0.0000001)}else{G0g<-inocguess}
-	Kg<-max(max(growth),minK)
+	if(is.null(inocguess)){G0g<-max(min(growth,na.rm=TRUE),0.0000001)}else{G0g<-inocguess}
+	Kg<-max(max(growth,na.rm=TRUE),minK)
 	vg=1 # Assume logistic model is adequate
 	rg=0
 	if(n>3){
