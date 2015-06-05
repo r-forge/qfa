@@ -476,7 +476,7 @@ makeFitness<-function(results,AUCLim=5,dtmax=25){
 	Glog=function(K,r,g,v,t) {
 		# Eliminate problems with division by zero
 		g=max(g,1E-9) 
-		K=max(K,1E-9) 
+		K=max(K,1E-9)
 		ifelse(is.na(Glogist(K,r,g,v,t)),0,Glogist(K,r,g,v,t)) # Temporarily replace NA with zero here to allow integrate function below to handle modelFit=FALSE
 	}
 	AUC<-function(dno,tstar,dat) max(0,integrate(Glog,lower=0,upper=tstar,K=dat$K[dno],r=dat$r[dno],g=dat$g[dno],v=dat$v[dno],subdivisions=1000)$value - tstar*dat$g[dno])
