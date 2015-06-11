@@ -13,7 +13,7 @@ findFit<-function(df){
 	}
 }
 	
-fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment"){
+fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment",stripORFs=c()){
 	# Eliminate spurious precision to make smaller files
 	#results[,3:9]=signif(results[,3:9],6)
 	# Summarises mean and median fitnesses for all orfs in an .fit object
@@ -26,6 +26,7 @@ fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment"){
 
 	orflst=unique(as.character(fitdf$ORF))
 	orflst=sort(orflst)
+	if(!is.null(stripORFs)) fitdf=fitdf[!fitdf$ORF%in%stripORFs,]
 
 	#meanRes=by(fitdf[,27:31],fitdf$ORF,median)
 	medRes=tapply(fitdf$fit,fitdf$ORF,median,na.rm=TRUE)
