@@ -100,9 +100,15 @@ getMissingSGA=function(SGAs,threshfrac){
 getMissingGenotypes=function(QFAs,threshfrac,mer){
 	QFAnums=as.numeric(substr(QFAs,nchar(QFAs)-3,nchar(QFAs)))
 	SGAnums=mer$SGA.Number[mer$Screen.Number%in%QFAnums]
+	SGAnums=SGAnums[!is.na(SGAnums)]
+	if(length(SGAnums)==0) {
+		print("Warning!  No SGAs found in database when searching for dead cultures")
+		return(NULL)
+	}
 	res=getMissingSGA(SGAnums,threshfrac)
 	return(res)
 }
+
 
 
 ## DEMO Stripping genes that were observed to be dead in starting libraries
