@@ -98,7 +98,8 @@ getMissingSGA=function(SGAs,threshfrac){
 }
 
 getMissingGenotypes=function(QFAs,threshfrac,mer){
-	SGAnums=mer$SGA.Number[mer$Screen.Number%in%QFAs]
+	QFAnums=as.numeric(substr(QFAs,nchar(QFAs)-3,nchar(QFAs)))
+	SGAnums=mer$SGA.Number[mer$Screen.Number%in%QFAnums]
 	res=getMissingSGA(SGAnums,threshfrac)
 	return(res)
 }
