@@ -105,11 +105,10 @@ getMissingGenotypes=function(QFAs,threshfrac,mer){
 		print("Warning!  No SGAs found in database when searching for dead cultures")
 		return(NULL)
 	}
+	print(paste("Identifying cultures missing in",sprintf("SGA%04d",SGAnums)))
 	res=getMissingSGA(SGAnums,threshfrac)
 	return(res)
 }
-
-
 
 ## DEMO Stripping genes that were observed to be dead in starting libraries
 # Parse .mer file
