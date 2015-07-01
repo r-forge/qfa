@@ -19,7 +19,7 @@ gen_logistic_maxslp<-function(K,r,g,v) r*v*K/(v+1)**((v+1)/v)
 
 ####### Normalise a column in a data frame by plate, grouping by the groupcol column (e.g. Treatment, Medium, or some combination)...
 ####### This function eradicates any plate effect within the group specified by groupcol
-normalisePlates=function(d,column,groupcol="Treatment"){
+normalisePlates=function(d,column,groupcol="Treatment",fmin=0.000001){
 	d[,groupcol]=as.character(d[,groupcol]); d[,column]=as.numeric(d[,column]); d$Barcode=as.character(d$Barcode)
 	for(grouplabel in sort(unique(d[,groupcol]))){
 		print(paste("Normalising plates by group",grouplabel))
@@ -27,7 +27,7 @@ normalisePlates=function(d,column,groupcol="Treatment"){
 		for (b in unique(d$Barcode[d[,groupcol]==grouplabel])){
 			datlst=as.numeric(d[(d$Barcode==b)&(d[,groupcol]==grouplabel),column])
 			p.med=median(datlst)
-			if(p.med>=1) datlst=datlst*med/p.med # Avoid division by zero median fitness...
+			if(p.med>=fmin) datlst=datlst*med/p.med # Avoid division by zero median fitness...
 			d[(d$Barcode==b)&(d[,groupcol]==grouplabel),column]=datlst
 		}		
 	}
@@ -671,7 +671,7 @@ growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 	len2=length(d$Growth)
 	# If this has left us with too few points, return "dead colony"
 	if ((len2/len1<0.25)|(len2<3)) {
-		if(!is.null(iguess)) {pars=c(iguess,0,iguess,1,Inf,0)}else{pars=c(minK,1E-9,1E-9,1,Inf,0)}
+		if(!is.null(iguess)) {pars=c(iguess,0,iguess,1,Inf,0)}else{pars=c(minK,0,minK,1,Inf,0)}
 		names(pars)=c("K","r","g","v","objval","tshift")
 		return(pars)
 	}
@@ -907,40 +907,7 @@ guess<-function(tim,growth,inocguess,xybounds,minK=0.025){
 	# Sanity check for guessed parameter values
 	# If the data have low correlation, then set r=0
 	# If all elements of growth are equal (e.g. zero) then correlation function throws error...
-	if((length(unique(growth))==1)|(cor(tim,growth)<0.1)){ rg=0; Kg=minK}
-	return(list(K=Kg,r=rg,g=G0g,v=vg))
-}#guess
-
-guessNEW<-function(tim,growth,inocguess,xybounds,minK=0.025){
-	# Sort time and growth
-	growth=growth[order(tim)]
-	tim=tim[order(tim)]
-	# Enforce positivity and monotonic increasing behaviour in growth
-	#growth[1]=max(c(growth[1],0.000000001))
-	#for (x in 2:length(growth)) growth[x]=max(c(max(growth[1:(x-1)]),growth[x],0.00000001))
-	G0g<-inocguess
-	Kg<-max(max(growth),minK)
-	vg=1 # Assume logistic model is adequate
-	rg=0
-	# Subset of data which will be linear on the log scale
-	growthadj=growth[growth<0.75*Kg]
-	timadj=tim[growth<0.75*Kg]
-
-	n=length(timadj)
-	if(n>=1){
-		fixed=lm(I(log(growthadj)-log(G0g))~timadj+0)
-		fixslope=fixed$coefficients[['timadj']]
-		free=lm(log(growthadj)~timadj)
-		freeslope=free$coefficients[['timadj']]
-		freeint=free$coefficients[['(Intercept)']]
-		
-		rguess=(freeslope*(Kg/G0g)^vg)/((Kg/G0g)^vg-1)
-		if(Kg>G0g) {rg=rguess}else{rg=0}
-	}
-	# Sanity check for guessed parameter values
-	# If the data have low correlation, then set r=0
-	# If all elements of growth are equal (e.g. zero) then correlation function throws error...
-	if((length(unique(growth))==1)|(cor(tim,growth)<0.1)){ rg=0; Kg=minK}
+	if((length(unique(growth))==1)|(cor(tim,growth)<0.1)){ rg=0; Kg=G0g }
 	return(list(K=Kg,r=rg,g=G0g,v=vg))
 }#guess
 
