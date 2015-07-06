@@ -44,6 +44,8 @@ getNeighbours=function(gvec,kb,sgd,geneCoord="Mid",geneDist="Mid",geneDir="All")
 		sgdChr$Up=if(targ$Stop>targ$Start){sgdChr[[geneDist]]}else{-sgdChr[[geneDist]]}
 		sgdChr$Down=if(targ$Stop>targ$Start){-sgdChr[[geneDist]]}else{sgdChr[[geneDist]]}
 		near=sgdChr[(sgdChr[[geneDir]]>=0)&(sgdChr[[geneDir]]<kb*1000)&(sgdChr$FType=="ORF"),]
+		near$Target_ORF=g
+		near$Target_Gene=targ$Gene
 		res=rbind(res,near)
 	}
 	return(res)
