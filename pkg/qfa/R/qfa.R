@@ -435,7 +435,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		cols<-sapply(positions,rcget,"col")
 		# Bind Data frame of barcode results to overall results
 		barcMetadata<-data.frame(Barcode=as.character(info$Barcode),Row=rows,Col=cols,
-		ScreenID=as.character(info$ScreenID),Treatment=as.character(info$Treatments),Medium=as.character(info$Medium),ORF=as.character(info$ORF),Screen.Name=as.character(info$Screen.Name),Library.Name=as.character(info$Library.Name),MasterPlate.Number=as.numeric(info$MasterPlate.Number),Timeseries.order=as.numeric(info$Timeseries.order),Inoc.Time=inoctime,TileX=as.numeric(info$Tile.Dimensions.X),TileY=as.numeric(info$Tile.Dimensions.Y),XOffset=as.numeric(info$X.Offset),YOffset=as.numeric(info$Y.Offset),Threshold=as.numeric(info$Threshold),EdgeLength=as.numeric(info$Edge.length),EdgePixels=as.numeric(info$Edge.Pixels),RepQuad=as.numeric(info$RepQuad))
+		ScreenID=as.character(info$ScreenID),Treatment=as.character(info$Treatments),Medium=as.character(info$Medium),ORF=as.character(info$ORF),Screen.Name=as.character(info$Screen.Name),Library.Name=as.character(info$Library.Name),MasterPlate.Number=as.numeric(info$MasterPlate.Number),Timeseries.order=as.numeric(info$Timeseries.order),Inoc.Time=inoctime,TileX=as.numeric(info$Tile.Dimensions.X),TileY=as.numeric(info$Tile.Dimensions.Y),XOffset=as.numeric(info$X.Offset),YOffset=as.numeric(info$Y.Offset),Threshold=as.numeric(info$Threshold),EdgeLength=as.numeric(info$Edge.length),EdgePixels=as.numeric(info$Edge.Pixels),RepQuad=as.numeric(info$RepQuad),stringsAsFactors=FALSE)
 		barcFitness<-data.frame(bcfit)
 		barcResults=cbind(barcMetadata,barcFitness)
 		if("Client"%in%colnames(info)){barcResults$Client=as.character(info$Client)}
@@ -612,7 +612,6 @@ colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectT
 	do<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
 	obsdat=data.frame(Expt.Time=as.numeric(do$Expt.Time),Growth=as.numeric(do$Growth))
 	pars=makefits(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow)
-	#print(pars)
 	return(pars)
 }
 
@@ -644,9 +643,11 @@ makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 
 makeBoundsQFA<-function(inocguess,d,minK=0,fixG=FALSE,globalOpt=FALSE,glog=TRUE){
 	# Define optimization bounds based on inocguess #
-	lowr<-0; upr<-25
+	#lowr<-0; upr<-25
+	lowr<-0; upr<-50
 	if(glog){
-		lowv<-0.1; upv<-10.0
+		#lowv<-0.1; upv<-10.0
+		lowv<-0.25; upv<-4.0
 	}else{
 		lowv<-1; upv<-1
 	}
