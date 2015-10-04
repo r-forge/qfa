@@ -732,7 +732,11 @@ growthcurve<-function(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 		 #print("Attempting to do global fit alternative sick colony growth curve")
 		 Kmin=max(0.9*inocguess,minK); Kmax=1.5*max(pars[1],minK); xybounds$K=c(Kmin,Kmax); 
 		 xybounds$r=c(0,3) # Slow growth
-		 xybounds$v=c(0.75,1.5) # More logistic growth
+		 if(glog){
+			xybounds$v=c(0.75,1.5) # More logistic growth
+	     }else{
+		    xybounds$v=c(1,1)
+		 }
 		 inits=list(K=pars[1],r=0.6,g=inocguess,v=1)
 		 newpars=de.fit(d$Expt.Time,d$Growth,inocguess,xybounds,inits=inits,initPop=TRUE,widenr=FALSE,logTransform=logTransform)			
 		 if(newpars[5]<=pars[5]) pars=newpars				
