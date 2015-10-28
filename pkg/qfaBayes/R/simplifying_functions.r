@@ -14,21 +14,10 @@ SHM_postpro<-function(a,Treatment,Screen,MPlate,remove_row,remove_col)
       a<-a[!a$Col%in%remove_col[i],]
 	}
   }
-  
-  Row<-paste(a$Row)
-  Col<-paste(a$Col)
-  for (i in 1:nrow(a)){
-    if (nchar(Row[i])<2){
-      Row[i]=paste(0,Row[i],sep="")
-    }
-    if (nchar(Col[i])<2){
-      Col[i]=paste(0,Col[i],sep="")
-    }
-  }
 
-  a$ID<-paste(a$Barcode,a$MasterPlate.Number,Row,Col,sep="")
-
+  a$ID<-paste(a$Barcode,a$MasterPlate.Number,sprintf("%02d",a$Row),sprintf("%02d",a$Col),sep="_")
   a<-a[order(a$ORF,a$ID,a$Expt.Time), ]
+  a$Expt.Time[a$Expt.Time<0]=0
 
   IDuni<-unique(a$ID)
   ORFuni=unique(a$ORF)
@@ -37,29 +26,42 @@ SHM_postpro<-function(a,Treatment,Screen,MPlate,remove_row,remove_col)
 
   N<-length(ORFuni)
   M<-length(IDuni)
-  NoORF_a<-as.numeric(lapply(split(a,a$ORF),funcNoORF))#no of repeats each orf
-  NoTime_a<-c(0,as.numeric(lapply(split(a,a$ID),nrow)))# 0+ no of time each repeat
-  NoSum_a<-c(0,unlist(lapply(1:N,funcNoSum,NoORF_vec=NoORF_a)))
-  dimr<-max(NoORF_a)
-  dimc<-max(NoTime_a)
-  y<-funcXY(a$Growth,M,N,NoTime_a,NoSum_a,dimr,dimc)
-  x<-funcXY(a$Expt.Time,M,N,NoTime_a,NoSum_a,dimr,dimc)
+  
+  Reps<-as.numeric(lapply(split(a,a$ORF),function(x) length(unique(x$ID))))
+  Times<-as.numeric(lapply(split(a,a$ID),nrow))
+  SumReps<-cumsum(c(0,Reps))
 
-  QFA.I<-list("NoORF"=c(NoORF_a),"NoTime"=c(NoTime_a)[-1],"NoSum"=c(NoSum_a),
+  dimr<-max(Reps)
+  dimc<-max(Times)
+
+  gmat=array(data=NA,dim=c(max(Reps),max(Times),length(ORFuni)))
+  tmat=array(data=NA,dim=c(max(Reps),max(Times),length(ORFuni)))
+  for (orfno in seq_along(ORFuni)){
+	df=a[a$ORF==ORFuni[orfno],]
+	ids=unique(df$ID)
+	for(idno in seq_along(ids)){
+		g=df$Growth[df$ID==ids[idno]]
+		t=df$Expt.Time[df$ID==ids[idno]]
+		gmat[idno,1:length(g),orfno]=g
+		tmat[idno,1:length(t),orfno]=t
+	}
+  }
+
+  QFA.I<-list("NoORF"=Reps,"NoTime"=Times,"NoSum"=SumReps,
     "N"=N,"M"=M,"gene"=gene)
-  QFA.D<-list(y=y,x=x,ORFuni=ORFuni)
-  x[is.na(x)]=-999
-  y[is.na(y)]=-999
-  xx<-aperm(x,c(2,1,3))
-  yy<-aperm(y,c(2,1,3))
+  QFA.D<-list(y=gmat,x=tmat,ORFuni=ORFuni)
+  tmat[is.na(tmat)]=-999
+  gmat[is.na(gmat)]=-999
+  xx<-aperm(tmat,c(2,1,3))
+  yy<-aperm(gmat,c(2,1,3))
 
   QFA.x=as.double(xx)
   QFA.y=as.double(yy)
-  QFA.NoORF=as.integer(NoORF_a)
-  QFA.NoTIME=as.integer(c(NoTime_a)[-1])
-  QFA.NoSUM=NoSum_a
-  QFA.I=as.integer(c(N,max(NoORF_a),max(NoTime_a),length(y),length(NoTime_a[-1])))
-  list(y=QFA.D$y,x=QFA.D$x,QFA.I=QFA.I,QFA.y=QFA.y,QFA.x=QFA.x,
+  QFA.NoORF=Reps
+  QFA.NoTIME=Times
+  QFA.NoSUM=SumReps
+  QFA.I=as.integer(c(N,max(Reps),max(Times),length(y),length(Times)))
+  SHM=list(y=QFA.D$y,x=QFA.D$x,QFA.I=QFA.I,QFA.y=QFA.y,QFA.x=QFA.x,
     QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME,QFA.NoSUM=QFA.NoSUM,gene=gene,orf=ORFuni)
 }
 
@@ -85,7 +87,7 @@ SHM_main <- function(burn,iters,thin,adaptive_phase,
 }
 
 ### Displays repeat level logistic growth curves for each ORF###
-plot_SHM_simple<-function(SHM_output,SHM){
+plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
   samp<-SHM_output
   y<-SHM$y
   x<-SHM$x
@@ -212,6 +214,8 @@ plot_SHM_simple<-function(SHM_output,SHM){
   r_i_tau<-exp(sigma_r_o)
   K_ij_tau<-exp(tau_K_l)
   r_ij_tau<-exp(tau_r_l)
+  
+  if(!is.null(outfile)) pdf(outfile)
 
   for (i in 1:N){
     ylimmax=max(y[,,i][!is.na(y[,,i])])
@@ -219,7 +223,8 @@ plot_SHM_simple<-function(SHM_output,SHM){
     plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)",
 	  ylab="Culture Density (AU)",xlim=c(0,xlimmax),ylim=c(0,ylimmax))
     for (j in 1:NoORF[i]){
-      points(x[j,,i],y[j,,i])
+	  srt=order(x[j,,i])
+      points(x[j,,i][srt],y[j,,i][srt],type="b",cex=0.5)
       KK=K_ij[(j+NoSum[i])]
       rr=r_ij[(j+NoSum[i])]
       curve((KK*P*exp(rr*x))/(KK+P*(exp(rr*x)-1)), 0, xlimmax,add=TRUE) 
@@ -228,6 +233,9 @@ plot_SHM_simple<-function(SHM_output,SHM){
     r=exp(r_o_l[i])
     curve((K*P*exp(r*x))/(K+P*(exp(r*x)-1)),lwd=3,col="red",add=T)
   }
+  
+  if(!is.null(outfile)) dev.off()
+  
 }
 
 
