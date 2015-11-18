@@ -1,24 +1,12 @@
 ### Creates an object with information in the format for running the SHM ###
-SHM_postpro<-function(a,Treatment,Screen,MPlate,remove_row,remove_col)
+### User should strip unwanted strains (e.g. edge spots) and ensure that ###
+### data only include plates from one experiment (e.g. unique tret & med)###
+### User should also ensure that density observations are sorted by Expt.Time ###
+### and that any observations with "negative times" are stripped or time set to zero ###
+### The SHM_preprocess function does not sort or filter input data. ###
+### This allows us to attach results to data, preserving metadata.  ###
+SHM_preprocess<-function(a)
 {
-  a<-funcREMOVE(a,Screen,Treatment,MPlate)
-  if (length(remove_row)>=1){
-    for (i in 1:length(remove_row)){
-      a<-a[!a$Row%in%remove_row[i],]
-      a<-a[!a$Row%in%remove_row[i],]
-	}
-  }
-  if (length(remove_col)>=1){
-    for (i in 1:length(remove_col)){
-      a<-a[!a$Col%in%remove_col[i],]
-      a<-a[!a$Col%in%remove_col[i],]
-	}
-  }
-
-  a$ID<-paste(a$Barcode,a$MasterPlate.Number,sprintf("%02d",a$Row),sprintf("%02d",a$Col),sep="_")
-  a<-a[order(a$ORF,a$ID,a$Expt.Time), ]
-  a$Expt.Time[a$Expt.Time<0]=0
-
   IDuni<-unique(a$ID)
   ORFuni=unique(a$ORF)
 
@@ -26,7 +14,7 @@ SHM_postpro<-function(a,Treatment,Screen,MPlate,remove_row,remove_col)
 
   N<-length(ORFuni)
   M<-length(IDuni)
-  
+
   Reps<-as.numeric(lapply(split(a,a$ORF),function(x) length(unique(x$ID))))
   Times<-as.numeric(lapply(split(a,a$ID),nrow))
   SumReps<-cumsum(c(0,Reps))
@@ -60,9 +48,30 @@ SHM_postpro<-function(a,Treatment,Screen,MPlate,remove_row,remove_col)
   QFA.NoORF=Reps
   QFA.NoTIME=Times
   QFA.NoSUM=SumReps
-  QFA.I=as.integer(c(N,max(Reps),max(Times),length(y),length(Times)))
+  QFA.I=as.integer(c(N,max(Reps),max(Times),length(dimr*dimc*N),length(Times)))
   SHM=list(y=QFA.D$y,x=QFA.D$x,QFA.I=QFA.I,QFA.y=QFA.y,QFA.x=QFA.x,
     QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME,QFA.NoSUM=QFA.NoSUM,gene=gene,orf=ORFuni)
+}
+
+### Takes qfa Raw data (i.e. Colonyzer output with metadata) and qfaBayes SHM posterior
+### Returns fitness object similar to the output from qfa.fit
+SHM_makeQFAfits=function(dat,post){
+	# Values that vary for a given spot correspond to final timepoint
+	meta=subset(aggregate(dat,by=list(dat$ID),FUN=tail,1),select=c(-Group.1))
+
+	num=by(dat,dat$ID,FUN=numericalfitness,4,4)
+	numdf=data.frame(matrix(unlist(lownum),nrow=length(lownum),byrow=TRUE))
+	names(numdf)=names(num[[1]])
+
+	postmean=colMeans(post)
+	
+	meta$K=exp(postmean[sprintf("K_lm[%i]",0:(dim(meta)[1]-1))])
+	meta$r=exp(postmean[sprintf("r_lm[%i]",0:(dim(meta)[1]-1))])
+	meta$g=exp(postmean["P"])
+	meta$v=1
+	meta=makeFitness(meta)
+	meta=cbind(meta,numdf)
+	return(meta)
 }
 
 ### Calls the C code for running the SHM MCMC ###
@@ -99,7 +108,7 @@ plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
 
   M=sum(NoORF[1:L])
  
-  K_lm=tau_K_l=K_o_l=sigma_K_o=K_p=P_l=r_lm=tau_r_l=r_o_l=sigma_r_o=r_p=nu_cl=nu_p=sigma_nu=0
+  K_lm=tau_K_l=K_o_l=sigma_K_o=K_p=P=r_lm=tau_r_l=r_o_l=sigma_r_o=r_p=nu_cl=nu_p=sigma_nu=0
   aa<-samp
   #K_lm[%i]
   t=1
@@ -138,10 +147,10 @@ plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
   K_p=mean(samp[,j])
 
   t=1
-  #"P_l ");
+  #"P
   i=(M+N+2)
   j=M+2*N+3
-  P_l=mean(samp[,j])
+  P=mean(samp[,j])
 
   t=1
   #r_lm[%i] 
@@ -204,7 +213,7 @@ plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
   K<-exp(K_p)
   K_i<-exp(K_o_l)
   K_ij<-exp(K_lm)
-  P<-exp(P_l)
+  P<-exp(P)
   r<-exp(r_p)
   r_i<-exp(r_o_l)
   r_ij<-exp(r_lm)
