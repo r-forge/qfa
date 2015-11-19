@@ -5,6 +5,7 @@
 ### and that any observations with "negative times" are stripped or time set to zero ###
 ### The SHM_preprocess function does not sort or filter input data. ###
 ### This allows us to attach results to data, preserving metadata.  ###
+### Data should be sorted by ORF then by spot ID.
 SHM_preprocess<-function(a)
 {
   IDuni<-unique(a$ID)
@@ -48,19 +49,21 @@ SHM_preprocess<-function(a)
   QFA.NoORF=Reps
   QFA.NoTIME=Times
   QFA.NoSUM=SumReps
-  QFA.I=as.integer(c(N,max(Reps),max(Times),length(dimr*dimc*N),length(Times)))
+  QFA.I=as.integer(c(N,max(Reps),max(Times),dimr*dimc*N,length(Times)))
+   
+  #QFA.I=as.integer(c(L,M,N,maxy,maxNoTIME)
   SHM=list(y=QFA.D$y,x=QFA.D$x,QFA.I=QFA.I,QFA.y=QFA.y,QFA.x=QFA.x,
     QFA.NoORF=QFA.NoORF,QFA.NoTIME=QFA.NoTIME,QFA.NoSUM=QFA.NoSUM,gene=gene,orf=ORFuni)
 }
 
 ### Takes qfa Raw data (i.e. Colonyzer output with metadata) and qfaBayes SHM posterior
 ### Returns fitness object similar to the output from qfa.fit
-SHM_makeQFAfits=function(dat,post){
+SHM_makeQFAfits=function(dat,post,fname=NULL){
 	# Values that vary for a given spot correspond to final timepoint
 	meta=subset(aggregate(dat,by=list(dat$ID),FUN=tail,1),select=c(-Group.1))
 
 	num=by(dat,dat$ID,FUN=numericalfitness,4,4)
-	numdf=data.frame(matrix(unlist(lownum),nrow=length(lownum),byrow=TRUE))
+	numdf=data.frame(matrix(unlist(num),nrow=length(num),byrow=TRUE))
 	names(numdf)=names(num[[1]])
 
 	postmean=colMeans(post)
@@ -71,6 +74,32 @@ SHM_makeQFAfits=function(dat,post){
 	meta$v=1
 	meta=makeFitness(meta)
 	meta=cbind(meta,numdf)
+	
+	if(!is.null(fname)){
+		pdf(fname)
+		tmax=max(dat$Expt.Time)
+		gmax=max(dat$Growth)
+		uniORF=unique(meta$ORF)
+		for(orfno in seq_along(uniORF)){
+			df=dat[dat$ORF==uniORF[orfno],]
+			uniID=unique(df$ID)
+			plot(NULL,xlim=c(0,tmax),ylim=c(0,gmax),main=unique(df$Gene),xlab="Time (d)",ylab="Cell density (AU)")
+			for(IDno in seq_along(uniID)){
+				points(df$Expt.Time[df$ID==uniID[IDno]],df$Growth[df$ID==uniID[IDno]],type="b")
+				# Curve
+				K=meta$K[meta$ID==uniID[IDno]]
+				r=meta$r[meta$ID==uniID[IDno]]
+				g=meta$g[meta$ID==uniID[IDno]]
+				curve((K*g*exp(r*x))/(K+g*(exp(r*x)-1)), from=0, to=tmax,col="black",add=TRUE)
+			}
+			K=exp(postmean[sprintf("K_o_l[%i]",orfno-1)])
+			r=exp(postmean[sprintf("r_o_l[%i]",orfno-1)])
+			g=exp(postmean["P"])
+			curve((K*g*exp(r*x))/(K+g*(exp(r*x)-1)), from=0, to=tmax,col="red",lwd=2,add=TRUE)
+		}
+		dev.off()
+	}
+	
 	return(meta)
 }
 
@@ -94,6 +123,9 @@ SHM_main <- function(burn,iters,thin,adaptive_phase,
   names(mat)=tmp$HEADER
   mat
 }
+
+
+
 
 ### Displays repeat level logistic growth curves for each ORF###
 plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
