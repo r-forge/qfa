@@ -57,7 +57,7 @@ print(unique(bigd$Medium))
 print(paste("Number of ORFs =",length(unique(bigd$ORF))))
 print("Screens:")
 print(unique(bigd$Screen.Name))
-platesize<-max(as.numeric(bigd$Row))*max(as.numeric(bigd$Col))
+platesize<-max(as.numeric(bigd$Row))*max(as.numeric(bigd$Column))
 if (length(bigd$Date.Time)%%platesize!=0){
 	warning("Number of photos not multiple of plate size")}
 print("Inoculation DateTimes:")

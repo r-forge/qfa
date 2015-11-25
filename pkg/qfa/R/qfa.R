@@ -391,6 +391,8 @@ varposget<-function(var,orfn,norfs){
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
 qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,nCores=1,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,...){
+	
+	if(!"Column"%in%colnames(d)) d$Column=d$Col
 
 	# ORF2gene argument is now deprecated, this link should be made with colony.read function instead
 	if(!is.null(inocguess)){
@@ -434,7 +436,7 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		rows<-sapply(positions,rcget,"row")
 		cols<-sapply(positions,rcget,"col")
 		# Bind Data frame of barcode results to overall results
-		barcMetadata<-data.frame(Barcode=as.character(info$Barcode),Row=rows,Col=cols,
+		barcMetadata<-data.frame(Barcode=as.character(info$Barcode),Row=rows,Column=cols,Col=cols,
 		ScreenID=as.character(info$ScreenID),Treatment=as.character(info$Treatments),Medium=as.character(info$Medium),ORF=as.character(info$ORF),Screen.Name=as.character(info$Screen.Name),Library.Name=as.character(info$Library.Name),MasterPlate.Number=as.numeric(info$MasterPlate.Number),Timeseries.order=as.numeric(info$Timeseries.order),Inoc.Time=inoctime,TileX=as.numeric(info$Tile.Dimensions.X),TileY=as.numeric(info$Tile.Dimensions.Y),XOffset=as.numeric(info$X.Offset),YOffset=as.numeric(info$Y.Offset),Threshold=as.numeric(info$Threshold),EdgeLength=as.numeric(info$Edge.length),EdgePixels=as.numeric(info$Edge.Pixels),RepQuad=as.numeric(info$RepQuad),stringsAsFactors=FALSE)
 		barcFitness<-data.frame(bcfit)
 		barcResults=cbind(barcMetadata,barcFitness)
@@ -609,7 +611,7 @@ colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectT
 	# Get row & column to restrict data
 	row<-position[1]; col<-position[2]
 	#print(paste(bcdata$Barcode[1],"Row:",row,"Col:",col))
-	do<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
+	do<-bcdata[(bcdata$Row==row)&(bcdata$Column==col),]
 	obsdat=data.frame(Expt.Time=as.numeric(do$Expt.Time),Growth=as.numeric(do$Growth))
 	pars=makefits(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow)
 	return(pars)
@@ -938,7 +940,7 @@ nozero<-function(growth){if (growth<=0){growth<-0.0000000000001} else {growth<-g
 colony.info<-function(position,bcdata){
 	# Get row & column to restrict data
 	row<-position[1]; col<-position[2]
-	d<-bcdata[(bcdata$Row==row)&(bcdata$Col==col),]
+	d<-bcdata[(bcdata$Row==row)&(bcdata$Column==col),]
 	# Want to use the LAST datapoint 
 	# Most relevant for edge length (possibly most reliable for position)
 	d<-d[order(d$Date.Time,decreasing=TRUE),]
@@ -975,6 +977,8 @@ colony.info<-function(position,bcdata){
 
 ##### Make PDFs #####
 qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.plates=c(),treatments=c(),screen.names=c(),screenIDs=c(),maxg=0,maxt=0,logify=FALSE,densityCol="Growth",curves=TRUE,ylabel="Cell density (AU)",ptype="p"){
+	if(!"Column"%in%colnames(d)) d$Column=d$Col
+
 	# Sort the data to be plotted sensibly, allowing easy comparison between repeats
 	results=results[order(results$MasterPlate.Number,results$Treatment,results$Screen.Name),]
 	# Get character vectors of requested barcodes, treatements,etc.; all if none specified
@@ -996,8 +1000,8 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 
 	print(paste("Plotting for",length(results[,1]),"colonies"))
 	# Produce PDF
-	colmin<-min(results$Col); rowmin<-min(results$Col)
-	colmax<-max(results$Col); rowmax<-max(results$Row)
+	colmin<-min(results$Column); rowmin<-min(results$Column)
+	colmax<-max(results$Column); rowmax<-max(results$Row)
 	pdf(file,4*(colmax-colmin+1),4*(rowmax-rowmin+1))
 	if(rowmax*colmax==96) {cexfctr=1.0;marge=c(2,1,2,0.75)} 
 	if(rowmax*colmax>96) {cexfctr<-(rowmax*colmax)/384; marge=c(2,1,2,0.75)}
@@ -1016,7 +1020,7 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 		inoctime<-rbc$Inoc.Time[1]
 		#as.POSIXlt(as.character(bigd$Date.Time),format=fmt)
 		# Find number of rows and columns on this plate
-		#nrow<-max(rbc$Row)-min(rbc$Row)+1; ncol<-max(rbc$Col)-min(rbc$Col)+1
+		#nrow<-max(rbc$Row)-min(rbc$Row)+1; ncol<-max(rbc$Column)-min(rbc$Column)+1
 		nrow<-rowmax-rowmin+1; ncol=colmax-colmin+1
 		# Find max growth to set y-axis for this plate
 		if (maxg==0) maxg=max(dbc$Growth)
@@ -1041,7 +1045,7 @@ rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify,densityCol="Growth",c
 	row<-as.numeric(resrow['Row']); col<-as.numeric(resrow['Col'])
 	if ('Gene'%in%names(resrow)){gene<-resrow['Gene']} else {gene<-resrow['ORF']}
 	# Get data for that colony
-	dcol<-dbc[(dbc$Row==row)&(dbc$Col==col),]
+	dcol<-dbc[(dbc$Row==row)&(dbc$Column==col),]
 	growth<-sapply(dcol[[densityCol]],nozero)
 	tim<-dcol$Expt.Time
 	if("tshift"%in%names(resrow)){tshift<-unique(as.numeric(resrow[["tshift"]]))[1]}else{tshift=0}
@@ -1050,7 +1054,7 @@ rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify,densityCol="Growth",c
 }
 
 ### Converts row no. to position vector ###	
-index2pos<-function(index,dbc) c(dbc[index,'Row'],dbc[index,'Col'])
+index2pos<-function(index,dbc) c(dbc[index,'Row'],dbc[index,'Column'])
 
 ### Do individual timecourse plot given parameters & data ###
 logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0,logify=FALSE,densityCol="Growth",curves=TRUE,ptype="p",tshift=0){

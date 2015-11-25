@@ -1,5 +1,5 @@
 plotRepsDF=function(gdf,target,type="l",lwd=2,mlab="",dmax=0.3,tmax=3){
-	gdf$ID=paste(gdf$Barcode,sprintf("%02d",gdf$MasterPlate.Number),sprintf("%02d",gdf$Row),sprintf("%02d",gdf$Col),sep="_")
+	gdf$ID=paste(gdf$Barcode,sprintf("%02d",gdf$MasterPlate.Number),sprintf("%02d",gdf$Row),sprintf("%02d",gdf$Column),sep="_")
 	gdf=gdf[order(gdf$ORF,gdf$ID,gdf$Expt.Time),]
 	clist=rainbow(length(unique(gdf$ID)))
 	names(clist)=unique(gdf$ID)
@@ -54,7 +54,7 @@ prepareTimecourse=function(df,target,tmax=5.0,freqQuant=0.1,repMax=10,byTime=TRU
 	}
 	gdf=gdf[gdf$Expt.Time<=tmax,]
 
-	gdf$PINID=paste(gdf$Barcode,paste("R",sprintf("%02d",gdf$Row),sep=""),paste("C",sprintf("%02d",gdf$Col),sep=""),sep="_")
+	gdf$PINID=paste(gdf$Barcode,paste("R",sprintf("%02d",gdf$Row),sep=""),paste("C",sprintf("%02d",gdf$Column),sep=""),sep="_")
 	listGrow=split(gdf,gdf$PINID)
 	# Need to randomly sample replicates if there are too many
 	if(length(listGrow)>repMax) listGrow=listGrow[sample(1:length(listGrow),repMax,replace=FALSE)]

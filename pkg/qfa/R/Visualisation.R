@@ -60,8 +60,8 @@ makeVisTool=function(){
 			lst=strsplit(globs$GROUPS$GroupORFs[globs$compno]," ")[[1]]
 			dcomp=globs$dat[globs$dat$ORF%in%lst,]
 			if(length(dcomp$ORF)>0){
-				points(dcomp$ControlFitnessSummary,dcomp$QueryFitnessSummary,col="purple",pch=16,cex=1)
-				text(dcomp$ControlFitnessSummary,dcomp$QueryFitnessSummary,dcomp$Gene,pos=1,cex=0.75)
+				points(dcomp$ControlFitnessSummary,dcomp$QueryFitnessSummary,col="purple",pch=16,cex=1.5)
+				text(dcomp$ControlFitnessSummary,dcomp$QueryFitnessSummary,dcomp$Gene,pos=sample(1:4,length(dcomp$Gene),replace=TRUE),cex=1.0)
 			}	
 		}
 		if(length(globs$targs)>0){
@@ -73,7 +73,9 @@ makeVisTool=function(){
 
 	rnkPlot=function(datno,focusPlot=TRUE,qthresh=0.05,ecol="green",scol="red",esym=19,ssym=19){
 		if(globs$compno>0){
-			compnm=paste(globs$compno,globs$GROUPS$GroupName[globs$compno],"\t",globs$GROUPS$GroupID[globs$compno])
+			lst=strsplit(globs$GROUPS$GroupORFs[globs$compno]," ")[[1]]
+			Ngrp=paste("(N=",length(lst),")",sep="")
+			compnm=paste("Group",paste(globs$compno,":",sep=""),globs$GROUPS$GroupName[globs$compno],Ngrp,globs$GROUPS$GroupID[globs$compno])
 		}else{
 			compnm=""
 		}
@@ -103,8 +105,8 @@ makeVisTool=function(){
 			lst=strsplit(globs$GROUPS$GroupORFs[globs$compno]," ")[[1]]
 			globs$dcomp=globs$dat[globs$dat$ORF%in%lst,]
 			if(length(globs$dcomp$ORF)>0){
-				points(globs$dcomp[[globs$ind]],globs$dcomp[[rply]],col="purple",pch=16,cex=1)
-				text(globs$dcomp[[globs$ind]],globs$dcomp[[rply]],globs$dcomp$Gene,pos=1,cex=0.75)
+				points(globs$dcomp[[globs$ind]],globs$dcomp[[rply]],col="purple",pch=16,cex=1.5)
+				text(globs$dcomp[[globs$ind]],globs$dcomp[[rply]],globs$dcomp$Gene,pos=1,cex=1.0)
 			}	
 		}
 		if(length(globs$targs)>0){
@@ -276,7 +278,7 @@ makeVisTool=function(){
 		if(key=="n") {
 			pngname=sprintf("QFAVisualisation%04d.png",globs$plotno)
 			cat("Printing plot to file:",file.path(getwd(),pngname),"\n")
-			png(pngname,width=480*2,height=480*2,pointsize=12*2)
+			png(pngname,width=480*2.5,height=480*2.5,pointsize=12*2)
 			if(globs$rankPlot){
 				rnkPlot(globs$datno,ecol=globs$Ecol,scol=globs$Scol,esym=globs$ESymbol,ssym=globs$SSymbol,focusPlot=FALSE)
 			}else{
@@ -329,14 +331,14 @@ makeVisTool=function(){
 			globs$ColourScheme=(globs$ColourScheme+1)%%3
 			# Toggle suppressor and enhancer colours
 			if(globs$ColourScheme==0){
-				globs$Ecol="blue"
-				globs$Scol="red"
+				globs$Ecol=rgb(0.4,0.4,1)
+				globs$Scol=rgb(1,0.4,0.4)
 				globs$ESymbol=25
 				globs$SSymbol=24
 			}
 			if(globs$ColourScheme==1){
-				globs$Ecol="red"
-				globs$Scol="blue"
+				globs$Ecol=rgb(1,0.4,0.4)
+				globs$Scol=rgb(0.4,0.4,1)
 				globs$ESymbol=25
 				globs$SSymbol=24
 			}
@@ -519,8 +521,8 @@ makeVisTool=function(){
 		
 		# Toggling between colour of suppressors and enhancers
 		globs$ColourScheme=0
-		globs$Ecol="blue"
-		globs$Scol="red"
+		globs$Ecol=rgb(0.4,0.4,1)
+		globs$Scol=rgb(1,0.4,0.4)
 		globs$ESymbol=25
 		globs$SSymbol=24
 

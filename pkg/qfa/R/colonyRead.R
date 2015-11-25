@@ -5,10 +5,10 @@
 ####
 
 colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF2gene="",libraries="LibraryDescriptions.csv",screenID=""){
-	# Are we reading all files in a folder?
+		# Are we reading all files in a folder?
 	if (length(strsplit(path,".")[[1]])>1){pathT=TRUE}else{pathT=FALSE}
 	# If no Colonyzer files specified, use all .dat in working directory
-	if (length(files)==0){fs<-list.files(path=path,pattern="\\.dat$")} else {fs<-files}
+	if (length(files)==0){fs<-list.files(path=path,pattern="\\.out$")} else {fs<-files}
 	# If we're using a path, then add path to filenames
 	if (pathT==TRUE) fs<-paste(path,fs,sep="/")
 	print("List of data files to read:")
@@ -102,41 +102,39 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	names(getGene)=orf2gene$orf
 	#colnames(iman)=c("FILENAME","ROW","COLUMN","TOPLEFTX","TOPLEFTY","WHITEAREA","TRIMMED","THRESHOLD","INTENSITY","EDGEPIXELS","COLR","COLG","COLB","BKR","BKG","BKB","EDGELEN","XDIM","YDIM")
 	# ROD-like columns
-	colNames=c("Image.Name","Row","Col","X.Offset","Y.Offset","Area","Trimmed","Threshold","Intensity","Edge.Pixels","Colony.Color.R","Colony.Color.G","Colony.Color.B","Background.Color.R","Background.Color.G","Background.Color.B","Edge.length","Tile.Dimensions.X","Tile.Dimensions.Y")
-	colClasses=c("character",rep("numeric",length(colNames)-1))
+	#colNames=c("Image.Name","Row","Col","X.Offset","Y.Offset","Area","Trimmed","Threshold","Intensity","Edge.Pixels","Colony.Color.R","Colony.Color.G","Colony.Color.B","Background.Color.R","Background.Color.G","Background.Color.B","Edge.length","Tile.Dimensions.X","Tile.Dimensions.Y")
+	#colClasses=c("character",rep("numeric",length(colNames)-1))
 
 	# Read in the image analysis output
 	# Have to define colClasses here since from R3.1-10, automatic conversion for string representation of numbers
 	if("data.table" %in% rownames(installed.packages())){
 		library(data.table) # Faster version of read.delim...
-		iman=do.call(rbind, lapply(fs, data.table::fread,header=FALSE,sep="\t",stringsAsFactors=FALSE,colClasses=colClasses))
+		iman=do.call(rbind, lapply(fs, data.table::fread,header=TRUE,sep="\t",stringsAsFactors=FALSE))
 		iman=data.frame(iman)
 	}else{
-		iman=do.call(rbind, lapply(fs, read.delim,header=FALSE,sep="\t",stringsAsFactors=FALSE,colClasses=colClasses))
+		iman=do.call(rbind, lapply(fs, read.delim,header=TRUE,sep="\t",stringsAsFactors=FALSE))
 	}
+
 	# Sometimes users include multiple copies of the same image analysis files (e.g. in concatenated collection & separately)
 	#iman=unique(iman) # This operation is quite time-consuming for large data.frames...
-	# Colonyzer columns
-	colnames(iman)=colNames
 
 	# Create extra columns
-	iman$Growth=iman$Trimmed/(255*iman$Tile.Dimensions.X*iman$Tile.Dimensions.Y)
-	if(nchar(iman$Image.Name[1])==31){
-		iman$Barcode=substr(iman$Image.Name,1,11)
-		iman$Date.Time=substr(iman$Image.Name,13,31)
+	if(nchar(iman$Filename[1])==31){
+		#iman$Barcode=substr(iman$Image.Name,1,11)
+		iman$Date.Time=substr(iman$Filename,13,31)
 	}else{
-		iman$Barcode=substr(iman$Image.Name,1,15)
-		iman$Date.Time=substr(iman$Image.Name,17,35)
+		#iman$Barcode=substr(iman$Image.Name,1,15)
+		iman$Date.Time=substr(iman$Filename,17,35)
 	}
 
 	# Dump any images which are not in the experimental description file
 	iman=iman[iman$Barcode%in%expt$Barcode,]
-	smalliman=iman[(iman$Row==1)&(iman$Col==1),]
+	smalliman=iman[(iman$Row==1)&(iman$Column==1),]
 
 	# Create a dictionary for filename->photo number
 	getPhotoNum<-function(filename){
 		# Get plate name from filename
-		if(nchar(iman$Image.Name[1])==31){
+		if(nchar(iman$Filename[1])==31){
 			platename=substr(filename,1,11)
 		}else{
 			platename=substr(filename,1,15)
@@ -144,12 +142,12 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 		# Filter iman data frame by filename
 		#tmp=na.omit(smalliman[(smalliman$Barcode==platename),])
 		tmp=smalliman[(smalliman$Barcode==platename),]
-		tmp=tmp[order(tmp$Image.Name),]
+		tmp=tmp[order(tmp$Filename),]
 		tmp$PhotoNum=1:length(tmp$Image.Name)
-		return(as.numeric(tmp$PhotoNum[tmp$Image.Name==filename]))
+		return(as.numeric(tmp$PhotoNum[tmp$Filename==filename]))
 	}
 
-	fnames=unique(iman$Image.Name)
+	fnames=unique(iman$Filename)
 	photoNum=sapply(fnames,getPhotoNum)
 	names(photoNum)=fnames
 
@@ -159,11 +157,11 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	iman$Screen.Name=barcScreen[iman$Barcode]
 	iman$RepQuad=barcQuad[iman$Barcode]
 	iman$MasterPlate.Number=barcPlate[iman$Barcode]
-	iman$Timeseries.order=as.numeric(photoNum[iman$Image.Name])
+	iman$Timeseries.order=as.numeric(photoNum[iman$Filename])
 	iman$Library.Name=barcLib[iman$Barcode]
-	iman$ORF=mapply(getORF, iman$Library.Name, iman$MasterPlate.Number, iman$Row, iman$Col)
+	iman$ORF=mapply(getORF, iman$Library.Name, iman$MasterPlate.Number, iman$Row, iman$Column)
 	iman$Gene=getGene[toupper(iman$ORF)]
-	iman$ScreenID=rep(screenID,length(iman$Image.Name))
+	iman$ScreenID=rep(screenID,length(iman$Filename))
 	if("Client"%in%colnames(expt)){iman$Client=barcClient[iman$Barcode]}
 	if("ExptDate"%in%colnames(expt)){iman$ExptDate=barcExptDate[iman$Barcode]}
 	if("User"%in%colnames(expt)){iman$User=barcUser[iman$Barcode]}
@@ -178,7 +176,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 
 	# Print checks so people are sure they're using the correct data #
 	print(paste("Number of Barcodes :",length(unique(iman$Barcode))))
-	print(paste("Number of Plate Photos :",length(unique(iman$Image.Name))))
+	print(paste("Number of Plate Photos :",length(unique(iman$Filename))))
 	print(paste("Number of ORFs :",length(unique(iman$ORF))))
 	print(paste("Number of Culture Images :",length(iman$Image.Name)))
 	print("Treatments :")
@@ -193,7 +191,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	if("PI"%in%colnames(iman)){print("PI :"); print(unique(iman$PI))}
 	if("Condition"%in%colnames(iman)){print("Condition :"); print(unique(iman$Condition))}
 	if("Inoc"%in%colnames(iman)){print("Inoculation type :"); print(unique(iman$Inoc))}	
-	platesize<-max(as.numeric(iman$Row))*max(as.numeric(iman$Col))
+	platesize<-max(as.numeric(iman$Row))*max(as.numeric(iman$Column))
 	if (length(iman$Date.Time)%%platesize!=0){
 		warning("Number of cultures not multiple of plate size")}
 	print("Inoculation DateTimes:")
@@ -212,7 +210,7 @@ ROD=data.frame(
 	Area=iman$Area,
 	SpotRow=iman$Row,
 	TrimmedArea=iman$Trimmed,
-	SpotColumn=iman$Col,
+	SpotColumn=iman$Column,
 	Intensity=iman$Intensity,
 	EdgePixels=iman$Edge.Pixels,
 	Threshold=iman$Threshold,

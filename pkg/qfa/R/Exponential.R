@@ -88,13 +88,13 @@ lin.fit<-function(tim,growth,inocguess=1,xybounds=1,inits=list(),logTransform=FA
 #    antialias = c("default", "none", "gray", "subpixel"))
 #
 #query=read.delim("LIQGROWTH/ANALYSISOUT/LIQGROWTH_Raw.txt",header=TRUE,sep="\t",stringsAsFactors=FALSE)
-#dat=query[(query$Barcode=="K000092_030_001")&(query$Row==3)&(query$Col==4),]
+#dat=query[(query$Barcode=="K000092_030_001")&(query$Row==3)&(query$Column==4),]
 #lin.fit(dat$Expt.Time,dat$Growth,dplot=TRUE,asking=interact)
-#dat=query[(query$Barcode=="K000092_030_001")&(query$Row==3)&(query$Col==5),]
+#dat=query[(query$Barcode=="K000092_030_001")&(query$Row==3)&(query$Column==5),]
 #lin.fit(dat$Expt.Time,dat$Growth,dplot=TRUE,asking=interact)
-#dat=query[(query$Barcode=="K000092_030_001")&(query$Row==3)&(query$Col==6),]
+#dat=query[(query$Barcode=="K000092_030_001")&(query$Row==3)&(query$Column==6),]
 #lin.fit(dat$Expt.Time,dat$Growth,dplot=TRUE,asking=interact)
-#dat=query[(query$Barcode=="K000092_030_001")&(query$Row==3)&(query$Col==7),]
+#dat=query[(query$Barcode=="K000092_030_001")&(query$Row==3)&(query$Column==7),]
 #lin.fit(dat$Expt.Time,dat$Growth,dplot=TRUE,asking=interact)
 #dev.off()
 
