@@ -8,13 +8,15 @@
 ### Data should be sorted by ORF then by spot ID.
 SHM_preprocess<-function(a)
 {
-  IDuni<-unique(a$ID)
-  ORFuni=unique(a$ORF)
+  a=a[order(a$ORF,a$ID),]
+  ORFuni=unique(a$ORF) 
+  # Was a bug here, need to sort (added line above) to give same ordering as that returned from lapply...
+  # Result was that wrong number of reps were being analysed for many genotypes (Reps incorrect below).
 
   gene<-a$Gene[match(ORFuni,a$ORF)]
 
   N<-length(ORFuni)
-  M<-length(IDuni)
+  M<-length(unique(a$ID))
 
   Reps<-as.numeric(lapply(split(a,a$ORF),function(x) length(unique(x$ID))))
   Times<-as.numeric(lapply(split(a,a$ID),nrow))
@@ -58,11 +60,15 @@ SHM_preprocess<-function(a)
 
 ### Takes qfa Raw data (i.e. Colonyzer output with metadata) and qfaBayes SHM posterior
 ### Returns fitness object similar to the output from qfa.fit
+### Optionally draws growth curves and summary curves using mean of posterior parameter values
 SHM_makeQFAfits=function(dat,post,fname=NULL){
+	dat=dat[order(dat$ORF,dat$ID),]
 	# Values that vary for a given spot correspond to final timepoint
 	meta=subset(aggregate(dat,by=list(dat$ID),FUN=tail,1),select=c(-Group.1))
+	meta=meta[order(meta$ORF,meta$ID),]
 
 	num=by(dat,dat$ID,FUN=numericalfitness,4,4)
+	num=num[meta$ID]
 	numdf=data.frame(matrix(unlist(num),nrow=length(num),byrow=TRUE))
 	names(numdf)=names(num[[1]])
 
@@ -79,23 +85,27 @@ SHM_makeQFAfits=function(dat,post,fname=NULL){
 		pdf(fname)
 		tmax=max(dat$Expt.Time)
 		gmax=max(dat$Growth)
-		uniORF=unique(meta$ORF)
+		uniORF=sort(unique(meta$ORF))
 		for(orfno in seq_along(uniORF)){
 			df=dat[dat$ORF==uniORF[orfno],]
 			uniID=unique(df$ID)
-			plot(NULL,xlim=c(0,tmax),ylim=c(0,gmax),main=unique(df$Gene),xlab="Time (d)",ylab="Cell density (AU)")
-			for(IDno in seq_along(uniID)){
-				points(df$Expt.Time[df$ID==uniID[IDno]],df$Growth[df$ID==uniID[IDno]],type="b")
+			plot(NULL,xlim=c(0,tmax),ylim=c(0,gmax),main=paste(unique(df$Gene),unique(df$ORF)),xlab="Time (d)",ylab="Cell density (AU)")
+			for(ID in uniID){
+				points(df$Expt.Time[df$ID==ID],df$Growth[df$ID==ID],type="b",cex=0.5)
 				# Curve
-				K=meta$K[meta$ID==uniID[IDno]]
-				r=meta$r[meta$ID==uniID[IDno]]
-				g=meta$g[meta$ID==uniID[IDno]]
+				K=meta$K[meta$ID==ID]
+				r=meta$r[meta$ID==ID]
+				g=meta$g[meta$ID==ID]
 				curve((K*g*exp(r*x))/(K+g*(exp(r*x)-1)), from=0, to=tmax,col="black",add=TRUE)
 			}
-			K=exp(postmean[sprintf("K_o_l[%i]",orfno-1)])
-			r=exp(postmean[sprintf("r_o_l[%i]",orfno-1)])
-			g=exp(postmean["P"])
-			curve((K*g*exp(r*x))/(K+g*(exp(r*x)-1)), from=0, to=tmax,col="red",lwd=2,add=TRUE)
+			K_summ=exp(postmean[sprintf("K_o_l[%i]",orfno-1)])
+			r_summ=exp(postmean[sprintf("r_o_l[%i]",orfno-1)])
+			g_summ=exp(postmean["P"])
+			DT=dtl(K_summ,r_summ,g_summ,1,0)*24*60
+			curve((K_summ*g_summ*exp(r_summ*x))/(K_summ+g_summ*(exp(r_summ*x)-1)), from=0, to=tmax,col="red",lwd=3,add=TRUE)
+			# Add legend
+			legt1<-paste(c("K=","r=","g=","DT="),c(signif(K_summ,3),signif(r_summ,3),signif(g_summ,3),signif(DT,3)),sep="")
+			legend("topleft",legt1,box.lty=0,cex=1)
 		}
 		dev.off()
 	}
@@ -142,7 +152,7 @@ plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
  
   K_lm=tau_K_l=K_o_l=sigma_K_o=K_p=P=r_lm=tau_r_l=r_o_l=sigma_r_o=r_p=nu_cl=nu_p=sigma_nu=0
   aa<-samp
-  #K_lm[%i]
+  #K_lm[%i] # CORRECT
   t=1
   for (i in 1:M){
     j=i
@@ -151,7 +161,7 @@ plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
   }
 
   t=1
-  #tau_K_l[%i]
+  #tau_K_l[%i] # CORRECT.  ITERATES THROUGH i BUT TAKES jTH ELEMENT FROM samp, THEN INCREMENTS j
   j=M+1
   for (i in (2*M+3*N+8):(2*M+4*N+7)){
     tau_K_l[t]=mean(samp[,j]);t=t+1
@@ -159,7 +169,7 @@ plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
   }
 
   t=1
-  #"K_o_l[%i] 
+  #"K_o_l[%i]  # CORRECT.  ITERATES THROUGH i BUT TAKES jTH ELEMENT FROM samp, THEN INCREMENTS j
   j=M+N+1
   for (i in (M+1):(M+N)){
     K_o_l[t]=mean(samp[,j]);t=t+1
@@ -167,25 +177,25 @@ plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
   }
 
   t=1
-  #sigma_K_o ");
+  #sigma_K_o "); # CORRECT
   i=2*M+3*N+5
   j=M+2*N+1
   sigma_K_o=mean(samp[,j])
   
   t=1
-  #K_p ");
+  #K_p ");  # CORRECT
   i=M+1+N
   j=M+2*N+2
   K_p=mean(samp[,j])
 
   t=1
-  #"P
+  #"P # CORRECT
   i=(M+N+2)
   j=M+2*N+3
   P=mean(samp[,j])
 
   t=1
-  #r_lm[%i] 
+  #r_lm[%i] # CORRECT
   j=M+2*N+4
   for (i in (M+2*N+4):(2*M+2*N+3)){
     r_lm[t]=mean(samp[,j]);t=t+1
@@ -193,7 +203,7 @@ plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
   }
 
   t=1
-  #tau_r_l[%i] ",l);
+  #tau_r_l[%i] ",l); # CORRECT.  ITERATES THROUGH i BUT TAKES jTH ELEMENT FROM samp, THEN INCREMENTS j
   j=2*M+2*N+4
   for (i in (2*M+4*N+8):(2*M+5*N+7)){
     tau_r_l[t]=mean(samp[,j]);t=t+1
@@ -201,28 +211,27 @@ plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
   }
 
   t=1
-  #r_o_l[%i] ",l);
+  #r_o_l[%i] ",l); # CORRECT.  ITERATES THROUGH i BUT TAKES jTH ELEMENT FROM samp, THEN INCREMENTS j
   j=2*M+3*N+4
   for (i in (2*M+2*N+4):(2*M+3*N+3)){
     r_o_l[t]=mean(samp[,j]);t=t+1
     j=j+1
   }
-
-
+  
   t=1
-  #sigma_r_o ");
+  #sigma_r_o "); # CORRECT 
   i=2*M+3*N+7
   j=2*M+4*N+4
   sigma_r_o=mean(samp[,j]);
 
   t=1
-  #r_p ");
+  #r_p "); # CORRECT
   i=2*M+3*N+4
   j=2*M+4*N+5
   r_p=mean(samp[,j]);
 
   t=1
-  #"nu_cl[%i] ",l);
+  #"nu_cl[%i] ",l);  # CORRECT?  nu_l[0]
   j=2*M+4*N+6
   for (i in (M+N+3):(M+2*N+2)){
     nu_cl[t]=mean(samp[,j]);t=t+1
@@ -230,13 +239,13 @@ plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
   }
 
   t=1
-  #sigma_nu ");
+  #sigma_nu "); # CORRECT
   i=2*M+3*N+6
   j=2*M+5*N+6
   sigma_nu=mean(samp[,j]);
 
   t=1
-  #nu_p ");
+  #nu_p "); # CORRECT
   i=M+2*N+3
   j=2*M+5*N+7
   nu_p=mean(samp[,j]);
@@ -257,10 +266,9 @@ plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
   r_ij_tau<-exp(tau_r_l)
   
   if(!is.null(outfile)) pdf(outfile)
-
+  ylimmax=max(y,na.rm=TRUE)
+  xlimmax=max(x,na.rm=TRUE)
   for (i in 1:N){
-    ylimmax=max(y[,,i][!is.na(y[,,i])])
-    xlimmax=max(x[,,i][!is.na(y[,,i])])
     plot(-1,-1,main=paste(gene[i],"Repeat Curves"),xlab="Time (days)",
 	  ylab="Culture Density (AU)",xlim=c(0,xlimmax),ylim=c(0,ylimmax))
     for (j in 1:NoORF[i]){
@@ -272,14 +280,15 @@ plot_SHM_simple<-function(SHM_output,SHM,outfile=NULL){
     }
     K=exp(K_o_l[i])
     r=exp(r_o_l[i])
+	DT=dtl(K,r,P,1,0)*24*60
     curve((K*P*exp(r*x))/(K+P*(exp(r*x)-1)),lwd=3,col="red",add=T)
+	legt1<-paste(c("K=","r=","g=","DT="),c(signif(K,3),signif(r,3),signif(P,3),signif(DT,3)),sep="")
+	legend("topleft",legt1,box.lty=0,cex=1)
   }
   
   if(!is.null(outfile)) dev.off()
   
 }
-
-
 
 ### Creates univariate MDRxMDP fitnesses measures from SHM output (x2) for input to the IHM ###
 IHM_MDRxMDP_postpro<-function(SHM_a,SHM_output_a,SHM_b,SHM_output_b){
