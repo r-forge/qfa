@@ -61,11 +61,15 @@ SHM_preprocess<-function(a)
 ### Takes qfa Raw data (i.e. Colonyzer output with metadata) and qfaBayes SHM posterior
 ### Returns fitness object similar to the output from qfa.fit
 ### Optionally draws growth curves and summary curves using mean of posterior parameter values
-SHM_makeQFAfits=function(dat,post,fname=NULL){
+SHM_makeQFAfits=function(dat,post,priors=NULL,fname=NULL,fdefs=c("r","K","MDR","MDP","MDRMDP","nAUC","nSTP","maxslp","nr")){
 	dat=dat[order(dat$ORF,dat$ID),]
 	# Values that vary for a given spot correspond to final timepoint
 	meta=subset(aggregate(dat,by=list(dat$ID),FUN=tail,1),select=c(-Group.1))
 	meta=meta[order(meta$ORF,meta$ID),]
+	metanames=unique(meta[,c("ORF","Gene")])
+	lup=as.vector(metanames$Gene)
+	names(lup)=metanames$ORF
+	
 
 	num=by(dat,dat$ID,FUN=numericalfitness,4,4)
 	num=num[meta$ID]
@@ -78,14 +82,53 @@ SHM_makeQFAfits=function(dat,post,fname=NULL){
 	meta$r=exp(postmean[sprintf("r_lm[%i]",0:(dim(meta)[1]-1))])
 	meta$g=exp(postmean["P"])
 	meta$v=1
+	meta$SHM_index=0:(length(meta$K)-1)
 	meta=makeFitness(meta)
 	meta=cbind(meta,numdf)
 	
+	plotDists=function(paramSumm="K_o_l[%i]",param="K_lm[%i]",pname="K",prior_mu="K_mu",prior_eta="eta_K_p",dfids=c(),orfno=1,xmax=NULL,Nsamp=100000){
+			smmeta=meta[meta$ID%in%dfids,]
+			Dens=density(exp(post[,sprintf(paramSumm,orfno-1)]))
+			if(is.null(xmax)) xmax=1.25*max(meta[[pname]])
+			plot(Dens,xlim=c(0,xmax),col="red",lwd=3,type="n",main=paste(pname,unique(smmeta$Gene),sep="\n"))
+			if(!is.null(priors)){
+				mln=priors[prior_mu]; vln=1/priors[prior_eta]
+				PDist=exp(rnorm(Nsamp,mean=mln,sd=sqrt(vln)))
+				points(density(PDist),type="l",col="blue",lwd=2)
+			}
+			if(!is.null(param)){
+				SHMinds=smmeta$SHM_index
+				for(ind in SHMinds) points(density(exp(post[,sprintf(param,ind)])),type="l",col="grey")
+			}
+			points(Dens,type="l",lwd=4,col="red")
+	}
+	
 	if(!is.null(fname)){
-		pdf(fname)
+		pdf(fname, height=7, width=9.898)
 		tmax=max(dat$Expt.Time)
 		gmax=max(dat$Growth)
-		uniORF=sort(unique(meta$ORF))
+		uniORF=unique(meta$ORF)
+		for(f in fdefs){
+			# Biological replicates
+			bymedian = with(meta, reorder(Gene,-eval(parse(text=f)),median))
+			boxplot(eval(parse(text=f))~bymedian,data=meta,ylab=f,las=2,cex.axis=0.65,main="Replicate strains",col=c("pink","lightblue"))
+		}
+		# MCMC samples
+		plotMCMC=function(paramSumm="r_o_l[%i]",fdef="r"){
+			cols=sprintf(paramSumm,0:(length(uniORF)-1))
+			samps=post[,cols]
+			newcols=sprintf("val.%i",0:(length(uniORF)-1))
+			colnames(samps)=newcols
+			samps$sampno=1:dim(post)[1]
+			rpost=reshape(samps,varying=newcols,direction="long",idvar="sampno",timevar="ORFno")
+			rpost$ORF=uniORF[rpost$ORFno+1]
+			rpost$Gene=lup[rpost$ORF]
+			bymed = with(rpost, reorder(Gene,-val,median))
+			boxplot(val~bymed,data=rpost,ylab=fdef,las=2,cex.axis=0.65,main="MCMC samples",col=c("pink","lightblue"))
+		}
+		plotMCMC(paramSumm="r_o_l[%i]",fdef="r")
+		plotMCMC(paramSumm="K_o_l[%i]",fdef="K")
+
 		for(orfno in seq_along(uniORF)){
 			df=dat[dat$ORF==uniORF[orfno],]
 			uniID=unique(df$ID)
@@ -106,8 +149,14 @@ SHM_makeQFAfits=function(dat,post,fname=NULL){
 			# Add legend
 			legt1<-paste(c("K=","r=","g=","DT="),c(signif(K_summ,3),signif(r_summ,3),signif(g_summ,3),signif(DT,3)),sep="")
 			legend("topleft",legt1,box.lty=0,cex=1)
+			op=par(mfrow=c(2,2))
+			plotDists(paramSumm="K_o_l[%i]",param="K_lm[%i]",pname="K",prior_mu="K_mu",prior_eta="eta_K_p",dfids=df$ID,orfno=orfno)
+			plotDists(paramSumm="r_o_l[%i]",param="r_lm[%i]",pname="r",prior_mu="r_mu",prior_eta="eta_r_p",dfids=df$ID,orfno=orfno)
+			plotDists(paramSumm="P",param=NULL,pname="g",prior_mu="P_mu",prior_eta="eta_P",dfids=dat$ID[dat$ORF==uniORF[orfno]],orfno=orfno,xmax=0.001)
+			par(op)
 		}
 		dev.off()
+		
 	}
 	
 	return(meta)
