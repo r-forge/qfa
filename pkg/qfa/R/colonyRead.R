@@ -5,7 +5,7 @@
 ####
 
 colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF2gene="",libraries="LibraryDescriptions.csv",screenID=""){
-		# Are we reading all files in a folder?
+	# Are we reading all files in a folder?
 	if (length(strsplit(path,".")[[1]])>1){pathT=TRUE}else{pathT=FALSE}
 	# If no Colonyzer files specified, use all .dat in working directory
 	if (length(files)==0){fs<-list.files(path=path,pattern="\\.out$")} else {fs<-files}
@@ -130,20 +130,28 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	# Dump any images which are not in the experimental description file
 	iman=iman[iman$Barcode%in%expt$Barcode,]
 	smalliman=iman[(iman$Row==1)&(iman$Column==1),]
+	
+	# Make sure that there are not multiple copies of files present
+	counts=c(table(smalliman$Filename))
+	probs=counts[counts>1]
+	if(length(probs)>0){
+		print("ERROR: The following images were found in multiple locations")
+		print(names(probs))
+		print("You should probably look up their locations in the relevant .json file, decide which location is correct and delete the files at other locations before reading data in again")
+		return(NULL)
+	}
 
 	# Create a dictionary for filename->photo number
 	getPhotoNum<-function(filename){
 		# Get plate name from filename
-		if(nchar(iman$Filename[1])==31){
-			platename=substr(filename,1,11)
-		}else{
-			platename=substr(filename,1,15)
-		}
+		nlst=strsplit(filename,"_")[[1]]
+		lenlst=length(nlst)
+		platename=paste(nlst[1:(lenlst-2)],collapse="_")
 		# Filter iman data frame by filename
 		#tmp=na.omit(smalliman[(smalliman$Barcode==platename),])
 		tmp=smalliman[(smalliman$Barcode==platename),]
 		tmp=tmp[order(tmp$Filename),]
-		tmp$PhotoNum=1:length(tmp$Image.Name)
+		tmp$PhotoNum=1:length(tmp$Filename)
 		return(as.numeric(tmp$PhotoNum[tmp$Filename==filename]))
 	}
 
