@@ -69,9 +69,16 @@ SHM_makeQFAfits=function(dat,post,priors=NULL,fname=NULL,fdefs=c("r","K","MDR","
 	metanames=unique(meta[,c("ORF","Gene")])
 	lup=as.vector(metanames$Gene)
 	names(lup)=metanames$ORF
+	scrname=unique(meta$Screen.Name)
+	gvec=strsplit(scrname,"_")[[1]]
+	if(length(gvec)==2){
+		scrname=paste(scrname,"CDC13+")
+	}else{
+		scrname=paste(scrname,"cdc13-1")
+	}
+	bckgrnd=paste(scrname,unique(meta$Treatment))
 	
-
-	num=by(dat,dat$ID,FUN=numericalfitness,4,4)
+	num=by(dat,dat$ID,FUN=numericalfitness,0.85,0.85)
 	num=num[meta$ID]
 	numdf=data.frame(matrix(unlist(num),nrow=length(num),byrow=TRUE))
 	names(numdf)=names(num[[1]])
@@ -88,17 +95,18 @@ SHM_makeQFAfits=function(dat,post,priors=NULL,fname=NULL,fdefs=c("r","K","MDR","
 	
 	plotDists=function(paramSumm="K_o_l[%i]",param="K_lm[%i]",pname="K",prior_mu="K_mu",prior_eta="eta_K_p",dfids=c(),orfno=1,xmax=NULL,Nsamp=100000){
 			smmeta=meta[meta$ID%in%dfids,]
-			Dens=density(exp(post[,sprintf(paramSumm,orfno-1)]))
 			if(is.null(xmax)) xmax=1.25*max(meta[[pname]])
-			plot(Dens,xlim=c(0,xmax),col="red",lwd=3,type="n",main=paste(pname,unique(smmeta$Gene),sep="\n"))
+			summVals=exp(post[,sprintf(paramSumm,orfno-1)])
+			Dens=density(summVals,from=0,to=xmax)
+			plot(Dens,xlim=c(0,xmax),col="red",lwd=3,type="n",main=paste(bckgrnd,pname,unique(smmeta$Gene),sep="\n"))
 			if(!is.null(priors)){
 				mln=priors[prior_mu]; vln=1/priors[prior_eta]
 				PDist=exp(rnorm(Nsamp,mean=mln,sd=sqrt(vln)))
-				points(density(PDist),type="l",col="blue",lwd=2)
+				points(density(PDist,from=0,to=xmax),type="l",col="blue",lwd=2)
 			}
 			if(!is.null(param)){
 				SHMinds=smmeta$SHM_index
-				for(ind in SHMinds) points(density(exp(post[,sprintf(param,ind)])),type="l",col="grey")
+				for(ind in SHMinds) points(density(exp(post[,sprintf(param,ind)]),from=0,to=xmax),type="l",col="grey")
 			}
 			points(Dens,type="l",lwd=4,col="red")
 	}
@@ -111,7 +119,7 @@ SHM_makeQFAfits=function(dat,post,priors=NULL,fname=NULL,fdefs=c("r","K","MDR","
 		for(f in fdefs){
 			# Biological replicates
 			bymedian = with(meta, reorder(Gene,-eval(parse(text=f)),median))
-			boxplot(eval(parse(text=f))~bymedian,data=meta,ylab=f,las=2,cex.axis=0.65,main="Replicate strains",col=c("pink","lightblue"))
+			boxplot(eval(parse(text=f))~bymedian,data=meta,ylab=f,las=2,cex.axis=0.45,cex=0.25,main=paste(bckgrnd,"replicate strains"),col=c("pink","lightblue"))
 		}
 		# MCMC samples
 		plotMCMC=function(paramSumm="r_o_l[%i]",fdef="r"){
@@ -124,7 +132,7 @@ SHM_makeQFAfits=function(dat,post,priors=NULL,fname=NULL,fdefs=c("r","K","MDR","
 			rpost$ORF=uniORF[rpost$ORFno+1]
 			rpost$Gene=lup[rpost$ORF]
 			bymed = with(rpost, reorder(Gene,-val,median))
-			boxplot(val~bymed,data=rpost,ylab=fdef,las=2,cex.axis=0.65,main="MCMC samples",col=c("pink","lightblue"))
+			boxplot(val~bymed,data=rpost,ylab=fdef,las=2,cex.axis=0.45,cex=0.25,main=paste(bckgrnd,"MCMC summary samples"),col=c("pink","lightblue"))
 		}
 		plotMCMC(paramSumm="r_o_l[%i]",fdef="r")
 		plotMCMC(paramSumm="K_o_l[%i]",fdef="K")
@@ -139,7 +147,7 @@ SHM_makeQFAfits=function(dat,post,priors=NULL,fname=NULL,fdefs=c("r","K","MDR","
 				K=meta$K[meta$ID==ID]
 				r=meta$r[meta$ID==ID]
 				g=meta$g[meta$ID==ID]
-				curve((K*g*exp(r*x))/(K+g*(exp(r*x)-1)), from=0, to=tmax,col="black",add=TRUE)
+				curve((K*g*exp(r*x))/(K+g*(exp(r*x)-1)), from=0, to=tmax,col="blue",add=TRUE)
 			}
 			K_summ=exp(postmean[sprintf("K_o_l[%i]",orfno-1)])
 			r_summ=exp(postmean[sprintf("r_o_l[%i]",orfno-1)])
@@ -907,7 +915,7 @@ plot_JHM_simple<-function(JHM_output,JHM){
 
 ### Gives a trace plot for one of every parameter type to check convergence qfaBayes output ###
 # Generalised so same function applies to all models - CONOR.
-visual_convergence_simple_check<-function(qfaBayes_output){
+visual_convergence_simple_check<-function(qfaBayes_output,verbose=TRUE){
 	zeroes=grep("\\[0\\]",colnames(qfaBayes_output))
 	unindexed=grep("\\[",colnames(qfaBayes_output),invert=TRUE)
 	namelist=colnames(qfaBayes_output)[c(zeroes,unindexed)]
@@ -920,8 +928,10 @@ visual_convergence_simple_check<-function(qfaBayes_output){
 		eff=effectiveSize(particles)
 		hpval=formatC(heidel_welch[3],3)
 		effval=formatC(eff,3)
-		print(pname)
-		print(heidel_welch)
+		if(verbose){
+			print(pname)
+			print(heidel_welch)
+		}
 		plot(particles,type="l",ylab=pname,xlab="iter",main=paste("Heidel-Welch p-value:",hpval,"ESS:",effval))
 		if(var(particles)>0){
 			acf(particles,main=pname)
