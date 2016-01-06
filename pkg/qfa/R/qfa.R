@@ -1054,7 +1054,7 @@ rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify,densityCol="Growth",c
 }
 
 ### Converts row no. to position vector ###	
-index2pos<-function(index,dbc) c(dbc[index,'Row'],dbc[index,'Column'])
+index2pos<-function(index,dbc) c(dbc[[index,'Row']],dbc[[index,'Column']])
 
 ### Do individual timecourse plot given parameters & data ###
 logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0,logify=FALSE,densityCol="Growth",curves=TRUE,ptype="p",tshift=0){
