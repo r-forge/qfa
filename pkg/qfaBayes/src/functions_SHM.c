@@ -3,11 +3,11 @@
 #include "print_SHM.h"
 
 /*trun*/
+
 double trun_const_low(double x,double m, double l)
 {
   return(1-0.5-(  (pow(3*l,0.5))*(x-m)/(((l*pow(x-m,2))+3)) +atan((pow(l/3,0.5))*(x-m)))/M_PI);
 }
-
 
 /*Logistic Growth*/
 
@@ -46,13 +46,17 @@ double MCMC_base(struct_data *D,struct_para *D_para,struct_priors *D_priors,doub
 	return(para); 
 	}
 
-
 double MCMC_base_truncate_low(double truncate, struct_data *D,struct_para *D_para,struct_priors *D_priors,double *accept,double *h,double para,double (*foo)(struct struct_data *D,struct struct_para *D_para,struct struct_priors *D_priors,double,int,int),int l, int m){
   double logu,logaprob,can;
-   can=rnorm(para,*h); /*can=para+gsl_ran_gaussian(RNG,*h);*/
-    if(can<=(truncate)){
-      can=para;
-    }
+   //can=rnorm(para,*h); /*can=para+gsl_ran_gaussian(RNG,*h);*/
+   // if(can<=(truncate)){
+   //   can=para;
+   // }
+
+   can=truncate-1.0;
+   while(can<=truncate){
+	 can=rnorm(para,*h);  
+   }
   logaprob=(*foo)(D,D_para,D_priors,can,l,m)-(*foo)(D,D_para,D_priors,para,l,m);
 
 	logu=log(1-runif(0,1));  /*logu=log(1-gsl_rng_uniform(RNG));*/
@@ -62,18 +66,20 @@ double MCMC_base_truncate_low(double truncate, struct_data *D,struct_para *D_par
 
 double MCMC_base_truncate_high(double truncate, struct_data *D,struct_para *D_para,struct_priors *D_priors,double *accept,double *h,double para,double (*foo)(struct struct_data *D,struct struct_para *D_para,struct struct_priors *D_priors,double,int,int),int l, int m){
   double logu,logaprob,can;
-   can=rnorm(para,*h); 
-    if(can>=(truncate)){
-      can=para;
-    }
+   //can=rnorm(para,*h); 
+   // if(can>=(truncate)){
+   //   can=para;
+   // }
+   can=truncate+1.0;
+   while(can>=truncate){
+	 can=rnorm(para,*h); 
+   }
   logaprob=(*foo)(D,D_para,D_priors,can,l,m)-(*foo)(D,D_para,D_priors,para,l,m);
 
   logu=log(1-runif(0,1)); 
   if (logaprob>logu){para=can;*accept=*accept+1;}
   return(para);
 }
-
-
 
 double MCMC_K_lm(struct_data *D,struct_para *D_para,struct_priors *D_priors,double para,int l, int m){
 	double density,F,SUM=0;
