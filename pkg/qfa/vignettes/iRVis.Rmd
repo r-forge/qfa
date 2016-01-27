@@ -218,3 +218,5 @@ visAll(buildGO)
 The demo datasets from Addinall et al. 2011, included in the qfa package, will always be present for comparison.
 
 You can <a href="javascript:window.print()">print</a> this document to have a physical copy to hand while using iRVis.
+
+
