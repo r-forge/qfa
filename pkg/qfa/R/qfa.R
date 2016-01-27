@@ -1000,11 +1000,11 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 
 	print(paste("Plotting for",length(results[,1]),"colonies"))
 	# Produce PDF
-	colmin<-min(results$Column); rowmin<-min(results$Column)
-	colmax<-max(results$Column); rowmax<-max(results$Row)
+	colmin<-min(results$Col); rowmin<-min(results$Col)
+	colmax<-max(results$Col); rowmax<-max(results$Row)
 	pdf(file,4*(colmax-colmin+1),4*(rowmax-rowmin+1))
-	if(rowmax*colmax==96) {cexfctr=1.0;marge=c(2,1,2,0.75)} 
-	if(rowmax*colmax>96) {cexfctr<-(rowmax*colmax)/384; marge=c(2,1,2,0.75)}
+	cexfctr<-(rowmax*colmax)/384; marge=c(2,1,2,0.75)
+	if(rowmax*colmax==96) {cexfctr=1.0;marge=c(2,1,2,0.75)}  
 	if(rowmax*colmax>384) {cexfctr<-(rowmax*colmax)/1536; marge=c(2.0,1.5,2.0,1.5)}
 	#cexfctr=1.0
 	bcount<-0; nbc<-length(barcodes)
@@ -1022,13 +1022,24 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 		# Find number of rows and columns on this plate
 		#nrow<-max(rbc$Row)-min(rbc$Row)+1; ncol<-max(rbc$Column)-min(rbc$Column)+1
 		nrow<-rowmax-rowmin+1; ncol=colmax-colmin+1
+		#nrow=length(unique(rbc$Row)); ncol=length(unique(rbc$Col))
 		# Find max growth to set y-axis for this plate
 		if (maxg==0) maxg=max(dbc$Growth)
 		# Set graphics parameters for each plate
 		op<-par(mfrow=c(nrow,ncol),oma=c(13,15,22,1),
 		mar=marge,mgp=c(3,1,0),cex=cexfctr)
 		## Plot for each row of results for that bcode ##
-		z<-apply(rbc,1,rowplot,dbc,inoctime,maxg,fmt,maxt,logify,densityCol=densityCol,curves=curves,ptype=ptype)
+		for(rno in rowmin:rowmax){
+		  for(cno in colmin:colmax){
+				params=rbc[(rbc$Row==rno)&(rbc$Col==cno),]
+				if(nrow(params)>0){
+					rowplot(params,dbc,inoctime,maxg,fmt,maxt,logify,densityCol=densityCol,curves=curves,ptype=ptype)
+				}else{
+					frame()
+				}
+			}
+		}
+		#z<-apply(rbc,1,rowplot,dbc,inoctime,maxg,fmt,maxt,logify,densityCol=densityCol,curves=curves,ptype=ptype)
 		# Title for the plate
 		maintit<-paste(rbc$Barcode[1],"Treatment:",rbc$Treatment[1],
 		"Medium:",rbc$Medium[1],"Plate:",rbc$MasterPlate.Number[1],sep=" ")
