@@ -54,11 +54,11 @@ makeVisTool=function(){
 
 		globs$orftargs=globs$dat$ORF[globs$targs]
 		globs$dat=globs$datlist[[datno]]$res
-		globs$targs=match(globs$orftargs,globs$dat$ORF)
+		globs$targs=match(toupper(globs$orftargs),toupper(globs$dat$ORF))
 		epiplot(globs$dat,0.05,mmain=maintitle,xxlab=xlab,yylab=ylab,ymin=globs$fymin[datno],ymax=globs$fymax[datno],xmin=globs$fxmin[datno],xmax=globs$fxmax[datno],quantreg=globs$quantreg,...)
 		if(globs$compno>0){
 			lst=strsplit(globs$GROUPS$GroupORFs[globs$compno]," ")[[1]]
-			dcomp=globs$dat[globs$dat$ORF%in%lst,]
+			dcomp=globs$dat[toupper(globs$dat$ORF)%in%toupper(lst),]
 			if(length(dcomp$ORF)>0){
 				points(dcomp$ControlFitnessSummary,dcomp$QueryFitnessSummary,col="purple",pch=16,cex=1.5)
 				text(dcomp$ControlFitnessSummary,dcomp$QueryFitnessSummary,dcomp$Gene,pos=sample(1:4,length(dcomp$Gene),replace=TRUE),cex=1.0)
@@ -737,14 +737,14 @@ getText=function(ORFGENE){
 	orfs=c()
 	genes=c()
 	for(gene in usergenes){
-		if (gene%in%ORFGENE$ORF) {
+		if (gene%in%toupper(ORFGENE$ORF)) {
 			orfs=c(orfs,gene)
-			genes=c(genes,ORFGENE$Gene[ORFGENE$ORF==gene])			
+			genes=c(genes,ORFGENE$Gene[toupper(ORFGENE$ORF)==gene])			
 		} else {
-			if(gene%in%ORFGENE$Gene){
+			if(gene%in%toupper(ORFGENE$Gene)){
 				# Standard gene names are ambiguous
 				# In this scenario, they do not unambiguously specify species (e.g. RIF1 in cerevisiae and pombe)
-				orfs=c(orfs,ORFGENE$ORF[ORFGENE$Gene==gene])
+				orfs=c(orfs,ORFGENE$ORF[toupper(ORFGENE$Gene)==gene])
 				genes=c(genes,gene)
 			}
 		}
