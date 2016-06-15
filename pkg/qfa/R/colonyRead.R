@@ -116,12 +116,12 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 		iman=do.call(rbind, lapply(fs, read.delim,header=hasHeader,sep="\t",stringsAsFactors=FALSE))
 	}
 	if(!hasHeader){
-		colnames(iman)=c("Filename","Row","Column","xOff","yOff","Area","Trimmed","Threshold","Intensity","EdgePixels","redMean","greenMean","blueMean","redMeanBack","greenMeanBack","blueMeanBack","Perimeter","dx","dy")
-		iman$x=iman$xOff+iman$dx/2.0
-		iman$y=iman$yOff+iman$dy/2.0
-		iman$Diameter=(iman$dx+iman$dy)/2.0
-		iman$Intensity=iman$Intensity/(iman$dx*iman$dy*255)
-		iman$Trimmed=iman$Trimmed/(iman$dx*iman$dy*255)
+		colnames(iman)=c("Filename","Row","Column","X.Offset","Y.Offset","Area","Trimmed","Threshold","Intensity","Edge.Pixels","redMean","greenMean","blueMean","redMeanBack","greenMeanBack","blueMeanBack","Edge.Length","Tile.Dimensions.X","Tile.Dimensions.Y")
+		iman$x=iman$X.Offset+iman$Tile.Dimensions.X/2.0
+		iman$y=iman$Y.Offset+iman$Tile.Dimensions.Y/2.0
+		iman$Diameter=(iman$Tile.Dimensions.X+iman$Tile.Dimensions.Y)/2.0
+		if(max(iman$Intensity)>1.0) iman$Intensity=iman$Intensity/(iman$Tile.Dimensions.X*iman$Tile.Dimensions.Y*255)
+		if(max(iman$Trimmed)>1.0) iman$Trimmed=iman$Trimmed/(iman$Tile.Dimensions.X*iman$Tile.Dimensions.Y*255)
 	}
 
 	# Sometimes users include multiple copies of the same image analysis files (e.g. in concatenated collection & separately)

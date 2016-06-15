@@ -1020,7 +1020,7 @@ colony.info<-function(position,bcdata){
 }
 
 ##### Make PDFs #####
-qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.plates=c(),treatments=c(),screen.names=c(),screenIDs=c(),maxg=0,maxt=0,logify=FALSE,densityCol="Growth",curves=TRUE,ylabel="Cell density (AU)",ptype="p",ming=0){
+qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.plates=c(),treatments=c(),screen.names=c(),screenIDs=c(),maxg=0,maxt=0,logify=FALSE,densityCol="Growth",curves=TRUE,ylabel="Cell density (AU)",ptype="p",ming=0.00001){
 	if(!"Column"%in%colnames(d)) d$Column=d$Col
 
 	# Sort the data to be plotted sensibly, allowing easy comparison between repeats
@@ -1096,7 +1096,7 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 }
 
 #### Plot a colony's timecourse from a row of the results #####	
-rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify,densityCol="Growth",curves=TRUE,ptype="p",ming=0){
+rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify,densityCol="Growth",curves=TRUE,ptype="p",ming=0.00001){
 	row<-as.numeric(resrow['Row']); col<-as.numeric(resrow['Col'])
 	if ('Gene'%in%names(resrow)){gene<-resrow['Gene']} else {gene<-resrow['ORF']}
 	# Get data for that colony
@@ -1112,7 +1112,7 @@ rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify,densityCol="Growth",c
 index2pos<-function(index,dbc) c(dbc[[index,'Row']],dbc[[index,'Column']])
 
 ### Do individual timecourse plot given parameters & data ###
-logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0,logify=FALSE,densityCol="Growth",curves=TRUE,ptype="p",tshift=0,logmin=0.001){
+logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0,logify=FALSE,densityCol="Growth",curves=TRUE,ptype="p",tshift=0,logmin=0.00001){
 	if(logify) {
 	  ylog="y"
 	  ylim=c(logmin,1.2*maxg)
@@ -1120,7 +1120,7 @@ logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0
 	  ylog=""
 	  ylim=c(0,1.2*maxg)
 	}
-	plot(NULL,type="n",xlim=c(0,maxt),ylim=c(logmin,1.2*maxg),log=ylog,xlab="",ylab="",main=gene,frame.plot=0,cex.main=3*scaleT,cex.axis=1*scaleT)
+	plot(NULL,type="n",xlim=c(0,maxt),ylim=ylim,log=ylog,xlab="",ylab="",main=gene,frame.plot=0,cex.main=3*scaleT,cex.axis=1*scaleT)
 	# Add data points
 	points(tim,growth,col="red",cex=1.25*scaleT,pch=4,lwd=2,type=ptype,xlim=c(0,maxt),ylim=c(logmin,1.2*maxg))
 	if(curves){
