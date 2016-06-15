@@ -450,6 +450,14 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		clusterCall(cl,function() library(qfa))
 	}else{cl=NULL}
 	
+	# Rename columns if necessary
+	if(!"Tile.Dimensions.X"%in%colnames(d)) d[,"Tile.Dimensions.X"]=d$Diameter
+	if(!"Tile.Dimensions.Y"%in%colnames(d)) d[,"Tile.Dimensions.Y"]=d$Diameter
+	if(!"X.Offset"%in%colnames(d)) d[,"X.Offset"]=round(d$x-d$Diameter/2.0)
+	if(!"Y.Offset"%in%colnames(d)) d[,"Y.Offset"]=round(d$y-d$Diameter/2.0)
+	if(!"Edge.length"%in%colnames(d)) d[,"Edge.length"]=d$Perimeter
+	if(!"Edge.Pixels"%in%colnames(d)) d[,"Edge.Pixels"]=d$Perimeter
+	
 	# Vector of barcodes
 	barcodes<-unique(d$Barcode); nbc<-length(barcodes)
 	# Get big data frame ready for results
@@ -479,8 +487,29 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 		rows<-sapply(positions,rcget,"row")
 		cols<-sapply(positions,rcget,"col")
 		# Bind Data frame of barcode results to overall results
-		barcMetadata<-data.frame(Barcode=as.character(info$Barcode),Row=rows,Column=cols,Col=cols,
-		ScreenID=as.character(info$ScreenID),Treatment=as.character(info$Treatments),Medium=as.character(info$Medium),ORF=as.character(info$ORF),Screen.Name=as.character(info$Screen.Name),Library.Name=as.character(info$Library.Name),MasterPlate.Number=as.numeric(info$MasterPlate.Number),Timeseries.order=as.numeric(info$Timeseries.order),Inoc.Time=inoctime,TileX=as.numeric(info$Tile.Dimensions.X),TileY=as.numeric(info$Tile.Dimensions.Y),XOffset=as.numeric(info$X.Offset),YOffset=as.numeric(info$Y.Offset),Threshold=as.numeric(info$Threshold),EdgeLength=as.numeric(info$Edge.length),EdgePixels=as.numeric(info$Edge.Pixels),RepQuad=as.numeric(info$RepQuad),stringsAsFactors=FALSE)
+		barcMetadata<-data.frame(
+		Barcode=as.character(info$Barcode),
+		Row=rows,
+		Column=cols,
+		Col=cols,
+		ScreenID=as.character(info$ScreenID),
+		Treatment=as.character(info$Treatments),
+		Medium=as.character(info$Medium),
+		ORF=as.character(info$ORF),
+		Screen.Name=as.character(info$Screen.Name),
+		Library.Name=as.character(info$Library.Name),
+		MasterPlate.Number=as.numeric(info$MasterPlate.Number),
+		Timeseries.order=as.numeric(info$Timeseries.order),
+		Inoc.Time=inoctime,
+		TileX=as.numeric(info$Tile.Dimensions.X),
+		TileY=as.numeric(info$Tile.Dimensions.Y),
+		XOffset=as.numeric(info$X.Offset),
+		YOffset=as.numeric(info$Y.Offset),
+		Threshold=as.numeric(info$Threshold),
+		EdgeLength=as.numeric(info$Edge.length),
+		EdgePixels=as.numeric(info$Edge.Pixels),
+		RepQuad=as.numeric(info$RepQuad),
+		stringsAsFactors=FALSE)
 		barcFitness<-data.frame(bcfit)
 		barcResults=cbind(barcMetadata,barcFitness)
 		if("Client"%in%colnames(info)){barcResults$Client=as.character(info$Client)}
