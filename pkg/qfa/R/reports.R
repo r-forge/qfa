@@ -196,7 +196,7 @@ plateBoxplots<-function(dataframe,outputfile,fitmax=185,groupcol="Treatment"){
 			plateNums=unique(as.numeric(as.character(dt$MasterPlate.Number)))
 			plateNums=as.character(plateNums)
 			dt$MasterPlate.Number<-factor(dt$MasterPlate.Number,levels=plateNums)
-			boxplot(dt$fit~dt$MasterPlate.Number,notch=TRUE,xlab="Plate Number",ylab="Fitness",col=rainbow(23),main=paste(grp,scr),ylim=c(0,fitmax),cex.axis=1)
+			if(length(dt$fit)>0) boxplot(dt$fit~dt$MasterPlate.Number,notch=TRUE,xlab="Plate Number",ylab="Fitness",col=rainbow(23),main=paste(grp,scr),ylim=c(0,fitmax),cex.axis=1)
 		}
 	}
 	fitdef=findFit(dataframe)
