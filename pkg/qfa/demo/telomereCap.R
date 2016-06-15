@@ -28,6 +28,10 @@ query=query[(query$Library.Name=="BooneSDLV3")&(query$RepQuad==1),]
 control=control[(control$Row!=1)&(control$Col!=1)&(control$Row!=16)&(control$Col!=24),]
 query=query[(query$Row!=1)&(query$Col!=1)&(query$Row!=16)&(query$Col!=24),]
 
+# Define which measure of cell density to use
+control$Growth=control$Intensity
+query$Growth=query$Intensity
+
 # Fit generalised logistic model to observed data
 control.fit<-qfa.fit(control,inocguess=1.4e-05,ORF2gene="ORF2GENE.txt",fixG=TRUE,detectThresh=0.001,AUCLim=4,STP=4)
 query.fit<-qfa.fit(query,inocguess=1.4e-05,ORF2gene="ORF2GENE.txt",fixG=TRUE,detectThresh=0.001,AUCLim=4,STP=4)
@@ -54,8 +58,8 @@ qresults=fitnessReport("27","URA3_Fitnesses.txt",query.fit)
 cresults=fitnessReport("27","cdc13-1_Fitnesses.txt",control.fit)
 
 # Epistasis analysis
-epi<-qfa.epi(query.fit,control.fit,0.05,plot=FALSE,wctest=TRUE)
+epi<-qfa.epi(query.fit,control.fit,0.05,plot=FALSE,wctest=TRUE,reg="splitreg")
 pdf("FitnessPlotGIS.pdf")
-qfa.epiplot(epi$Results,0.05,xxlab="URA3D Fitness",yylab="cdc13-1 Fitness",mmain="Median fitness, MDR*MDP (Wilcoxon test for significance) at 27C",fmax=175)
+qfa.epiplot(epi,0.05,xxlab="URA3D Fitness",yylab="cdc13-1 Fitness",mmain="Median fitness, MDR*MDP (Wilcoxon test for significance) at 27C",fmax=175)
 dev.off()
 report.epi(epi$Results,file="EpistasisReport.txt")
