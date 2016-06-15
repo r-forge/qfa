@@ -107,12 +107,21 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 
 	# Read in the image analysis output
 	# Have to define colClasses here since from R3.1-10, automatic conversion for string representation of numbers
+	if(grepl("\\.out",fs[1])){hasHeader=TRUE}else{hasHeader=FALSE}
 	if("data.table" %in% rownames(installed.packages())){
 		library(data.table) # Faster version of read.delim...
-		iman=do.call(rbind, lapply(fs, data.table::fread,header=TRUE,sep="\t",stringsAsFactors=FALSE))
+		iman=do.call(rbind, lapply(fs, data.table::fread,header=hasHeader,sep="\t",stringsAsFactors=FALSE))
 		iman=data.frame(iman)
 	}else{
-		iman=do.call(rbind, lapply(fs, read.delim,header=TRUE,sep="\t",stringsAsFactors=FALSE))
+		iman=do.call(rbind, lapply(fs, read.delim,header=hasHeader,sep="\t",stringsAsFactors=FALSE))
+	}
+	if(!hasHeader){
+		colnames(iman)=c("Filename","Row","Column","xOff","yOff","Area","Trimmed","Threshold","Intensity","EdgePixels","redMean","greenMean","blueMean","redMeanBack","greenMeanBack","blueMeanBack","Perimeter","dx","dy")
+		iman$x=iman$xOff+iman$dx/2.0
+		iman$y=iman$yOff+iman$dy/2.0
+		iman$Diameter=(iman$dx+iman$dy)/2.0
+		iman$Intensity=iman$Intensity/(iman$dx*iman$dy*255)
+		iman$Trimmed=iman$Trimmed/(iman$dx*iman$dy*255)
 	}
 
 	# Sometimes users include multiple copies of the same image analysis files (e.g. in concatenated collection & separately)
@@ -120,10 +129,10 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 
 	# Create extra columns
 	if(nchar(iman$Filename[1])==31){
-		#iman$Barcode=substr(iman$Image.Name,1,11)
+		if(!"Barcode"%in%colnames(iman)) iman$Barcode=substr(iman$Filename,1,11)
 		iman$Date.Time=substr(iman$Filename,13,31)
 	}else{
-		#iman$Barcode=substr(iman$Image.Name,1,15)
+		if(!"Barcode"%in%colnames(iman)) iman$Barcode=substr(iman$Filename,1,15)
 		iman$Date.Time=substr(iman$Filename,17,35)
 	}
 
@@ -141,12 +150,17 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 		return(NULL)
 	}
 
+	fmt="%Y-%m-%d_%H-%M-%S"
+
 	# Create a dictionary for filename->photo number
-	getPhotoNum<-function(filename){
+	getPhotoNum<-function(filename,fmt="%Y-%m-%d_%H-%M-%S"){
 		# Get plate name from filename
-		nlst=strsplit(filename,"_")[[1]]
-		lenlst=length(nlst)
-		platename=paste(nlst[1:(lenlst-2)],collapse="_")
+		#nlst=strsplit(filename,"_")[[1]]
+		#lenlst=length(nlst)
+		#platename=paste(nlst[1:(lenlst-2)],collapse="_")
+		lenFname=nchar(filename)
+		lenDate=nchar(format(Sys.time(), fmt))
+		platename=substring(filename,1,lenFname-lenDate-1)
 		# Filter iman data frame by filename
 		#tmp=na.omit(smalliman[(smalliman$Barcode==platename),])
 		tmp=smalliman[(smalliman$Barcode==platename),]
@@ -156,7 +170,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	}
 
 	fnames=unique(iman$Filename)
-	photoNum=sapply(fnames,getPhotoNum)
+	photoNum=sapply(fnames,getPhotoNum,fmt)
 	names(photoNum)=fnames
 
 	iman$Inoc.Time=barcStart[iman$Barcode]
@@ -177,7 +191,6 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	if("Condition"%in%colnames(expt)){iman$Condition=barcCond[iman$Barcode]}
 	if("Inoc"%in%colnames(expt)){iman$Inoc=barcInoc[iman$Barcode]}
 
-	fmt="%Y-%m-%d_%H-%M-%S"
 	t0<-as.POSIXlt(as.character(iman$Inoc.Time),format=fmt)
 	t1<-as.POSIXlt(as.character(iman$Date.Time),format=fmt)
 	iman$Expt.Time=as.numeric(difftime(t1,t0,units="days"))	
@@ -186,7 +199,7 @@ colonyzer.read<-function(path=".",files=c(),experiment="ExptDescription.txt",ORF
 	print(paste("Number of Barcodes :",length(unique(iman$Barcode))))
 	print(paste("Number of Plate Photos :",length(unique(iman$Filename))))
 	print(paste("Number of ORFs :",length(unique(iman$ORF))))
-	print(paste("Number of Culture Images :",length(iman$Image.Name)))
+	print(paste("Number of Culture Images :",length(iman$Filename)))
 	print("Treatments :")
 	print(unique(iman$Treatments))
 	print("Media:")
