@@ -94,7 +94,7 @@ summarise <- function(df,fdef="fit",summarystat=mean){
 
 ################################################## Epistasis Function ###########################################################
 qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
-	GISthresh=0.0,plot=TRUE,modcheck=FALSE,wctest=TRUE,bootstrap=NULL,Nboot=5000,subSamp=Inf,quantreg=FALSE,fdef="fit"){
+	GISthresh=0.0,plot=TRUE,modcheck=FALSE,wctest=TRUE,bootstrap=NULL,Nboot=5000,subSamp=Inf,reg="lmreg",fdef="fit"){
 	###### Get ORF median fitnesses for control & double #######
 	print("Calculating median (or mean) fitness for each ORF")
 	## LIK ##
@@ -134,7 +134,7 @@ qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 	}
 	
 	### Fit genetic independence model ###
-	m<-lm.epi(dFms,cFms,modcheck,quantreg)
+	m<-lm.epi(dFms,cFms,modcheck,reg=reg)
 	print(paste("Ratio of background mutant fitness to wildtype fitness =",round(m,4)))
 	###### Estimate probability of interaction #######
 	print("Calculating interaction probabilities")
@@ -201,22 +201,23 @@ qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 	if (plot==TRUE){qfa.epiplot(results,qthresh,m,quantreg=quantreg)}
 	final<-list(Results=results,
 	Enhancers=gethits(results,qthresh,type="E",GISthresh=GISthresh),
-	Suppressors=gethits(results,qthresh,type="S",GISthresh=GISthresh))
+	Suppressors=gethits(results,qthresh,type="S",GISthresh=GISthresh),
+	slope=m,
+	reg=reg)
 	if(!is.null(bootstrap)) final$GISsummary=GISlist
 	return(final)
 }
 
-
 ############### Epistasis Functions ##################
 # Makes epistasis plot for a given fdr level #
-qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot",fmax=0,quantreg=FALSE){
-	enhancers<-gethits(results,qthresh,type="E")
-	suppressors<-gethits(results,qthresh,type="S")
-	others<-results[(!results$ORF%in%enhancers$ORF)&(!results$ORF%in%suppressors$ORF),]
+qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot",fmax=0){
+	enhancers<-gethits(results$Results,qthresh,type="E")
+	suppressors<-gethits(results$Results,qthresh,type="S")
+	others<-results$Results[(!results$Results$ORF%in%enhancers$ORF)&(!results$Results$ORF%in%suppressors$ORF),]
 	if (fmax==0){
 		# Get plot parameters
-		ymax=1.1*max(results$QueryFitnessSummary); ymin=0
-		xmax=1.1*max(results$ControlFitnessSummary); xmin=0
+		ymax=1.1*max(results$Results$QueryFitnessSummary); ymin=0
+		xmax=1.1*max(results$Results$ControlFitnessSummary); xmin=0
 	}else{
 		ymin=0;ymax=fmax
 		xmin=0;xmax=fmax
@@ -226,13 +227,13 @@ qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Co
 	col=8,pch=19,cex=0.5)
 	# Add line for genetic independence
 	if (fitratio!=FALSE){abline(0,fitratio,lwd=2,col=8)} else {
-		slope=lm.epi(results$QueryFitnessSummary,results$ControlFitnessSummary,modcheck=FALSE,quantreg=quantreg)
+		slope=results$slope
 		abline(0,slope,lwd=2,col=8)}
 	# Add 1:1 fitness line
 	abline(0,1,lwd=2,lty=4,col=8)
 	# Add reference ORF fitnesses lines
 	if (ref.orf!=FALSE){
-		reforf<-results[results$ORF==ref.orf,]
+		reforf<-results$Results[results$Results$ORF==ref.orf,]
 		abline(v=reforf$ControlFitnessSummary,col="lightblue",lwd=2)
 		abline(h=reforf$QueryFitnessSummary,col="lightblue",lwd=2)}
 	# Add points for non-suppressors & non-enhancers
@@ -247,7 +248,7 @@ qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Co
 		points(suppressors$ControlFitnessSummary,suppressors$QueryFitnessSummary,col='red',pch=19,cex=0.5)
 		text(suppressors$ControlFitnessSummary,suppressors$QueryFitnessSummary,suppressors$Gene,col=1,pos=4,offset=0.1,cex=0.4)
 	}
-	Corr=signif(cor(results$QueryFitnessSummary,results$ControlFitnessSummary),3)
+	Corr=signif(cor(results$Results$QueryFitnessSummary,results$Results$ControlFitnessSummary),3)
 	Slope=signif(slope,3)
 	legend("topleft",c(paste("Correlation: ",Corr),paste("Slope: ",Slope)),bty = "n")
 }
@@ -267,22 +268,64 @@ orfstat<-function(orf,fitframe,fitfunct){
 	return(fitfunct(orfd$K,orfd$r,orfd$g,orfd$v))
 }
 
+# Regression through origin and point that splits dataset in two
+splitRegression=function(x,y){
+  # Find line that goes through one of the points (& origin) and has
+  # about half of data above and about half of data below line
+  fdat=data.frame(x=x,y=y)
+  fdat=fdat[(fdat$x>0)&(fdat$y>0),]
+  slopes=fdat$y/fdat$x
+  pred=slopes%*%t(fdat$x)
+  vert=t(pred)-fdat$y
+  vert[abs(vert)<0.00000001]=0
+  above=sign(vert)
+
+  fracs=apply(above>0,1,sum)/(length(slopes)-1)
+  best=which.min(abs(fracs-0.5))
+  slopes[best]
+}
+# Regression minimising perpendicular distance between points and line
+perpRegression=function(x,y){
+
+  perpDist=function(x,y,m){
+    sqrt(((x+m*y)/(m^2+1)-x)^2+(m*(x+m*y)/(m^2+1)-y)^2)
+  }
+  
+  obf=function(m){
+     return(sum(perpDist(x,y,m)))
+  }
+
+  perpRes=optim(50,obf,lower=0,upper=Inf)$par
+
+  return(perpRes)
+}
+
 # Linear regression genetic ind. model fit
-lm.epi<-function(doubles,controls,modcheck=FALSE,quantreg=FALSE){
-	if(quantreg){
-		indmod<-rq(doubles~0+controls)
-	}else{
-		indmod<-lm(doubles~0+controls)
+lm.epi<-function(doubles,controls,modcheck=FALSE,reg="splitreg"){
+	if(reg=="lmreg"){
+		indmod=lm(doubles~0+controls)
+		m=as.numeric(indmod$coefficients)
 	}
-	m<-as.numeric(indmod$coefficients)
+	if(reg=="quantreg"){
+		indmod=rq(doubles~0+controls)
+		m=as.numeric(indmod$coefficients)
+	}
+	if(reg=="splitreg"){
+		m=splitRegression(controls,doubles)
+	}
+	if(reg=="perpreg"){
+		m=perpRegression(controls,doubles)
+	}
+	
 	# Check if linear regression OK
-	if (modcheck==TRUE){
+	if ((modcheck==TRUE)&(reg%in%c("quantreg","lmreg"))){
 		pdf("ModelCheck.pdf")
 		resids<-indmod$residuals
 		hist(resids,xlab="Fitness Residuals",main="Histogram of Residuals")
 		qqnorm(resids/sd(resids),main="Normal QQ Plot")
 		abline(0,1,lwd=2,col="red")
-		dev.off()}
+		dev.off()
+	}
 	return(m)
 }
 
@@ -646,10 +689,11 @@ makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,min
 makeBoundsQFA<-function(inocguess,d,minK=0,fixG=FALSE,globalOpt=FALSE,glog=TRUE){
 	# Define optimization bounds based on inocguess #
 	#lowr<-0; upr<-25
-	lowr<-0; upr<-50
+	lowr<-0; upr<-500
 	if(glog){
 		#lowv<-0.1; upv<-10.0
 		lowv<-0.25; upv<-4.0
+		lowv<-0.000001
 	}else{
 		lowv<-1; upv<-1
 	}
@@ -976,7 +1020,7 @@ colony.info<-function(position,bcdata){
 }
 
 ##### Make PDFs #####
-qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.plates=c(),treatments=c(),screen.names=c(),screenIDs=c(),maxg=0,maxt=0,logify=FALSE,densityCol="Growth",curves=TRUE,ylabel="Cell density (AU)",ptype="p"){
+qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.plates=c(),treatments=c(),screen.names=c(),screenIDs=c(),maxg=0,maxt=0,logify=FALSE,densityCol="Growth",curves=TRUE,ylabel="Cell density (AU)",ptype="p",ming=0){
 	if(!"Column"%in%colnames(d)) d$Column=d$Col
 
 	# Sort the data to be plotted sensibly, allowing easy comparison between repeats
@@ -1033,7 +1077,7 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 		  for(cno in colmin:colmax){
 				params=rbc[(rbc$Row==rno)&(rbc$Col==cno),]
 				if(nrow(params)>0){
-					rowplot(params,dbc,inoctime,maxg,fmt,maxt,logify,densityCol=densityCol,curves=curves,ptype=ptype)
+					rowplot(params,dbc,inoctime,maxg,fmt,maxt,logify,densityCol=densityCol,curves=curves,ptype=ptype,ming=ming)
 				}else{
 					frame()
 				}
@@ -1052,7 +1096,7 @@ qfa.plot<-function(file,results,d,fmt="%Y-%m-%d_%H-%M-%S",barcodes=c(),master.pl
 }
 
 #### Plot a colony's timecourse from a row of the results #####	
-rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify,densityCol="Growth",curves=TRUE,ptype="p"){
+rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify,densityCol="Growth",curves=TRUE,ptype="p",ming=0){
 	row<-as.numeric(resrow['Row']); col<-as.numeric(resrow['Col'])
 	if ('Gene'%in%names(resrow)){gene<-resrow['Gene']} else {gene<-resrow['ORF']}
 	# Get data for that colony
@@ -1061,16 +1105,24 @@ rowplot<-function(resrow,dbc,inoctime,maxg,fmt,maxt,logify,densityCol="Growth",c
 	tim<-dcol$Expt.Time
 	if("tshift"%in%names(resrow)){tshift<-unique(as.numeric(resrow[["tshift"]]))[1]}else{tshift=0}
 	# Draw the curves and data
-	logdraw(row,col,resrow,tim,growth,gene,maxg,maxt=maxt,logify=logify,densityCol=densityCol,curves=curves,ptype=ptype,tshift=tshift)
+	logdraw(row,col,resrow,tim,growth,gene,maxg,maxt=maxt,logify=logify,densityCol=densityCol,curves=curves,ptype=ptype,tshift=tshift,logmin=ming)
 }
 
 ### Converts row no. to position vector ###	
 index2pos<-function(index,dbc) c(dbc[[index,'Row']],dbc[[index,'Column']])
 
 ### Do individual timecourse plot given parameters & data ###
-logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0,logify=FALSE,densityCol="Growth",curves=TRUE,ptype="p",tshift=0){
-	if(logify) {ylog="y"}else{ylog=""}
-	plot(NULL,type="n",xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg),log=ylog,xlab="",ylab="",main=gene,frame.plot=0,cex.main=3*scaleT,cex.axis=1*scaleT)
+logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0,logify=FALSE,densityCol="Growth",curves=TRUE,ptype="p",tshift=0,logmin=0.001){
+	if(logify) {
+	  ylog="y"
+	  ylim=c(logmin,1.2*maxg)
+	}else{
+	  ylog=""
+	  ylim=c(0,1.2*maxg)
+	}
+	plot(NULL,type="n",xlim=c(0,maxt),ylim=c(logmin,1.2*maxg),log=ylog,xlab="",ylab="",main=gene,frame.plot=0,cex.main=3*scaleT,cex.axis=1*scaleT)
+	# Add data points
+	points(tim,growth,col="red",cex=1.25*scaleT,pch=4,lwd=2,type=ptype,xlim=c(0,maxt),ylim=c(logmin,1.2*maxg))
 	if(curves){
 		if("nr_t"%in%names(resrow)) abline(v=resrow['nr_t'],col="blue")
 		if("maxslp_t"%in%names(resrow)) abline(v=resrow['maxslp_t'],col="blue",lty=2)
@@ -1083,8 +1135,7 @@ logdraw<-function(row,col,resrow,tim,growth,gene,maxg,fitfunct,maxt=0,scaleT=1.0
 		x=0
 		curve(Glogist(K,r,g,v,x-tshift),n=31,lwd=2.5,add=TRUE,from=tshift,to=maxt,xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg))
 	}
-	# Add data points
-	points(tim,growth,col="red",cex=2*scaleT,pch=4,lwd=2,type=ptype,xlim=c(0,maxt),ylim=c(0.00001,1.2*maxg))
+
 	if(curves){
 		# Add legend
 		legt1<-paste(c("K=","r=","g=","v=","MDR=","MDP=","AUC=","DT="),c(signif(K,3),signif(r,3),signif(g,3),signif(v,3),signif(MDR,3),signif(MDP,3),signif(AUC,3),signif(DT,3)),sep="")
