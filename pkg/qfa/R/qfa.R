@@ -236,9 +236,11 @@ qfa.epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Co
 		reforf<-results$Results[results$Results$ORF==ref.orf,]
 		abline(v=reforf$ControlFitnessSummary,col="lightblue",lwd=2)
 		abline(h=reforf$QueryFitnessSummary,col="lightblue",lwd=2)}
-	# Add points for non-suppressors & non-enhancers
-	points(others$ControlFitnessSummary,others$QueryFitnessSummary,col="grey",cex=0.5,pch=19)
-	text(others$ControlFitnessSummary,others$QueryFitnessSummary,others$Gene,col="grey",pos=4,offset=0.1,cex=0.4)
+	if(length(others$ORF)>0){
+		# Add points for non-suppressors & non-enhancers
+		points(others$ControlFitnessSummary,others$QueryFitnessSummary,col="grey",cex=0.5,pch=19)
+		text(others$ControlFitnessSummary,others$QueryFitnessSummary,others$Gene,col="grey",pos=4,offset=0.1,cex=0.4)
+	}
 	# Add suppressors & enhancers
 	if(length(enhancers$ORF)>0){
 		points(enhancers$ControlFitnessSummary,enhancers$QueryFitnessSummary,col='green',pch=19,cex=0.5)
