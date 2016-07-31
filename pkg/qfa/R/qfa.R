@@ -435,7 +435,7 @@ varposget<-function(var,orfn,norfs){
 ############################### Likelihood Functions ################################
 
 ##### Does max. lik. fit for all colonies, given colonyzer.read or rod.read input #####
-qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,nCores=1,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,...){
+qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",minK=0.025,detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,nCores=1,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,nrate=TRUE,...){
 	
 	if(!"Column"%in%colnames(d)) d$Column=d$Col
 
@@ -481,9 +481,9 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 			ex <- Filter(function(x) is.function(get(x, .GlobalEnv)), ls(.GlobalEnv))
 			clusterExport(cl, ex)
 			clusterExport(cl, as.vector(lsf.str(envir=.GlobalEnv)))
-			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow,...))
+			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow,nrate,...))
 		}else{
-			bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow,...))
+			bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow,nrate,...))
 		}
 		info<-data.frame(t(sapply(positions,colony.info,dbc)))
 		rows<-sapply(positions,rcget,"row")
@@ -580,7 +580,7 @@ loapproxfun=function(t,g,span=0.2){
 	return(loex)
 }
 
-numericalfitness<-function(obsdat,AUCLim,STP){
+numericalfitness=function(obsdat,AUCLim,STP,nrate=TRUE){
 	# Generate numerical AUC
 	if(length(obsdat$Growth)>1){
 			loapproxfree=loapproxfun(obsdat$Expt.Time,obsdat$Growth,span=0.5)
@@ -600,11 +600,13 @@ numericalfitness<-function(obsdat,AUCLim,STP){
 	names(res)=c(nAUCnames,nSTPnames)
 	if(length(AUCLim)>1) res["nAUC"]=res[nAUCnames[length(nAUCnames)]]
 	if(length(STP)>1) res["nSTP"]=res[nSTPnames[length(nSTPnames)]]
-	numr_lst=numerical_r(obsdat)
-	res["nr"]=numr_lst$nr
-	res["nr_t"]=numr_lst$nr_t
-	res["maxslp"]=numr_lst$mslp
-	res["maxslp_t"]=numr_lst$mslp_t	
+	if(nrate){
+	  numr_lst=numerical_r(obsdat)
+	  res["nr"]=numr_lst$nr
+	  res["nr_t"]=numr_lst$nr_t
+	  res["maxslp"]=numr_lst$mslp
+	  res["maxslp_t"]=numr_lst$mslp_t	
+	}
 	return(res)
 }
 
@@ -681,18 +683,18 @@ numerical_r=function(obsdat,mkPlots=FALSE,span=0.3,nBrute=1000,cDiffDelta=0.0001
 }
 
 ### Growth model fitting for one colony ###
-colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,...){
+colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,nrate=TRUE,...){
 	# Get row & column to restrict data
 	row<-position[1]; col<-position[2]
 	#print(paste(bcdata$Barcode[1],"Row:",row,"Col:",col))
 	do<-bcdata[(bcdata$Row==row)&(bcdata$Column==col),]
 	obsdat=data.frame(Expt.Time=as.numeric(do$Expt.Time),Growth=as.numeric(do$Growth))
-	pars=makefits(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow)
+	pars=makefits(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow,nrate)
 	return(pars)
 }
 
-makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,...){
-	numfit=numericalfitness(obsdat,AUCLim,STP)
+makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,nrate=TRUE...){
+	numfit=numericalfitness(obsdat,AUCLim,STP,nrate=nrate)
 	
 	if(modelFit){
 		pars=growthcurve(obsdat,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,glog,checkSlow)
