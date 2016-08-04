@@ -4,7 +4,7 @@ makeVisTool=function(){
 	globs<-new.env()
 
 	# Plotting function
-	epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot",ymin=0,ymax=0,xmin=0,xmax=0,ecol="green",scol="red",esym=19,ssym=19,quantreg=FALSE){
+	epiplot<-function(results,qthresh,fitratio=FALSE,ref.orf="YOR202W",xxlab="Control Fitness",yylab="Query Fitness",mmain="Epistasis Plot",ymin=0,ymax=0,xmin=0,xmax=0,ecol="green",scol="red",esym=19,ssym=19,reg="lmreg"){
 		enhancers<-gethits(results,qthresh,type="E")
 		suppressors<-gethits(results,qthresh,type="S")
 		others<-results[(!results$ORF%in%enhancers$ORF)&(!results$ORF%in%suppressors$ORF),]
@@ -13,7 +13,7 @@ makeVisTool=function(){
 		col=8,pch=19,cex=0.5)
 		# Add line for genetic independence
 		if (fitratio!=FALSE){abline(0,fitratio,lwd=2,col=8)} else {
-			slp=lm.epi(results$QueryFitnessSummary,results$ControlFitnessSummary,modcheck=FALSE,quantreg=quantreg)
+			slp=lm.epi(results$QueryFitnessSummary,results$ControlFitnessSummary,modcheck=FALSE,reg="lmreg")
 			abline(0,slp,lwd=2,col=8)}
 		# Add 1:1 fitness line
 		abline(0,1,lwd=2,lty=4,col=8)
@@ -55,7 +55,7 @@ makeVisTool=function(){
 		globs$orftargs=globs$dat$ORF[globs$targs]
 		globs$dat=globs$datlist[[datno]]$res
 		globs$targs=match(toupper(globs$orftargs),toupper(globs$dat$ORF))
-		epiplot(globs$dat,0.05,mmain=maintitle,xxlab=xlab,yylab=ylab,ymin=globs$fymin[datno],ymax=globs$fymax[datno],xmin=globs$fxmin[datno],xmax=globs$fxmax[datno],quantreg=globs$quantreg,...)
+		epiplot(globs$dat,0.05,mmain=maintitle,xxlab=xlab,yylab=ylab,ymin=globs$fymin[datno],ymax=globs$fymax[datno],xmin=globs$fxmin[datno],xmax=globs$fxmax[datno],reg=globs$reg,...)
 		if(globs$compno>0){
 			lst=strsplit(globs$GROUPS$GroupORFs[globs$compno]," ")[[1]]
 			dcomp=globs$dat[toupper(globs$dat$ORF)%in%toupper(lst),]
@@ -456,12 +456,12 @@ makeVisTool=function(){
 		return(NULL)
 	}
 
-	visTool<-function(groups,orf2gene,GISfiles,metaRep="MetaReport.txt",fitmax=0,quantreg=FALSE){
+	visTool<-function(groups,orf2gene,GISfiles,metaRep="MetaReport.txt",fitmax=0,reg="lmreg"){
 		# Function for generating interactive plot
 		globs$GROUPS=groups()
 		globs$ORFGENE=orf2gene
 		globs$datlist=list()
-		globs$quantreg=quantreg
+		globs$reg=reg
 		clients=c()
 		dates=c()
 		
@@ -614,7 +614,7 @@ buildComplexes<-function(){
 
 buildBenschop<-function() buildComplexes()
 
-iRVisDemo<-function(groupFun=buildComplexes,fitmax=0,quantreg=FALSE){
+iRVisDemo<-function(groupFun=buildComplexes,fitmax=0,reg="lmreg"){
 	orfile=file.path(file.path(system.file(package = "qfa"),"extdata","ORF2GENE.txt"))
 	ORFGENE=read.delim(orfile,stringsAsFactors=FALSE,sep="\t",header=FALSE)
 	colnames(ORFGENE)=c("ORF","Gene")
@@ -623,7 +623,7 @@ iRVisDemo<-function(groupFun=buildComplexes,fitmax=0,quantreg=FALSE){
 	# Read in GIS files
 	filenames=list.files(file.path(system.file(package = "qfa"),"extdata"),pattern="\\GIS.txt$",full.names=TRUE)
 	visTool=makeVisTool()
-	visTool(groupFun,ORFGENE,filenames,"MetaReport.txt",fitmax=fitmax,quantreg=quantreg)
+	visTool(groupFun,ORFGENE,filenames,"MetaReport.txt",fitmax=fitmax,reg=reg)
 }
 
 NAtoBlank=function(x){
