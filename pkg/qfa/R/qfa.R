@@ -481,9 +481,9 @@ qfa.fit<-function(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="%Y-%m-%d_%H-%M-%S",mi
 			ex <- Filter(function(x) is.function(get(x, .GlobalEnv)), ls(.GlobalEnv))
 			clusterExport(cl, ex)
 			clusterExport(cl, as.vector(lsf.str(envir=.GlobalEnv)))
-			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow,nrate,...))
+			bcfit<-t(parSapply(cl,positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow,nrate))
 		}else{
-			bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow,nrate,...))
+			bcfit<-t(sapply(positions,colony.fit,dbc,inocguess,fixG,globalOpt,detectThresh,minK,logTransform,AUCLim,STP,glog,modelFit,checkSlow,nrate))
 		}
 		info<-data.frame(t(sapply(positions,colony.info,dbc)))
 		rows<-sapply(positions,rcget,"row")
@@ -623,7 +623,10 @@ numerical_r=function(obsdat,mkPlots=FALSE,span=0.3,nBrute=1000,cDiffDelta=0.0001
 	la=NA
 	try(a<-loapproxfun(tims,gdat,span=span),silent=TRUE)
 	try(la<-loapproxfun(ltims,lgdat,span=span),silent=TRUE)
-	if(!exists("a")|!exists("la")|!is.function(la)|!is.function(a)) return(list(nr=0,nr_t=NA,mslp=0,mslp_t=NA))
+	problem=list(nr=0,nr_t=NA,mslp=0,mslp_t=NA)
+	if(!exists("a")) return(problem)
+	if(!is.function(a)) return(problem)
+	if(!is.function(la)) return(problem)
 	centralDiff=function(f,delta) return(function(x) (f(x+delta/2.0)-f(x-delta/2.0))/delta)
 	lslp=centralDiff(la,cDiffDelta)
 	slp=centralDiff(a,cDiffDelta)
