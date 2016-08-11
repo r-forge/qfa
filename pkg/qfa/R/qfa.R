@@ -580,7 +580,7 @@ loapproxfun=function(t,g,span=0.2){
 	return(loex)
 }
 
-numericalfitness=function(obsdat,AUCLim,STP,nrate=TRUE){
+numericalfitness=function(obsdat,AUCLim,STP,nrate=FALSE){
 	# Generate numerical AUC
 	if(length(obsdat$Growth)>1){
 			loapproxfree=loapproxfun(obsdat$Expt.Time,obsdat$Growth,span=0.5)
