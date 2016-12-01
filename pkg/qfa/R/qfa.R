@@ -696,7 +696,7 @@ colony.fit<-function(position,bcdata,inocguess,fixG=TRUE,globalOpt=FALSE,detectT
 	return(pars)
 }
 
-makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,nrate=TRUE...){
+makefits<-function(obsdat,inocguess,fixG=TRUE,globalOpt=FALSE,detectThresh=0,minK=0,logTransform=FALSE,AUCLim=5,STP=10,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,nrate=TRUE,...){
 	numfit=numericalfitness(obsdat,AUCLim,STP,nrate=nrate)
 	
 	if(modelFit){
