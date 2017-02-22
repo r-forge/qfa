@@ -198,7 +198,7 @@ qfa.epi<-function(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",
 	orflist<-unique(as.character(results$ORF))
 	results<-results[match(orflist,results$ORF),]
 	# Plot results
-	if (plot==TRUE){qfa.epiplot(results,qthresh,m,quantreg=quantreg)}
+	if (plot==TRUE){qfa.epiplot(results,qthresh,m)}
 	final<-list(Results=results,
 	Enhancers=gethits(results,qthresh,type="E",GISthresh=GISthresh),
 	Suppressors=gethits(results,qthresh,type="S",GISthresh=GISthresh),
