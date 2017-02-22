@@ -659,7 +659,7 @@ numerical_r=function(obsdat,mkPlots=FALSE,span=0.3,nBrute=1000,cDiffDelta=0.0001
 		curve(la,from=-0.1*tmax,to=tmax,add=TRUE,col="red",lwd=2,xlim=c(-0.1*tmax,tmax))
 		par(new=TRUE)
 		
-		curve(lslp(x),from=-0.1*tmax,to=tmax,col="blue",xlab="",ylab="",xaxt="n",yaxt="n",lwd=2,xlim=c(-0.1*tmax,tmax))
+		curve(lslp,from=-0.1*tmax,to=tmax,col="blue",xlab="",ylab="",xaxt="n",yaxt="n",lwd=2,xlim=c(-0.1*tmax,tmax))
 		axis(4)
 		mtext("Slope of Log Cell Density",side=4,line=3,col="blue")
 
