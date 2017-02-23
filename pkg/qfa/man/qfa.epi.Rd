@@ -6,7 +6,7 @@ Fits a genetic independence model between control strains and double mutant stra
 }
 \usage{
 qfa.epi(double,control,qthresh=0.05,orfdict="ORF2GENE.txt",GISthresh=0.0,plot=TRUE,
-modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE,bootstrap=NULL,Nboot=5000,subSamp=Inf)
+modcheck=FALSE,wctest=TRUE,bootstrap=NULL,Nboot=5000,subSamp=Inf,reg="lmreg",fdef="fit")
 }
 \arguments{
   \item{double}{Either a qfa.posterior or the results of qfa.fit for the double mutants}
@@ -16,12 +16,13 @@ modcheck=TRUE,fitfunct=mdrmdp,wctest=TRUE,bootstrap=NULL,Nboot=5000,subSamp=Inf)
   \item{GISthresh}{When returning interaction hitlists, this variable determines the cutoff for strength of genetic interaction.}
   \item{plot}{If TRUE, then a 2-way fitness plot is made.}
   \item{modcheck}{If TRUE then diagnostic residual plots are output to \dQuote{ModelCheck.pdf}}
-  \item{fitfunct}{The name of a fitness function whose arguments are, in order, (K,r,g,v) (carrying capacity, rate and initial size of population and shape parameter for generalised logistic growth model).  DEPRECATED.  Please manually add a column named \dQuote{fit} to double and control instead.}
   \item{wctest}{If TRUE, then use the Wilcoxon test for differences in medians as a measure of statistical significance of genetic interaction.  This is the default.  If FALSE, then use a t-test for difference in mean fitnesses instead.}
   \item{bootstrap}{If TRUE, then use bootstrapping procedure to check if genetic interactions are significant.  If false, then use linear regression and t-test or wilcoxon test.}
   \item{Nboot}{Number of bootstrap samples to generate if using bootstrapping procedure}
-  \item{subSamp}{Number of subsamples of available replicates to sample when bootstrapping (default, Inf, uses all available replicates, i.e. each summary (each bootstrap sample) is based on sampling subSamp from N with replacement.  If subSamp==Inf, then subSamp is set equal to N.}  
-}
+  \item{subSamp}{Number of subsamples of available replicates to sample when bootstrapping (default, Inf, uses all available replicates, i.e. each summary (each bootstrap sample) is based on sampling subSamp from N with replacement.  If subSamp==Inf, then subSamp is set equal to N.}
+  \item{reg}{String specifying what type of regression to use.  Default is least squares regression as implemented in lm function: "lmreg".  Alternatives include "quantreg", "splitreg" and "perpreg".  See lm.epi function help for further details.}  
+  \item{fdef}{String specifying what fitness definition to use.  Must be the name of a column common to double and control.  Typical options include: "nAUC", "r", "MDRMDP".  The default "fit" is included for backwards compatibility with earlier versions of this function which relied on users manually creating a "fit" column that includes their required fitness definition values.  This was usually achieved by copying an existing column (e.g. "MDRMDP").}
+  }
 
 \value{
 Returns an R list containing three data frames: Results, Enhancers and Suppressors.  Each data frame has the following columns:

@@ -6,7 +6,8 @@ Checks that there are enough observations above the detection threshold to fit t
 }
 \usage{
 growthcurve(obsdat,iguess,fixG=TRUE,globalOpt=FALSE,
-detectThresh=0,minK=0,logTransform=FALSE,glog=TRUE)
+detectThresh=0,minK=0,logTransform=FALSE,glog=TRUE,
+checkSlow=TRUE)
 }
 \arguments{
   \item{obsdat}{A data frame containing a numeric Expt.Time column (time since culture inoculation, typically in days) and a numeric Growth column (typically cell density estimates estimated from a timeseries of culture photographs, quantified by software such as Colonyzer: http://research.ncl.ac.uk/colonyzer/).} 
@@ -17,6 +18,7 @@ detectThresh=0,minK=0,logTransform=FALSE,glog=TRUE)
   \item{minK}{Lowest allowable value of K (stationary phase cell density) allowable for a culture which is not classed as dead or missing.  Default 0.}
   \item{logTransform}{Carry out log transformation of data before curve fit (allows fitting model to growth curve observations on the log scale)}
   \item{glog}{Boolean indicating whether to use the asymmetric generalised logistic model (TRUE) or the simpler, original logistic model (FALSE)}
+  \item{checkSlow}{Boolean indicating whether to also use parameters corresponding to a sick, slow growing strain as initial guess (TRUE), and compare objective function values.}
 }
 \value{
 A list of generalised logistic model parameters (K, r, g, v) which give the best fit to the observed data in obsdat, together with objval, the objective value (squared error).

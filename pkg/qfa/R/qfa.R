@@ -673,10 +673,10 @@ numerical_r=function(obsdat,mkPlots=FALSE,span=0.3,nBrute=1000,cDiffDelta=0.0001
 		abline(a=intercept,b=slope,lwd=3,col="green",untf=FALSE)
 		points(obsdat$Expt.Time,obsdat$Growth)
 		mtext("Cell density (AU)",side=2,line=3,col="red")
-		curve(a(x),from=-0.1*tmax,to=tmax,add=TRUE,col="red",lwd=2,xlim=c(-0.1*tmax,tmax))
+		curve(a,from=-0.1*tmax,to=tmax,add=TRUE,col="red",lwd=2,xlim=c(-0.1*tmax,tmax))
 		par(new=TRUE)
 		
-		curve(slp(x),from=-0.1*tmax,to=tmax,col="blue",xlab="",ylab="",xaxt="n",yaxt="n",lwd=2,xlim=c(-0.1*tmax,tmax))
+		curve(slp,from=-0.1*tmax,to=tmax,col="blue",xlab="",ylab="",xaxt="n",yaxt="n",lwd=2,xlim=c(-0.1*tmax,tmax))
 		axis(4)
 		mtext("Slope of Cell Density",side=4,line=3,col="blue")
 
