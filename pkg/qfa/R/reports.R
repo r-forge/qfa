@@ -13,7 +13,7 @@ findFit<-function(df){
 	}
 }
 	
-fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment",stripORFs=c()){
+fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment",stripORFs=c(),fdef="fit"){
 	# Eliminate spurious precision to make smaller files
 	#results[,3:9]=signif(results[,3:9],6)
 	# Summarises mean and median fitnesses for all orfs in an .fit object
@@ -29,20 +29,17 @@ fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment",stripORFs=
 	if(!is.null(stripORFs)) fitdf=fitdf[!fitdf$ORF%in%stripORFs,]
 
 	#meanRes=by(fitdf[,27:31],fitdf$ORF,median)
-	medRes=tapply(fitdf$fit,fitdf$ORF,median,na.rm=TRUE)
-	meanRes=tapply(fitdf$fit,fitdf$ORF,mean,na.rm=TRUE)
-	varRes=tapply(fitdf$fit,fitdf$ORF,var,na.rm=TRUE)
-	numRes=tapply(fitdf$fit,fitdf$ORF,length)
-	seRes=tapply(fitdf$fit,fitdf$ORF,sd,na.rm=TRUE)/sqrt(numRes)
+	medRes=tapply(fitdf[[fdef]],fitdf$ORF,median,na.rm=TRUE)
+	meanRes=tapply(fitdf[[fdef]],fitdf$ORF,mean,na.rm=TRUE)
+	varRes=tapply(fitdf[[fdef]],fitdf$ORF,var,na.rm=TRUE)
+	numRes=tapply(fitdf[[fdef]],fitdf$ORF,length)
+	seRes=tapply(fitdf[[fdef]],fitdf$ORF,sd,na.rm=TRUE)/sqrt(numRes)
 	orflst=names(medRes)
 	genelst=as.character(fitdf$Gene[match(orflst,as.character(fitdf$ORF))])
 
 	results=data.frame(Gene=genelst,ORF=orflst,MedianFit=medRes,MeanFit=meanRes,VarianceFit=varRes,NumRepeats=numRes,SEFit=seRes)
-
-	packs = data.frame(installed.packages(),stringsAsFactors=FALSE)
+	
 	# Automatically extract qfa package version number
-	#packs = data.frame(installed.packages(),stringsAsFactors=FALSE)
-	#vno=packs$Version[packs$Package=="qfa"]
 	sinfo=sessionInfo()
 	vno=sinfo$otherPkgs$qfa$Version[1]
 	QFAversion=paste("R package version:",vno)
@@ -55,7 +52,7 @@ fitnessReport<-function(grp,outputfile,dataframe,groupcol="Treatment",stripORFs=
 	rUser=paste("User:",paste(unique(fitdf$User),collapse=" "))
 	rPI=paste("PI:",paste(unique(fitdf$PI),collapse=" "))
 	rDate=paste("Date:",paste(unique(fitdf$ExptDate),collapse=" "))
-	rFit=paste("Fitness definition:",findFit(fitdf))
+	if(fdef=="fit") {rFit=paste("Fitness definition:",findFit(fitdf))}else{rFit=paste("Fitness definition:",fdef)}
 	rCond=paste("Condition:",paste(unique(fitdf$Condition),collapse=" "))
 	spacer="#########################################################"
 	header=c(QFAversion,
@@ -73,8 +70,6 @@ report.epi<-function(results,filename){
 	# Eliminate spurious precision to make smaller files
 	results[,3:9]=signif(results[,3:9],6)
 	# Automatically extract qfa package version number
-	#packs = data.frame(installed.packages(),stringsAsFactors=FALSE)
-	#vno=packs$Version[packs$Package=="qfa"]
 	sinfo=sessionInfo()
 	vno=sinfo$otherPkgs$qfa$Version[1]
 
@@ -124,7 +119,7 @@ report.epi<-function(results,filename){
 	file.remove(tmpfname)	
 }
 
-correlationReport<-function(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185){
+correlationReport<-function(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185,fdef="fit"){
 	# Tests the correlation of all possible repeats of the same plate/treatment
 	# Useful tool for searching for incorrect plate orientation, or misplaced/mislabelled plates
 	# Can also give clues about plates with incorrect medium
@@ -152,16 +147,13 @@ correlationReport<-function(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185){
 					r1=reps[reps$Barcode==bpair[1],]
 					r2=reps[reps$Barcode==bpair[2],]
 
-					if((length(r1$fit)==length(r2$fit))&(length(r1$fit)>0)){
+					if((length(r1[[fdef]])==length(r2[[fdef]]))&(length(r1[[fdef]])>0)){
 						cols=rainbow(max(as.numeric(dataframe$MasterPlate.Number),na.rm=TRUE))
-						correlate=cor(r1$fit,r2$fit)
+						correlate=cor(r1[[fdef]],r2[[fdef]])
 						corrs=rbind(corrs,c(bpair[1],bpair[2],t,p,correlate))
 						ptitle=paste("Plate:",p,"Corr:",formatC(correlate,4))
 						plot(NULL,xlim=c(0,fitmax),ylim=c(0,fitmax),xlab=bpair[1],ylab=bpair[2],main=ptitle,axes=FALSE,cex.main=1.2)
-						#abline(0,1,lwd=3,col="grey")
-						#text(r1$fit,r2$fit,r1$Gene,col="black",pos=4,offset=0.1,cex=0.4)
-						points(r1$fit,r2$fit,col=cols[r1$MasterPlate.Number],pch=16,cex=0.4)
-						#print(c(sum(r1$Gene==r2$Gene),length(r1$Gene)))
+						points(r1[[fdef]],r2[[fdef]],col=cols[r1$MasterPlate.Number],pch=16,cex=0.4)
 					}else{
 						plot(NULL,xlim=c(0,fitmax),ylim=c(0,fitmax),xlab=bpair[1],ylab=bpair[2],main=paste("Trt:",t,"Plate:",p),axes=FALSE)
 					}
@@ -179,7 +171,7 @@ correlationReport<-function(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185){
 	dev.off()
 }
 
-plateBoxplots<-function(dataframe,outputfile,fitmax=185,groupcol="Treatment"){
+plateBoxplots<-function(dataframe,outputfile,fitmax=185,groupcol="Treatment",fdef="fit"){
 	# Generates plate by plate boxplots of culture fitnesses
 	# Useful for identifying plates with medium problems
 	dataframe$ScreenRepQuad=paste(dataframe$Screen.Name,"RQ",sprintf("%02d",dataframe$RepQuad),sep="_")
@@ -196,10 +188,10 @@ plateBoxplots<-function(dataframe,outputfile,fitmax=185,groupcol="Treatment"){
 			plateNums=unique(as.numeric(as.character(dt$MasterPlate.Number)))
 			plateNums=as.character(plateNums)
 			dt$MasterPlate.Number<-factor(dt$MasterPlate.Number,levels=plateNums)
-			if(length(dt$fit)>0) boxplot(dt$fit~dt$MasterPlate.Number,notch=TRUE,xlab="Plate Number",ylab="Fitness",col=rainbow(23),main=paste(grp,scr),ylim=c(0,fitmax),cex.axis=1)
+			if(length(dt[[fdef]])>0) boxplot(dt[[fdef]]~dt$MasterPlate.Number,notch=TRUE,xlab="Plate Number",ylab="Fitness",col=rainbow(23),main=paste(grp,scr),ylim=c(0,fitmax),cex.axis=1)
 		}
 	}
-	fitdef=findFit(dataframe)
+	if(fdef=="fit"){fitdef=findFit(dataframe)}else{fitdef=fdef}
 	by(dataframe,dataframe$Barcode,summaryPlots,fdef=fitdef,fdef2="MDRMDP",label="")
 	dev.off()
 }

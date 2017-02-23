@@ -8,7 +8,7 @@ Produces a multipage pdf of growth curves.  Each page corresponds to a single pl
 qfa.plot(file,results,d,fmt="\%Y-\%m-\%d_\%H-\%M-\%S",barcodes=c(),
 master.plates=c(),treatments=c(),screen.names=c(),screenIDs=c(),
 maxg=0,maxt=0,logify=FALSE,densityCol="Growth",curves=TRUE,
-ylabel="Cell density (AU)",ptype="p")}
+ylabel="Cell density (AU)",ptype="p",ming=1e-5)}
 \arguments{
   \item{file}{The file to output the plots to.}
   \item{results}{The output of qfa.fit which contains the fitted curve parameters of colony growth you wish to plot.}
@@ -26,5 +26,6 @@ ylabel="Cell density (AU)",ptype="p")}
   \item{curves}{Boolean indicating whether fitted model curves should be drawn.  Useful to set this to false when generating diagnostic, data-only growth curves.  To do this, set curves = FALSE and pass the same (data) object twice, as both the d and results arguments.  For example: qfa.plot("test.pdf",df,df,curves=FALSE)}
   \item{ylabel}{String for y-axis label on growth curve plots.}
   \item{ptype}{Plot type for data: "p": points, "l": lines, "b": both}
+  \item{ming}{Minimum growth value (y-axis) for plotting.}
 }
 \keyword{qfa}

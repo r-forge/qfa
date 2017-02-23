@@ -7,7 +7,7 @@ Useful tool for searching for incorrect plate orientation, or misplaced/mislabel
 Can also give clues about plates with incorrect medium.
 }
 \usage{
-correlationReport(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185)
+correlationReport(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185,fdef="fit")
 }
 \arguments{
   \item{dataframe}{Dataframe containing fitnesses to be summarised.  Typically output from qfa.fit function.  Must add a "fit" column before passing to this function.}
@@ -16,6 +16,7 @@ correlationReport(scrnms,dataframe,outputfile,aw=4,ah=4,fitmax=185)
   \item{fitmax}{Upper limit for both x and y axes in correlation plots.  Maximum observable fitness for this combination of experiments and fitness definitions.}
   \item{aw}{Number of horizontal panels per page in output report.}
   \item{ah}{Number of vertical panels per page in output report.}
+  \item{fdef}{Fitness definition to use (e.g. "nAUC","r","MDR").}
 }
 \value{
 Generates a multi-page .pdf report demonstrating two-way between-replicate correlation for all possible pairs of plates and for all media, treatments and replicates in a QFA experiment.}

@@ -112,7 +112,7 @@ makePDF=function(t1,raw,tmax=5.0,lab="",byTime=FALSE,cexval=1.0){
 
 findImages=function(path,barcRange=c(1,15),tRange=c(17,35),nchar=39,fmt="%Y-%m-%d_%H-%M-%S"){
 	# Search for QFA images in file structure, extract as much information as possible from filenames
-	flist=list.files(path=path,pattern="\\.(jpg|JPG)$",recursive=TRUE,full.name=TRUE)
+	flist=list.files(path=path,pattern="\\.(jpg|JPG)$",recursive=TRUE,full.names=TRUE)
 	basename(flist)
 	dat=data.frame(flist=flist,file=basename(flist),stringsAsFactors=FALSE)
 	dat=dat[nchar(dat$file)==nchar,]

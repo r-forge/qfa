@@ -13,13 +13,14 @@ Ideally there should be no trend or pattern in any of these boxplots.
 Boxplots with notches can be used as an initial indication of whether any observed differences are significant: pairs of boxes with notches that do not overlap may be significantly different.  For example if the notch for quadrant 4 of a plate does not overlap with the notch for quadrant 1 of the same plate, that would suggest that the fitnesses of spots in quadrant 1 are significantly different from those in quadrant 4.
 }
 \usage{
-plateBoxplots(dataframe,outputfile,fitmax=185,groupcol="Treatment")
+plateBoxplots(dataframe,outputfile,fitmax=185,groupcol="Treatment", fdef="fit")
 }
 \arguments{
   \item{dataframe}{Dataframe containing fitnesses to be summarised.  Typically output from qfa.fit function.  Must add a "fit" column before passing to this function.  For example: dataframe$fit=dataframe$MDRMDP}
   \item{outputfile}{Output file name.}
   \item{fitmax}{Upper limit for y-axis in plots (maximum observable fitness in this combination of experiment and fitness definition. }
   \item{groupcol}{String name of column labelling group membership of each plate/barcode.  Typically this will be the Treatment or Medium column (or some combination of both if there are more than one treatment and more than one medium within the dataframe d).  Plates are grouped by unique values of groupcol before being summarised with a boxplot.}
+  \item{fdef}{Fitness definition chosen (e.g. "r","nAUC","MDR","MDRMDP").}
 }
 \value{
 Generates a multi-page .pdf report demonstrating within-plate and between-plate culture variance for all plates, media, treatments and replicates in a QFA experiment.}

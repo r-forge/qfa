@@ -5,11 +5,12 @@
 Creates an interactive, searchable version of a selection of fitness plots from Addinall et al. 2011 PLoS Genetics (http://dx.doi.org/10.1371/journal.pgen.1001362).
 }
 \usage{
-iRVisDemo(groupFun=buildComplexes, fitmax=0)
+iRVisDemo(groupFun=buildComplexes, fitmax=0, reg="lmreg")
 }
 \arguments{
 \item{groupFun}{Specify the name of a function to build a data frame containing related groups of genes to be highlighted together.  Current options are buildBenschop (default) and buildGO.  buildBenschop allows highlighting of functionally related genes from Benschop et al. (2010): http://dx.doi.org/10.1016/j.molcel.2010.06.002.  buildGO allows highlighting of functionally related genes from the Gene Ontology database: http://www.geneontology.org/}
 \item{fitmax}{Upper limit for fitness values on axes.  Specifying a value here is useful if you need to make multiple plots.  Fixing the limits of your axes will allow fitness plots to be compared more easily.  This is partiuclarly important when making a multiple panel figure for a manuscript, for example.}
+\item{reg}{String specifying what type of regression to use.  Default is least squares regression as implemented in lm function: "lmreg".  Alternatives include "quantreg", "splitreg" and "perpreg".  See lm.epi function for further details.}
 }
 \value{
 Returns an interactive plot for comparing control and query fitnesses and visualising interaction strengths for data presented in Addinall et al. 2011 PLoS Genetics (http://dx.doi.org/10.1371/journal.pgen.1001362).

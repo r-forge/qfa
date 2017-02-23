@@ -9,10 +9,11 @@ Starting with a data frame describing the output from the qfa.fit function (with
 Typically a "group" will be a description of treatment (e.g. temperature) or of growth medium (e.g. drug added to solid agar).
 }
 \usage{
-normalisePlates(d,column,groupcol)}
+normalisePlates(d,column,groupcol="Treatment",fmin=1e-06)}
 \arguments{
   \item{d}{Dataframe (output from qfa.fit) for normalisation.}
   \item{column}{String name of column to normalise (typically the fitness measure of interest).  See qfa.fit and makeFitness help files for descriptions of available culture fitness measures.}
   \item{groupcol}{String name of column labelling group membership of each plate/barcode.  Typically this will be the Treatment or Medium column (or some combination of both if there are more than one treatment and more than one medium within the dataframe d).}
+  \item{fmin}{Epsilon (very small number greater than zero).  Do not scale by dividing fitnesses by a plate-wide median if median is less than fmin.}
 }
 \keyword{normalisePlates}

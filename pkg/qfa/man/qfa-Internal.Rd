@@ -68,6 +68,17 @@
 \alias{getMode}
 \alias{reportExpts}
 
+\alias{findImages}
+\alias{gen_logistic_maxslp}
+\alias{makePDF}
+\alias{perpRegression}
+\alias{plotRepsDF}
+\alias{plotRow}
+\alias{prepareTimecourse}
+\alias{splitRegression}
+\alias{summaryPlots}
+\alias{timecourseImages}
+
 \title{Internal qfa Functions} 
 \description{ 
   Internal qfa functions and environments.  globs is an environment for storing "global" variables.

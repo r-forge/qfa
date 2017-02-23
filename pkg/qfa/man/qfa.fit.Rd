@@ -7,7 +7,7 @@ Given a series of culture density observations from colonyzer.read, this functio
 \usage{
 qfa.fit(d,inocguess,ORF2gene="ORF2GENE.txt",fmt="\%Y-\%m-\%d_\%H-\%M-\%S",minK=0.025,
 detectThresh=0.0005,globalOpt=FALSE,logTransform=FALSE,fixG=TRUE,AUCLim=5,STP=20,
-nCores=1,glog=TRUE,modelFit=TRUE...)
+nCores=1,glog=TRUE,modelFit=TRUE,checkSlow=TRUE,nrate=FALSE,...)
 }
 \arguments{
   \item{d}{The data.frame containing the timecourse data for each colony (returned from colonyzer.read).}
@@ -25,7 +25,8 @@ nCores=1,glog=TRUE,modelFit=TRUE...)
   \item{nCores}{Can attempt to split model fitting load across multiple parallel cores.  Experimental, probably best to leave this value set to default (1)}
   \item{glog}{Boolean (TRUE or FALSE) specifying whether to carry out generalised (asymmetric) logistic model fit to growth curve data.  When set to FALSE, carry out simpler logistic model fit (as in Addinall et al. 2011)}
   \item{modelFit}{Boolean (TRUE or FALSE) specifying whether to carry out any model fitting at all.  When set to FALSE, only numerical fitness estimates such as nr, nMDP, nAUC are generated}
-  \item{checkSlow}{Boolean (TRUE or FALSE) specifying whether to re-optimise curve-fitting for slow-growing strains.  If TRUE, slow-growing or dead strains are identified heuristically and a second round of curve fitting using global (but slower) optimisation is carried out.  Heuristic identification of slow-growing strains is currently experimental, it seems we have over-tuned these to datasets we capture at Newcastle.  If you notice a banding pattern in your MDR or r fitnesses, please set checkSlow to FALSE.}
+  \item{checkSlow}{Boolean (TRUE or FALSE) specifying whether to re-optimise curve-fitting for slow-growing strains.  If TRUE, slow-growing or dead strains are identified heuristically and a second round of curve fitting using global (but slower) optimisation is carried out.  Heuristic identification of slow-growing strains is currently experimental, it seems we have over-tuned these to datasets we capture at Newcastle.  If you notice a banding pattern in your MDR or r fitness distributions, please set checkSlow to FALSE.}
+  \item{nrate}{Boolean specifiying whether to include numerical rate estimates in the output results.}
   \item{...}{Extra arguments passed to optim} 
 }
 \value{
