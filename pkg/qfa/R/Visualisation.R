@@ -202,7 +202,7 @@ makeVisTool=function(){
 			globs$yf=grconvertY(y,from="ndc",to="user")
 			candidate=targFun(globs$xf,globs$yf,globs$dat)
 			directurl="http://www.this-page-intentionally-left-blank.org/"
-			if(!is.na(pmatch("Y",globs$dat$ORF[candidate]))) directurl=paste("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus=",globs$dat$ORF[candidate],sep="")
+			if(!is.na(pmatch("Y",globs$dat$ORF[candidate]))) directurl=paste("http://www.yeastgenome.org/locus/",globs$dat$ORF[candidate],sep="")
 			if(!is.na(pmatch("SP",globs$dat$ORF[candidate]))) directurl=paste("http://www.pombase.org/spombe/result/",globs$dat$ORF[candidate],sep="")
 			browseURL(directurl)
 		}
@@ -381,7 +381,7 @@ makeVisTool=function(){
 			globs$targ=globs$targs[length(globs$targs)]
 			#browseURL(paste("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus=",globs$dat$ORF[globs$targ],sep=""))
 			directurl="http://www.this-page-intentionally-left-blank.org/"
-			if(!is.na(pmatch("Y",globs$dat$ORF[globs$targ]))) directurl=paste("http://www.yeastgenome.org/cgi-bin/locus.fpl?locus=",globs$dat$ORF[globs$targ],sep="")
+			if(!is.na(pmatch("Y",globs$dat$ORF[globs$targ]))) directurl=paste("http://www.yeastgenome.org/locus/",globs$dat$ORF[globs$targ],sep="")
 			if(!is.na(pmatch("SP",globs$dat$ORF[globs$targ]))) directurl=paste("http://www.pombase.org/spombe/result/",globs$dat$ORF[globs$targ],sep="")
 			browseURL(directurl)
 		}
@@ -711,8 +711,8 @@ toClipboard=function(x,sep="\n"){
 
 buildGO<-function(){
 	# Note we do not recommend that users edit this particular set of functionally related genes
-	fname=file.path(system.file(package = "qfa"),"extdata","GOAnnotation.txt.gz")
-	cat("\nGrouping of genes by GO terms specified in this text file (note: must be uncompressed before viewing with text editor)\n~~~~~~~~~~~~~~~\n")
+	fname=file.path(system.file(package = "qfa"),"extdata","GOAnnotation.txt")
+	cat("\nGrouping of genes by GO terms specified in this text file\n~~~~~~~~~~~~~~~\n")
 	cat(paste(fname,"\n"))
 	GO=read.delim(fname,sep="\t",header=TRUE,stringsAsFactors=FALSE)
 	return(GO)

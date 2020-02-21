@@ -1,9 +1,9 @@
 Package: qfa
-Version: 0.0-44
-Date: 2017-02-23
+Version: 0.0-45
+Date: 2019-02-21
 Title: Tools for Quantitative Fitness Analysis (QFA) of Arrayed Microbial Cultures Growing on Solid Agar Surfaces
-Author: Conor Lawless <conor.lawless@ncl.ac.uk>, with contributions from Alexander Young <alextisyoung@gmail.com> and Darren Wilkinson <d.j.wilkinson@ncl.ac.uk>
-Maintainer: Conor Lawless <conor.lawless@ncl.ac.uk>
+Author: Conor Lawless <cnr.lwlss@gmail.com>, with contributions from Alexander Young <alextisyoung@gmail.com> and Darren Wilkinson <d.j.wilkinson@ncl.ac.uk>
+Maintainer: Conor Lawless <cnr.lwlss@gmail.com>
 Depends:
 	R (>= 2.14.0),
 	sp,
@@ -18,4 +18,4 @@ Description: Quantitative Fitness Analysis (QFA) is a complementary series of ex
 License: Artistic-2.0
 VignetteBuilder: knitr, utils
 URL: http://qfa.r-forge.r-project.org/
-BugReports:  conor.lawless@ncl.ac.uk
+BugReports:  cnr.lwlss@gmail.com
